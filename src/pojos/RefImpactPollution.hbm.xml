@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Created by charbda 20/04/2011 -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.RefImpactPollution" table="ref_impact_pollution">
+    <id name="refPollutionId" type="int">
+      <column name="POLLUTION_ID"/>
+      <generator class="increment"/>
+    </id>
+    <property name="refPollutionName" type="string">
+      <column length="256" name="POLLUTION_NAME"/>
+    </property>
+    <property name="refPollutionCode" type="string">
+      <column length="1" name="POLLUTION_CODE"/>
+    </property>
+  </class>
+</hibernate-mapping>

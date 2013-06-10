@@ -42,7 +42,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /** Creates new form SDFEditor */
     private ArrayList modelRegions = new ArrayList();
-    private ArrayList modelBioregions = new ArrayList();
+    private ArrayList modelBioregions = new ArrayList();        
     private ArrayList modelBirds = new ArrayList();
     private ArrayList modelHabitats = new ArrayList();
     private ArrayList modelSpecies = new ArrayList();

@@ -92,7 +92,7 @@
         <xsl:choose>
           <xsl:when test="string(siteManagement/managementBodies) or string(siteManagement/managementPlans) or string(siteManagement/conservationMeasures)">
             <li>
-              <a href="#6">6. IMPACTS AND ACTIVITIES IN AND AROUND THE SITE</a>
+              <a href="#6">6. SITE MANAGEMENT</a>
             </li>
           </xsl:when>
         </xsl:choose>

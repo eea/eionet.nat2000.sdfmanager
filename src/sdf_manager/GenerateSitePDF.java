@@ -580,7 +580,8 @@ public class GenerateSitePDF implements Exporter {
                         Element bElem = doc.createElement("managementBody");
                         bElem.appendChild(doc.createElement("organisation")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyOrg(),"mgmtBodyOrg")));
                         //if el campo addressunestructured esta vacio entonces addres es un tipo complejo (implementar) en caso contrario
-                         if(resp.getRespAddressArea() != null && !!resp.getRespAddressArea().equals("")){
+                         //if(resp.getRespAddressArea() != null && !!resp.getRespAddressArea().equals("")){
+                         if(bodyObj.getMgmtBodyAddressArea() != null && !bodyObj.getMgmtBodyAddressArea().equals("")){
                             Element addresElem = doc.createElement("address");
 
                             addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAdminUnit(),"adminUnit") + "  "));
@@ -602,7 +603,12 @@ public class GenerateSitePDF implements Exporter {
                             // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(resp.getRespThoroughFare(),"thoroughfare")));
                             // bElem.appendChild(addresElem);
                         }else{
-                            bElem.appendChild(doc.createElement("address")).appendChild(doc.createTextNode(fmt(resp.getRespAddress(),"respAddress")));
+                            //bElem.appendChild(doc.createElement("address")).appendChild(doc.createTextNode(fmt(resp.getRespAddress(),"respAddress")));
+                            
+                            Element addresElem = doc.createElement("address");
+                            addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAddress(),"addressArea")));
+                            bElem.appendChild(addresElem);
+                            
                         }
 
 

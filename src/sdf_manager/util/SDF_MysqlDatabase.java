@@ -17,10 +17,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
 import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 
 
 /**
@@ -133,6 +135,15 @@ public class SDF_MysqlDatabase {
                             msgError = msgError+"\n"+ msgErrorPopulate +"\n"+ msgErrorAlterHabitat +"\n"+ msgErrorAlterDataQual +"\n"+ msgErrorUpdateRefHabitats +"\n"+ msgErrorUpdateVersion3Done;
                           }
                      }
+                     if(isSpecCroatiaExist(con, stDBExist)){
+                          SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
+                     }else{
+                         SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");                          
+                          String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
+                          if(msgErrorPopulateSpec != null){
+                            msgError = msgError+"\n"+ msgErrorPopulateSpec;
+                          }
+                     }
                       
                       //Sept 2013
                       
@@ -175,7 +186,16 @@ public class SDF_MysqlDatabase {
                       if(msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null){
                           msgError = msgError+"\n"+ msgErrorPopulate +"\n"+ msgErrorAlterHabitat +"\n"+ msgErrorAlterDataQual +"\n"+ msgErrorUpdateRefHabitats +"\n"+ msgErrorUpdateVersion3Done;
                         }
-                 }                  
+                 }   
+                  if(isSpecCroatiaExist(con, stDBExist)){
+                      SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
+                 }else{
+                     SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");                          
+                      String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
+                      if(msgErrorPopulateSpec != null){
+                        msgError = msgError+"\n"+ msgErrorPopulateSpec;
+                      }
+                 }
                   //Sept 2013
                   
                   
@@ -914,5 +934,72 @@ public class SDF_MysqlDatabase {
      }
      
    }
+   
+   
+   private static boolean isSpecCroatiaExist(Connection con, Statement st){
+       boolean tableExists=false;
+       Statement stDBSpec = null;
+       ResultSet rsDBEXist = null;
+
+       try{
+                 	       	   
+    	   String hql = "select REF_SPECIES_CODE from natura2000.ref_species where REF_SPECIES_CODE = '6337'";    	   
+    	   stDBSpec = con.createStatement();
+
+           rsDBEXist = stDBSpec.executeQuery(hql);
+           if(rsDBEXist.next()){
+        	   tableExists=true;            	   
+        	   }
+           else
+           {
+        	   tableExists=false;
+           }
+            	              
+       }catch(Exception e){
+    	   tableExists=false;
+           SDF_MysqlDatabase.log.error("New species Croatia does not exist");
+       }finally{
+           return tableExists;
+       }
+   }
+   
+   private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException{
+       String msgErrorCreate=null;
+       Statement st = null;
+
+       try{
+             SDF_MysqlDatabase.log.info("Updating RefSpecies Croatia ...");
+
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"Update_RefSpecies_version3.sql");
+
+             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
+             BufferedReader brInsert = new BufferedReader(inInsert);
+             String strLineInsert ;
+             st = con.createStatement();
+             //Read File Line By Line
+             while ((strLineInsert = brInsert.readLine()) != null)   {
+                st.executeUpdate(strLineInsert);
+             }
+         //Close the input stream
+
+             inInsert.close();
+
+       }catch(SQLException e){
+         msgErrorCreate ="UpdateRefHabitats.sql:An error has been produced in database";
+         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
+       }catch(Exception e){
+         msgErrorCreate ="UpdateRefHabitats:A general error has been produced";
+         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
+     }finally{
+         if(st != null){
+            st.close();
+         }
+         return msgErrorCreate;
+     }
+     
+   }
+   
+   
+   
    
 }

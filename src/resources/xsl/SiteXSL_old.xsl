@@ -85,7 +85,7 @@
         <xsl:choose>
           <xsl:when test="string(siteProtection/nationalDesignations) or string(siteProtection/relations) or string(siteProtection/siteDesignationAdditional)">
             <li>
-              <a href="#5">5. SITE PROTECTION STATUS AND RELATION WITH CORINE BIOTOPES</a>
+              <a href="#5">5. SITE PROTECTION STATUS</a>
             </li>
           </xsl:when>
         </xsl:choose>

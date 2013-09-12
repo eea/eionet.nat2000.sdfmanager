@@ -268,8 +268,11 @@ public class ExporterSiteXML implements Exporter {
             log("Parsing sitecodes...");
             ExporterSiteXML.log.info("Parsing sitecodes...");
 
-            Element sdfs = doc.createElement("sdfs");
-
+                        
+            Element sdfs = doc.createElement("sdfs");            
+            sdfs.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            sdfs.setAttribute("xsi:noNamespaceSchemaLocation", "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd");
+            
             doc.appendChild(sdfs);
 
             while (itrSites.hasNext()) {

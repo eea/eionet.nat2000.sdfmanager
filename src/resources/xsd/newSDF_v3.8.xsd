@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by USER USER (CENTRE THEMATIQUE EUROPEEN) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<!--Start the Schema elements-->
-	<xs:element name="sdfs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd">
+	<!--Start the Schema elements-->	
+	<xs:element name="sdfs">
 		<xs:complexType>
 			<xs:sequence>
 				<!--To allow more than one site in the xml file-->

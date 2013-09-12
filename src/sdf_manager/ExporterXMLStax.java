@@ -534,8 +534,12 @@ public class ExporterXMLStax implements Exporter {
             eventWriter.add(end);
 
             // Create config open tag
-            StartElement sdfsStartElement = eventFactory.createStartElement("","", "sdfs");
+            StartElement sdfsStartElement = eventFactory.createStartElement("","", "sdfs");                                  
             eventWriter.add(sdfsStartElement);
+            
+            eventWriter.add(eventFactory.createAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+            eventWriter.add(eventFactory.createAttribute("xsi:noNamespaceSchemaLocation", "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd"));
+            
             eventWriter.add(end);
             Iterator itrSites = this.sitecodes.iterator();
 

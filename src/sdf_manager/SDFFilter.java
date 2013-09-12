@@ -1148,7 +1148,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         });
                                              
-        btnGenerateAllPdfs.setText("Pfd All");
+        btnGenerateAllPdfs.setText("Pdf All");
         btnGenerateAllPdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGenerateAllPdfs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1531,7 +1531,7 @@ public final class SDFFilter extends javax.swing.JFrame {
            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
        }
        else {
-           int answer = javax.swing.JOptionPane.showOptionDialog(
+           /*int answer = javax.swing.JOptionPane.showOptionDialog(
                 this,
                "This operation can take a long time. Do you want to continue?",
                "Pdf Generation",
@@ -1541,7 +1541,8 @@ public final class SDFFilter extends javax.swing.JFrame {
                 null,
                 null
                 );
-           if (answer == javax.swing.JOptionPane.YES_OPTION) {        	           	           	               
+           if (answer == javax.swing.JOptionPane.YES_OPTION) {
+           */        	           	           	               
                for(int i=0; i<row.length;i++){
                   
                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
@@ -1552,8 +1553,8 @@ public final class SDFFilter extends javax.swing.JFrame {
                
                
                this.tabDisplaySites.repaint();
-
-           }
+           //}
+               
        }
 
    }//GEN-LAST:event_btnGeneratePDFsActionPerformed

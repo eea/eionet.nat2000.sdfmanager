@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by USER USER (CENTRE THEMATIQUE EUROPEEN) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--Start the Schema elements-->
+	<xs:element name="sdfs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sdf">
+					<xs:complexType>
+						<xs:sequence>
+							<!-- 1. SITE IDENTIFICATION -->
+							<xs:element name="siteIdentification">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 1.1. Type -->
+										<xs:element name="siteType" type="SiteTypeType"/>
+										<!-- 1.2. Site code -->
+										<xs:element name="siteCode" type="SiteCodeType"/>
+										<!-- 1.3. Site name -->
+										<xs:element name="siteName" type="xs:string"/>
+										<!-- 1.4. First Compilation date -->
+										<xs:element name="compilationDate" type="xs:gYearMonth"/>
+										<!-- 1.5. Update date -->
+										<xs:element name="updateDate" type="xs:gYearMonth"/>
+										<!-- 1.6. Respondent -->
+										<xs:element name="respondent">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="name" type="xs:string"/>
+													<xs:choice>
+														<xs:element name="address">
+															<xs:complexType>
+																<xs:sequence>
+																	<xs:element name="adminUnit" type="xs:string" minOccurs="1"/>
+																	<xs:element name="locatorDesignator" type="xs:string" minOccurs="0"/>
+																	<xs:element name="locatorName" type="xs:string" minOccurs="0"/>
+																	<xs:element name="addressArea" type="xs:string" minOccurs="0"/>
+																	<xs:element name="postName" type="xs:string" minOccurs="0"/>
+																	<xs:element name="postCode" type="xs:string" minOccurs="0"/>
+																	<xs:element name="thoroughfare" type="xs:string" minOccurs="0"/>
+																</xs:sequence>
+															</xs:complexType>
+														</xs:element>
+														<xs:element name="addressUnstructured"/>
+													</xs:choice>
+													<xs:element name="email" type="xs:string"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 1.7. Site indication and designation / classification dates -->
+										<xs:element name="spaClassificationDate" type="xs:gYearMonth"/>
+										<xs:element name="spaLegalReference" type="xs:string"/>
+										<xs:element name="sciProposalDate" type="xs:gYearMonth"/>
+										<xs:element name="sciConfirmationDate" type="xs:gYearMonth" minOccurs="0"/>
+										<xs:element name="sacDesignationDate" type="xs:gYearMonth"/>
+										<xs:element name="sacLegalReference" type="xs:string"/>
+										<xs:element name="explanations" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- 2. SITE LOCATION -->
+							<xs:element name="siteLocation">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 2.1. Site-centre location [decimal degrees] -->
+										<xs:element name="longitude" type="xs:decimal"/>
+										<xs:element name="latitude" type="xs:decimal"/>
+										<!-- 2.2. Area [ha] -->
+										<xs:element name="area" type="xs:decimal"/>
+										<!-- 2.3. Marine area [%] -->
+										<xs:element name="marineAreaPercentage" type="xs:decimal"/>
+										<!-- 2.4. Site length [km] -->
+										<xs:element name="siteLength" type="xs:decimal" minOccurs="0"/>
+										<!-- 2.5. Administrative region code and name -->
+										<xs:element name="adminRegions">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="region" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="code" type="xs:string"/>
+																<xs:element name="name" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- Saying category correspons for Biogeo and MarineGeoregions - Anatolian and Artic is for the EMERALD data-->
+										<!-- 2.6. Biogeographical Region(s) -->
+										<xs:element name="biogeoRegions" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="code" type="biogeoRegionCodeType"/>
+													<xs:element name="percentage" type="xs:decimal" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- HABITAT TYPES CAN BE NULL AND SPECIES BUT ONE OF SHOULD BE REPORTED-->
+							<!-- 3. ECOLOGICAL INFORMATION -->
+							<xs:element name="ecologicalInformation" nillable="false">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 3.1. Habitat types present on the site and site evaluation for them -->
+										<xs:element name="habitatTypes" minOccurs ="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="habitatType" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<!--The coding convention use for Habitats Type is referenced at the Natura2000 Reference Portal  http://bd.eionet.europa.eu/activities/Natura_2000/reference_portal -->
+																<xs:element name="code" type="xs:string"/>
+																<xs:element name="priorityFormOfHabitatType" type="xs:boolean" minOccurs="0"/>
+																<xs:element name="nonPresenceInSite" type="xs:boolean" minOccurs="0"/>
+																<xs:element name="coveredArea" type="xs:decimal"/>
+																<xs:element name="caves" type="xs:nonNegativeInteger" minOccurs="0"/>
+																<xs:element name="observationDataQuality" type="observationDataQualityType"/>
+																<xs:element name="representativity" type="assessmentTypeABCD"/>
+																<xs:element name="relativeSurface" type="assessmentTypeABC"/>
+																<xs:element name="conservation" type="assessmentTypeABC"/>
+																<xs:element name="global" type="assessmentTypeABC"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- IF motivation element EXISTS then -->
+											<!-- 3.3. Other important species of flora and fauna (optional) -->
+										<!-- ELSE -->
+											<!-- 3.2. Species referred to in Artcle 4 of Directive 2009/147/EC and listed in Annex II of Directive 92/43/EEC and site evaluation form them -->
+										<xs:element name="species" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="speciesPopulation" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="speciesGroup" type="specGroupType"/>
+																<xs:element name="speciesCode" type="xs:string"/>
+																<xs:element name="scientificName" type="xs:string"/>
+																<xs:element name="sensitiveInfo" type="xs:boolean"/>
+																<xs:element name="nonPresenceInSite" type="xs:boolean" minOccurs="0"/>
+                                <!-- This element is not presence for Other Species -->
+																<xs:element name="populationType" type="populationType" minOccurs="0"/>
+																<xs:element name="populationSize">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="lowerBound" type="populationSizeInteger"/>
+																			<xs:element name="upperBound" type="populationSizeInteger"/>
+																			<xs:element name="countingUnit" type="xs:string"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="abundanceCategory" type="abundanceType" minOccurs="0"/>
+                                <!-- This element is not presence for Other Species -->
+																<xs:element name="observationDataQuality" type="observationDataQualityType" minOccurs="0"/>
+																<xs:element name="population" type="assessmentTypeABCD" minOccurs="0"/>
+                                <!-- This element is not presence for Other Species -->
+																<xs:element name="conservation" type="assessmentTypeABC" minOccurs="0"/>
+                                <!-- This element is not presence for Other Species -->
+																<xs:element name="isolation" type="assessmentTypeABC" minOccurs="0"/>
+                                <!-- This element is not presence for Other Species -->
+																<xs:element name="global" type="assessmentTypeABC" minOccurs="0"/>
+																<xs:element name="motivations" minOccurs="0">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="motivation" type="motivationType" maxOccurs="unbounded"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- 4. SITE DESCRIPTION -->
+							<xs:element name="siteDescription">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 4.1. General site character -->
+										<xs:element name="habitatClass" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="code" type="xs:token"/>
+													<xs:element name="coveragePercentage" type="xs:decimal"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="otherSiteCharacteristics" type="xs:string" minOccurs="0"/>
+										<!-- 4.2. Quality and importance -->
+										<xs:element name="qualityAndImportance" type="xs:string" minOccurs="0"/>
+										<!-- 4.3. Threats, pressures and activities with impacts on the site -->
+										<xs:element name="impacts">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="impact" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<!--The coding convention use for Impacts Type is referenced at Biodiversity Data Centre     	  http://bd.eionet.europa.eu/activities/Natura_2000/reference_portal -->
+																<xs:element name="code" type="xs:string"/>
+																<xs:element name="rank" type="rankType"/>
+																<xs:element name="pollutionCode" type="pollutionCodeType" minOccurs="0"/>
+																<xs:element name="occurrence" type="impactOccurrenceType"/>
+																<xs:element name="natureOfImpact" type="natureOfImpactType"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 4.4. Ownership (optional) -->
+										<xs:element name="ownership">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="ownershipPart" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="ownershiptype" type="ownershipType"/>
+																<xs:element name="percent" type="xs:decimal"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 4.5. Documentation (optional) -->
+										<xs:element name="documentation" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="description" type="xs:string"/>
+													<xs:element name="links">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="link" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- 5. SITE PROTECTION STATUS (optional) -->
+							<xs:element name="siteProtection">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 5.1. Designation types at national and regional level -->
+										<xs:element name="nationalDesignations">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="nationalDesignation" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="designationCode" type="xs:string"/>
+																<xs:element name="cover" type="xs:decimal"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 5.2. Relation of the described site with other sites -->
+										<xs:element name="relations">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="nationalRelationships">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="nationalRelationship" minOccurs="0" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="designationCode" type="xs:string"/>
+																			<xs:element name="siteName" type="xs:string"/>
+																			<xs:element name="type" type="relationshipType"/>
+																			<xs:element name="cover" type="xs:decimal"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="internationalRelationships">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="internationalRelationship" minOccurs="0" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="convention" type="conventionType"/>
+																			<xs:element name="siteName" type="xs:string"/>
+																			<xs:element name="type" type="relationshipType"/>
+																			<xs:element name="cover" type="xs:decimal"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 5.3. Site designation (optional) -->
+										<xs:element name="siteDesignationAdditional" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- 6. SITE MANAGEMENT -->
+							<xs:element name="siteManagement">
+								<xs:complexType>
+									<xs:sequence>
+										<!-- 6.1. Body(ies) responsible for the site management -->
+										<xs:element name="managementBodies">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="managementBody" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="organisation" type="xs:string"/>
+																<xs:choice>
+																	<xs:element name="address">
+																		<xs:complexType>
+																			<xs:sequence>
+																				<xs:element name="adminUnit" type="xs:string" minOccurs="1"/>
+																				<xs:element name="locatorDesignator" type="xs:string" minOccurs="0"/>
+																				<xs:element name="locatorName" type="xs:string" minOccurs="0"/>
+																				<xs:element name="addressArea" type="xs:string" minOccurs="0"/>
+																				<xs:element name="postName" type="xs:string" minOccurs="0"/>
+																				<xs:element name="postCode" type="xs:string" minOccurs="0"/>
+																				<xs:element name="thoroughfare" type="xs:string" minOccurs="0"/>
+																			</xs:sequence>
+																		</xs:complexType>
+																	</xs:element>
+																	<xs:element name="addressUnstructured"/>
+																</xs:choice>
+																<xs:element name="email" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 6.2. Management plan(s) -->
+										<xs:element name="managementPlans">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="exists" type="planExistType"/>
+													<xs:element name="managementPlan" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="name" type="xs:string"/>
+																<xs:element name="url" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<!-- 6.3. Conservation measures (optional) -->
+										<xs:element name="conservationMeasures" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<!-- 7. MAP OF THE SITES -->
+							<xs:element name="map">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="InspireID" type="xs:string"/>
+										<xs:element name="pdfProvided" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="mapReference" type="xs:string" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="SiteTypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SiteCodeType">
+		<xs:restriction base="xs:token">
+			<xs:length value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="biogeoRegionCodeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="alpine"/>
+			<xs:enumeration value="anatolian"/>
+			<xs:enumeration value="arctic"/>
+			<xs:enumeration value="atlantic"/>
+			<xs:enumeration value="mediterranean"/>
+			<xs:enumeration value="blackSea"/>
+			<xs:enumeration value="boreal"/>
+			<xs:enumeration value="continental"/>
+			<xs:enumeration value="macaronesian"/>
+			<xs:enumeration value="pannonian"/>
+			<xs:enumeration value="steppic"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="marineRegionCodeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="marineAtlantic"/>
+			<xs:enumeration value="marineBaltic"/>
+			<xs:enumeration value="marineBlackSea"/>
+			<xs:enumeration value="marineMacaronesian"/>
+			<xs:enumeration value="marineMediterranean"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--ObservationDataQuality Types G: Good; M: Medium; P: Poor; DD:???????-->
+	<xs:simpleType name="observationDataQualityType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="G"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="DD"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="assessmentTypeABCD">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="C"/>
+			<xs:enumeration value="D"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="assessmentTypeABC">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="populationType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="p"/>
+			<xs:enumeration value="r"/>
+			<xs:enumeration value="c"/>
+			<xs:enumeration value="w"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="populationSizeInteger">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rankType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="H"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="L"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="impactOccurrenceType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="i"/>
+			<xs:enumeration value="o"/>
+			<xs:enumeration value="b"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ownershipType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="publicNational"/>
+			<xs:enumeration value="publicState"/>
+			<xs:enumeration value="publicLocal"/>
+			<xs:enumeration value="publicAny"/>
+			<xs:enumeration value="joint"/>
+			<xs:enumeration value="private"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="relationshipType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="="/>
+			<xs:enumeration value="+"/>
+			<xs:enumeration value="-"/>
+			<xs:enumeration value="*"/>
+			<xs:enumeration value="/"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="conventionType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ramsar"/>
+			<xs:enumeration value="biogenetic"/>
+			<xs:enumeration value="eurodiploma"/>
+			<xs:enumeration value="biosphere"/>
+			<xs:enumeration value="barcelona"/>
+			<xs:enumeration value="bucharest"/>
+			<xs:enumeration value="worldHeritage"/>
+			<xs:enumeration value="helcom"/>
+			<xs:enumeration value="ospar"/>
+			<xs:enumeration value="protectedMarine"/>
+			<xs:enumeration value="other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="motivationType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="IV"/>
+			<xs:enumeration value="V"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="C"/>
+			<xs:enumeration value="D"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="abundanceType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="C"/>
+			<xs:enumeration value="R"/>
+			<xs:enumeration value="V"/>
+			<xs:enumeration value="P"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="specGroupType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="R"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="planExistType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="P"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="natureOfImpactType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Positive"/>
+			<xs:enumeration value="Negative"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pollutionCodeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="T"/>
+			<xs:enumeration value="O"/>
+			<xs:enumeration value="X"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

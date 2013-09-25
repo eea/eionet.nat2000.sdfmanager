@@ -703,7 +703,7 @@ public class ExporterSiteXML implements Exporter {
             if(site.getSiteUpdateDate() != null ){
                 siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteUpdateDate()),"updateDate")));
             }else{
-               siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
+//               siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
             }
 
             if(site.getSiteCompDate() !=null && site.getSiteUpdateDate() != null){
@@ -760,7 +760,7 @@ public class ExporterSiteXML implements Exporter {
                 if(site.getSiteSciPropDate() != null){
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()),"sciProposalDate")));
                 }else{
-                    siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
+//                    siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
                 if(site.getSiteSciConfDate()!= null ){
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()),"sciConfirmationDate")));
@@ -768,7 +768,7 @@ public class ExporterSiteXML implements Exporter {
                 if(site.getSiteSacDate() != null){
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()),"sacDesignationDate")));
                 }else{
-                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
+//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
 
             }else if(("B").equals(siteType)){
@@ -791,7 +791,7 @@ public class ExporterSiteXML implements Exporter {
                 if(site.getSiteSacDate() != null){
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()),"sacDesignationDate")));
                 }else{
-                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
+//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
 
             }else if(("C").equals(siteType)){
@@ -814,7 +814,7 @@ public class ExporterSiteXML implements Exporter {
                 if(site.getSiteSacDate() != null){
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()),"sacDesignationDate")));
                 }else{
-                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
+//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
             }
 

@@ -252,8 +252,13 @@ public class GenerateSitePDF implements Exporter {
                 }
 
                 if(site.getSiteSpaDate() != null){
-                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),"spaClassificationDate")));
+                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),"spaClassificationDate")));                    
                  }
+                //AMG.
+                else{                	
+                	siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( "0000-00","spaClassificationDate")));
+                }
+                //AMG.
 
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(),"spaLegalReference")));
 

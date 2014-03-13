@@ -40,6 +40,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import java.awt.Font;
+
 /**
  *
  * @author charbda
@@ -616,6 +618,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
             }
             tabDisplaySites.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tabDisplaySites.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
             TableColumn col = tabDisplaySites.getColumnModel().getColumn(0);
             col.setPreferredWidth(75);
             col = tabDisplaySites.getColumnModel().getColumn(1);

@@ -15,15 +15,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import pojos.*;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -32,16 +26,35 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-
-
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.w3c.dom.Document;
-
 import org.w3c.dom.Element;
-
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.DocLink;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Map;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.MgmtPlan;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.Ownership;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteOwnership;
+import pojos.SiteRelation;
+import pojos.Species;
 import sdf_manager.util.SDF_Util;
 
 /**

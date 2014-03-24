@@ -1,0 +1,109 @@
+2014-03-24 18:31:19 SDF_ManagerApp [INFO] Logging initialized.
+2014-03-24 18:31:19 SDF_MysqlDatabase [INFO] Connection to MySQL: user==>root<==password==>ABr00t<==
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] User=sa, already exist
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] natura2000 Schema DB already exists and ref species table is OK
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] natura2000 Schema DB already exists and ref birds table is OK
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] Habitat table is already updated
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] Ref Tables are already updated
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] ReleaseDBUpdates exists
+2014-03-24 18:31:20 SDF_MysqlDatabase [INFO] Ref Table species Croatia are already inserted
+2014-03-24 18:31:20 SDF_ManagerApp [INFO] run importTool
+2014-03-24 18:31:20 Version [INFO] HCANN000001: Hibernate Commons Annotations {4.0.2.Final}
+2014-03-24 18:31:20 Version [INFO] HHH000412: Hibernate Core {4.2.7.Final}
+2014-03-24 18:31:20 Environment [INFO] HHH000206: hibernate.properties not found
+2014-03-24 18:31:20 Environment [INFO] HHH000021: Bytecode provider name : javassist
+2014-03-24 18:31:20 Configuration [INFO] HHH000043: Configuring from resource: /hibernate.cfg.xml
+2014-03-24 18:31:20 Configuration [INFO] HHH000040: Configuration resource: /hibernate.cfg.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Site.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefSpecies.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Map.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/SiteOwnership.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Resp.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Impact.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Region.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/HabitatClass.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Doc.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefNuts.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefHabitats.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefHabClasses.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Biogeo.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Species.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefDesignations.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Mgmt.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/SiteBiogeo.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/SiteRelation.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefBirds.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Habitat.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Ownership.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/DocLink.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/MgmtPlan.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/MgmtBody.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/NationalDtype.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/OtherSpecies.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefImpacts.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefConventions.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/Country.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefQuality.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefPopulation.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefUnit.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefCategory.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefSpeciesGroup.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefImpactRank.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000221: Reading mappings from resource: pojos/RefImpactPollution.hbm.xml
+2014-03-24 18:31:20 DTDEntityResolver [WARN] HHH000223: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/. Use namespace http://www.hibernate.org/dtd/ instead. Refer to Hibernate 3.6 Migration Guide!
+2014-03-24 18:31:20 Configuration [INFO] HHH000041: Configured SessionFactory: null
+2014-03-24 18:31:20 ConnectionProviderInitiator [WARN] HHH000022: c3p0 properties were encountered, but the org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider provider class was not found on the classpath; these properties are going to be ignored.
+2014-03-24 18:31:20 DriverManagerConnectionProviderImpl [INFO] HHH000402: Using Hibernate built-in connection pool (not for production use!)
+2014-03-24 18:31:20 DriverManagerConnectionProviderImpl [INFO] HHH000115: Hibernate connection pool size: 1000
+2014-03-24 18:31:20 DriverManagerConnectionProviderImpl [INFO] HHH000006: Autocommit mode: false
+2014-03-24 18:31:20 DriverManagerConnectionProviderImpl [INFO] HHH000401: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost/natura2000?autoReconnect=true]
+2014-03-24 18:31:20 DriverManagerConnectionProviderImpl [INFO] HHH000046: Connection properties: {useUnicode=true, user=root, password=****, characterEncoding=utf8, charSet=utf8}
+2014-03-24 18:31:21 Dialect [INFO] HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2014-03-24 18:31:21 TransactionFactoryInitiator [INFO] HHH000268: Transaction strategy: org.hibernate.engine.transaction.internal.jdbc.JdbcTransactionFactory
+2014-03-24 18:31:21 ASTQueryTranslatorFactory [INFO] HHH000397: Using ASTQueryTranslatorFactory
+2014-03-24 18:31:24 SDF_ManagerView [INFO] Open Filter Editor
+2014-03-24 18:31:24 SDFFilter [INFO] Init....
+2014-03-24 18:31:24 SDFFilter [INFO] populating filter site
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter region
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter bioregion
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter species
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter other species
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter habitats
+2014-03-24 18:31:25 SDFFilter [INFO] populating filter habitat classes
+2014-03-24 18:31:25 SDFFilter [INFO] finish***

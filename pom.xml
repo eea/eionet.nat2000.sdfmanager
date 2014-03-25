@@ -1,15 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
     <version>3.3</version>
-    <name>JNCC_Sites_Manager_Beta</name>
+
+    <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
 
-    <!-- configuration of Maven repositories to be used -->
+    <!-- Configuration of Maven repositories to be used. -->
 
     <repositories>
         <repository>
@@ -28,15 +30,20 @@
         </repository>
     </repositories>
 
+    <!-- Properties to be used below. -->
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.6</jdk.version>
     </properties>
 
+    <!-- The build configuration. -->
+
     <build>
-        <sourceDirectory>src</sourceDirectory>
 
         <plugins>
+
+            <!--  Maven compiler plugin. -->
 
 	        <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
@@ -48,7 +55,7 @@
 	            </configuration>
 	        </plugin>
 
-	        <!-- Maven JAR plugin -->
+	        <!-- Maven JAR plugin. -->
 
 	        <plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
@@ -66,7 +73,7 @@
 	            </configuration>
 	        </plugin>
 
-	        <!-- Maven dependency plugin -->
+	        <!-- Maven dependency plugin. -->
 
 	        <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
@@ -86,7 +93,7 @@
 		        </executions>
 	        </plugin>
 
-	        <!--  Maven assembly plugin -->
+	        <!--  Maven assembly plugin. -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -108,17 +115,28 @@
 
         <resources>
             <resource>
-                <directory>src</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.form</include>
+                    <include>**/*.gif</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.jpeg</include>
+                    <include>**/*.png</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
             </resource>
         </resources>
 
-        <!-- Name of the bundled project when it is finally built -->
-        <!--  <finalName>SDFmanager</finalName> -->
-
     </build>
+
+    <!-- Dependencies.  -->
 
     <dependencies>
 
@@ -173,29 +191,6 @@
 	    	<artifactId>slf4j-api</artifactId>
 	    	<version>1.6.1</version>
 	    </dependency>
-<!--
-        <dependency>
-            <groupId>sqljdbc4</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>nux</groupId>
-            <artifactId>nux</artifactId>
-            <version>1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/nux.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>ojdbc6</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/ojdbc6.jar</systemPath>
-        </dependency>
--->
         <dependency>
         	<groupId>org.jdesktop</groupId>
         	<artifactId>swing-worker</artifactId>

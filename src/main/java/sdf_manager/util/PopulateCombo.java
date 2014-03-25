@@ -14,17 +14,17 @@ import javax.swing.JComboBox;
 
 
 public class PopulateCombo {
-    
+
     private final static Logger log = Logger.getLogger(PopulateCombo.class .getName());
-    
-    
+
+
     /**
-     * 
-     * @param comboBox 
+     *
+     * @param comboBox
      */
-    public static void populateJComboTypeABCD(JComboBox comboBox){
-        
-        try{
+    public static void populateJComboTypeABCD(JComboBox comboBox) {
+
+        try {
            Properties prop =  SDF_Util.getSDFProperties();
            String assesmentABCD = prop.getProperty("assessmentTypeABCD");
            comboBox.insertItemAt("-", 0);
@@ -33,21 +33,21 @@ public class PopulateCombo {
            while (st.hasMoreElements()) {
                String token = st.nextToken();
                comboBox.insertItemAt(token, i);
-               i++;
+               i++ ;
            }
            comboBox.setSelectedIndex(0);
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
-    
+
     /**
-     * 
-     * @param comboBox 
+     *
+     * @param comboBox
      */
-    public static void populateJComboTypeABC(JComboBox comboBox){
-        
-        try{
+    public static void populateJComboTypeABC(JComboBox comboBox) {
+
+        try {
            Properties prop =  SDF_Util.getSDFProperties();
            String assesmentABCD = prop.getProperty("assessmentTypeABC");
            comboBox.insertItemAt("-", 0);
@@ -56,13 +56,13 @@ public class PopulateCombo {
            while (st.hasMoreElements()) {
                String token = st.nextToken();
                comboBox.insertItemAt(token, i);
-               i++;
+               i++ ;
            }
            comboBox.setSelectedIndex(0);
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
-    
+
 
 }

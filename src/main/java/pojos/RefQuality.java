@@ -10,12 +10,12 @@ public class RefQuality {
     private String refQualityName;
     private String refQualityCode;
     private String refQualitySpecies;
-    
+
     /**
-     * 
+     *
      */
     public RefQuality(){
-        
+
     }
 
     /**

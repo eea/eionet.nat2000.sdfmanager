@@ -10,12 +10,12 @@ public class RefSpeciesGroup {
     private String refSpeciesGroupName;
     private String refSpeciesGroupCode;
     private String refSpeciesGroupSpecies;
-    
+
     /**
-     * 
+     *
      */
     public RefSpeciesGroup(){
-        
+
     }
 
     /**

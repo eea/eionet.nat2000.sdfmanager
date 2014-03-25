@@ -49,7 +49,7 @@ class QAQCWorker extends SwingWorker<Boolean, Void> {
 
 /**
  *
- * 
+ *
  */
 public class QAQCMain extends javax.swing.JFrame {
 
@@ -102,10 +102,10 @@ public class QAQCMain extends javax.swing.JFrame {
      *
      */
     void emptySites() {
-        
+
         int crow = this.tabDisplaySites.getRowCount();
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-        for (int i = crow -1; i >= 0; i--) {            
+        for (int i = crow -1; i >= 0; i--) {
             model.removeRow(i);
         }
         tabDisplaySites.repaint();
@@ -117,7 +117,7 @@ public class QAQCMain extends javax.swing.JFrame {
      */
     void updateNumResults(int i) {
         this.txtNumResults.setText("Number of results: " + i);
-        
+
     }
 
     /**
@@ -137,13 +137,13 @@ public class QAQCMain extends javax.swing.JFrame {
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
             Object[] tuple = {tabRes[1],tabRes[0]};
-            
+
             model.insertRow(i, tuple);
             i++;
         }
         Object[] columnNames = {"Site","Species Name"};
         model.setColumnIdentifiers(columnNames);
-        
+
         updateNumResults(i);
     }
 
@@ -246,7 +246,7 @@ public class QAQCMain extends javax.swing.JFrame {
         Object[] columnNames = {"Site","Other Species Name"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
-    
+
     }
 
     /**
@@ -261,22 +261,22 @@ public class QAQCMain extends javax.swing.JFrame {
                 + "and species.otherSpeciesGroup not like 'B'"
                 + "order by species.otherSpeciesCode ASC";
         Query q = session.createQuery(hql);
-       
+
         Iterator itr = q.iterate();
         int i = 0;
         while (itr.hasNext()) {
-            
+
             Object[] tabRes = (Object[]) itr.next();
             Object[] tuple = {tabRes[1],tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-      
+
         Object[] columnNames = {"Site","Other Species Code"};
         model.setColumnIdentifiers(columnNames);
-        
+
         updateNumResults(i);
-       
+
     }
 
     /**
@@ -287,7 +287,7 @@ public class QAQCMain extends javax.swing.JFrame {
         QAQCMain.log.info("Getting sites with unknwon habitat type");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String hql = "select habitat.habitatCode, habitat.site.siteCode from Habitat as habitat "
-                + "where not exists (from RefHabitats as ref where ref.refHabitatsCode like habitat.habitatCode) "                
+                + "where not exists (from RefHabitats as ref where ref.refHabitatsCode like habitat.habitatCode) "
                 + "order by habitat.habitatCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -311,7 +311,7 @@ public class QAQCMain extends javax.swing.JFrame {
         QAQCMain.log.info("Getting sites with unknwon habitat classes");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String hql = "select habitat.habitatClassCode, habitat.site.siteCode from HabitatClass as habitat "
-                + "where not exists (from RefHabClasses as ref where ref.refHabClassesCode like habitat.habitatClassCode) "                
+                + "where not exists (from RefHabClasses as ref where ref.refHabClassesCode like habitat.habitatClassCode) "
                 + "order by habitat.habitatClassCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -335,7 +335,7 @@ public class QAQCMain extends javax.swing.JFrame {
         QAQCMain.log.info("Getting sites with unknwon regions");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String hql = "select region.regionCode, region.site.siteCode from Region as region "
-                + "where not exists (from RefNuts as ref where ref.refNutsCode like region.regionCode) "                
+                + "where not exists (from RefNuts as ref where ref.refNutsCode like region.regionCode) "
                 + "order by region.regionCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -348,7 +348,7 @@ public class QAQCMain extends javax.swing.JFrame {
         }
         Object[] columnNames = {"Site","Regions"};
         model.setColumnIdentifiers(columnNames);
-        updateNumResults(i);       
+        updateNumResults(i);
     }
 
     /**
@@ -367,7 +367,7 @@ public class QAQCMain extends javax.swing.JFrame {
         }
         else if (index == 3) {
             fetchUnknownBirdsNames(session);
-        } 
+        }
         else if (index == 4) {
             fetchUnknownBirdsCodes(session);
         }
@@ -524,9 +524,9 @@ public class QAQCMain extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             QAQCMain.log.error("No site selected");
@@ -535,25 +535,25 @@ public class QAQCMain extends javax.swing.JFrame {
         else {
             SDFEditor editor = new SDFEditor(this,"edit");
             editor.loadSite(sitecode,"");
-            editor.setVisible(true);            
+            editor.setVisible(true);
         }
-    }//GEN-LAST:event_btnEditActionPerformed
+    } //GEN-LAST:event_btnEditActionPerformed
 
-    private void btnFetchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFetchActionPerformed
-        
-        
+    private void btnFetchActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnFetchActionPerformed
+
+
         QAQCWorker worker = new QAQCWorker();
         final ProgressDialog dlg = new ProgressDialog(this, false);
         dlg.setLabel("Performing query...");
         dlg.setModal(false);
-        dlg.setVisible(false);        
+        dlg.setVisible(false);
         worker.setDialog(dlg);
-        worker.setQAQC(this);        
+        worker.setQAQC(this);
         worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);
-                        
-    }//GEN-LAST:event_btnFetchActionPerformed
+
+    } //GEN-LAST:event_btnFetchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

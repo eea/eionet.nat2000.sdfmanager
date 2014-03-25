@@ -15,8 +15,8 @@ import pojos.Site;
  */
 public class EditorSitecode extends javax.swing.JDialog {
 
-        
-    /** Creates new form EditorSitecode */  
+
+    /** Creates new form EditorSitecode */
     private String sitecode;
     private SDFFilter filter;
     public static boolean ok = false;
@@ -28,7 +28,7 @@ public class EditorSitecode extends javax.swing.JDialog {
      * @param filter
      * @param modal
      */
-    public EditorSitecode(java.awt.Frame parent, SDFFilter filter, boolean modal) {        
+    public EditorSitecode(java.awt.Frame parent, SDFFilter filter, boolean modal) {
         super(parent, modal);
         this.filter = filter;
         initComponents();
@@ -53,8 +53,8 @@ public class EditorSitecode extends javax.swing.JDialog {
       super.setVisible(true);
       requestFocus();
     }
-   
-  
+
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -170,52 +170,52 @@ public class EditorSitecode extends javax.swing.JDialog {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void txtSitecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSitecodeActionPerformed
-       
-}//GEN-LAST:event_txtSitecodeActionPerformed
+    private void txtSitecodeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_txtSitecodeActionPerformed
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+} //GEN-LAST:event_txtSitecodeActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.setVisible(false);
-}//GEN-LAST:event_btnCancelActionPerformed
+} //GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
        if (this.txtSitecode.getText().length() != 9) {
-            EditorSitecode.log.error("Not a valid siteocde: incorrect length.::"+this.txtSitecode.getText());
+            EditorSitecode.log.error("Not a valid siteocde: incorrect length.::" + this.txtSitecode.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Not a valid siteocde: incorrect length.");
             return;
         }
-      
+
        Session session = HibernateUtil.getSessionFactory().openSession();
        //Check if the site code is valid (it must start with country code
        String cuntryCode = this.txtSitecode.getText();
        cuntryCode = cuntryCode.substring(0,2);
-      
+
        String hqlCountry = "from Country where countryCode='" + cuntryCode+ "'";
        Iterator itrCountry = session.createQuery(hqlCountry).iterate();
        if (!itrCountry.hasNext()) {
-            EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::"+this.txtSitecode.getText());
+            EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::" + this.txtSitecode.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Not a valid siteocde: It must start with country code");
             return;
        }
 
 
-       String hql = "select count(*) from Site as site where site.siteCode like '" + 
+       String hql = "select count(*) from Site as site where site.siteCode like '" +
                this.txtSitecode.getText()+ "'";
        Query q = session.createQuery(hql);
        Number n = (Number) session.createCriteria(Site.class).add(Restrictions.eq("siteCode", this.txtSitecode.getText())).setProjection(Projections.rowCount()).uniqueResult();
        if (n.intValue() > 0) {
-            EditorSitecode.log.error("Not a valid sitecode: already exists.::"+this.txtSitecode.getText());
+            EditorSitecode.log.error("Not a valid sitecode: already exists.::" + this.txtSitecode.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: already exists");
-            return;           
+            return;
        }
        ok = true;
        this.sitecode = this.txtSitecode.getText();
        this.filter.setNewSitecode(this.sitecode);
        this.exit();
-        
-    }//GEN-LAST:event_btnSaveActionPerformed
+
+    } //GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments

@@ -26,9 +26,9 @@ import org.hibernate.Query;
 
 
 /**
- * 
- * 
- * @author 
+ *
+ *
+ * @author
  */
 public class SDF_MysqlDatabase {
 
@@ -42,21 +42,21 @@ public class SDF_MysqlDatabase {
      */
     public static String createNaturaDB() throws SQLException, Exception{
 
-      String msgError=null;
+      String msgError = null;
 
       Connection con = null;
       Statement stDBExist = null;
       ResultSet rsDBEXist = null;
       Statement stDBUser = null;
       ResultSet rsDBUser = null;
-      try{
+      try {
          Properties properties = new Properties();
-         properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"sdf_database.properties"));
+         properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
          Class.forName("com.mysql.jdbc.Driver");
-         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>"+properties.getProperty("user")+"<==password==>"+properties.getProperty("password")+"<==");
-         con = (Connection) DriverManager.getConnection("jdbc:mysql://"+properties.getProperty("host")+":"+properties.getProperty("port")+"/",properties.getProperty("user"),properties.getProperty("password"));
+         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user") + "<==password==>" + properties.getProperty("password") + "<==");
+         con = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + ":" + properties.getProperty("port") + "/",properties.getProperty("user"),properties.getProperty("password"));
 
-         try{
+         try {
 
              //dataBase exist??
               String schemaFileName ="CreateSDFSchema.sql";
@@ -64,7 +64,7 @@ public class SDF_MysqlDatabase {
               stDBUser = con.createStatement();
 
               rsDBEXist = stDBUser.executeQuery(sqlDBUser);
-              if(rsDBEXist.next()){
+              if (rsDBEXist.next()) {
                   SDF_MysqlDatabase.log.info("User=sa, already exist");
                   schemaFileName ="CreateSDFOnlySchema.sql";
               }
@@ -73,14 +73,14 @@ public class SDF_MysqlDatabase {
               stDBExist = con.createStatement();
               rsDBEXist = stDBExist.executeQuery(sqlDBExist);
 
-              if(rsDBEXist.next()){
+              if (rsDBEXist.next()) {
                  //Create Data Base
                   String name = rsDBEXist.getString("name");
 
-                  if(name != null && !(("").equals(name))){
-                      if(isRefSpeciesUpdated(con,stDBExist)){
+                  if (name != null && !(("").equals(name))) {
+                      if (isRefSpeciesUpdated(con,stDBExist)) {
                            SDF_MysqlDatabase.log.info("natura2000 Schema DB already exists and ref species table is OK");
-                      }else{
+                      } else {
                           SDF_MysqlDatabase.log.info("Drop Schema");
                           String sql = "drop schema natura2000";
                           Statement st = con.createStatement();
@@ -88,41 +88,41 @@ public class SDF_MysqlDatabase {
                           SDF_MysqlDatabase.log.info("Recreate Schema");
                           msgError = createMySQLDB (con,schemaFileName);
                           String msgErrorPopulate = populateRefTables(con);
-                          if(msgErrorPopulate != null){
-                             msgError = msgError+"\n"+ msgErrorPopulate;
+                          if (msgErrorPopulate != null) {
+                             msgError = msgError + "\n" + msgErrorPopulate;
                           }
                       }
-                      if(isRefBirdsUpdated(con, stDBExist)){
+                      if (isRefBirdsUpdated(con, stDBExist)) {
                            SDF_MysqlDatabase.log.info("natura2000 Schema DB already exists and ref birds table is OK");
-                      }else{
+                      } else {
                           SDF_MysqlDatabase.log.info("Recreate Ref Birds table");
                            msgError = alterRefBirds(con);
                            msgError = populateRefBirds(con);
                       }
 
-                      if(isHabitatUpdated(con, stDBExist)){
+                      if (isHabitatUpdated(con, stDBExist)) {
                            SDF_MysqlDatabase.log.info("Habitat table is already updated");
-                      }else{
+                      } else {
                           SDF_MysqlDatabase.log.info("Add a new column to habitat table");
                            msgError = alterHabitat(con);
                       }
-                      if(isRefTablesExist(con, stDBExist)){
+                      if (isRefTablesExist(con, stDBExist)) {
                            SDF_MysqlDatabase.log.info("Ref Tables are already updated");
-                      }else{
+                      } else {
                           SDF_MysqlDatabase.log.info("Create Ref tables");
                            msgError = createRefTables(con);
                            String msgErrorPopulate = populateRefTables(con);
-                           if(msgErrorPopulate != null){
-                             msgError = msgError+"\n"+ msgErrorPopulate;
+                           if (msgErrorPopulate != null) {
+                             msgError = msgError + "\n" + msgErrorPopulate;
                            }
                       }
-                      
-                      
+
+
                       //Sept 2013. Version 3. Create ReleaseDBUpdates.
-                      
-                      if(isReleaseDBUpdatesExist(con, stDBExist)){
+
+                      if (isReleaseDBUpdatesExist(con, stDBExist)) {
                           SDF_MysqlDatabase.log.info("ReleaseDBUpdates exists");
-                     }else{
+                     } else {
                          SDF_MysqlDatabase.log.info("Create ReleaseDBUpdates");
                           msgError = createReleaseDBUpdates(con);
                           String msgErrorPopulate = PopulateReleaseDBUpdates(con);
@@ -131,50 +131,50 @@ public class SDF_MysqlDatabase {
                           String msgErrorUpdateRefHabitats = UpdateRefHabitats(con);
                           //tabla ref species
                           String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
-                          if(msgErrorPopulate != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null){
-                            msgError = msgError+"\n"+ msgErrorPopulate +"\n"+ msgErrorAlterHabitat +"\n"+ msgErrorAlterDataQual +"\n"+ msgErrorUpdateRefHabitats +"\n"+ msgErrorUpdateVersion3Done;
+                          if (msgErrorPopulate != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null) {
+                            msgError = msgError + "\n" + msgErrorPopulate  + "\n" + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n" + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
                           }
                      }
-                     if(isSpecCroatiaExist(con, stDBExist)){
+                     if (isSpecCroatiaExist(con, stDBExist)) {
                           SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
-                     }else{
-                         SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");                          
+                     } else {
+                         SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");
                           String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
-                          if(msgErrorPopulateSpec != null){
-                            msgError = msgError+"\n"+ msgErrorPopulateSpec;
+                          if (msgErrorPopulateSpec != null) {
+                            msgError = msgError + "\n" + msgErrorPopulateSpec;
                           }
                      }
-                      
-                      //Sept 2013
-                      
 
-                  }else{
+                      //Sept 2013
+
+
+                  } else {
                        msgError = createMySQLDB (con,schemaFileName);
                        String msgErrorPopulate = populateRefTables(con);
-                       if(msgErrorPopulate != null){
-                         msgError = msgError+"\n"+ msgErrorPopulate;
+                       if (msgErrorPopulate != null) {
+                         msgError = msgError + "\n" + msgErrorPopulate;
                        }
                   }
-                  if(!isDateTypeColumnsLongText(con,stDBUser)){
+                  if (!isDateTypeColumnsLongText(con,stDBUser)) {
                       String msgErrorPopulate = alterDateColumnsType(con);
-                      if(msgErrorPopulate != null){
-                        msgError = msgError+"\n"+ msgErrorPopulate;
+                      if (msgErrorPopulate != null) {
+                        msgError = msgError + "\n" + msgErrorPopulate;
                       }
-                     
+
                   }
 
-              }else{
+              } else {
 
                   msgError = createMySQLDB (con,schemaFileName);
                   String msgErrorPopulate = populateRefTables(con);
-                  if(msgErrorPopulate != null){
-                     msgError = msgError+"\n"+ msgErrorPopulate;
+                  if (msgErrorPopulate != null) {
+                     msgError = msgError + "\n" + msgErrorPopulate;
                   }
-                  
-                  //Sept 2013. Version 3. Create ReleaseDBUpdates.                  
-                  if(isReleaseDBUpdatesExist(con, stDBExist)){
+
+                  //Sept 2013. Version 3. Create ReleaseDBUpdates.
+                  if (isReleaseDBUpdatesExist(con, stDBExist)) {
                       SDF_MysqlDatabase.log.info("ReleaseDBUpdates exists");
-                 }else{
+                 } else {
                      SDF_MysqlDatabase.log.info("Create ReleaseDBUpdates");
                       msgError = createReleaseDBUpdates(con);
                       String msgErrorPopulateRel = PopulateReleaseDBUpdates(con);
@@ -183,49 +183,49 @@ public class SDF_MysqlDatabase {
                       String msgErrorUpdateRefHabitats = UpdateRefHabitats(con);
                       //tabla ref species
                       String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
-                      if(msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null){
-                          msgError = msgError+"\n"+ msgErrorPopulate +"\n"+ msgErrorAlterHabitat +"\n"+ msgErrorAlterDataQual +"\n"+ msgErrorUpdateRefHabitats +"\n"+ msgErrorUpdateVersion3Done;
+                      if (msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null) {
+                          msgError = msgError + "\n" + msgErrorPopulate  + "\n" + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n" + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
                         }
-                 }   
-                  if(isSpecCroatiaExist(con, stDBExist)){
+                 }
+                  if (isSpecCroatiaExist(con, stDBExist)) {
                       SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
-                 }else{
-                     SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");                          
+                 } else {
+                     SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");
                       String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
-                      if(msgErrorPopulateSpec != null){
-                        msgError = msgError+"\n"+ msgErrorPopulateSpec;
+                      if (msgErrorPopulateSpec != null) {
+                        msgError = msgError + "\n" + msgErrorPopulateSpec;
                       }
                  }
                   //Sept 2013
-                  
-                  
+
+
               }
 
 
-          }  catch (SQLException s){
-              
+          }  catch (SQLException s) {
+
               JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog",JOptionPane.ERROR_MESSAGE);
-              SDF_MysqlDatabase.log.error("Error in Data Base:::"+s.getMessage());
+              SDF_MysqlDatabase.log.error("Error in Data Base:::" + s.getMessage());
               throw s;
           }
       }
-      catch (Exception e){
+      catch (Exception e) {
         msgError = "The connection to MySQL Data Base has failed.\n Please, Make sure that the parmeters (user and password) in the properties file are right";
         JOptionPane.showMessageDialog(new JFrame(), msgError, "Dialog",JOptionPane.ERROR_MESSAGE);
-        SDF_MysqlDatabase.log.error("The connection to MySQL Data Base has failed.\n Please, Make sure that the parmeters (user and password) in the properties file are right.::"+e.getMessage());
+        SDF_MysqlDatabase.log.error("The connection to MySQL Data Base has failed.\n Please, Make sure that the parmeters (user and password) in the properties file are right.::" + e.getMessage());
         throw e;
-      }finally{
-          if(rsDBEXist != null){
+      } finally {
+          if (rsDBEXist != null) {
              rsDBEXist.close();
           }
-          if(stDBExist != null){
+          if (stDBExist != null) {
           }
           con.close();
       }
       return msgError;
     }
 
-    
+
     /**
      * Method to validate if the datatype of comlumns:
      * SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF
@@ -234,37 +234,37 @@ public class SDF_MysqlDatabase {
      * @param con
      * @param st
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static boolean isDateTypeColumnsLongText(Connection con, Statement st) throws SQLException{
         boolean refSpeciesUpdated=true;
 
         //It's necessary to compare not only datatyp but alos the size of the column
-        
+
         String columnTypeVarchar= "VARCHAR";
         int columnSizeVarchar= 512;
-        try{
+        try {
               String sql = "SELECT SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF FROM natura2000.site";
               st = con.createStatement();
-              ResultSet rs = st.executeQuery(sql);          
+              ResultSet rs = st.executeQuery(sql);
               ResultSetMetaData rsmd = rs.getMetaData();
               int NumOfCol = rsmd.getColumnCount();
-              for(int i=1;i<=NumOfCol;i++){
-                  if((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i)<= columnSizeVarchar){
+              for(int i=1;i<=NumOfCol;i++) {
+                  if ((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i)<= columnSizeVarchar) {
                       refSpeciesUpdated = false;
                   }
-                 
-              }              
-        }catch(SQLException e){
+
+              }
+        } catch (SQLException e) {
             SDF_MysqlDatabase.log.error("Ref Species is already updated");
-        }catch(Exception e){
+        } catch (Exception e) {
             SDF_MysqlDatabase.log.error("Ref Species is already updated");
-        }finally{
+        } finally {
             return refSpeciesUpdated;
         }
     }
-    
-    
+
+
     /**
      *
      * @param con
@@ -274,15 +274,15 @@ public class SDF_MysqlDatabase {
      */
     private static String createMySQLDB (Connection con, String schemaFileName) throws SQLException{
       boolean mySQLDB = false;
-      String msgErrorCreate=null;
+      String msgErrorCreate = null;
       Statement st = null;
       Statement st2 = null;
       Statement stAlter = null;
       Statement stInsert = null;
-      try{
+      try {
           SDF_MysqlDatabase.log.info("Creating Schema Data Base");
 
-          FileInputStream fstreamSchema = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+schemaFileName);
+          FileInputStream fstreamSchema = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + schemaFileName);
           InputStreamReader inSchema = new InputStreamReader(fstreamSchema);
           BufferedReader brSchema = new BufferedReader(inSchema);
           String strLineSchema ;
@@ -297,7 +297,7 @@ public class SDF_MysqlDatabase {
           // Open the file that is the first
           // Create tables in Data Base
           SDF_MysqlDatabase.log.info("Creating tables in Data Base");
-          FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"CreateMySqlTables.sql");
+          FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "CreateMySqlTables.sql");
 
           InputStreamReader in = new InputStreamReader(fstream, "UTF-8");
           BufferedReader br = new BufferedReader(in);
@@ -312,7 +312,7 @@ public class SDF_MysqlDatabase {
 
           //Populate data base
           SDF_MysqlDatabase.log.info("Populating tables");
-          File dir = new File(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB");
+          File dir = new File(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB");
 
           // The list of files can also be retrieved as File objects
           File[] files = dir.listFiles();
@@ -327,7 +327,7 @@ public class SDF_MysqlDatabase {
           if (files == null) {
              // Either dir does not exist or is not a directory
           } else {
-              for (int i=0; i<files.length; i++) {
+              for (int i = 0; i<files.length; i++) {
 
                // Get filename of file or directory
                 File filename = files[i];
@@ -348,25 +348,25 @@ public class SDF_MysqlDatabase {
              }
          }
           mySQLDB = true;
-      }catch(SQLException e){
+      } catch (SQLException e) {
           msgErrorCreate ="An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } catch (Exception e) {
           msgErrorCreate ="A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } finally {
+          if (st != null) {
              st.close();
           }
-          if(st2 != null){
+          if (st2 != null) {
              st2.close();
           }
-          if(stInsert != null){
+          if (stInsert != null) {
              stInsert.close();
           }
           return msgErrorCreate;
       }
-      
+
 
     }
 
@@ -377,10 +377,10 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String alterDateColumnsType(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
-        try{
-              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"alteColumnDatatype.sql");
+        try {
+              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "alteColumnDatatype.sql");
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
               BufferedReader brAlter = new BufferedReader(inAlter);
@@ -392,39 +392,39 @@ public class SDF_MysqlDatabase {
               }
               inAlter.close();
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="alteColumnDatatype.sql:::An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
           msgErrorCreate ="alteColumnDatatype.sql:A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+          if (st != null) {
              st.close();
           }
           return msgErrorCreate;
        }
-      
+
     }
 
-   
+
     /**
      *
      * @param con
      * @param st
      * @return
      */
-    private static boolean isRefSpeciesUpdated(Connection con, Statement st){
+    private static boolean isRefSpeciesUpdated(Connection con, Statement st) {
         boolean refSpeciesUpdated=false;
 
-        try{
+        try {
               String sql = "select REF_SPECIES_CODE_NEW from natura2000.ref_species";
               st = con.createStatement();
               st.executeQuery(sql);
               refSpeciesUpdated = true;
-        }catch(Exception e){
+        } catch (Exception e) {
             SDF_MysqlDatabase.log.error("Ref Species is already updated");
-        }finally{
+        } finally {
             return refSpeciesUpdated;
         }
     }
@@ -435,17 +435,17 @@ public class SDF_MysqlDatabase {
      * @param st
      * @return
      */
-    private static boolean isHabitatUpdated(Connection con, Statement st){
+    private static boolean isHabitatUpdated(Connection con, Statement st) {
         boolean habitatUpdated=false;
 
-        try{
+        try {
               String sql = "select HABITAT_COVER_HA from natura2000.habitat";
               st = con.createStatement();
               st.executeQuery(sql);
               habitatUpdated = true;
-        }catch(Exception e){
+        } catch (Exception e) {
             SDF_MysqlDatabase.log.error("Habitats already updated");
-        }finally{
+        } finally {
 
             return habitatUpdated;
         }
@@ -457,17 +457,17 @@ public class SDF_MysqlDatabase {
      * @param st
      * @return
      */
-    private static boolean isRefBirdsUpdated(Connection con, Statement st){
+    private static boolean isRefBirdsUpdated(Connection con, Statement st) {
         boolean refBirdsUpdated=false;
-        try{
+        try {
               String sql = "select REF_BIRDS_CODE_NEW from natura2000.ref_BIRDS";
               st = con.createStatement();
               st.executeQuery(sql);
               refBirdsUpdated = true;
-        }catch(Exception e){
+        } catch (Exception e) {
             refBirdsUpdated=false;
             SDF_MysqlDatabase.log.error("Ref Birds is already updated");
-        }finally{
+        } finally {
 
             return refBirdsUpdated;
         }
@@ -483,12 +483,12 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String alterRefBirds(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
 
-        try{
+        try {
             SDF_MysqlDatabase.log.info("alterRefBirds....");
-              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"Alter_Ref_Birds_table.sql");
+              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "Alter_Ref_Birds_table.sql");
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter);
               BufferedReader brAlter = new BufferedReader(inAlter);
@@ -502,19 +502,19 @@ public class SDF_MysqlDatabase {
               inAlter.close();
 
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="Alter_Ref_Birds_table.sql:::An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());        
-      }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } catch (Exception e) {
           msgErrorCreate ="Alter_Ref_Birds_table.sql::A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } finally {
+          if (st != null) {
              st.close();
           }
           return msgErrorCreate;
       }
-     
+
     }
     /**
      *
@@ -523,13 +523,13 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String populateRefBirds(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
 
-        try{
+        try {
               SDF_MysqlDatabase.log.info("populateRefBirds....");
 
-              FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"insert_birds_new.sql");
+              FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "insert_birds_new.sql");
 
               InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
               BufferedReader brInsert = new BufferedReader(inInsert);
@@ -543,19 +543,19 @@ public class SDF_MysqlDatabase {
 
               inInsert.close();
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="insert_birds_new.sql:::An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
           msgErrorCreate ="insert_birds_new.sql::A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } finally {
+          if (st != null) {
              st.close();
           }
           return msgErrorCreate;
       }
-      
+
     }
 
     /**
@@ -565,27 +565,27 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String alterHabitat(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
 
-        try{
+        try {
               st = con.createStatement();
               //Read File Line By Line
               String sqlAlter = "ALTER TABLE `natura2000`.`habitat` ADD COLUMN `HABITAT_COVER_HA` DOUBLE NULL;";
               st.executeUpdate(sqlAlter);
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="alterHabitat:::An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
           msgErrorCreate ="alterHabitat::A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+          if (st != null) {
              st.close();
           }
           return msgErrorCreate;
       }
-      
+
     }
    /**
      *
@@ -593,18 +593,18 @@ public class SDF_MysqlDatabase {
      * @param st
      * @return
      */
-    private static boolean isRefTablesExist(Connection con, Statement st){
+    private static boolean isRefTablesExist(Connection con, Statement st) {
         boolean refBirdsUpdated=false;
 
-        try{
+        try {
               String sql = "select * from natura2000.ref_impact_rank";
               st = con.createStatement();
               st.executeQuery(sql);
               refBirdsUpdated = true;
-        }catch(Exception e){
+        } catch (Exception e) {
             refBirdsUpdated=false;
             SDF_MysqlDatabase.log.error("Ref tables not exist");
-        }finally{
+        } finally {
             return refBirdsUpdated;
         }
     }
@@ -615,10 +615,10 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String createRefTables(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
-        try{
-              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"CreateRefTables.sql");
+        try {
+              FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "CreateRefTables.sql");
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
               BufferedReader brAlter = new BufferedReader(inAlter);
@@ -630,19 +630,19 @@ public class SDF_MysqlDatabase {
               }
               inAlter.close();
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="CreateRefTables.sqll:::An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } catch (Exception e) {
           msgErrorCreate ="CreateRefTables.sql::A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-      }finally{
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+      } finally {
+          if (st != null) {
              st.close();
           }
           return msgErrorCreate;
       }
-      
+
     }
 /**
      *
@@ -651,13 +651,13 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      */
     private static String populateRefTables(Connection con) throws SQLException{
-        String msgErrorCreate=null;
+        String msgErrorCreate = null;
         Statement st = null;
-        try{
+        try {
 
           //Populate data base
           SDF_MysqlDatabase.log.info("Populating Ref tables");
-          File dir = new File(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"ref_tables");
+          File dir = new File(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "ref_tables");
 
           // The list of files can also be retrieved as File objects
           File[] files = dir.listFiles();
@@ -672,7 +672,7 @@ public class SDF_MysqlDatabase {
           if (files == null) {
              // Either dir does not exist or is not a directory
           } else {
-              for (int i=0; i<files.length; i++) {
+              for (int i = 0; i<files.length; i++) {
 
                // Get filename of file or directory
                 File filename = files[i];
@@ -694,15 +694,15 @@ public class SDF_MysqlDatabase {
          }
 
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
           msgErrorCreate ="insert_birds_new.sql:::An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }catch(Exception e){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
           msgErrorCreate ="insert_birds_new.sql::A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-        }finally{
-            SDF_MysqlDatabase.log.info("st=="+st);
-          if(st != null){
+          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+            SDF_MysqlDatabase.log.info("st==" + st);
+          if (st != null) {
              st.close();
           }
            return msgErrorCreate;
@@ -710,37 +710,36 @@ public class SDF_MysqlDatabase {
 
     }
 
-    
-    
+
+
     /**
     *
     * Sept 201. Version 3
     */
-   private static boolean isReleaseDBUpdatesExist(Connection con, Statement st){
+   private static boolean isReleaseDBUpdatesExist(Connection con, Statement st) {
        boolean tableExists=false;
 
-       try{
+       try {
              String sql = "select * from natura2000.ReleaseDBUpdates";
              st = con.createStatement();
              st.executeQuery(sql);
              tableExists = true;
-       }catch(Exception e){
-    	   tableExists=false;
+       } catch (Exception e) {
+           tableExists=false;
            SDF_MysqlDatabase.log.error("ReleaseDBUpdates does not exist");
-       }finally{
+       } finally {
            return tableExists;
        }
    }
-   
+
    private static String createReleaseDBUpdates(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
-       try{
-             
-    	   
-    	   	 SDF_MysqlDatabase.log.info("createReleaseDBUpdates....");
-    	   
-    	   	 FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"createReleaseDBUpdates_version3.sql");
+       try {
+
+             SDF_MysqlDatabase.log.info("createReleaseDBUpdates....");
+
+             FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "createReleaseDBUpdates_version3.sql");
 
              InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
              BufferedReader brAlter = new BufferedReader(inAlter);
@@ -752,29 +751,29 @@ public class SDF_MysqlDatabase {
              }
              inAlter.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="ReleaseDBUpdates.sql:::An error has been produced in database";
-        SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }catch(Exception e){
+        SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } catch (Exception e) {
          msgErrorCreate ="ReleaseDBUpdates.sql::A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-    
+
    private static String PopulateReleaseDBUpdates(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              SDF_MysqlDatabase.log.info("populate ReleaseDBUpdates....");
 
-             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"insert_ReleaseDBUpdates_version3.sql");
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "insert_ReleaseDBUpdates_version3.sql");
 
              InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
              BufferedReader brInsert = new BufferedReader(inInsert);
@@ -788,53 +787,53 @@ public class SDF_MysqlDatabase {
 
              inInsert.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="insert_ReleaseDBUpdates_version3.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="insert_ReleaseDBUpdates_version3.sql:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-    
+
    private static String alterHabitatQual(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              st = con.createStatement();
              //Read File Line By Line
              String sqlAlter = "ALTER TABLE `natura2000`.`habitat` MODIFY COLUMN `HABITAT_DATA_QUALITY` varchar(2);";
              st.executeUpdate(sqlAlter);
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="alterHabitatDataQuality:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="alterHabitatDataQuality:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
-     } 
-   } 
+     }
+   }
 
-   
+
    private static String InsertRefDataQual(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              SDF_MysqlDatabase.log.info("Inserting DD for Habitats in RefDataQuality...");
 
-             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"insert_RefDataQual_version3.sql");
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "insert_RefDataQual_version3.sql");
 
              InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
              BufferedReader brInsert = new BufferedReader(inInsert);
@@ -848,29 +847,29 @@ public class SDF_MysqlDatabase {
 
              inInsert.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="insert_RefDataQual_version3.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="insert_RefDataQual_version3:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-   
+
    private static String UpdateRefHabitats(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              SDF_MysqlDatabase.log.info("Updating RefHabitats ...");
 
-             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"Update_RefHabitats_version3.sql");
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "Update_RefHabitats_version3.sql");
 
              InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
              BufferedReader brInsert = new BufferedReader(inInsert);
@@ -884,29 +883,29 @@ public class SDF_MysqlDatabase {
 
              inInsert.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="UpdateRefHabitats.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="UpdateRefHabitats:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-   
+
    private static String UpdateVersion3Done(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              SDF_MysqlDatabase.log.info("Updating UpdateVersion3Done ...");
 
-             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"UpdateVersion3Done_version3.sql");
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "UpdateVersion3Done_version3.sql");
 
              InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
              BufferedReader brInsert = new BufferedReader(inInsert);
@@ -920,57 +919,55 @@ public class SDF_MysqlDatabase {
 
              inInsert.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="UpdateVersion3Done.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="UpdateVersion3Done general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-   
-   
-   private static boolean isSpecCroatiaExist(Connection con, Statement st){
+
+
+   private static boolean isSpecCroatiaExist(Connection con, Statement st) {
        boolean tableExists=false;
        Statement stDBSpec = null;
        ResultSet rsDBEXist = null;
 
-       try{
-                 	       	   
-    	   String hql = "select REF_SPECIES_CODE from natura2000.ref_species where REF_SPECIES_CODE = '6337'";    	   
-    	   stDBSpec = con.createStatement();
+       try {
+
+           String hql = "select REF_SPECIES_CODE from natura2000.ref_species where REF_SPECIES_CODE = '6337'";
+           stDBSpec = con.createStatement();
 
            rsDBEXist = stDBSpec.executeQuery(hql);
-           if(rsDBEXist.next()){
-        	   tableExists=true;            	   
-        	   }
-           else
-           {
-        	   tableExists=false;
+           if (rsDBEXist.next()) {
+               tableExists=true;
+           } else {
+               tableExists=false;
            }
-            	              
-       }catch(Exception e){
-    	   tableExists=false;
+
+       } catch (Exception e) {
+           tableExists=false;
            SDF_MysqlDatabase.log.error("New species Croatia does not exist");
-       }finally{
+       } finally {
            return tableExists;
        }
    }
-   
+
    private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException{
-       String msgErrorCreate=null;
+       String msgErrorCreate = null;
        Statement st = null;
 
-       try{
+       try {
              SDF_MysqlDatabase.log.info("Updating RefSpecies Croatia ...");
 
-             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database"+File.separator+"mysqlDB"+File.separator+"populateDB"+File.separator+"Update_RefSpecies_version3.sql");
+             FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "Update_RefSpecies_version3.sql");
 
              InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
              BufferedReader brInsert = new BufferedReader(inInsert);
@@ -984,22 +981,22 @@ public class SDF_MysqlDatabase {
 
              inInsert.close();
 
-       }catch(SQLException e){
+       } catch (SQLException e) {
          msgErrorCreate ="UpdateRefHabitats.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-       }catch(Exception e){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+       } catch (Exception e) {
          msgErrorCreate ="UpdateRefHabitats:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate+".::::"+e.getMessage());
-     }finally{
-         if(st != null){
+         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+     } finally {
+         if (st != null) {
             st.close();
          }
          return msgErrorCreate;
      }
-     
+
    }
-   
-   
-   
-   
+
+
+
+
 }

@@ -256,30 +256,30 @@ public class EditorBioregion extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
     /**
      *
      * @param evt
      */
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1 && this.editing == false) {
             this.editing = true;
             int i = cmbCode.getSelectedIndex();
             cmbName.setSelectedIndex(i);
             this.editing = false;
         }
-    }//GEN-LAST:event_cmbCodeItemStateChanged
+    } //GEN-LAST:event_cmbCodeItemStateChanged
     /**
      *
      * @param evt
      */
-    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbNameItemStateChanged
+    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbNameItemStateChanged
         if (this.editing == false) {
             int i = cmbName.getSelectedIndex();
             cmbCode.setSelectedIndex(i);
         }
         //txtArea.setText("100");
-    }//GEN-LAST:event_cmbNameItemStateChanged
+    } //GEN-LAST:event_cmbNameItemStateChanged
     /**
      * Checks if the param is null
      * @param s
@@ -297,10 +297,10 @@ public class EditorBioregion extends javax.swing.JFrame {
      *
      * @param evt
      */
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
 
         String code = (String) cmbCode.getSelectedItem();
-        EditorBioregion.log.info("Saving bio region ::"+code);
+        EditorBioregion.log.info("Saving bio region ::" + code);
         Double percent;
         boolean saveOK = false;
         String msgInfo="";
@@ -308,31 +308,31 @@ public class EditorBioregion extends javax.swing.JFrame {
             EditorBioregion.log.error("There is not code for Biogeographical region .");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a code for Biogeographical region.");
         }
-        else if(txtArea.getText().equals("")) {
+        else if (txtArea.getText().equals("")) {
             EditorBioregion.log.error("There is not perecent for cover.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a percentage for cover.");
         }
-        else if((isNum(txtArea.getText())) == null) {
+        else if ((isNum(txtArea.getText())) == null) {
             EditorBioregion.log.error("Percent field should be a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Percentage should be a number.");
 
-        }else if(!SDF_Util.validatePercent(txtArea.getText())){
+        } else if (!SDF_Util.validatePercent(txtArea.getText())) {
             EditorBioregion.log.error("The percent is not valid.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a valid percentage.");
         }
         else {
             Double dblPercentage = null;
-            if (txtArea.getText()!=null && !txtArea.getText().equals("")){
+            if (txtArea.getText()!=null && !txtArea.getText().equals("")) {
                 dblPercentage = new Double(txtArea.getText());
             }
-            if (this.previousPercentage!=null){
-                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage - this.previousPercentage ) > 100){
+            if (this.previousPercentage!=null) {
+                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage - this.previousPercentage ) > 100) {
                     EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
                     javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
                     return;
                 }
             } else {
-                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage) > 100){
+                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage) > 100) {
                     EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
                     javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
                     return;
@@ -357,22 +357,22 @@ public class EditorBioregion extends javax.swing.JFrame {
                 msgInfo="Bioregion added";
 
            }
-            if(saveOK){
+            if (saveOK) {
                 javax.swing.JOptionPane.showMessageDialog(this, msgInfo);
                 this.exit();
-            }else{
+            } else {
                 this.setVisible(true);
             }
 
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
 
 

@@ -48,7 +48,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
        int i = 0;
        while (itr.hasNext()) {
            Object obj = itr.next();
-           if(((String)obj).equals("")) continue;
+           if (((String)obj).equals("")) continue;
            cmbCode.insertItemAt(obj, i);
            i++;
        }
@@ -83,21 +83,21 @@ public class EditorDesignationType extends javax.swing.JFrame {
       * @param desigCode
       * @return
       */
-     private String getDesigNationName(String desigCode){
-         EditorDesignationType.log.info("Get the name of the designation type for the code :::"+desigCode);
+     private String getDesigNationName(String desigCode) {
+         EditorDesignationType.log.info("Get the name of the designation type for the code :::" + desigCode);
          String desigName ="";
          try{
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
-            if(q.uniqueResult() != null){
+            if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
             }
 
-         }catch(Exception e){
+         } catch (Exception e) {
              //e.printStackTrace();
-             EditorDesignationType.log.error("An Error has occurred . Error ::"+e.getMessage());
+             EditorDesignationType.log.error("An Error has occurred . Error ::" + e.getMessage());
          }
          EditorDesignationType.log.info("Finish getDesigNationName()");
          return desigName;
@@ -122,12 +122,12 @@ public class EditorDesignationType extends javax.swing.JFrame {
             this.parent.saveDesignation(dtype,this.index );
             javax.swing.JOptionPane.showMessageDialog(this, "National designation type saved.");
             this.exit();
-         }else {
+         } else {
             if (this.parent.designationTypeExists((String)cmbCode.getSelectedItem())) {
                 EditorDesignationType.log.error("Designation type is already declared.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Designation type is already declared.");
                 this.setVisible(true);
-            }else{
+            } else {
                 EditorDesignationType.log.info("National designation type added.");
                 this.parent.addDesignation(dtype);
                 javax.swing.JOptionPane.showMessageDialog(this, "National designation type added.");
@@ -347,37 +347,37 @@ public class EditorDesignationType extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
     /**
      * Added the description of the designtation type
      * @param evt
      */
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
 
         if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
-            EditorDesignationType.log.info("Get the descrition of the designation type.Designation Code ::"+code);
+            EditorDesignationType.log.info("Get the descrition of the designation type.Designation Code ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String desigTypeName = (String) q.uniqueResult();
-            EditorDesignationType.log.info("The description of the designation type ::"+desigTypeName);
+            EditorDesignationType.log.info("The description of the designation type ::" + desigTypeName);
             this.txtName.setText(desigTypeName);
         }
-    }//GEN-LAST:event_cmbCodeItemStateChanged
+    } //GEN-LAST:event_cmbCodeItemStateChanged
     /**
      *
      * @param evt
      */
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         if (((String)cmbCode.getSelectedItem()).equals("")) {
             EditorDesignationType.log.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected.");
@@ -389,13 +389,13 @@ public class EditorDesignationType extends javax.swing.JFrame {
         else if (!ConversionTools.checkDouble(txtCover.getText())) {
             EditorDesignationType.log.error("Cover is not a valid number.");
            javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
-        }else if(!SDF_Util.validatePercent(txtCover.getText())){
+        } else if (!SDF_Util.validatePercent(txtCover.getText())) {
             EditorDesignationType.log.error("The percent of the cover is not a valid percent.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
-        }else {
+        } else {
             saveDesignation();
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

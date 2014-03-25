@@ -21,7 +21,7 @@ public interface Exporter {
     public boolean processDatabase(String filename);
 
     /**
-     * 
+     *
      * @param filename
      * @return
      */

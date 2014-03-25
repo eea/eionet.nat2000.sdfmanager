@@ -69,7 +69,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
      */
      public void loadConventions(SiteRelation h, int index) {
         this.index = index;
-        EditorInternationalRelation.log.info("Loading the data of the conventions to modifiy them.:::"+h.getSiteRelationConvention());
+        EditorInternationalRelation.log.info("Loading the data of the conventions to modifiy them.:::" + h.getSiteRelationConvention());
         int selectedIndex = getSelectedindexbyCode(h.getSiteRelationConvention());
         this.cmbCode.setSelectedIndex(selectedIndex);
         this.txtName.setText(h.getSiteRelationSitename());
@@ -87,52 +87,52 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
       * @param desigCode
       * @return
       */
-     private String getRelationDescription(String desigCode){
+     private String getRelationDescription(String desigCode) {
          String desigName ="";
-         EditorInternationalRelation.log.info("Get the description of the relation.:::"+desigCode);
+         EditorInternationalRelation.log.info("Get the description of the relation.:::" + desigCode);
          try{
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsCode from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
-            if(q.uniqueResult() != null){
+            if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
             }
 
-         }catch(Exception e){
+         } catch (Exception e) {
              //e.printStackTrace();
-             EditorInternationalRelation.log.error("An error has occurred in search of the description. Error Message:::"+e.getMessage());
+             EditorInternationalRelation.log.error("An error has occurred in search of the description. Error Message:::" + e.getMessage());
          }
-         EditorInternationalRelation.log.info("The description of the relation.:::"+desigName);
+         EditorInternationalRelation.log.info("The description of the relation.:::" + desigName);
          return desigName;
 
      }
 
-     private int getSelectedindexbyCode(String conventionCode){
+     private int getSelectedindexbyCode(String conventionCode) {
          int code=0;
-         if(("ramsar").equals(conventionCode)){
+         if (("ramsar").equals(conventionCode)) {
             code = 0;
-        }else if(("biogenetic").equals(conventionCode)){
+        } else if (("biogenetic").equals(conventionCode)) {
             code = 1;
-        }else if(("eurodiploma").equals(conventionCode)){
+        } else if (("eurodiploma").equals(conventionCode)) {
             code = 2;
-        }else if(("biosphere").equals(conventionCode)){
+        } else if (("biosphere").equals(conventionCode)) {
             code = 3;
-        }else if(("barcelona").equals(conventionCode)){
+        } else if (("barcelona").equals(conventionCode)) {
             code = 4;
-        }else if(("bucharest").equals(conventionCode)){
+        } else if (("bucharest").equals(conventionCode)) {
              code=5;
-        }else if(("worldHeritage").equals(conventionCode)){
+        } else if (("worldHeritage").equals(conventionCode)) {
             code=6;
-        }else if(("helcom").equals(conventionCode)){
+        } else if (("helcom").equals(conventionCode)) {
             code=7;
-        }else if(("ospar").equals(conventionCode)){
+        } else if (("ospar").equals(conventionCode)) {
             code=8;
-        }else if(("protectedMarine").equals(conventionCode)){
+        } else if (("protectedMarine").equals(conventionCode)) {
              code=9;
-        }else if(("other").equals(conventionCode)){
+        } else if (("other").equals(conventionCode)) {
             code=10;
-        }else{
+        } else {
              code=0;
         }
          return code;
@@ -148,30 +148,30 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         Character type = ((String)cmbType.getSelectedItem()).charAt(0);
         Character scope = 'I';
         SiteRelation sr = new SiteRelation();
-        if(this.cmbCode.getSelectedIndex() == 0){
+        if (this.cmbCode.getSelectedIndex() == 0) {
             code = "ramsar";
-        }else if(this.cmbCode.getSelectedIndex() == 1){
+        } else if (this.cmbCode.getSelectedIndex() == 1) {
             code = "biogenetic";
-        }else if(this.cmbCode.getSelectedIndex() == 2){
+        } else if (this.cmbCode.getSelectedIndex() == 2) {
             code = "eurodiploma";
-        }else if(this.cmbCode.getSelectedIndex() == 3){
+        } else if (this.cmbCode.getSelectedIndex() == 3) {
             code = "biosphere";
-        }else if(this.cmbCode.getSelectedIndex() == 4){
+        } else if (this.cmbCode.getSelectedIndex() == 4) {
             code = "barcelona";
-        }else if(this.cmbCode.getSelectedIndex() == 5){
+        } else if (this.cmbCode.getSelectedIndex() == 5) {
             code = "bucharest";
-        }else if(this.cmbCode.getSelectedIndex() == 6){
+        } else if (this.cmbCode.getSelectedIndex() == 6) {
             code = "worldHeritage";
-        }else if(this.cmbCode.getSelectedIndex() == 7){
+        } else if (this.cmbCode.getSelectedIndex() == 7) {
             code = "helcom";
-        }else if(this.cmbCode.getSelectedIndex() == 8){
+        } else if (this.cmbCode.getSelectedIndex() == 8) {
             code = "ospar";
-        }else if(this.cmbCode.getSelectedIndex() == 9){
+        } else if (this.cmbCode.getSelectedIndex() == 9) {
             code = "protectedMarine";
-        }else if(this.cmbCode.getSelectedIndex() == 10){
+        } else if (this.cmbCode.getSelectedIndex() == 10) {
             code = "other";
         }
-        EditorInternationalRelation.log.info("The code of the relation.:::"+code);
+        EditorInternationalRelation.log.info("The code of the relation.:::" + code);
         sr.setSiteRelationConvention(code);
         sr.setSiteRelationSitename(name);
         sr.setSiteRelationCover(cover);
@@ -184,7 +184,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
             EditorInternationalRelation.log.info("Relation  saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "Relation  saved.");
 
-         }else {
+         } else {
             this.parent.addRelation(sr);
             EditorInternationalRelation.log.info("Relation  added.");
             javax.swing.JOptionPane.showMessageDialog(this, "Relation added.");
@@ -269,7 +269,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane2.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "+", "-", "*", "/" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", " + ", "-", "*", "/" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
@@ -409,20 +409,20 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
-}//GEN-LAST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
+} //GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         if (((String) cmbCode.getSelectedItem()).equals("")) {
             EditorInternationalRelation.log.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected.");
         } else if (txtName.getText().equals("")) {
             EditorInternationalRelation.log.error("No name for the relation is provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a name for the site.");
-        }else if(txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256){
-            EditorInternationalRelation.log.error("The site Name is too long, more than 256 characters.:::"+txtName.getText() );
+        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256) {
+            EditorInternationalRelation.log.error("The site Name is too long, more than 256 characters.:::" + txtName.getText() );
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid site name (256 characters).");
         } else if (txtCover.getText().equals("")) {
             EditorInternationalRelation.log.error("No cover for the relation is provided.");
@@ -430,7 +430,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         } else if (!ConversionTools.checkDouble(txtCover.getText())) {
             EditorInternationalRelation.log.error("The cover is not a valid number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
-        } else if(!SDF_Util.validatePercent(txtCover.getText())){
+        } else if (!SDF_Util.validatePercent(txtCover.getText())) {
             EditorInternationalRelation.log.error("The percent of the cover is not a valid.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
         }
@@ -438,11 +438,11 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
             saveRelation();
 
         }
-}//GEN-LAST:event_btnSaveActionPerformed
+} //GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-}//GEN-LAST:event_btnCancelActionPerformed
+} //GEN-LAST:event_btnCancelActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;

@@ -37,7 +37,7 @@ public class SDF_Util {
      * @param date
      * @return
      */
-    public static String getFormatDateToXML(Date date){
+    public static String getFormatDateToXML(Date date) {
         SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM");
         return formateador.format(date);
 
@@ -46,7 +46,7 @@ public class SDF_Util {
     /**
      *
      */
-    public static void getProperties(){
+    public static void getProperties() {
         Properties props = System.getProperties();
        PropertyConfigurator.configure("log4j.properties");
     }
@@ -55,21 +55,21 @@ public class SDF_Util {
       *
       * @return
       */
-    public static Properties getSDFProperties(){
+    public static Properties getSDFProperties() {
 
         Properties properties = null;
-        try{
+        try {
            properties = new Properties();
-           properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+"\\database\\sdf.properties"));
+           properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf.properties"));
 
 
-        }catch(FileNotFoundException e){
-            SDF_Util.log.error("sdf.properties file is missing. Error message:::"+e.getMessage());
-        }catch(IOException e){
-            SDF_Util.log.error("An error has occurred. Error message:::"+e.getMessage());
-        }catch(Exception e){
-            SDF_Util.log.error("Ageneral exception has occurred. Error message:::"+e.getMessage());
-        }finally{
+        } catch (FileNotFoundException e) {
+            SDF_Util.log.error("sdf.properties file is missing. Error message:::" + e.getMessage());
+        } catch (IOException e) {
+            SDF_Util.log.error("An error has occurred. Error message:::" + e.getMessage());
+        } catch (Exception e) {
+            SDF_Util.log.error("Ageneral exception has occurred. Error message:::" + e.getMessage());
+        } finally {
 
             return properties;
         }
@@ -80,17 +80,17 @@ public class SDF_Util {
      * @param strPercent
      * @return
      */
-    public static boolean validatePercent(String strPercent){
+    public static boolean validatePercent(String strPercent) {
         boolean percentOK = true;
-        try{
+        try {
             double percent = (new Double(strPercent)).doubleValue();
-            if(percent >100){
+            if (percent >100) {
                 percentOK = false;
             }
-            if (percent < 0){
+            if (percent < 0) {
                 percentOK = false;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             SDF_Util.log.error("Percent not valid");
             percentOK = false;
@@ -105,19 +105,19 @@ public class SDF_Util {
      * @return
      */
      public static boolean validateSite (Session session, String sitecode) {
-        String hql = " from Site where siteCode='"+sitecode+"'";
+        String hql = " from Site where siteCode='" + sitecode + "'";
         try {
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
-            if(itr.hasNext()){
+            if (itr.hasNext()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
 
         } catch (Exception e) {
             //e.printStackTrace();
-            SDF_Util.log.error("An error has occurred validating site. Error Message==>"+e.getMessage());
+            SDF_Util.log.error("An error has occurred validating site. Error Message==>" + e.getMessage());
             return false;
         }
 
@@ -129,7 +129,7 @@ public class SDF_Util {
       * @param importType
       * @return
       */
-     public static File copyToLogImportFile(HashMap sitesDB,String importType){
+     public static File copyToLogImportFile(HashMap sitesDB,String importType) {
         File fileLog = null;
         try {
           Calendar cal = Calendar.getInstance();
@@ -138,23 +138,23 @@ public class SDF_Util {
           String dateLine = sdf.format(cal.getTime());
           String dateName = sdfName.format(cal.getTime());
           String filePath = (new File("")).getAbsolutePath();
-          fileLog = new File(filePath+"//logs//logErrorImport_"+importType+"_"+dateName+".log");
+          fileLog = new File(filePath + "//logs//logErrorImport_" + importType + "_" + dateName + ".log");
           FileWriter logErrorFile = new FileWriter(fileLog);
 
           Set sitesSet = sitesDB.keySet();
 
           Iterator it=sitesSet.iterator();
-          //logErrorFile.write(dateLine + ":  following sites are already stored in Data Base: "+System.getProperty("line.separator") );
-          while(it.hasNext()){
+          //logErrorFile.write(dateLine + ":  following sites are already stored in Data Base: " + System.getProperty("line.separator") );
+          while(it.hasNext()) {
               String siteCode = (String) it.next();
-              logErrorFile.write(dateLine + "The following nuts of the site ::" + siteCode+ " don't belong to level 2."+System.getProperty("line.separator"));
+              logErrorFile.write(dateLine + "The following nuts of the site ::" + siteCode + " don't belong to level 2." + System.getProperty("line.separator"));
 
               ArrayList nutsList = (ArrayList)sitesDB.get(siteCode);
-              if(nutsList != null && !(nutsList.isEmpty())){
+              if (nutsList != null && !(nutsList.isEmpty())) {
 
-                for(int i=0;i<nutsList.size();i++){
+                for(int i = 0;i < nutsList.size();i++ ) {
                     String nutCode = (String)nutsList.get(i);
-                    logErrorFile.write("           "+nutCode+ System.getProperty("line.separator"));
+                    logErrorFile.write("           " + nutCode + System.getProperty("line.separator"));
                 }
 
               }
@@ -163,10 +163,10 @@ public class SDF_Util {
           }
           logErrorFile.flush();
           logErrorFile.close();
-         // write("LOG file : exportLog"+formatDate+".log");
-       }catch (Exception e) {
+         // write("LOG file : exportLog" + formatDate + ".log");
+       } catch (Exception e) {
           e.printStackTrace();
-           SDF_Util.log.error("An error has occurred writting log file for import process. Error Message==>"+e.getMessage());
+           SDF_Util.log.error("An error has occurred writting log file for import process. Error Message==>" + e.getMessage());
        }
        return fileLog;
     }
@@ -178,7 +178,7 @@ public class SDF_Util {
       * @param importType
       * @return
       */
-     public static File copyToLogImportFileList(ArrayList sitesDB,String importType){
+     public static File copyToLogImportFileList(ArrayList sitesDB,String importType) {
         File fileLog = null;
         try {
           Calendar cal = Calendar.getInstance();
@@ -187,25 +187,25 @@ public class SDF_Util {
           String dateLine = sdf.format(cal.getTime());
           String dateName = sdfName.format(cal.getTime());
           String filePath = (new File("")).getAbsolutePath();
-          fileLog = new File(filePath+"//logs//logErrorImport_"+importType+"_"+dateName+".log");
+          fileLog = new File(filePath + "//logs//logErrorImport_" + importType + "_" + dateName + ".log");
           FileWriter logErrorFile = new FileWriter(fileLog);
 
           //Set sitesSet = sitesDB.entrySet();
 
           Iterator it=sitesDB.iterator();
-          logErrorFile.write(dateLine + ": The following sites are already stored in Data Base: "+System.getProperty("line.separator") );
-          while(it.hasNext()){
+          logErrorFile.write(dateLine + ": The following sites are already stored in Data Base: " + System.getProperty("line.separator") );
+          while(it.hasNext()) {
               String siteCode = (String) it.next();
-              logErrorFile.write("     " + siteCode+ System.getProperty("line.separator"));
+              logErrorFile.write("     " + siteCode + System.getProperty("line.separator"));
 
               logErrorFile.flush();
           }
           logErrorFile.flush();
           logErrorFile.close();
-         // write("LOG file : exportLog"+formatDate+".log");
-       }catch (Exception e) {
+         // write("LOG file : exportLog" + formatDate + ".log");
+       } catch (Exception e) {
           //e.printStackTrace();
-           SDF_Util.log.error("An error has occurred writting log file for import process. Error Message==>"+e.getMessage());
+           SDF_Util.log.error("An error has occurred writting log file for import process. Error Message==>" + e.getMessage());
        }
        return fileLog;
     }
@@ -221,26 +221,26 @@ public class SDF_Util {
         File fileLog = null;
         try {
 
-          // String logFileName =  dirPath+ System.getProperty("file.separator")+"exportSiteLog"+formatDate+".log";
+          // String logFileName =  dirPath + System.getProperty("file.separator") + "exportSiteLog" + formatDate + ".log";
            fileLog = new File(logFileName);
            FileWriter logErrorFile = new FileWriter(fileLog);
-           if(!exportErrorList.isEmpty()){
+           if (!exportErrorList.isEmpty()) {
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat sdfFormat = new SimpleDateFormat("dd-MM-yyy hh:mm:ss");
             String dateLine = sdfFormat.format(calendar.getTime());
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
-            while(itSite.hasNext()){
+            while(itSite.hasNext()) {
                 String lineExport = (String)itSite.next();
-                logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }
           }
           logErrorFile.flush();
           logErrorFile.close();
-       }catch (Exception e) {
+       } catch (Exception e) {
           //e.printStackTrace();
-           SDF_Util.log.error("An error has occurred writting log file. Error Message==>"+e.getMessage());
+           SDF_Util.log.error("An error has occurred writting log file. Error Message==>" + e.getMessage());
        }
        return fileLog;
     }

@@ -84,14 +84,14 @@ public class EditorRegion extends javax.swing.JFrame {
     * @param codeNut
     * @return
     */
-   private boolean isNutExisting(String codeNut){
-        EditorRegion.log.info("Checking if the region::"+codeNut+" exists for this site::"+this.siteCode);
+   private boolean isNutExisting(String codeNut) {
+        EditorRegion.log.info("Checking if the region::" + codeNut+" exists for this site::" + this.siteCode);
         boolean nutExist = false;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '"+this.siteCode+"'";
+        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode+"'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
-        if(itr.hasNext()){
+        if (itr.hasNext()) {
             nutExist = true;
         }
         return nutExist;
@@ -243,56 +243,56 @@ public class EditorRegion extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1 && this.editing == false) {
             this.editing = true;
             int i = cmbCode.getSelectedIndex();
             cmbName.setSelectedIndex(i);
             this.editing = false;
         }
-    }//GEN-LAST:event_cmbCodeItemStateChanged
+    } //GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbNameItemStateChanged
+    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbNameItemStateChanged
         if (this.editing == false) {
             int i = cmbName.getSelectedIndex();
             cmbCode.setSelectedIndex(i);
         }
-    }//GEN-LAST:event_cmbNameItemStateChanged
+    } //GEN-LAST:event_cmbNameItemStateChanged
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         String code = (String) cmbCode.getSelectedItem();
         String name;
-        
+
         /*we're working with a valid NUTS code */
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "select refN.refNutsDescription from RefNuts refN where refN.refNutsCode like '" + code + "'";
         Query q = session.createQuery(hql);
         name = (String) q.uniqueResult();
-        
+
         if (code.equals("")) {
             EditorRegion.log.error("No code found for NUTS region.");
             javax.swing.JOptionPane.showMessageDialog(this, "No code found for NUTS region.");
-        }else if(!("").equals(code) && code.length() >4){
+        } else if (!("").equals(code) && code.length() >4) {
             EditorRegion.log.error("Code is too long.(Maximum 4 characters).");
             javax.swing.JOptionPane.showMessageDialog(this, "Code is too long. Please, insert a valid code (4 characters).");
         }
         else if (name.equals("")) {
             EditorRegion.log.error("No description found for NUTS region");
             javax.swing.JOptionPane.showMessageDialog(this, "No description found for NUTS region.");
-        }else if(!("").equals(name) && name.length() >128){
+        } else if (!("").equals(name) && name.length() >128) {
             EditorRegion.log.error("Name is too long (Maximum 128 characters).");
             javax.swing.JOptionPane.showMessageDialog(this, "Name is too long. Please, insert a valid name (128 characters).");
-        }else if(isNutExisting(code)){
+        } else if (isNutExisting(code)) {
             EditorRegion.log.error("The region is already exist for thi site");
             javax.swing.JOptionPane.showMessageDialog(this, "The region is already exist for thi site");
         }
-        else {            
+        else {
             Region r = new Region();
             r.setRegionCode(code);
             r.setRegionName(name);
@@ -300,7 +300,7 @@ public class EditorRegion extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Region Saved");
             this.exit();
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

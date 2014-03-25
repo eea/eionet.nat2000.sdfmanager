@@ -58,8 +58,8 @@ class ExporterWorkerSitePDF extends SwingWorker<Boolean, Void> {
         this.fileName = fileName;
     }
 
-    
-    
+
+
     @Override
     public void done() {
         dlg.setVisible(false);
@@ -115,10 +115,10 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
       */
     private String getFileName() {
         String name;
-        name = "Site_"+this.siteCode+".pdf";
+        name = "Site_" + this.siteCode+".pdf";
         return name;
     }
-     
+
     @Action
     public void exportDatabase() {
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
@@ -147,27 +147,27 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
         String formatDate = sdf.format(cal.getTime());
         String logFile;
-        if (dbFile.getParent().equals("")){
-           logFile = "generatePDFSiteLog_"+formatDate+".log";
+        if (dbFile.getParent().equals("")) {
+           logFile = "generatePDFSiteLog_" + formatDate+".log";
         }
         else{
-           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_"+formatDate+".log";
+           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
         }
        Exporter exporter = null;
        exporter = new GenerateSitePDF(this,encoding,siteCode,this.dirPath);
        boolean isOK = exporter.processDatabase(this.dirPath+ System.getProperty("file.separator") + dbFile.getName());
-       
-       if(isOK){
+
+       if (isOK) {
           SDFExporterPDF.log.info("PDF file has been saved properly.");
-          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly","PDF",JOptionPane.INFORMATION_MESSAGE); 
-          this.exit();
-          return; 
-       }else{
-          JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "PDF",JOptionPane.ERROR_MESSAGE); 
+          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly","PDF",JOptionPane.INFORMATION_MESSAGE);
           this.exit();
           return;
-       }      
-                   
+       } else {
+          JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "PDF",JOptionPane.ERROR_MESSAGE);
+          this.exit();
+          return;
+       }
+
     }
 
 
@@ -193,16 +193,16 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         File fileLog = null;
         SDFExporterPDF.log.info("Creating specific log file for the export process");
         try {
-           
+
            fileLog = new File(logFileName);
            FileWriter logErrorFile = new FileWriter(fileLog);
-           if(!exportErrorList.isEmpty()){
+           if (!exportErrorList.isEmpty()) {
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat sdfFormat = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
             String dateLine = sdfFormat.format(calendar.getTime());
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
-            while(itSite.hasNext()){
+            while (itSite.hasNext()) {
                 String lineExport = (String)itSite.next();
                 logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
                 logErrorFile.flush();
@@ -210,14 +210,14 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
           }
           logErrorFile.flush();
           logErrorFile.close();
-       }catch (Exception e) {
-           SDFExporterPDF.log.error("An error has ocurred copying the errors in log file. Error Message :::"+e.getMessage());
+       } catch (Exception e) {
+           SDFExporterPDF.log.error("An error has ocurred copying the errors in log file. Error Message :::" + e.getMessage());
        }
        return fileLog;
     }
 
     /**
-     * 
+     *
      */
     public void centerParent () {
           int x;
@@ -229,14 +229,14 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
 
           Dimension mySize = getSize();
 
-          if (parentSize.width > mySize.width){
+          if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
           }
           else{
             x = topLeft.x;
           }
 
-          if (parentSize.height > mySize.height){
+          if (parentSize.height > mySize.height) {
             y = ((parentSize.height - mySize.height)/2) + topLeft.y;
           } else{
             y = topLeft.y;
@@ -400,11 +400,11 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnSavePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSavePDFActionPerformed
+    private void btnSavePDFActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSavePDFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSavePDFActionPerformed
+    } //GEN-LAST:event_btnSavePDFActionPerformed
 
 
     @Action
@@ -424,6 +424,6 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
     javax.swing.JTextArea txtLogger;
     javax.swing.JTextField txtPath;
     // End of variables declaration//GEN-END:variables
- 
+
 
 }

@@ -10,12 +10,12 @@ public class RefCategory {
     private String refCategoryName;
     private String refCategoryCode;
     private String refCategorySpecies;
-    
+
     /**
-     * 
+     *
      */
     public RefCategory(){
-        
+
     }
 
     /**

@@ -14,15 +14,15 @@ public class SDF_KeyValue {
 		this.value = value;
 	}
 
-	public String getValue() { 
+	public String getValue() {
             return value;
         }
-	public String getKey() { 
+	public String getKey() {
             return key.toString();
         }
 
 	@Override
-	public String toString() { 
+	public String toString() {
             return key.toString();
         }
 
@@ -43,7 +43,7 @@ public class SDF_KeyValue {
         }
 
 
-   
+
 
 	@Override
 	public int hashCode() {

@@ -50,7 +50,7 @@ public class EditorImpact extends javax.swing.JFrame {
        int i = 0;
        while (itr.hasNext()) {
            Object obj = itr.next();
-           if(("").equals((String)obj)){
+           if (("").equals((String)obj)) {
                continue;
            }
            cmbCode.insertItemAt(obj, i);
@@ -67,45 +67,45 @@ public class EditorImpact extends javax.swing.JFrame {
      * @param impact
      * @param index
      */
-    public void loadImpact(Impact impact,int index){
-        EditorImpact.log.info("Loading the data of the impact to modify them ::::"+impact.getImpactCode());
+    public void loadImpact(Impact impact,int index) {
+        EditorImpact.log.info("Loading the data of the impact to modify them ::::" + impact.getImpactCode());
         this.impactId = impact.getImpactId();
 
         this.index = index;
 
-        if(impact.getImpactCode() != null && !(("").equals(impact.getImpactCode()))){
+        if (impact.getImpactCode() != null && !(("").equals(impact.getImpactCode()))) {
             this.cmbCode.setSelectedItem(impact.getImpactCode());
         }
 
-        EditorImpact.log.info("impact.getImpactRank() ::::"+impact.getImpactRank());
-        if(impact.getImpactRank() != null && !(("").equals(impact.getImpactRank().toString()))){
+        EditorImpact.log.info("impact.getImpactRank() ::::" + impact.getImpactRank());
+        if (impact.getImpactRank() != null && !(("").equals(impact.getImpactRank().toString()))) {
             String impactRankCode  = impact.getImpactRank().toString();
             String impactRankName = getRankNameByCode(impactRankCode);
             this.cmbRank.setSelectedItem(impactRankName);
-        }else{
+        } else {
             this.cmbRank.setSelectedIndex(0);
         }
 
 
-       EditorImpact.log.info("impact.getImpactOccurrence() ::::"+impact.getImpactOccurrence());
-        if(impact.getImpactOccurrence() != null && !(("").equals(impact.getImpactOccurrence().toString()))){
-            if(("i").equals(impact.getImpactOccurrence().toString())){
+       EditorImpact.log.info("impact.getImpactOccurrence() ::::" + impact.getImpactOccurrence());
+        if (impact.getImpactOccurrence() != null && !(("").equals(impact.getImpactOccurrence().toString()))) {
+            if (("i").equals(impact.getImpactOccurrence().toString())) {
                 this.cmbType.setSelectedIndex(1);
-            }else if(("o").equals(impact.getImpactOccurrence().toString())){
+            } else if (("o").equals(impact.getImpactOccurrence().toString())) {
                 this.cmbType.setSelectedIndex(2);
-            }else if(("b").equals(impact.getImpactOccurrence().toString())){
+            } else if (("b").equals(impact.getImpactOccurrence().toString())) {
                 this.cmbType.setSelectedIndex(3);
-            }else{
+            } else {
                 this.cmbType.setSelectedIndex(0);
             }
 
         }
-       EditorImpact.log.info("impact.getImpactPollutionCode() ::::"+impact.getImpactPollutionCode());
-       if(impact.getImpactPollutionCode() != null && !(("").equals(impact.getImpactPollutionCode().toString()))){
+       EditorImpact.log.info("impact.getImpactPollutionCode() ::::" + impact.getImpactPollutionCode());
+       if (impact.getImpactPollutionCode() != null && !(("").equals(impact.getImpactPollutionCode().toString()))) {
             String impactPollutionCode  = impact.getImpactPollutionCode().toString();
             String impactPollutionName = getPollutionNameByCode(impactPollutionCode);
             this.cmbPollution.setSelectedItem(impactPollutionName);
-        }else{
+        } else {
             this.cmbPollution.setSelectedIndex(0);
         }
 
@@ -117,7 +117,7 @@ public class EditorImpact extends javax.swing.JFrame {
      * @param type
      */
    private void setType(String type) {
-       EditorImpact.log.info("The type Of the impact ::::"+type);
+       EditorImpact.log.info("The type Of the impact ::::" + type);
        /**
         * P = Positive
         * N = Negative
@@ -147,21 +147,21 @@ public class EditorImpact extends javax.swing.JFrame {
     * @param scope
     */
    private boolean saveImpact(Character type, String code, Character rank, Character pollution, Character scope) {
-        EditorImpact.log.info("Saving the impact ::::"+code);
+        EditorImpact.log.info("Saving the impact ::::" + code);
         Impact impact = new Impact();
         impact.setImpactType(type);
         boolean saveOK = false;
-        if (!(("-").equals(code))){
+        if (!(("-").equals(code))) {
             impact.setImpactCode(code);
         }
-        if (!(("-").equals(rank.toString()))){
+        if (!(("-").equals(rank.toString()))) {
             impact.setImpactRank(rank);
         }
-        if (!(("-").equals(pollution.toString()))){
+        if (!(("-").equals(pollution.toString()))) {
 
             impact.setImpactPollutionCode(pollution);
         }
-        if (!(("-").equals(scope))){
+        if (!(("-").equals(scope))) {
             impact.setImpactOccurrence(scope);
         }
         printImpact(impact);
@@ -169,14 +169,14 @@ public class EditorImpact extends javax.swing.JFrame {
         if (this.editing && this.index > -1) {
            /*we're editing an existing impact*/
             impact.setImpactId(this.impactId);
-            if(this.parent.saveImpact(impact,this.index)){
+            if (this.parent.saveImpact(impact,this.index)) {
                EditorImpact.log.info("Impact has been updated.");
                javax.swing.JOptionPane.showMessageDialog(this, "Impact has been updated.");
                saveOK = true;
             }
 
-        }else {
-            if(this.parent.addImpact(impact)){
+        } else {
+            if (this.parent.addImpact(impact)) {
                EditorImpact.log.info("Impact has been added.");
                javax.swing.JOptionPane.showMessageDialog(this, "Impact has been added.");
                saveOK = true;
@@ -251,10 +251,10 @@ public class EditorImpact extends javax.swing.JFrame {
     * @param selectedItem
     * @return
     */
-   private String getRankNameByCode(String rankCode){
+   private String getRankNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the rank name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankName from RefImpactRank where refRankCode='"+rankCode+"'";
+       String hql = "select distinct refRankName from RefImpactRank where refRankCode='" + rankCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -267,10 +267,10 @@ public class EditorImpact extends javax.swing.JFrame {
     * @param selectedItem
     * @return
     */
-   private String getRankCodeByName(String rankName){
+   private String getRankCodeByName(String rankName) {
        EditorImpact.log.info("Getting the rank code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankCode from RefImpactRank where refRankName='"+rankName+"'";
+       String hql = "select distinct refRankCode from RefImpactRank where refRankName='" + rankName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -282,10 +282,10 @@ public class EditorImpact extends javax.swing.JFrame {
     * @param selectedItem
     * @return
     */
-   private String getPollutionNameByCode(String rankCode){
+   private String getPollutionNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the Polution name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='"+rankCode+"'";
+       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='" + rankCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -298,10 +298,10 @@ public class EditorImpact extends javax.swing.JFrame {
     * @param selectedItem
     * @return
     */
-   private String getPollutionCodeByName(String rankName){
+   private String getPollutionCodeByName(String rankName) {
        EditorImpact.log.info("Getting the Polution code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='"+rankName+"'";
+       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='" + rankName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -530,48 +530,48 @@ public class EditorImpact extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
          if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
-            EditorImpact.log.info("Get the description of the impact.:::"+code);
+            EditorImpact.log.info("Get the description of the impact.:::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct impact.refImpactsDescr from RefImpacts impact where impact.refImpactsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String impactDesc = (String) q.uniqueResult();
-            EditorImpact.log.info("The description of the impact.:::"+impactDesc);
+            EditorImpact.log.info("The description of the impact.:::" + impactDesc);
             this.txtName.setText(impactDesc);
         }
-    }//GEN-LAST:event_cmbCodeItemStateChanged
+    } //GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         String code = (String) this.cmbCode.getSelectedItem();
         String rank = (String) this.cmbRank.getSelectedItem();
         String rankCode = "-";
-        if(!rank.equals("-")){
+        if (!rank.equals("-")) {
            rankCode = getRankCodeByName(rank);
         }
 
         String pollutionName = (String) this.cmbPollution.getSelectedItem();
         String pollution = "-";
-        if(!pollutionName.equals("-")){
+        if (!pollutionName.equals("-")) {
            pollution = getPollutionCodeByName(pollutionName);
         }
 
         String scope = (String) this.cmbType.getSelectedItem();
-        if(this.saveImpact(type.charAt(0), code, rankCode.charAt(0), pollution.charAt(0), scope.charAt(0))){
+        if (this.saveImpact(type.charAt(0), code, rankCode.charAt(0), pollution.charAt(0), scope.charAt(0))) {
             this.exit();
-        }else{
+        } else {
             this.setVisible(true);
         }
 
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

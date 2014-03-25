@@ -35,6 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.6</jdk.version>
+        <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
     </properties>
 
     <!-- The build configuration. -->
@@ -45,55 +46,55 @@
 
             <!--  Maven compiler plugin. -->
 
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-compiler-plugin</artifactId>
-	            <version>2.3.2</version>
-	            <configuration>
-	                <source>${jdk.version}</source>
-	                <target>${jdk.version}</target>
-	            </configuration>
-	        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
 
-	        <!-- Maven JAR plugin. -->
+            <!-- Maven JAR plugin. -->
 
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-jar-plugin</artifactId>
-	            <version>2.4</version>
-	            <configuration>
-	                <archive>
-	                    <manifest>
-	                        <addClasspath>true</addClasspath>
-	                        <mainClass>sdf_manager.SDF_ManagerApp</mainClass>
-	                        <classpathPrefix>lib/</classpathPrefix>
-	                    </manifest>
-	                </archive>
-	                <outputDirectory>${project.basedir}</outputDirectory>
-	            </configuration>
-	        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>sdf_manager.SDF_ManagerApp</mainClass>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
+            </plugin>
 
-	        <!-- Maven dependency plugin. -->
+            <!-- Maven dependency plugin. -->
 
-	        <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-dependency-plugin</artifactId>
-		        <version>2.5.1</version>
-		        <executions>
-		            <execution>
-			            <id>copy-dependencies</id>
-			            <phase>package</phase>
-			            <goals>
-			                <goal>copy-dependencies</goal>
-			            </goals>
-			            <configuration>
-			                <outputDirectory>${project.basedir}/lib/</outputDirectory>
-			            </configuration>
-		            </execution>
-		        </executions>
-	        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/lib/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-	        <!--  Maven assembly plugin. -->
+            <!--  Maven assembly plugin. -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -140,208 +141,237 @@
 
     <dependencies>
 
-		<dependency>
-		   <groupId>org.hibernate</groupId>
-		   <artifactId>hibernate-core</artifactId>
-		   <version>4.2.7.Final</version>
-		</dependency>
+        <dependency>
+           <groupId>org.hibernate</groupId>
+           <artifactId>hibernate-core</artifactId>
+           <version>4.2.7.Final</version>
+        </dependency>
 
-	    <dependency>
-	    	<groupId>log4j</groupId>
-	    	<artifactId>log4j</artifactId>
-	    	<version>1.2.17</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>com.healthmarketscience.jackcess</groupId>
-	    	<artifactId>jackcess</artifactId>
-	    	<version>1.2.6</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>xalan</groupId>
-	    	<artifactId>xalan</artifactId>
-	    	<version>2.7.1</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>xerces</groupId>
-	    	<artifactId>xercesImpl</artifactId>
-	    	<version>2.9.1</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>xml-apis</groupId>
-	    	<artifactId>xml-apis</artifactId>
-	    	<version>1.3.04</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>org.apache.xmlbeans</groupId>
-	    	<artifactId>xmlbeans</artifactId>
-	    	<version>2.3.0</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>xom</groupId>
-	    	<artifactId>xom</artifactId>
-	    	<version>1.2.5</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>xalan</groupId>
-	    	<artifactId>serializer</artifactId>
-	    	<version>2.7.1</version>
-	    </dependency>
-	    <dependency>
-	    	<groupId>org.slf4j</groupId>
-	    	<artifactId>slf4j-api</artifactId>
-	    	<version>1.6.1</version>
-	    </dependency>
         <dependency>
-        	<groupId>org.jdesktop</groupId>
-        	<artifactId>swing-worker</artifactId>
-        	<version>1.1</version>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
         </dependency>
         <dependency>
-        	<groupId>commons-logging</groupId>
-        	<artifactId>commons-logging-api</artifactId>
-        	<version>1.1</version>
+            <groupId>com.healthmarketscience.jackcess</groupId>
+            <artifactId>jackcess</artifactId>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi</artifactId>
-        	<version>3.7</version>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi-examples</artifactId>
-        	<version>3.7</version>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi-ooxml</artifactId>
-        	<version>3.7</version>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.3.04</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi-ooxml-schemas</artifactId>
-        	<version>3.7</version>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>2.3.0</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi-scratchpad</artifactId>
-        	<version>3.7</version>
+            <groupId>xom</groupId>
+            <artifactId>xom</artifactId>
+            <version>1.2.5</version>
         </dependency>
         <dependency>
-        	<groupId>net.sf.saxon</groupId>
-        	<artifactId>saxon</artifactId>
-        	<version>8.7</version>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.7.1</version>
         </dependency>
         <dependency>
-        	<groupId>net.sf.saxon</groupId>
-        	<artifactId>Saxon-HE</artifactId>
-        	<version>9.4</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
-        	<groupId>org.hsqldb</groupId>
-        	<artifactId>hsqldb</artifactId>
-        	<version>2.0.0</version>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>swing-worker</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
-        	<groupId>com.lowagie</groupId>
-        	<artifactId>itext</artifactId>
-        	<version>2.0.8</version>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
-        	<groupId>javassist</groupId>
-        	<artifactId>javassist</artifactId>
-        	<version>3.4.GA</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.7</version>
         </dependency>
         <dependency>
-        	<groupId>javax.sql</groupId>
-        	<artifactId>jdbc-stdext</artifactId>
-        	<version>2.0</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-examples</artifactId>
+            <version>3.7</version>
         </dependency>
         <dependency>
-        	<groupId>javax.transaction</groupId>
-        	<artifactId>jta</artifactId>
-        	<version>1.1</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.7</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.lucene</groupId>
-        	<artifactId>lucene-core</artifactId>
-        	<version>2.0.0</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>3.7</version>
         </dependency>
         <dependency>
-        	<groupId>mysql</groupId>
-        	<artifactId>mysql-connector-java</artifactId>
-        	<version>5.1.18</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>3.7</version>
         </dependency>
         <dependency>
-        	<groupId>commons-lang</groupId>
-        	<artifactId>commons-lang</artifactId>
-        	<version>2.5</version>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>8.7</version>
         </dependency>
         <dependency>
-        	<groupId>org.xhtmlrenderer</groupId>
-        	<artifactId>core-renderer</artifactId>
-        	<version>R8</version>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.4</version>
         </dependency>
         <dependency>
-        	<groupId>dom4j</groupId>
-        	<artifactId>dom4j</artifactId>
-        	<version>1.6.1</version>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
-        	<groupId>net.sf.ehcache</groupId>
-        	<artifactId>ehcache</artifactId>
-        	<version>1.2.3</version>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.0.8</version>
         </dependency>
         <dependency>
-        	<groupId>org.hibernate</groupId>
-        	<artifactId>ejb3-persistence</artifactId>
-        	<version>1.0.2.GA</version>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.4.GA</version>
         </dependency>
         <dependency>
-        	<groupId>org.apache.geronimo.specs</groupId>
-        	<artifactId>geronimo-stax-api_1.0_spec</artifactId>
-        	<version>1.0.1</version>
+            <groupId>javax.sql</groupId>
+            <artifactId>jdbc-stdext</artifactId>
+            <version>2.0</version>
         </dependency>
         <dependency>
-        	<groupId>gnu.getopt</groupId>
-        	<artifactId>java-getopt</artifactId>
-        	<version>1.0.13</version>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
-        	<groupId>antlr</groupId>
-        	<artifactId>antlr</artifactId>
-        	<version>2.7.6</version>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
-        	<groupId>org.jdesktop</groupId>
-        	<artifactId>appframework</artifactId>
-        	<version>1.0.3</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.18</version>
         </dependency>
         <dependency>
-        	<groupId>asm</groupId>
-        	<artifactId>asm-attrs</artifactId>
-        	<version>1.5.3</version>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
         </dependency>
         <dependency>
-        	<groupId>asm</groupId>
-        	<artifactId>asm</artifactId>
-        	<version>1.5.3</version>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>core-renderer</artifactId>
+            <version>R8</version>
         </dependency>
         <dependency>
-        	<groupId>cglib</groupId>
-        	<artifactId>cglib</artifactId>
-        	<version>2.1_3</version>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
-        	<groupId>commons-collections</groupId>
-        	<artifactId>commons-collections</artifactId>
-        	<version>2.1.1</version>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
-        	<groupId>commons-io</groupId>
-        	<artifactId>commons-io</artifactId>
-        	<version>2.1</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>ejb3-persistence</artifactId>
+            <version>1.0.2.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>gnu.getopt</groupId>
+            <artifactId>java-getopt</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>2.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>appframework</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-attrs</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.1_3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.1</version>
         </dependency>
 
     </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <linkXref>false</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>300</minimumTokens>
+                    <targetJdk>${jdk.version}</targetJdk>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <configLocation>${checkstyle.config.location}</configLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

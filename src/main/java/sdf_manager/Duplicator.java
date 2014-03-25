@@ -35,7 +35,7 @@ import pojos.Species;
  * @author charbda
  */
 public class Duplicator {
-    
+
 
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Duplicator.class .getName());
@@ -43,17 +43,17 @@ public class Duplicator {
      *
      */
     public Duplicator() {
-        
+
     }
     /**
      * This method duplicates species
      * @param inSpecies
      * @return
      */
-    public Species duplicateSpeciesNoPopulation(Species inSpecies) {      
+    public Species duplicateSpeciesNoPopulation(Species inSpecies) {
         Species outSpecies = new Species();
         duplicateSpeciesNoPopulation(inSpecies, outSpecies);
-        return outSpecies;        
+        return outSpecies;
     }
 
     /**
@@ -64,9 +64,9 @@ public class Duplicator {
     public void duplicateSpeciesNoPopulation(Species inSpecies, Species outSpecies) {
         log.info("Duplicating species...");
         /* duplicate species without population data*/
-        outSpecies.setSite(inSpecies.getSite());        
+        outSpecies.setSite(inSpecies.getSite());
         outSpecies.setSpeciesCode(inSpecies.getSpeciesCode());
-        outSpecies.setSpeciesConservation(inSpecies.getSpeciesConservation());        
+        outSpecies.setSpeciesConservation(inSpecies.getSpeciesConservation());
         outSpecies.setSpeciesGlobal(inSpecies.getSpeciesGlobal());
         outSpecies.setSpeciesGroup(inSpecies.getSpeciesGroup());
         outSpecies.setSpeciesIsolation(inSpecies.getSpeciesIsolation());
@@ -79,7 +79,7 @@ public class Duplicator {
         outSpecies.setSpeciesSizeMax(inSpecies.getSpeciesSizeMax());
         outSpecies.setSpeciesSizeMin(inSpecies.getSpeciesSizeMin());
         outSpecies.setSpeciesType(inSpecies.getSpeciesType());
-        outSpecies.setSpeciesUnit(inSpecies.getSpeciesUnit());       
+        outSpecies.setSpeciesUnit(inSpecies.getSpeciesUnit());
     }
     /**
      *
@@ -105,7 +105,7 @@ public class Duplicator {
            nResp.setRespLocatorName(resp.getRespLocatorName());
            nResp.setRespPostCode(resp.getRespPostCode());
            nResp.setRespPostName(resp.getRespPostName());
-           nResp.setRespThoroughFare(resp.getRespThoroughFare());           
+           nResp.setRespThoroughFare(resp.getRespThoroughFare());
            nResp.getSites().add(outSite);
            this.saveAndReloadObj(nResp);
            outSite.setResp(nResp);
@@ -128,8 +128,8 @@ public class Duplicator {
             Region r = (Region) itr.next();
             Region nR = new Region();
             nR.setRegionCode(r.getRegionCode());
-            nR.setRegionName(r.getRegionName());            
-            nR.setSite(outSite);            
+            nR.setRegionName(r.getRegionName());
+            nR.setSite(outSite);
             outSite.getRegions().add(nR);
         }
         regions = inSite.getSiteBiogeos();
@@ -141,12 +141,12 @@ public class Duplicator {
             nSb.setBiogeoPercent(sb.getBiogeoPercent());
             nSb.setSite(outSite);
             SiteBiogeoId id= new SiteBiogeoId(outSite.getSiteCode(),nSb.getBiogeo().getBiogeoId());
-            nSb.setId(id);            
+            nSb.setId(id);
             outSite.getSiteBiogeos().add(nSb);
             //saveAndReloadObj(outSite);
         }
         Set habitats = inSite.getHabitats();
-        itr = habitats.iterator();        
+        itr = habitats.iterator();
         while (itr.hasNext()) {
             Habitat h = ((Habitat)itr.next());
             Habitat nH = new Habitat();
@@ -165,7 +165,7 @@ public class Duplicator {
         }
         Set species = inSite.getSpecieses();
         itr = species.iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             Species s = (Species) itr.next();
             Species nS = new Species();
             nS.setSite(outSite);
@@ -188,7 +188,7 @@ public class Duplicator {
         }
         species = inSite.getOtherSpecieses();
         itr = species.iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             OtherSpecies s = (OtherSpecies) itr.next();
             OtherSpecies nS = new OtherSpecies();
             nS.setSite(outSite);
@@ -206,7 +206,7 @@ public class Duplicator {
         }
         habitats = inSite.getHabitatClasses();
         itr = habitats.iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             HabitatClass h = (HabitatClass) itr.next();
             HabitatClass nH = new HabitatClass();
             nH.setHabitatClassCode(h.getHabitatClassCode());
@@ -215,7 +215,7 @@ public class Duplicator {
             nH.setSite(outSite);
             outSite.getHabitatClasses().add(nH);
         }
-        outSite.setSiteCharacteristics(inSite.getSiteCharacteristics());                
+        outSite.setSiteCharacteristics(inSite.getSiteCharacteristics());
         outSite.setSiteQuality(inSite.getSiteQuality());
         Set impacts = inSite.getImpacts();
         itr = impacts.iterator();
@@ -238,7 +238,7 @@ public class Duplicator {
             nO.setOwnership(o.getOwnership());
             nO.setOwnershipPercent(o.getOwnershipPercent());
             SiteOwnershipId id = new SiteOwnershipId(o.getOwnership().getOwnershipId(),outSite.getSiteCode());
-            nO.setId(id);   
+            nO.setId(id);
             outSite.getSiteOwnerships().add(nO);
             //saveAndReloadObj(outSite);
         }
@@ -248,7 +248,7 @@ public class Duplicator {
             nDoc.setDocDescription(doc.getDocDescription());
             nDoc.getSites().add(outSite);
             saveAndReloadObj(nDoc);
-            Iterator itr2 = doc.getDocLinks().iterator();            
+            Iterator itr2 = doc.getDocLinks().iterator();
             while (itr2.hasNext()) {
                 DocLink link = (DocLink) itr2.next();
                 DocLink nLink = new DocLink();
@@ -256,9 +256,9 @@ public class Duplicator {
                 nLink.setDocLinkUrl(link.getDocLinkUrl());
                 //saveAndReloadObj(nLink);
                 nDoc.getDocLinks().add(nLink);
-            }                        
+            }
             outSite.setDoc(nDoc);
-            //saveAndReloadObj(outSite);            
+            //saveAndReloadObj(outSite);
         }
         Set designations = inSite.getNationalDtypes();
         itr = designations.iterator();
@@ -326,8 +326,8 @@ public class Duplicator {
             Map nMap = new Map();
             nMap.setMapInspire(map.getMapInspire());
             nMap.setMapPdf(map.getMapPdf());
-            nMap.setMapReference(map.getMapReference());            
-            nMap.getSites().add(outSite);            
+            nMap.setMapReference(map.getMapReference());
+            nMap.getSites().add(outSite);
             this.saveAndReloadObj(nMap);
             outSite.setMap(nMap);
         }
@@ -335,7 +335,7 @@ public class Duplicator {
         return outSite;
     }
     /**
-     * 
+     *
      * @param o
      */
     private void saveAndReloadObj(Object o) {

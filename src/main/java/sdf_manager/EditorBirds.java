@@ -40,7 +40,7 @@ public class EditorBirds extends javax.swing.JFrame {
         populateUnit();
         populateCategory();
         populateQuality();
-        
+
     }
 
     /**
@@ -65,40 +65,40 @@ public class EditorBirds extends javax.swing.JFrame {
        cmbName.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
-       EditorBirds.log.info("Loading birds group: ");       
-       
+       EditorBirds.log.info("Loading birds group: ");
+
        hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds";
-       if(speciesCode == null){
+       if (speciesCode == null) {
                hql += " where refBirds.refCodeNew='0'";
        }
        hql += " order by refBirds.refBirdsName";
-       
-       
+
+
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
-       int i = 0;     
+       int i = 0;
        cmbCode.insertItemAt("", i);//initialize
        cmbName.insertItemAt("", i);//initialize
         i++;
        int j=-1;
        while (itr.hasNext()) {
            Object obj[] = (Object[]) itr.next();
-           if(((String)obj[0]).equals("")){
+           if (((String)obj[0]).equals("")) {
                continue;
            }
            cmbCode.insertItemAt(obj[0], i);
            cmbName.insertItemAt(obj[1], i);
-           
+
            i++;
        }
        if (i > 0) {
-           if(j>-1){
+           if (j>-1) {
               cmbCode.setSelectedIndex(j);
-           }else{
+           } else {
              cmbCode.setSelectedIndex(0);
            }
        }
-            
+
        this.cmbCode.repaint();
        this.cmbName.repaint();
     }
@@ -108,7 +108,7 @@ public class EditorBirds extends javax.swing.JFrame {
     * @param s
     * @param index
     */
-   public void loadBirds(Species s, int index){
+   public void loadBirds(Species s, int index) {
        EditorBirds.log.info("Loading existing birds: " + s.getSpeciesCode());
        this.editing = true;
        this.index = index;
@@ -116,16 +116,16 @@ public class EditorBirds extends javax.swing.JFrame {
        String code="";
        String name ="";
        code = s.getSpeciesCode();
-       name = s.getSpeciesName();   
-        
-       loadBirds(s.getSpeciesCode());       
+       name = s.getSpeciesName();
+
+       loadBirds(s.getSpeciesCode());
        loadBirdsName(s.getSpeciesCode());
        String hql= "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code +"'";
-       
-       
+
+
        Query q = session.createQuery(hql);
        Long count = (Long) q.uniqueResult();
-       if (count == 0) {   
+       if (count == 0) {
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
        }
@@ -133,95 +133,95 @@ public class EditorBirds extends javax.swing.JFrame {
            cmbCode.setSelectedItem(code);
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
-          
-       }       
-       if (ConversionTools.smallToBool(s.getSpeciesSensitive())){
+
+       }
+       if (ConversionTools.smallToBool(s.getSpeciesSensitive())) {
            this.chkSensitive.setSelected(true);
        }
-       if (ConversionTools.smallToBool(s.getSpeciesNp())){
+       if (ConversionTools.smallToBool(s.getSpeciesNp())) {
            this.chkNP.setSelected(true);
        }
-    
-       if(s.getSpeciesType() != null ){
+
+       if (s.getSpeciesType() != null ) {
            String popTypeName = getPopulationTypeNameByCode(s.getSpeciesType().toString());
-           if (popTypeName!= null && popTypeName!="null") this.cmbType.setSelectedItem(popTypeName);
-       }else{
+           if (popTypeName != null && popTypeName != "null") this.cmbType.setSelectedItem(popTypeName);
+       } else {
            this.cmbType.setSelectedIndex(0);
        }
-       
-       if(s.getSpeciesSizeMin() != null){
+
+       if (s.getSpeciesSizeMin() != null) {
            this.txtMinimum.setText(ConversionTools.intToString(s.getSpeciesSizeMin()));
        }
-       if(s.getSpeciesSizeMax() != null){
+       if (s.getSpeciesSizeMax() != null) {
            this.txtMaximum.setText(ConversionTools.intToString(s.getSpeciesSizeMax()));
        }
-       
-       
-       if(s.getSpeciesUnit() != null){
+
+
+       if (s.getSpeciesUnit() != null) {
           String popTypeName = getUnitTypeNameByCode(s.getSpeciesUnit().toString());
           this.cmbUnit.setSelectedItem(popTypeName);
-       }else{
+       } else {
            this.cmbUnit.setSelectedIndex(0);
        }
-       
-       if(s.getSpeciesCategory() != null){
-           String categoryCode = ConversionTools.charToString(s.getSpeciesCategory()).toUpperCase();           
+
+       if (s.getSpeciesCategory() != null) {
+           String categoryCode = ConversionTools.charToString(s.getSpeciesCategory()).toUpperCase();
            String categoryName = getCategoryNameByCode(categoryCode);
            this.cmbCategory.setSelectedItem(categoryName);
-       }else{
+       } else {
            this.cmbCategory.setSelectedIndex(0);
        }
-       
 
-       if(s.getSpeciesDataQuality() != null){
+
+       if (s.getSpeciesDataQuality() != null) {
            String qualityCode = s.getSpeciesDataQuality();
            String qualityName = getQualityNameByQualityCode(qualityCode);
-           if (qualityName!=null) this.cmbQuality.setSelectedItem(qualityName);
-       }else{
+           if (qualityName != null) this.cmbQuality.setSelectedItem(qualityName);
+       } else {
            this.cmbQuality.setSelectedIndex(0);
        }
-       
-       
+
+
        this.cmbPopulation.setSelectedItem(ConversionTools.charToString(s.getSpeciesPopulation()));
        this.cmbConservation.setSelectedItem(ConversionTools.charToString(s.getSpeciesConservation()));
        this.cmbIsolation.setSelectedItem(ConversionTools.charToString(s.getSpeciesIsolation()));
        this.cmbGlobal.setSelectedItem(ConversionTools.charToString(s.getSpeciesGlobal()));
        printSpecies(s);
    }
-   
-   
+
+
 
    /**
     * Loads the name of th species
     * @param speciesCode
     */
-   private void loadBirdsName(String speciesCode){
+   private void loadBirdsName(String speciesCode) {
 
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
        EditorBirds.log.info("Loading birds Name: ");
        EditorBirds.log.info("Bird Code: " + speciesCode);
        String groupSpecies = "B";
-      
-      
+
+
        hql = "select distinct refSp.refAltBirdsName, refSp.refBirdsCode";
        hql += " from RefBirds refSp";
-       hql += " where refSp.refBirdsCode ='"+speciesCode+"'";
+       hql += " where refSp.refBirdsCode ='" + speciesCode+"'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
 
        if (itr.hasNext()) {
            Object obj[] = (Object[]) itr.next();
-           if(obj[0] != null){
+           if (obj[0] != null) {
                this.txAltSpeciesName.setText((String)obj[0]);
-           }else{
+           } else {
              this.txAltSpeciesName.setText("");
            }
         }
 
    }
 
-   
+
 
    /**
     * saves species
@@ -229,32 +229,32 @@ public class EditorBirds extends javax.swing.JFrame {
    private void saveSpecies() {
         EditorBirds.log.info("Saving birds");
         Species s = new Species();
-       
-       
+
+
         s.setSpeciesGroup('B');
         s.setSpeciesCode(((String)this.cmbCode.getSelectedItem()));
-       
+
         s.setSpeciesName(((String)this.cmbName.getSelectedItem()));
-       
+
         s.setSpeciesSensitive(ConversionTools.boolToSmall(this.chkSensitive.isSelected()));
         s.setSpeciesNp(ConversionTools.boolToSmall(this.chkNP.isSelected()));
-        
+
         if (!(("-").equals((String)this.cmbType.getSelectedItem()))) {
-            String popTypeCode = getPopulationTypeCodebyName((String)this.cmbType.getSelectedItem()); 
+            String popTypeCode = getPopulationTypeCodebyName((String)this.cmbType.getSelectedItem());
             s.setSpeciesType(popTypeCode.charAt(0));
         }
-        if(this.txtMinimum.getText() != null && !(("").equals(this.txtMinimum.getText()))){
+        if (this.txtMinimum.getText() != null && !(("").equals(this.txtMinimum.getText()))) {
             s.setSpeciesSizeMin(ConversionTools.stringToInt(this.txtMinimum.getText()));
         }
-        if(this.txtMaximum.getText() != null && !(("").equals(this.txtMaximum.getText()))){
+        if (this.txtMaximum.getText() != null && !(("").equals(this.txtMaximum.getText()))) {
            s.setSpeciesSizeMax(ConversionTools.stringToInt(this.txtMaximum.getText()));
         }
-                
+
         if (!this.cmbUnit.getSelectedItem().equals("-")) {
             String unitCode = getUnitTypeCodeByName((String)this.cmbUnit.getSelectedItem());
             s.setSpeciesUnit(unitCode);
         }
-       
+
         if (!this.cmbCategory.getSelectedItem().equals("-")) {
             String category = (String)this.cmbCategory.getSelectedItem();
             String categoryCode = getCategoryCodeByName(category);
@@ -265,11 +265,11 @@ public class EditorBirds extends javax.swing.JFrame {
             String qualityCode = getQualityCodeByQualityName(qualityName);
             s.setSpeciesDataQuality(qualityCode);
         }
-        
+
         if (!this.cmbPopulation.getSelectedItem().equals("-")) {
-           
+
             s.setSpeciesPopulation(ConversionTools.stringToChar((String)this.cmbPopulation.getSelectedItem()));
-            
+
         }
         if (!this.cmbConservation.getSelectedItem().equals("-")) {
             s.setSpeciesConservation(ConversionTools.stringToChar((String)this.cmbConservation.getSelectedItem()));
@@ -280,7 +280,7 @@ public class EditorBirds extends javax.swing.JFrame {
         if (!this.cmbGlobal.getSelectedItem().equals("-")) {
             s.setSpeciesGlobal(ConversionTools.stringToChar((String)this.cmbGlobal.getSelectedItem()));
         }
-        
+
         if (this.editing && this.index > -1) {
             this.parent.saveSpecies(s,this.index);
         }
@@ -294,7 +294,7 @@ public class EditorBirds extends javax.swing.JFrame {
     * Print the data of the species in console
     * @param s
     */
-   private void printSpecies(Species s){
+   private void printSpecies(Species s) {
        EditorBirds.log.info("Code: " + s.getSpeciesCode());
        EditorBirds.log.info("Name: " + s.getSpeciesName());
        EditorBirds.log.info("Group: " + s.getSpeciesGroup());
@@ -323,119 +323,119 @@ public class EditorBirds extends javax.swing.JFrame {
       super.setVisible(true);
       requestFocus();
     }
-   
+
     /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getPopulationTypeCodebyName(String popTypeName){
-       EditorBirds.log.info("Getting the population type code by name");        
+   private String getPopulationTypeCodebyName(String popTypeName) {
+       EditorBirds.log.info("Getting the population type code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPop.refPopulationCode from RefPopulation refPop where refPop.refPopulationName='"+popTypeName+"'";
+       String hql = "select distinct refPop.refPopulationCode from RefPopulation refPop where refPop.refPopulationName='" + popTypeName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
    /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getPopulationTypeNameByCode(String popTypeCode){
-       EditorBirds.log.info("Getting the population type name by code");        
+   private String getPopulationTypeNameByCode(String popTypeCode) {
+       EditorBirds.log.info("Getting the population type name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop where refPop.refPopulationCode='"+popTypeCode+"'";
+       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop where refPop.refPopulationCode='" + popTypeCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
    /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getUnitTypeNameByCode(String unitCode){
-       EditorBirds.log.info("Getting the unit name by code");        
+   private String getUnitTypeNameByCode(String unitCode) {
+       EditorBirds.log.info("Getting the unit name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitName from RefUnit where refUnitCode='"+unitCode+"'";
+       String hql = "select distinct refUnitName from RefUnit where refUnitCode='" + unitCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
-   
-   
+
+
+
    /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getUnitTypeCodeByName(String unitName){
-       EditorBirds.log.info("Getting the unit code by name");        
+   private String getUnitTypeCodeByName(String unitName) {
+       EditorBirds.log.info("Getting the unit code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitCode from RefUnit where refUnitName='"+unitName+"'";
+       String hql = "select distinct refUnitCode from RefUnit where refUnitName='" + unitName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
    /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getCategoryNameByCode(String categoryCode){
-       EditorBirds.log.info("Getting the category type name by code");        
+   private String getCategoryNameByCode(String categoryCode) {
+       EditorBirds.log.info("Getting the category type name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='"+categoryCode+"'";
+       String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='" + categoryCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
    /**
     * Gets the population type by selected index
     * @param selectedItem
     * @return
     */
-   private String getCategoryCodeByName(String categoryName){
-       EditorBirds.log.info("Getting the category type code by name");        
+   private String getCategoryCodeByName(String categoryName) {
+       EditorBirds.log.info("Getting the category type code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='"+categoryName+"'";
+       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='" + categoryName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
     /**
-    * 
+    *
     * @param qualityName
-    * @return 
+    * @return
     */
    private String getQualityCodeByQualityName(String qualityName) {
-       EditorBirds.log.info("Get quality code by quality name");       
+       EditorBirds.log.info("Get quality code by quality name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualityName='"+qualityName+"'";
+       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualityName='" + qualityName+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
-   
+
    /**
-    * 
+    *
     * @param qualityName
-    * @return 
+    * @return
     */
    private String getQualityNameByQualityCode(String qualityCode) {
-       EditorBirds.log.info("Get quality name by quality code");       
+       EditorBirds.log.info("Get quality name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='"+qualityCode+"'";
+       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='" + qualityCode+"'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
-       
+
    }
 
 
@@ -452,19 +452,19 @@ public class EditorBirds extends javax.swing.JFrame {
        int i = 0;
        cmbType.insertItemAt("-", 0);
 
-       while (itr.hasNext()) {  
+       while (itr.hasNext()) {
            i++;
-           Object obj = itr.next();           
+           Object obj = itr.next();
            cmbType.insertItemAt(obj, i);
-           
-       }       
+
+       }
        if (i > 0) {
 
             cmbType.setSelectedIndex(0);
             cmbType.repaint();
        }
    }
-   
+
    /**
     * Loads the habitats from reference table
     */
@@ -477,18 +477,18 @@ public class EditorBirds extends javax.swing.JFrame {
        Iterator itr = q.iterate();
        int i = 0;
        cmbUnit.insertItemAt("-", 0);
-       while (itr.hasNext()) {  
+       while (itr.hasNext()) {
            i++;
-           Object obj = itr.next();           
+           Object obj = itr.next();
            cmbUnit.insertItemAt(obj, i);
-           
-       }       
+
+       }
        if (i > 0) {
             cmbUnit.setSelectedIndex(0);
             cmbUnit.repaint();
        }
    }
-   
+
     /**
     * Loads the habitats from reference table
     */
@@ -501,11 +501,11 @@ public class EditorBirds extends javax.swing.JFrame {
        Iterator itr = q.iterate();
        int i = 0;
        cmbQuality.insertItemAt("-", 0);
-       while (itr.hasNext()) {  
+       while (itr.hasNext()) {
            i++;
-           Object obj = itr.next();           
+           Object obj = itr.next();
            cmbQuality.insertItemAt(obj, i);
-       }       
+       }
        if (i > 0) {
             cmbQuality.setSelectedIndex(0);
             cmbQuality.repaint();
@@ -523,12 +523,12 @@ public class EditorBirds extends javax.swing.JFrame {
        Iterator itr = q.iterate();
        int i = 0;
        cmbCategory.insertItemAt("-", 0);
-       while (itr.hasNext()) {  
+       while (itr.hasNext()) {
            i++;
-           Object obj = itr.next();           
+           Object obj = itr.next();
            cmbCategory.insertItemAt(obj, i);
-           
-       }       
+
+       }
        if (i > 0) {
             cmbCategory.setSelectedIndex(0);
             cmbCategory.repaint();
@@ -988,31 +988,31 @@ public class EditorBirds extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
-        if (evt.getStateChange() == 1){
-            int row = this.cmbCode.getSelectedIndex();   
-            String code = (String)this.cmbCode.getSelectedItem();   
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
+        if (evt.getStateChange() == 1) {
+            int row = this.cmbCode.getSelectedIndex();
+            String code = (String)this.cmbCode.getSelectedItem();
             this.cmbName.setSelectedIndex(row);
             this.cmbName.repaint();
             loadBirdsName(code);
         }
-        
-    }//GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbNameItemStateChanged
-        if (evt.getStateChange() == 1){
-            int row = this.cmbName.getSelectedIndex();            
+    } //GEN-LAST:event_cmbCodeItemStateChanged
+
+    private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbNameItemStateChanged
+        if (evt.getStateChange() == 1) {
+            int row = this.cmbName.getSelectedIndex();
             this.cmbCode.setSelectedIndex(row);
             loadBirdsName((String)this.cmbCode.getSelectedItem());
         }
-        
-    }//GEN-LAST:event_cmbNameItemStateChanged
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_cmbNameItemStateChanged
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * Checks if the param is a number
@@ -1034,41 +1034,41 @@ public class EditorBirds extends javax.swing.JFrame {
      * @param minArea
      * @return
      */
-    private boolean isSizeOK(String maxArea, String minArea){
+    private boolean isSizeOK(String maxArea, String minArea) {
         boolean sizeOK=true;
         try{
-            if(maxArea != null && !(("").equals(maxArea)) && minArea != null && !(("").equals(minArea))){
+            if (maxArea != null && !(("").equals(maxArea)) && minArea != null && !(("").equals(minArea))) {
                 int intMaxArea = Integer.parseInt(maxArea);
                 int intMinArea = Integer.parseInt(minArea);
-                if(intMinArea >intMaxArea){
+                if (intMinArea >intMaxArea) {
                     sizeOK = false;
                 }
             }
-        }catch(Exception e){
-          EditorBirds.log.error("Error Message::"+e.getMessage());
+        } catch (Exception e) {
+          EditorBirds.log.error("Error Message::" + e.getMessage());
         }
         return sizeOK;
 
     }
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
 
-        if(this.txtMaximum.getText() != null && !("").equals(this.txtMaximum.getText()) && isNum(this.txtMaximum.getText())==null){
+        if (this.txtMaximum.getText() != null && !("").equals(this.txtMaximum.getText()) && isNum(this.txtMaximum.getText()) == null) {
             EditorBirds.log.error("Maximum Size field is not a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Maximum Size field should be a number.");
-        }else if(this.txtMinimum.getText() != null && !("").equals(this.txtMinimum.getText()) && isNum(this.txtMinimum.getText())==null){
+        } else if (this.txtMinimum.getText() != null && !("").equals(this.txtMinimum.getText()) && isNum(this.txtMinimum.getText()) == null) {
             EditorBirds.log.error("Minimum Size field is not a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Minimum Size field should be a number.");
-        }else if(!isSizeOK(this.txtMaximum.getText(),this.txtMinimum.getText())){
+        } else if (!isSizeOK(this.txtMaximum.getText(),this.txtMinimum.getText())) {
             EditorBirds.log.error("The minimum size is bigger than maximum size.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Check the size. The minimum size is bigger than maximum size.");
-        }else {
+        } else {
             this.saveSpecies();
             EditorBirds.log.error("Species saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "Species saved.");
             this.exit();
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

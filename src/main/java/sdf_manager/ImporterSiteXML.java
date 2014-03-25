@@ -51,7 +51,7 @@ public class ImporterSiteXML implements Importer {
     public ImporterSiteXML(Logger logger, String encoding, String logFile, String fileName, String siteCode) {
         this.logger = logger;
         this.encoding = encoding;
-        this.initLogFile(logFile); 
+        this.initLogFile(logFile);
         this.siteCode=siteCode;
     }
 
@@ -90,12 +90,12 @@ public class ImporterSiteXML implements Importer {
      */
     public void initLogFile(String fileName) {
          try {
-            
+
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
          }
-         catch(Exception e) {
-             ImporterSiteXML.log.error("An error has occurred in initLogFile. Error Message :::"+e.getMessage());
+         catch (Exception e) {
+             ImporterSiteXML.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
      }
@@ -103,13 +103,13 @@ public class ImporterSiteXML implements Importer {
      /**
       *
       */
-     public void closeLogFile(){
+     public void closeLogFile() {
          try {
              out.close();
              outFile.close();
          }
-         catch(Exception e) {
-             ImporterSiteXML.log.error("An error has occurred in closeLogFile. Error Message :::"+e.getMessage());
+         catch (Exception e) {
+             ImporterSiteXML.log.error("An error has occurred in closeLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
      }
@@ -140,7 +140,7 @@ public class ImporterSiteXML implements Importer {
      * @param fileName
      * @return
      */
-    public boolean validateAndProcessDB(String fileName) {       
+    public boolean validateAndProcessDB(String fileName) {
         Session session =null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -148,11 +148,11 @@ public class ImporterSiteXML implements Importer {
             boolean sitesDB = validateSites(session);
             ImporterSiteXML.log.info("Validation has finished");
             log("Validation has finished.",1);
-            if(!sitesDB){
+            if (!sitesDB) {
                 ImporterSiteXML.log.info("Import process is starting");
                 log("Import process is starting.",1);
                 this.processDatabase(session,fileName);
-            }else{
+            } else {
                 ImporterSiteXML.log.error("Error in validation");
                 log("Error in validation.",1);
                 JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
@@ -163,9 +163,9 @@ public class ImporterSiteXML implements Importer {
 
         } catch (Exception e) {
             ////e.printStackTrace();
-            ImporterSiteXML.log.error("Error in import process:::"+e.getMessage());
+            ImporterSiteXML.log.error("Error in import process:::" + e.getMessage());
             return false;
-        }finally{
+        } finally {
             session.clear();
             session.close();
         }
@@ -180,13 +180,13 @@ public class ImporterSiteXML implements Importer {
      private boolean validateSites(Session session) {
         boolean siteInDB=false;
         try {
-           if(SDF_Util.validateSite(session,this.siteCode)){
+           if (SDF_Util.validateSite(session,this.siteCode)) {
                siteInDB=true;
            }
            session.flush();
            session.clear();
-        }catch (Exception e) {
-            ImporterSiteXML.log.error("Error validating Site:::"+e.getMessage());            
+        } catch (Exception e) {
+            ImporterSiteXML.log.error("Error validating Site:::" + e.getMessage());
         }
         return siteInDB;
 
@@ -212,34 +212,34 @@ public class ImporterSiteXML implements Importer {
         boolean isOK = true;
 
         try {
-            ImporterSiteXML.log.info("Import process from file:::"+fileName);
-            
+            ImporterSiteXML.log.info("Import process from file:::" + fileName);
+
             log("Init Import process.");
             isOK = getNodeSite(session,fileName);
 
-            if(isOK){
+            if (isOK) {
                 ImporterSiteXML.log.info("Import process has finished succesfully");
                 log("Import process has finished succesfully" );
                 javax.swing.JOptionPane.showMessageDialog(new Frame(),"Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);;
-            }else{
+            } else {
                log("It's been produced an error in the Import Process" );
                 ImporterSiteXML.log.error("It's been produced an error in the Import Process.\nPlease check the log file for more details");
-                JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process.Please check the log file for more details", "Dialog",JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process.Please check the log file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
             }
-            
+
         } catch (Exception ex) {
             //ex.printStackTrace();
             log("It's been produced an error in the Import Process" );
-            ImporterSiteXML.log.error("It's been produced an error in the Import Process.:::"+ex.getMessage());
+            ImporterSiteXML.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());
             JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process", "Dialog",JOptionPane.ERROR_MESSAGE);
             isOK= false;
-        }finally{
-            session.clear();           
+        } finally {
+            session.clear();
         }
         return isOK;
     }
 
-  
+
     /**
      *
      * @param session
@@ -252,7 +252,7 @@ public class ImporterSiteXML implements Importer {
         //session.merge(site);
         tr.commit();
        session.flush();
-     
+
     }
 
     /***
@@ -296,7 +296,7 @@ public class ImporterSiteXML implements Importer {
         session.flush();
 
     }
-   
+
     /**
      *
      * @param session
@@ -311,22 +311,22 @@ public class ImporterSiteXML implements Importer {
 
     }
 
-    
+
      /**
      *
      * @param ownerShipType
      * @return
      */
-    private int getOwnerShipId(Session session, String ownerShipType){
+    private int getOwnerShipId(Session session, String ownerShipType) {
         int ownerShipId = -1;
-       
-        String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode like '"+ownerShipType+"'";
+
+        String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode like '" + ownerShipType+"'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
-        if(itr.hasNext()){
+        if (itr.hasNext()) {
             ownerShipId = ((Integer)itr.next()).intValue();
         }
-        
+
         return ownerShipId;
 
     }
@@ -336,49 +336,49 @@ public class ImporterSiteXML implements Importer {
      * @param biogeoCode
      * @return
      */
-    private int getBiogeoId( Session session, String biogeoCode){
+    private int getBiogeoId( Session session, String biogeoCode) {
        int biogeoId = 0;
-       String hql = "select distinct biogeo.biogeoId from Biogeo biogeo where biogeo.biogeoCode like '"+biogeoCode+"'";
+       String hql = "select distinct biogeo.biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + biogeoCode+"'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
 
-       if(itr.hasNext()){            
+       if (itr.hasNext()) {
           biogeoId = ((Integer)itr.next()).intValue();
        }
        return biogeoId;
 
     }
 
-   
+
 
     /**
      *
      * @param regionCode
      * @return
      */
-    private boolean isRegionLevel2(Session session, String regionCode){
+    private boolean isRegionLevel2(Session session, String regionCode) {
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        
+
         boolean nutsOK = false;
 
         ImporterSiteXML.log.info("Validating Region Code");
-        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='"+regionCode+"'";
+        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode+"'";
 
         try {
             Query q = session.createQuery(hql);
-            if(q.uniqueResult() != null){
+            if (q.uniqueResult() != null) {
                nutsOK = true;
             }
         } catch (Exception e) {
             //e.printStackTrace();
-            ImporterSiteXML.log.error("Error loading Region Descrption:::"+e.getMessage());
+            ImporterSiteXML.log.error("Error loading Region Descrption:::" + e.getMessage());
 
         }
         return nutsOK;
     }
-    
-    
-    private boolean getNodeSite(Session session,String fileName){
+
+
+    private boolean getNodeSite(Session session,String fileName) {
 
         boolean importOK = false;
         try{
@@ -391,18 +391,18 @@ public class ImporterSiteXML implements Importer {
             document = builder.parse(fileName);
 
             // Create a XPathFactory
-            
+
             XPathFactory xFactory = XPathFactory.newInstance();
 
             // Create a XPath object
             XPath xpath = xFactory.newXPath();
-                
+
             /******/
             Site site= new Site();
 
             // Compile the XPath expression
-            log("Processing ...:"+this.siteCode);
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/siteCode/text()");
+            log("Processing ...:" + this.siteCode);
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/siteCode/text()");
 
             // Run the query and get a nodeset
             Object result = expr.evaluate(document, XPathConstants.NODE);
@@ -410,20 +410,20 @@ public class ImporterSiteXML implements Importer {
             // Cast the result to a DOM NodeList
             Node nodes = (Node) result;
             //Site code
-            site.setSiteCode(nodes.getNodeValue());                
+            site.setSiteCode(nodes.getNodeValue());
 
             //Site Type
             log("Processing Site Type");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/siteType/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/siteType/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
             nodes = (Node) result;
             site.setSiteType(nodes.getNodeValue().charAt(0));
-              
-                
+
+
             //Site Name
             log("Processing Site Name");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/siteName/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/siteName/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
             nodes = (Node) result;
@@ -431,76 +431,76 @@ public class ImporterSiteXML implements Importer {
 
             //Compilation Date
             log("Processing Compilation Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/compilationDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/compilationDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                nodes = (Node) result;
-               if(nodes.getNodeValue() != null && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
-                   site.setSiteCompDate(ConversionTools.convertStringToDate(nodes.getNodeValue())); 
-               }               
-            }            
+               if (nodes.getNodeValue() != null && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                   site.setSiteCompDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
+               }
+            }
 
 
             //Update Date
             log("Processing Update Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/updateDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/updateDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
-                if(nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
-                   site.setSiteUpdateDate(ConversionTools.convertStringToDate(nodes.getNodeValue())); 
+                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                   site.setSiteUpdateDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
-                
-             
+
+
             //SPA Classification Date
             log("Processing SPA Classification Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/spaClassificationDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/spaClassificationDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
-                if(nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
+                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSpaDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
-                }            
+                }
             }
 
             //SPA Legal Reference
             log("Processing SPA Legal Reference");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/spaLegalReference/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/spaLegalReference/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
-                if(nodes.getNodeValue()!= null){
-                    site.setSiteSpaLegalRef(nodes.getNodeValue());    
-                }             
+                if (nodes.getNodeValue()!= null) {
+                    site.setSiteSpaLegalRef(nodes.getNodeValue());
+                }
             }
 
 
             //SCI Confirmation Date
             log("Processing SCI Confirmation Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/sciConfirmationDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/sciConfirmationDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
-                if(nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
+                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSciConfDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
-                
-              
+
+
             //SCI Proposal Date
             log("Processing SCI Proposal Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/sciProposalDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/sciProposalDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
-                if(nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
+                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSciPropDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
@@ -509,12 +509,12 @@ public class ImporterSiteXML implements Importer {
             //SAC Designation Date
             log("Processing SAC Designation Date");
             ImporterSiteXML.log.info("Processing SAC Designation Date");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/sacDesignationDate/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/sacDesignationDate/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
               nodes = (Node) result;
-              if(nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))){
+              if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                    site.setSiteSacDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
               }
             }
@@ -523,22 +523,22 @@ public class ImporterSiteXML implements Importer {
             //SAC Designation Date
             log("Processing SAC Legal Reference");
             ImporterSiteXML.log.info("Processing SAC Legal Reference");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/sacLegalReference/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/sacLegalReference/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteSacLegalRef(nodes.getNodeValue());
             }
-                
-                
+
+
             //Explanations
             log("Processing Explanations");
             ImporterSiteXML.log.info("Processing Explanations");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/explanations/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/explanations/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteExplanations(nodes.getNodeValue());
             }
@@ -546,11 +546,11 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Name
             log("Processing Respondent-Name");
             ImporterSiteXML.log.info("Processing Respondent-Name");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/name/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/name/text()");
             // Run the query and get a nodeset
-            result = expr.evaluate(document, XPathConstants.NODE);            
+            result = expr.evaluate(document, XPathConstants.NODE);
             Resp resp = new Resp();
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespName(nodes.getNodeValue());
             }
@@ -559,22 +559,22 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Admin Unit
             log("Processing Respondent-Admin Unit");
             ImporterSiteXML.log.info("Processing Respondent-Admin Unit");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/adminUnit/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/adminUnit/text()");
             // Run the query and get a nodeset
-            result = expr.evaluate(document, XPathConstants.NODE);            
-            if(result != null){
+            result = expr.evaluate(document, XPathConstants.NODE);
+            if (result != null) {
                 nodes = (Node) result;
-                resp.setRespAdminUnit(nodes.getNodeValue());                
+                resp.setRespAdminUnit(nodes.getNodeValue());
             }
 
 
             //Respondent-Locator Designator
             log("Processing Respondent-Locator Designator");
             ImporterSiteXML.log.info("Processing Respondent-Locator Designator");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/locatorDesignator/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/locatorDesignator/text()");
             // Run the query and get a nodeset
-            result = expr.evaluate(document, XPathConstants.NODE);           
-            if(result != null){
+            result = expr.evaluate(document, XPathConstants.NODE);
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespLocatorDesig(nodes.getNodeValue());
             }
@@ -583,10 +583,10 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Locator Name
             log("Processing Respondent-Locator Name");
             ImporterSiteXML.log.info("Processing Respondent-Locator Name");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/locatorName/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/locatorName/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespLocatorName(nodes.getNodeValue());
             }
@@ -595,34 +595,34 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Address Area
             log("Processing Respondent-Address Area");
             ImporterSiteXML.log.info("Processing Respondent-Address Area");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/addressArea/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/addressArea/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespAddressArea(nodes.getNodeValue());
             }
-                    
+
 
             //Respondent-Post Name
             log("Processing Respondent-Post Name");
             ImporterSiteXML.log.info("Processing Respondent-Post Name");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/postName/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/postName/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespPostName(nodes.getNodeValue());
             }
-                    
+
 
             //Respondent-Post Code
             log("Processing Respondent-Post Code");
             ImporterSiteXML.log.info("Processing Respondent-Post Code");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/postCode/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/postCode/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespPostCode(nodes.getNodeValue());
             }
@@ -631,22 +631,22 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Thoroughfare
             log("Processing Respondent-Thoroughfare");
             ImporterSiteXML.log.info("Processing Respondent-Thoroughfare");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/address/thoroughfare/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/address/thoroughfare/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespThoroughFare(nodes.getNodeValue());
             }
-                    
+
 
             //Respondent-Unstructured Address
             log("Processing Respondent-Unstructured Address");
             ImporterSiteXML.log.info("Processing Respondent-Unstructured Address");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/addressUnstructured/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/addressUnstructured/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 resp.setRespAddress(nodes.getNodeValue());
             }
@@ -655,24 +655,24 @@ public class ImporterSiteXML implements Importer {
             //Respondent-Email
             log("Processing Respondent-Email");
             ImporterSiteXML.log.info("Processing Respondent-Email");
-            expr = xpath.compile("//sdf/siteIdentification[siteCode='"+this.siteCode+"']/respondent/email/text()");
+            expr = xpath.compile("//sdf/siteIdentification[siteCode='" + this.siteCode+"']/respondent/email/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                nodes = (Node) result;
                resp.setRespEmail(nodes.getNodeValue());
             }
 
-            site.setResp(resp); 
+            site.setResp(resp);
 
 
             //Site Location-Longitude
             log("Processing Site Location-Longitude");
             ImporterSiteXML.log.info("Processing Site Location-Longitude");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/longitude/text()");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/longitude/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteLongitude(ConversionTools.stringToDouble(nodes.getNodeValue()));
             }
@@ -680,21 +680,21 @@ public class ImporterSiteXML implements Importer {
             //Site Location-Latitude
             log("Processing Site Location-Latitude");
             ImporterSiteXML.log.info("Processing Site Location-Latitude");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/latitude/text()");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/latitude/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteLatitude(ConversionTools.stringToDouble(nodes.getNodeValue()));
             }
-                
+
             //Site Location-Area
             log("Processing Site Location-Area");
             ImporterSiteXML.log.info("Processing Site Location-Area");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/area/text()");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/area/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteArea(ConversionTools.stringToDouble(nodes.getNodeValue()));
             }
@@ -702,68 +702,68 @@ public class ImporterSiteXML implements Importer {
             //Site Location-Marine Area
             log("Processing Site Location-Marine Area");
             ImporterSiteXML.log.info("Processing Site Location-Marine Area");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/marineAreaPercentage/text()");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/marineAreaPercentage/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteMarineArea(ConversionTools.stringToDouble(nodes.getNodeValue()));
             }
-                
+
             //Site Location-Length
             log("Processing Site Location-Length");
             ImporterSiteXML.log.info("Processing Site Location-Length");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/siteLength/text()");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/siteLength/text()");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
-            if(result != null){
+            if (result != null) {
                 nodes = (Node) result;
                 site.setSiteLength(ConversionTools.stringToDouble(nodes.getNodeValue()));
             }
-                
-                
+
+
             //Site Location-Admin Regions
             log("Processing Site Location-Admin Regions");
             ImporterSiteXML.log.info("Processing Site Location-Admin Regions");
-            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/adminRegions");
+            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/adminRegions");
             // Run the query and get a nodeset
-            result = expr.evaluate(document, XPathConstants.NODE);            
-            if(result != null){
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/adminRegions/region");
+            result = expr.evaluate(document, XPathConstants.NODE);
+            if (result != null) {
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/adminRegions/region");
                 result = expr.evaluate(document, XPathConstants.NODESET);
-                if(result != null){
-                    NodeList nodeList = (NodeList)result;                    
-                    for(int i=1;i<=nodeList.getLength();i++){
+                if (result != null) {
+                    NodeList nodeList = (NodeList)result;
+                    for(int i=1;i<=nodeList.getLength();i++) {
                         Region region = new Region();
                         String regCode=null;
                         String regName=null;
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/adminRegions/region["+i+"]/code/text()");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/adminRegions/region[" + i+"]/code/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nDataReg = (Node)result;
                             regCode = nDataReg.getNodeValue();
                             //Site Location-Admin Regions-Region
-                            log("         Processing Region:::"+regCode);
-                            ImporterSiteXML.log.info("Processing Site Location-Admin Regions-Region:::"+regCode);
+                            log("         Processing Region:::" + regCode);
+                            ImporterSiteXML.log.info("Processing Site Location-Admin Regions-Region:::" + regCode);
                             boolean regionOK=isRegionLevel2(session,regCode);
-                            if(!regionOK){
-                                log("         Region Code:::"+regCode+" doesn't belong to nut level 2:::");
-                                ImporterSiteXML.log.info("Region Code:::"+regCode+" doesn't belong to nut level 2:::"); 
+                            if (!regionOK) {
+                                log("         Region Code:::" + regCode+" doesn't belong to nut level 2:::");
+                                ImporterSiteXML.log.info("Region Code:::" + regCode+" doesn't belong to nut level 2:::");
                             }
-                            
-                            
+
+
                         }
-                        
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/adminRegions/region["+i+"]/name/text()");
+
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/adminRegions/region[" + i+"]/name/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nDataReg = (Node)result;
                             regName = nDataReg.getNodeValue();
                         }
-                        if(regCode != null){
+                        if (regCode != null) {
                             region.setRegionCode(regCode);
                         }
-                        if(regName != null){
+                        if (regName != null) {
                             region.setRegionName(regName);
                         }
                         region.setSite(site);
@@ -771,79 +771,79 @@ public class ImporterSiteXML implements Importer {
 
                     }
                 }
-                
+
                 //Site Location-BioRegions
                 log("Processing Site Location-BioRegions");
                 ImporterSiteXML.log.info("Processing Site Location-BioRegions");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/biogeoRegions");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/biogeoRegions");
                 // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODESET);
                 Set bioRegion=null;
-                if(result != null){
+                if (result != null) {
                     NodeList nodeBio = (NodeList)result;
                     bioRegion = new HashSet();
-                    for(int i=1;i<=nodeBio.getLength();i++){
+                    for(int i=1;i<=nodeBio.getLength();i++) {
                         SiteBiogeo siteBio = null;
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/biogeoRegions["+i+"]/code/text()");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/biogeoRegions[" + i+"]/code/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nBioReg = (Node)result;
                             //siteBio.set
                             String biogeoCode = nBioReg.getNodeValue();
                             //Site Location-BioRegions-Biogeo
-                            log("         Processing BioRegion:::"+biogeoCode);
-                            ImporterSiteXML.log.info("Processing Site Location-BioRegions:::"+biogeoCode);
+                            log("         Processing BioRegion:::" + biogeoCode);
+                            ImporterSiteXML.log.info("Processing Site Location-BioRegions:::" + biogeoCode);
                             int biogeoId = getBiogeoId(session,biogeoCode);
                             Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeoId);
                             SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
                             siteBio = new SiteBiogeo(id,biogeo,site);
                         }
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteLocation/biogeoRegions["+i+"]/percentage/text()");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteLocation/biogeoRegions[" + i+"]/percentage/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nBioRegPer = (Node)result;
                             //siteBio.set
                             String biogeoPercent = nBioRegPer.getNodeValue();
-                            if(siteBio != null){
+                            if (siteBio != null) {
                                 siteBio.setBiogeoPercent(new Double(biogeoPercent));
                             }
                         }
-                        if(siteBio != null){
+                        if (siteBio != null) {
                             site.getSiteBiogeos().add(siteBio);
                         }
-                    }                   
+                    }
                 }
-                
+
                 //Ecological Information-Habitat
                 log("Processing Ecological Information-Habitat");
                 ImporterSiteXML.log.info("Processing Ecological Information-Habitat");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes");
                 // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
-                if(result != null){
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType");
+                if (result != null) {
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType");
                         // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODESET);
-                    if(result != null){
+                    if (result != null) {
                         NodeList nodeHab = (NodeList)result;
-                        for(int i=1;i<=nodeHab.getLength();i++){
-                           Habitat habitat = new Habitat();  
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/code/text()");
+                        for(int i=1;i<=nodeHab.getLength();i++) {
+                           Habitat habitat = new Habitat();
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/code/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 habitat.setHabitatCode(nodeData.getNodeValue());
-                            } 
-                            
+                            }
+
                             //Ecological Information-Habitat
-                            log("         Processing Habitat:::"+habitat.getHabitatCode());
-                            ImporterSiteXML.log.info("Processing Habitat:::"+habitat.getHabitatCode());
-                            
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/priorityFormOfHabitatType/text()");
+                            log("         Processing Habitat:::" + habitat.getHabitatCode());
+                            ImporterSiteXML.log.info("Processing Habitat:::" + habitat.getHabitatCode());
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/priorityFormOfHabitatType/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 if (Boolean.parseBoolean(nodeData.getNodeValue())) {
                                     habitat.setHabitatPriority(Short.parseShort("0"));
@@ -851,11 +851,11 @@ public class ImporterSiteXML implements Importer {
                                     habitat.setHabitatPriority(Short.parseShort("1"));
                                 }
                             }
-                                
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/nonPresenceInSite/text()");
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/nonPresenceInSite/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 if (Boolean.parseBoolean(nodeData.getNodeValue())) {
                                     habitat.setHabitatNp(Short.parseShort("0"));
@@ -864,376 +864,376 @@ public class ImporterSiteXML implements Importer {
                                 }
                             }
 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/coveredArea/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/coveredArea/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 habitat.setHabitatCover(Double.parseDouble(nodeData.getNodeValue()));
                             }
-                                
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/caves/text()");
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/caves/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 habitat.setHabitatCaves(Integer.parseInt(nodeData.getNodeValue()));
                             }
 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/observationDataQuality/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/observationDataQuality/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
                                 habitat.setHabitatDataQuality(nodeData.getNodeValue());
                             }
-                            
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/representativity/text()");
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/representativity/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
+                                if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatRepresentativity(nodeData.getNodeValue().charAt(0));
                                 }
                             }
 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/relativeSurface/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/relativeSurface/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
+                                if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatRelativeSurface(nodeData.getNodeValue().charAt(0));
                                 }
                             }
-                           
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/conservation/text()");
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/conservation/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
+                                if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatConservation(nodeData.getNodeValue().charAt(0));
                                 }
                             }
 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType["+i+"]/global/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/habitatTypes/habitatType[" + i+"]/global/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
+                                if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatGlobal(nodeData.getNodeValue().charAt(0));
                                 }
                             }
                             habitat.setSite(site);
                             site.getHabitats().add(habitat);
                         }
-                    }                        
+                    }
                 }
-                  
-                
+
+
                 //Ecological Information-Species
                 log("Processing Ecological Information-Species");
                 ImporterSiteXML.log.info("Processing Ecological Information-Species");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species");
                 // Run the query and get a nodeset
-                result = expr.evaluate(document, XPathConstants.NODE);               
-                if(result != null){
+                result = expr.evaluate(document, XPathConstants.NODE);
+                if (result != null) {
                     //NodeList nodeList = (NodeList) result;
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODESET);
-                    if(result != null){
+                    if (result != null) {
                         NodeList nodeList = (NodeList) result;
-                        for(int i=1;i<=nodeList.getLength();i++){                                 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/motivations/text()");
+                        for(int i=1;i<=nodeList.getLength();i++) {
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/motivations/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 OtherSpecies species = new OtherSpecies();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/speciesGroup/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/speciesGroup/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
                                     species.setOtherSpeciesGroup(nodeData.getNodeValue());
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/speciesCode/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/speciesCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesCode(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesCode(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/scientificName/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/scientificName/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesName(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesName(nodeData.getNodeValue());
                                     }
                                 }
 
                                 //Ecological Information-Species
-                                log("         Processing Species:::"+species.getOtherSpeciesCode()+"::: Species name ::"+species.getOtherSpeciesName());
-                                ImporterSiteXML.log.info("Processing Species:::"+species.getOtherSpeciesCode()+"::: Species name ::"+species.getOtherSpeciesName());
-                                
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/sensitiveInfo/text()");
+                                log("         Processing Species:::" + species.getOtherSpeciesCode()+"::: Species name ::" + species.getOtherSpeciesName());
+                                ImporterSiteXML.log.info("Processing Species:::" + species.getOtherSpeciesCode()+"::: Species name ::" + species.getOtherSpeciesName());
+
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/sensitiveInfo/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(("true").equals(nodeData.getNodeValue())){
+                                    if (("true").equals(nodeData.getNodeValue())) {
                                         species.setOtherSpeciesSensitive(Short.parseShort("1"));
-                                    }else{
+                                    } else {
                                         species.setOtherSpeciesSensitive(Short.parseShort("0"));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/nonPresenceInSite/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/nonPresenceInSite/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(("true").equals(nodeData.getNodeValue())){
+                                    if (("true").equals(nodeData.getNodeValue())) {
                                         species.setOtherSpeciesNp(Short.parseShort("1"));
-                                    }else{
+                                    } else {
                                         species.setOtherSpeciesNp(Short.parseShort("0"));
                                     }
                                 }
-                                                                        
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/lowerBound/text()");
+
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/lowerBound/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue())); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue()));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/upperBound/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/upperBound/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue())); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue()));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/countingUnit/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/countingUnit/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesUnit(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesUnit(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/abundanceCategory/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/abundanceCategory/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setOtherSpeciesCategory(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setOtherSpeciesCategory(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
 
-                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/motivations/motivation");
+                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/motivations/motivation");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODESET);
-                                if(result != null){
+                                if (result != null) {
                                     NodeList nodeMot = (NodeList)result;
                                     StringBuffer strMot = new StringBuffer();
-                                    for(int j=1;j<=nodeMot.getLength();j++){
-                                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/motivations/motivation["+j+"]/text()");
+                                    for(int j=1;j<=nodeMot.getLength();j++) {
+                                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/motivations/motivation[" + j+"]/text()");
                                         // Run the query and get a nodeset
                                         result = expr.evaluate(document, XPathConstants.NODE);
-                                        if(result!=null){
+                                        if (result!=null) {
                                             Node nodeMotv = (Node)result;
-                                            if(nodeMotv.getNodeValue() != null){
-                                              strMot.append(nodeMotv.getNodeValue()); 
-                                              strMot.append(","); 
+                                            if (nodeMotv.getNodeValue() != null) {
+                                              strMot.append(nodeMotv.getNodeValue());
+                                              strMot.append(",");
                                             }
                                         }
                                     }
                                     String motiva = strMot.toString();
                                     motiva = motiva.substring(0,motiva.length()-1);
-                                    species.setOtherSpeciesMotivation(motiva); 
+                                    species.setOtherSpeciesMotivation(motiva);
                                 }
                                 species.setSite(site);
                                 site.getOtherSpecieses().add(species);
-                            }else{
+                            } else {
                                 Species species = new Species();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/speciesGroup/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/speciesGroup/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
                                     species.setSpeciesGroup(nodeData.getNodeValue().charAt(0));
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/speciesCode/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/speciesCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesCode(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesCode(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/scientificName/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/scientificName/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesName(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesName(nodeData.getNodeValue());
                                     }
                                 }
 
                                 //Ecological Information-Species
-                                log("         Processing Species:::"+species.getSpeciesCode()+"::: Species name ::"+species.getSpeciesName());
-                                ImporterSiteXML.log.info("Processing Species:::"+species.getSpeciesCode()+"::: Species name ::"+species.getSpeciesName());
-                            
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/sensitiveInfo/text()");
+                                log("         Processing Species:::" + species.getSpeciesCode()+"::: Species name ::" + species.getSpeciesName());
+                                ImporterSiteXML.log.info("Processing Species:::" + species.getSpeciesCode()+"::: Species name ::" + species.getSpeciesName());
+
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/sensitiveInfo/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                        if(("true").equals(nodeData.getNodeValue())){
+                                    if (nodeData.getNodeValue() != null) {
+                                        if (("true").equals(nodeData.getNodeValue())) {
                                             species.setSpeciesSensitive(Short.parseShort("1"));
-                                        }else{
+                                        } else {
                                             species.setSpeciesSensitive(Short.parseShort("0"));
                                         }
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/nonPresenceInSite/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/nonPresenceInSite/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                        if(("true").equals(nodeData.getNodeValue())){
+                                    if (nodeData.getNodeValue() != null) {
+                                        if (("true").equals(nodeData.getNodeValue())) {
                                             species.setSpeciesNp(Short.parseShort("1"));
-                                        }else{
+                                        } else {
                                             species.setSpeciesNp(Short.parseShort("0"));
                                         }
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationType/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationType/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesType(nodeData.getNodeValue().charAt(0)); 
-                                    }
-                                }
-                                    
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/lowerBound/text()");
-                                // Run the query and get a nodeset
-                                result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
-                                    Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue())); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesType(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/upperBound/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/lowerBound/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue())); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue()));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/populationSize/countingUnit/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/upperBound/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesUnit(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue()));
+                                    }
+                                }
+
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/populationSize/countingUnit/text()");
+                                // Run the query and get a nodeset
+                                result = expr.evaluate(document, XPathConstants.NODE);
+                                if (result != null) {
+                                    Node nodeData = (Node)result;
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesUnit(nodeData.getNodeValue());
                                     }
                                 }
 
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/abundanceCategory/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/abundanceCategory/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesCategory(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesCategory(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/observationDataQuality/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/observationDataQuality/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesDataQuality(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesDataQuality(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/population/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/population/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesPopulation(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesPopulation(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/conservation/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/conservation/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesConservation(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesConservation(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/isolation/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/isolation/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesIsolation(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesIsolation(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/ecologicalInformation/species/speciesPopulation["+i+"]/global/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/ecologicalInformation/species/speciesPopulation[" + i+"]/global/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      species.setSpeciesGlobal(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      species.setSpeciesGlobal(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
                                 species.setSite(site);
@@ -1242,46 +1242,46 @@ public class ImporterSiteXML implements Importer {
                         }
                     }
                 }
-                    
-                
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription");
+
+
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription");
                 // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
-               
-                if(result != null){
+
+                if (result != null) {
                     //Site Description-Habitat Class
                     log("Processing Site Description-Habitat Class");
-                    ImporterSiteXML.log.info("Processing Site Description-Habitat Class");        
+                    ImporterSiteXML.log.info("Processing Site Description-Habitat Class");
                     //NodeList nodeList = (NodeList) result;
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/habitatClass");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/habitatClass");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODESET);                   
-                    if(result != null){
+                    result = expr.evaluate(document, XPathConstants.NODESET);
+                    if (result != null) {
                         NodeList nodeHabClass = (NodeList)result;
-                        for(int i=1;i<=nodeHabClass.getLength();i++){
+                        for(int i=1;i<=nodeHabClass.getLength();i++) {
                             HabitatClass habClass = new HabitatClass();
 
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/habitatClass["+i+"]/code/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/habitatClass[" + i+"]/code/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
-                                  habClass.setHabitatClassCode(nodeData.getNodeValue()); 
+                                if (nodeData.getNodeValue() != null) {
+                                  habClass.setHabitatClassCode(nodeData.getNodeValue());
                                 }
                             }
-                            
+
                             //Site Description-Habitat Class
-                            log("         Processing Habitat Class:::"+habClass.getHabitatClassCode());
-                            ImporterSiteXML.log.info("Processing Habitat Class:::"+habClass.getHabitatClassCode());
-                                
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/habitatClass["+i+"]/coveragePercentage/text()");
+                            log("         Processing Habitat Class:::" + habClass.getHabitatClassCode());
+                            ImporterSiteXML.log.info("Processing Habitat Class:::" + habClass.getHabitatClassCode());
+
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/habitatClass[" + i+"]/coveragePercentage/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
-                                  habClass.setHabitatClassCover(Double.parseDouble(nodeData.getNodeValue())); 
+                                if (nodeData.getNodeValue() != null) {
+                                  habClass.setHabitatClassCover(Double.parseDouble(nodeData.getNodeValue()));
                                 }
                             }
                             habClass.setSite(site);
@@ -1289,92 +1289,92 @@ public class ImporterSiteXML implements Importer {
                         }
                     }
 
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/otherSiteCharacteristics/text()");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/otherSiteCharacteristics/text()");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                          site.setSiteCharacteristics(nodeData.getNodeValue()); 
+                        if (nodeData.getNodeValue() != null) {
+                          site.setSiteCharacteristics(nodeData.getNodeValue());
                         }
                     }
 
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/qualityAndImportance/text()");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/qualityAndImportance/text()");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                          site.setSiteQuality(nodeData.getNodeValue()); 
+                        if (nodeData.getNodeValue() != null) {
+                          site.setSiteQuality(nodeData.getNodeValue());
                         }
                     }
-                       
-                    
+
+
                     //Site Description-Impacts
                     log("Processing Site Description-Impacts");
                     ImporterSiteXML.log.info("Processing ite Description-Impacts");
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact");
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact");
                          // Run the query and get a nodeset
-                        result = expr.evaluate(document, XPathConstants.NODESET);                    
-                        if(result != null){
+                        result = expr.evaluate(document, XPathConstants.NODESET);
+                        if (result != null) {
                             NodeList nodeImpacts = (NodeList)result;
-                            for(int i=1;i<=nodeImpacts.getLength();i++){                                    
+                            for(int i=1;i<=nodeImpacts.getLength();i++) {
                                 Impact impact = new Impact();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact["+i+"]/code/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact[" + i+"]/code/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      impact.setImpactCode(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      impact.setImpactCode(nodeData.getNodeValue());
                                     }
                                 }
-                                   
+
                                 //Site Description-Impact
-                                log("         Processing Impact:::"+impact.getImpactCode());
-                                ImporterSiteXML.log.info("Processing Impact:::"+impact.getImpactCode());
-                
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact["+i+"]/rank/text()");
+                                log("         Processing Impact:::" + impact.getImpactCode());
+                                ImporterSiteXML.log.info("Processing Impact:::" + impact.getImpactCode());
+
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact[" + i+"]/rank/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      impact.setImpactRank(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      impact.setImpactRank(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact["+i+"]/pollutionCode/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact[" + i+"]/pollutionCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      impact.setImpactPollutionCode(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      impact.setImpactPollutionCode(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact["+i+"]/occurrence/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact[" + i+"]/occurrence/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      impact.setImpactOccurrence(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      impact.setImpactOccurrence(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/impacts/impact["+i+"]/natureOfImpact/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/impacts/impact[" + i+"]/natureOfImpact/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      impact.setImpactType(nodeData.getNodeValue().charAt(0)); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      impact.setImpactType(nodeData.getNodeValue().charAt(0));
                                     }
                                 }
                                 impact.setSite(site);
@@ -1385,42 +1385,42 @@ public class ImporterSiteXML implements Importer {
 
                     //Site Description-OwnerShip
                     log("Processing Site Description-OwnerShip");
-                    ImporterSiteXML.log.info("Processing Site Description-OwnerShip");    
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/ownership");
+                    ImporterSiteXML.log.info("Processing Site Description-OwnerShip");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/ownership");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/ownership/ownershipPart");
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/ownership/ownershipPart");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
-                        if(result != null){
+                        if (result != null) {
                             NodeList nodeOwner = (NodeList)result;
-                            for(int i=1;i<=nodeOwner.getLength();i++){                                    
+                            for(int i=1;i<=nodeOwner.getLength();i++) {
                                 SiteOwnership ownerShip = new SiteOwnership();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/ownership/ownershipPart["+i+"]/ownershiptype/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/ownership/ownershipPart[" + i+"]/ownershiptype/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
+                                    if (nodeData.getNodeValue() != null) {
                                         Ownership owner = new Ownership();
                                         owner.setOwnershipType(nodeData.getNodeValue());
-                                        
+
                                         //Site Description-OwnerShip
-                                        log("         Processing OwnerShip:::"+owner.getOwnershipType());
-                                        ImporterSiteXML.log.info("Processing OwnerShip:::"+owner.getOwnershipType());
+                                        log("         Processing OwnerShip:::" + owner.getOwnershipType());
+                                        ImporterSiteXML.log.info("Processing OwnerShip:::" + owner.getOwnershipType());
                                         int ownerShipId = getOwnerShipId(session,nodeData.getNodeValue());
-                                        if(ownerShipId != -1){
+                                        if (ownerShipId != -1) {
                                             owner.setOwnershipId(ownerShipId);
                                             SiteOwnershipId id = new SiteOwnershipId(owner.getOwnershipId(),site.getSiteCode());
                                             //siteOwnerShip.setId(id);
                                             ownerShip = new SiteOwnership(id, owner, site);
-                                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/ownership/ownershipPart["+i+"]/percent/text()");
+                                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/ownership/ownershipPart[" + i+"]/percent/text()");
                                             // Run the query and get a nodeset
                                             result = expr.evaluate(document, XPathConstants.NODE);
-                                            if(result != null){
+                                            if (result != null) {
                                                 Node nodeDataPercent = (Node)result;
-                                                if(nodeData.getNodeValue() != null){
+                                                if (nodeData.getNodeValue() != null) {
                                                     ownerShip.setOwnershipPercent(Double.parseDouble(nodeDataPercent.getNodeValue()));
                                                 }
                                             }
@@ -1432,40 +1432,40 @@ public class ImporterSiteXML implements Importer {
                             }
                         }
                     }
-                        
+
                     //Site Description-Documentation
                     log("Processing Site Description-Documentation");
-                    ImporterSiteXML.log.info("Processing Site Description-Documentation");  
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/documentation");
+                    ImporterSiteXML.log.info("Processing Site Description-Documentation");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/documentation");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
                         Doc doc = new Doc();
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/documentation/description/text()");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/documentation/description/text()");
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nodeData = (Node)result;
-                            if(nodeData.getNodeValue() != null){
+                            if (nodeData.getNodeValue() != null) {
                                 doc.setDocDescription(nodeData.getNodeValue());
                             }
                         }
-                          
+
                         //Site Description-Documentation-Links
                         log("Processing Site Description-Documentation-Links");
-                        ImporterSiteXML.log.info("Processing Site Description-Documentation-Links"); 
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/documentation/links");
+                        ImporterSiteXML.log.info("Processing Site Description-Documentation-Links");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/documentation/links");
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
-                        if(result != null){
+                        if (result != null) {
                             NodeList nodeLinks = (NodeList)result;
-                            for(int i=1;i<=nodeLinks.getLength();i++){                                    
+                            for(int i=1;i<=nodeLinks.getLength();i++) {
                                 DocLink link = new DocLink();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/documentation/links/link/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/documentation/links/link/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
+                                if (nodeData.getNodeValue() != null) {
                                     link.setDocLinkUrl(nodeData.getNodeValue());
                                 }
                                 link.setDoc(doc);
@@ -1473,414 +1473,414 @@ public class ImporterSiteXML implements Importer {
                             }
                         }
                         site.setDoc(doc);
-                    } 
+                    }
                 }
 
                 //Site Description-Documentation-Other Site Characteristics
                 log("Processing Site Description-Documentation-Other Site Characteristics");
                 ImporterSiteXML.log.info("Processing Site Description-Documentation-Other Site Characteristics");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/otherSiteCharacteristics/text()");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/otherSiteCharacteristics/text()");
                  // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
-                if(result != null){
+                if (result != null) {
                     Node nodeData = (Node)result;
-                    if(nodeData.getNodeValue() != null){
-                      site.setSiteCharacteristics(nodeData.getNodeValue()); 
+                    if (nodeData.getNodeValue() != null) {
+                      site.setSiteCharacteristics(nodeData.getNodeValue());
                     }
                 }
 
                 //Site Description-Documentation-Quality and Importance
                 log("Processing Site Description-Documentation-Quality and Importance");
                 ImporterSiteXML.log.info("Processing Site Description-Documentation-Quality and Importance");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteDescription/qualityAndImportance/text()");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteDescription/qualityAndImportance/text()");
                  // Run the query and get a nodeset
-                result = expr.evaluate(document, XPathConstants.NODE);                
-                if(result != null){
+                result = expr.evaluate(document, XPathConstants.NODE);
+                if (result != null) {
                     Node nodeData = (Node)result;
-                    if(nodeData.getNodeValue() != null){
-                      site.setSiteQuality(nodeData.getNodeValue()); 
+                    if (nodeData.getNodeValue() != null) {
+                      site.setSiteQuality(nodeData.getNodeValue());
                     }
                 }
-                   
-                
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection");
+
+
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection");
                  // Run the query and get a nodeset
-                result = expr.evaluate(document, XPathConstants.NODE);                
-                if(result != null){
+                result = expr.evaluate(document, XPathConstants.NODE);
+                if (result != null) {
                     //Site Protection-National Designations
                     log("Processing Site Protection-National Designations");
                     ImporterSiteXML.log.info("Processing Site Protection-National Designations");
-                    
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/nationalDesignations");
+
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/nationalDesignations");
                      // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
-                      if(result != null){
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation");
+                      if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
-                        if(result != null){
+                        if (result != null) {
                             NodeList nodeNDesig = (NodeList)result;
-                            for(int i=1;i<=nodeNDesig.getLength();i++){                                    
+                            for(int i=1;i<=nodeNDesig.getLength();i++) {
                                 NationalDtype nationalDType = new NationalDtype();
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation["+i+"]/designationCode/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation[" + i+"]/designationCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      nationalDType.setNationalDtypeCode(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      nationalDType.setNationalDtypeCode(nodeData.getNodeValue());
                                     }
                                 }
 
                                 //Site Description-National Designation
-                                log("         Processing National Designation:::"+nationalDType.getNationalDtypeCode());
-                                ImporterSiteXML.log.info("Processing National Designation:::"+nationalDType.getNationalDtypeCode());
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation["+i+"]/cover/text()");
+                                log("         Processing National Designation:::" + nationalDType.getNationalDtypeCode());
+                                ImporterSiteXML.log.info("Processing National Designation:::" + nationalDType.getNationalDtypeCode());
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/nationalDesignations/nationalDesignation[" + i+"]/cover/text()");
                                 // Run the query and get a nodeset
-                                result = expr.evaluate(document, XPathConstants.NODE);                                
-                                if(result != null){
+                                result = expr.evaluate(document, XPathConstants.NODE);
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      nationalDType.setNationalDtypeCover(Double.parseDouble(nodeData.getNodeValue())); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      nationalDType.setNationalDtypeCover(Double.parseDouble(nodeData.getNodeValue()));
                                     }
                                 }
                                 nationalDType.setSite(site);
                                 site.getNationalDtypes().add(nationalDType);
                             }
                         }
-                     }      
-                         
+                     }
+
                      //Site Protection-Relations
                      log("Processing Site Protection-Relations");
                      ImporterSiteXML.log.info("Processing Site Protection-Relations");
-                     expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations");
+                     expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations");
                      // Run the query and get a nodeset
-                     result = expr.evaluate(document, XPathConstants.NODE);                     
-                     if(result != null){                         
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships");
+                     result = expr.evaluate(document, XPathConstants.NODE);
+                     if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             //Site Protection-National Relations
                             log("Processing Site Protection-National Relations");
                             ImporterSiteXML.log.info("Processing Site Protection-National Relations");
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship");
                              // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODESET);
-                            if(result != null){
+                            if (result != null) {
                                 NodeList nodeNRel = (NodeList)result;
-                                for(int i=1;i<=nodeNRel.getLength();i++){
+                                for(int i=1;i<=nodeNRel.getLength();i++) {
                                     SiteRelation rel = new SiteRelation();
-                                    rel.setSiteRelationScope('N'); 
+                                    rel.setSiteRelationScope('N');
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship["+i+"]/designationCode/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship[" + i+"]/designationCode/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationCode(nodeData.getNodeValue()); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationCode(nodeData.getNodeValue());
                                         }
                                     }
-                                    
+
                                     //Site Description-National Relation
-                                    log("         Processing National Relation:::"+rel.getSiteRelationCode());
-                                    ImporterSiteXML.log.info("Processing National Relation:::"+rel.getSiteRelationCode());
-                                
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship["+i+"]/siteName/text()");
+                                    log("         Processing National Relation:::" + rel.getSiteRelationCode());
+                                    ImporterSiteXML.log.info("Processing National Relation:::" + rel.getSiteRelationCode());
+
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship[" + i+"]/siteName/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationSitename(nodeData.getNodeValue()); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationSitename(nodeData.getNodeValue());
                                         }
                                     }
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship["+i+"]/type/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship[" + i+"]/type/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationType(nodeData.getNodeValue().charAt(0)); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationType(nodeData.getNodeValue().charAt(0));
                                         }
                                     }
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship["+i+"]/cover/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/nationalRelationships/nationalRelationship[" + i+"]/cover/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue())); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue()));
                                         }
                                     }
                                     rel.setSite(site);
                                     site.getSiteRelations().add(rel);
-                                }  
+                                }
                             }
                         }
-                            
-                               
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships");
+
+
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship");
+                        if (result != null) {
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship");
                              // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODESET);
-                            if(result != null){
+                            if (result != null) {
                                 //Site Protection-International Relations
                                 log("Processing Site Protection-International Relations");
                                 ImporterSiteXML.log.info("Processing Site Protection-International Relations");
                                 NodeList nodeNRel = (NodeList)result;
-                                for(int i=1;i<=nodeNRel.getLength();i++){
+                                for(int i=1;i<=nodeNRel.getLength();i++) {
                                     SiteRelation rel = new SiteRelation();
-                                    rel.setSiteRelationScope('I'); 
+                                    rel.setSiteRelationScope('I');
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship["+i+"]/convention/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship[" + i+"]/convention/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationConvention(nodeData.getNodeValue()); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationConvention(nodeData.getNodeValue());
                                         }
                                     }
-                                    
+
                                     //Site Description-International Relation
-                                    log("         Processing International Relation:::"+rel.getSiteRelationConvention());
-                                    ImporterSiteXML.log.info("Processing International Relation:::"+rel.getSiteRelationConvention());
+                                    log("         Processing International Relation:::" + rel.getSiteRelationConvention());
+                                    ImporterSiteXML.log.info("Processing International Relation:::" + rel.getSiteRelationConvention());
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship["+i+"]/siteName/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship[" + i+"]/siteName/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationSitename(nodeData.getNodeValue()); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationSitename(nodeData.getNodeValue());
                                         }
                                     }
 
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship["+i+"]/type/text()");
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship[" + i+"]/type/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationType(nodeData.getNodeValue().charAt(0)); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationType(nodeData.getNodeValue().charAt(0));
                                         }
                                     }
-                                        
-                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship["+i+"]/cover/text()");
+
+                                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/internationalRelationships/internationalRelationship[" + i+"]/cover/text()");
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
-                                    if(result != null){
+                                    if (result != null) {
                                         Node nodeData = (Node)result;
-                                        if(nodeData.getNodeValue() != null){
-                                          rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue())); 
+                                        if (nodeData.getNodeValue() != null) {
+                                          rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue()));
                                         }
                                     }
                                     rel.setSite(site);
                                     site.getSiteRelations().add(rel);
-                                }  
+                                }
                             }
 
                             //Site Protection-Additional Designation
                             log("Processing Site Protection-Additional Designation");
                             ImporterSiteXML.log.info("Processing Site Protection-Additional Designation");
-                            expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteProtection/relations/siteDesignationAdditional/text()");
+                            expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteProtection/relations/siteDesignationAdditional/text()");
                              // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
-                            if(result != null){
+                            if (result != null) {
                                 Node nodeData = (Node)result;
-                                if(nodeData.getNodeValue() != null){
-                                  site.setSiteDesignation(nodeData.getNodeValue()); 
+                                if (nodeData.getNodeValue() != null) {
+                                  site.setSiteDesignation(nodeData.getNodeValue());
                                 }
                             }
-                        }                     
+                        }
                     }
                 }
-                    
-                
+
+
                 //Site Management
                 log("Processing Site Management");
                 ImporterSiteXML.log.info("Processing Site Management");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement");
                 // Run the query and get a nodeset
-                result = expr.evaluate(document, XPathConstants.NODE);                
-                if(result != null){
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies");
+                result = expr.evaluate(document, XPathConstants.NODE);
+                if (result != null) {
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies");
                      // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     Mgmt mgmt = new Mgmt();
                     saveAndReloadSession(session, mgmt);
-                    if(result != null){
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody");
+                    if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
-                        if(result != null){
+                        if (result != null) {
                             NodeList nodeMgmtBody = (NodeList)result;
-                            for(int i=1;i<=nodeMgmtBody.getLength();i++){                                    
+                            for(int i=1;i<=nodeMgmtBody.getLength();i++) {
                                 MgmtBody mgmtBody = new MgmtBody();
 
                                 //Site Management Body
                                 log("         Processing Site Management Body");
                                 ImporterSiteXML.log.info("Processing Site Management Body");
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/organisation/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/organisation/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyOrg(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyOrg(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/adminUnit/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/adminUnit/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyAdminUnit(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyAdminUnit(nodeData.getNodeValue());
                                     }
                                 }
 
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/locatorDesignator/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/locatorDesignator/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyLocatorDesignator(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyLocatorDesignator(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/locatorName/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/locatorName/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyLocatorName(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyLocatorName(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/addressArea/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/addressArea/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyAddressArea(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyAddressArea(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/postName/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/postName/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyPostName(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyPostName(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/postCode/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/postCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyPostCode(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyPostCode(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/address/thoroughfare/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/address/thoroughfare/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyThroughFare(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyThroughFare(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/addressUnstructured/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/addressUnstructured/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyAddress(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyAddress(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementBodies/managementBody["+i+"]/email/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementBodies/managementBody[" + i+"]/email/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtBody.setMgmtBodyEmail(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtBody.setMgmtBodyEmail(nodeData.getNodeValue());
                                     }
                                 }
-                                
-                                mgmtBody.setMgmt(mgmt);     
+
+                                mgmtBody.setMgmt(mgmt);
                                 saveAndReloadSession(session, mgmtBody);
                                 mgmt.getMgmtBodies().add(mgmtBody);
                             }
                         }
 
                     }
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementPlans");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementPlans");
                      // Run the query and get a nodeset
-                    result = expr.evaluate(document, XPathConstants.NODE);                    
-                    if(result != null){
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementPlans/planExistType/text()");
+                    result = expr.evaluate(document, XPathConstants.NODE);
+                    if (result != null) {
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementPlans/planExistType/text()");
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
-                        if(result != null){
+                        if (result != null) {
                             Node nodeData = (Node)result;
-                            if(nodeData.getNodeValue() != null){                                    
-                                mgmt.setMgmtStatus(nodeData.getNodeValue().charAt(0)); 
-                            }else{
+                            if (nodeData.getNodeValue() != null) {
+                                mgmt.setMgmtStatus(nodeData.getNodeValue().charAt(0));
+                            } else {
                                 mgmt.setMgmtStatus('N');
                             }
-                        }else{
+                        } else {
                             mgmt.setMgmtStatus('N');
                         }
 
-                        expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementPlans/managementPlan");
+                        expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementPlans/managementPlan");
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
-                        if(result != null){
+                        if (result != null) {
                             NodeList nodeMgmtBody = (NodeList)result;
-                            for(int i=1;i<=nodeMgmtBody.getLength();i++){                                    
+                            for(int i=1;i<=nodeMgmtBody.getLength();i++) {
                                 MgmtPlan mgmtPlan = new MgmtPlan();
                                 //Site Management Plan
                                 log("         Processing Site Management Plan");
                                 ImporterSiteXML.log.info("Processing Site Management Body");
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementPlans/managementPlan["+i+"]/name/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementPlans/managementPlan[" + i+"]/name/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtPlan.setMgmtPlanName(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtPlan.setMgmtPlanName(nodeData.getNodeValue());
                                     }
                                 }
 
-                                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/managementPlans/managementPlan["+i+"]/url/text()");
+                                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/managementPlans/managementPlan[" + i+"]/url/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                if(result != null){
+                                if (result != null) {
                                     Node nodeData = (Node)result;
-                                    if(nodeData.getNodeValue() != null){
-                                      mgmtPlan.setMgmtPlanUrl(nodeData.getNodeValue()); 
+                                    if (nodeData.getNodeValue() != null) {
+                                      mgmtPlan.setMgmtPlanUrl(nodeData.getNodeValue());
                                     }
                                 }
                                 mgmtPlan.setMgmt(mgmt);
@@ -1889,59 +1889,59 @@ public class ImporterSiteXML implements Importer {
                             }
                         }
                     }
-                    
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/siteManagement/conservationMeasures/text()");
+
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/siteManagement/conservationMeasures/text()");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
-                    if(result != null){
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                          mgmt.setMgmtConservMeasures(nodeData.getNodeValue()); 
+                        if (nodeData.getNodeValue() != null) {
+                          mgmt.setMgmtConservMeasures(nodeData.getNodeValue());
                         }
                     }
                     saveAndReloadSession(session, mgmt);
-                    site.setMgmt(mgmt);                       
+                    site.setMgmt(mgmt);
                 }
 
                 //Map
                 log("Processing Map");
                 ImporterSiteXML.log.info("Processing Map");
-                expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/map");
+                expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/map");
                      // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
-                if(result != null){
+                if (result != null) {
                     Map map = new Map();
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/map/InspireID/text()");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/map/InspireID/text()");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
-                    if(result != null){
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                          map.setMapInspire(nodeData.getNodeValue()); 
+                        if (nodeData.getNodeValue() != null) {
+                          map.setMapInspire(nodeData.getNodeValue());
                         }
                     }
 
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/map/pdfProvided/text()");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/map/pdfProvided/text()");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
-                    if(result != null){
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                            if(("true").equals(nodeData.getNodeValue())){
+                        if (nodeData.getNodeValue() != null) {
+                            if (("true").equals(nodeData.getNodeValue())) {
                                 map.setMapId(0);
-                            }else{
+                            } else {
                                 map.setMapId(1);
                             }
                         }
                     }
 
-                    expr = xpath.compile("//sdf[siteIdentification/siteCode='"+this.siteCode+"']/map/mapReference/text()");
+                    expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode+"']/map/mapReference/text()");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
-                    if(result != null){
+                    if (result != null) {
                         Node nodeData = (Node)result;
-                        if(nodeData.getNodeValue() != null){
-                          map.setMapReference(nodeData.getNodeValue()); 
+                        if (nodeData.getNodeValue() != null) {
+                          map.setMapReference(nodeData.getNodeValue());
                         }
                     }
                     saveAndReloadSession(session, map);
@@ -1952,13 +1952,13 @@ public class ImporterSiteXML implements Importer {
             site.setSiteDateCreation(cal.getTime());
             saveAndReloadSession(session, site);
             importOK=true;
-        }catch(Exception e){
+        } catch (Exception e) {
             importOK=false;
             //e.printStackTrace();
-            ImporterSiteXML.log.info("Impor process has failed, the error message :"+e.getMessage());
+            ImporterSiteXML.log.info("Impor process has failed, the error message :" + e.getMessage());
         }
          return importOK;
     }
-    
-   
+
+
 }

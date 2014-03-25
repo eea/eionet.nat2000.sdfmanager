@@ -26,10 +26,10 @@ public class SDFVerifier {
      * @return
      */
     public static int verifySiteCode(String siteCode) {
-       if (siteCode.length() != 9) {       
+       if (siteCode.length() != 9) {
             return 1;
         }
-       if (!siteCode.matches("^[A-Z][A-Z][A-Z0-9]*")) {            
+       if (!siteCode.matches("^[A-Z][A-Z][A-Z0-9]*")) {
             return 2;
         }
         return 0;
@@ -41,9 +41,9 @@ public class SDFVerifier {
      * @return
      */
     public static int verifySiteName(String siteName) {
-        if (siteName.length() == 0){
+        if (siteName.length() == 0) {
             return 1;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -54,12 +54,12 @@ public class SDFVerifier {
      * @return
      */
     public static int verifySiteType(String siteType) {
-        if (siteType.length() != 1){
+        if (siteType.length() != 1) {
             return 1;
         }
-        if (!siteType.equalsIgnoreCase("A") && !siteType.equalsIgnoreCase("B") && !siteType.equalsIgnoreCase("C")){
+        if (!siteType.equalsIgnoreCase("A") && !siteType.equalsIgnoreCase("B") && !siteType.equalsIgnoreCase("C")) {
             return 2;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -70,7 +70,7 @@ public class SDFVerifier {
      * @return
      */
     public static int verifyDate(String date) {
-        if (!date.matches("^[0-9]{4}-[0-9]{2}[\\-0-9]{0,3}")){
+        if (!date.matches("^[0-9]{4}-[0-9]{2}[\\-0-9]{0,3}")) {
             return 1;
         }
         return 0;
@@ -82,7 +82,7 @@ public class SDFVerifier {
      * @return
      */
     public static int verifyStringNotEmpty(String val) {
-        if (val.length() != 0){
+        if (val.length() != 0) {
             return 0;
         }
         else{
@@ -120,7 +120,7 @@ public class SDFVerifier {
      * @return
      */
     public static int verifyChar(String val) {
-        if (val.length() == 1){
+        if (val.length() == 1) {
             return 0;
         }
         else{
@@ -149,7 +149,7 @@ public class SDFVerifier {
      * @return
      */
     public static int verifyBoolean(String val) {
-        if (val != null && (val.equalsIgnoreCase("TRUE") || val.equalsIgnoreCase("FALSE"))){
+        if (val != null && (val.equalsIgnoreCase("TRUE") || val.equalsIgnoreCase("FALSE"))) {
             return 0;
         }
         else{
@@ -167,7 +167,7 @@ public class SDFVerifier {
         boolean res = resp.getRespName() != null && resp.getRespAddress() != null &&
                 resp.getRespEmail() != null && !resp.getRespName().equals("") &&
                 ! resp.getRespAddress().equals("") && !resp.getRespEmail().equals("");
-        if (res){
+        if (res) {
             return 0;
         }
         else{
@@ -183,7 +183,7 @@ public class SDFVerifier {
     public static int checkRegion (Region region) {
         boolean res = region.getRegionCode() != null && region.getRegionName() != null &&
                 !region.getRegionCode().equals("") && !region.getRegionName().equals("");
-        if (res){
+        if (res) {
             return 0;
         }
         else{
@@ -196,8 +196,8 @@ public class SDFVerifier {
      * @param siteBiogeo
      * @return
      */
-    public static int checkBioRegion (SiteBiogeo siteBiogeo) {        
-        if (siteBiogeo.getBiogeo() == null){
+    public static int checkBioRegion (SiteBiogeo siteBiogeo) {
+        if (siteBiogeo.getBiogeo() == null) {
             return 1;
         }
         else{
@@ -210,8 +210,8 @@ public class SDFVerifier {
      * @param habitat
      * @return
      */
-    public static int checkHabitat (Habitat habitat) {        
-        if (habitat.getHabitatCode() != null){
+    public static int checkHabitat (Habitat habitat) {
+        if (habitat.getHabitatCode() != null) {
             return 0;
         }
         else {
@@ -224,8 +224,8 @@ public class SDFVerifier {
      * @param species
      * @return
      */
-    public static int checkSpecies (Species species) {        
-        if (species.getSpeciesCode() != null){
+    public static int checkSpecies (Species species) {
+        if (species.getSpeciesCode() != null) {
             return 0;
         }
         else{
@@ -238,8 +238,8 @@ public class SDFVerifier {
      * @param species
      * @return
      */
-    public static int checkOSpecies (OtherSpecies species) {        
-        if (species.getOtherSpeciesCode() != null){
+    public static int checkOSpecies (OtherSpecies species) {
+        if (species.getOtherSpeciesCode() != null) {
             return 0;
         }
         else {
@@ -252,8 +252,8 @@ public class SDFVerifier {
      * @param hClass
      * @return
      */
-    public static int checkhClass (HabitatClass hClass) {        
-        if (hClass.getHabitatClassCode() != null){
+    public static int checkhClass (HabitatClass hClass) {
+        if (hClass.getHabitatClassCode() != null) {
             return 0;
         }
         else{
@@ -266,8 +266,8 @@ public class SDFVerifier {
      * @param impact
      * @return
      */
-    public static int checkImpact (Impact impact) {        
-        if (impact.getImpactCode() != null){
+    public static int checkImpact (Impact impact) {
+        if (impact.getImpactCode() != null) {
             return 0;
         }
         else{
@@ -276,11 +276,11 @@ public class SDFVerifier {
     }
 
     /**
-     * 
+     *
      * @param o
      * @return
      */
-    public static int checkOwnership (Ownership o) {        
+    public static int checkOwnership (Ownership o) {
         return 0;
     }
 }

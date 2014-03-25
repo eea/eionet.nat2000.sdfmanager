@@ -329,10 +329,10 @@ public class SDFEditorView extends javax.swing.JFrame {
            this.site.setSiteName(fmt(this.txtSiteName.getText()));
        }
        Character type;
-       if (this.cmbSiteType.getSelectedItem().equals("SPA")){
+       if (this.cmbSiteType.getSelectedItem().equals("SPA")) {
            type = 'A';
        }
-       else if (this.cmbSiteType.getSelectedItem().equals("SCI")){
+       else if (this.cmbSiteType.getSelectedItem().equals("SCI")) {
            type = 'B';
        }
        else{
@@ -434,19 +434,19 @@ public class SDFEditorView extends javax.swing.JFrame {
         Double area = ConversionTools.stringToDoubleN(this.txtArea.getText());
         Double marineArea = ConversionTools.stringToDoubleN(this.txtMarineArea.getText());
         Double length = ConversionTools.stringToDoubleN(this.txtLength.getText());
-        if (longitude != null){
+        if (longitude != null) {
             this.site.setSiteLongitude(longitude);
         }
-        if (latitude != null){
+        if (latitude != null) {
             this.site.setSiteLatitude(latitude);
         }
-        if (area != null){
+        if (area != null) {
             this.site.setSiteArea(area);
         }
-        if (marineArea != null){
+        if (marineArea != null) {
             this.site.setSiteMarineArea(marineArea);
         }
-        if (length != null){
+        if (length != null) {
             this.site.setSiteLength(length);
         }
     }
@@ -455,7 +455,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         String spaDate = this.txtDateSpa.getText();
         if (!spaDate.equals("")) {
             Date date = ConversionTools.convertToDate(spaDate);
-            if (date != null){
+            if (date != null) {
                 this.site.setSiteSpaDate(date);
             }
             else{
@@ -463,7 +463,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             }
         }
         String spaLegalRef = this.txtSpaRef.getText();
-        if (!spaLegalRef.equals("")){
+        if (!spaLegalRef.equals("")) {
             this.site.setSiteSpaLegalRef(spaLegalRef);
         }
         String sciPropDate = this.txtDatePropSci.getText();
@@ -497,11 +497,11 @@ public class SDFEditorView extends javax.swing.JFrame {
             }
         }
         String sacLegalRef = this.txtSacRef.getText();
-        if (!sacLegalRef.equals("")){
+        if (!sacLegalRef.equals("")) {
             this.site.setSiteSacLegalRef(sacLegalRef);
         }
         String explanations = this.txtSacExpl.getText();
-        if (!explanations.equals("")){
+        if (!explanations.equals("")) {
             this.site.setSiteExplanations(explanations);
         }
     }
@@ -536,12 +536,12 @@ public class SDFEditorView extends javax.swing.JFrame {
         else {
             //if (!respName.equals("") || !respAddr.equals("") || !respEmail.equals("")) {
             resp = new Resp();
-            if(!("").equals(respName) || !("").equals(respEmail)){
+            if (!("").equals(respName) || !("").equals(respEmail)) {
                  resp.setRespName(respName);
                  resp.setRespEmail(respEmail);
                  if ( !("").equals(respAddr)) {
                   resp.setRespAddress(respAddr);
-                 }else if(!("").equals(respAddrArea)){
+                 } else if (!("").equals(respAddrArea)) {
 
                   resp.setRespAddressArea(respAddrArea);
                   resp.setRespLocatorDesig(respLocatorDesig);
@@ -595,7 +595,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         this.saveAndReloadSession();
         this.loadSpecies();
     }
-    private void copySpecies(Species spFrom, Species spTo){
+    private void copySpecies(Species spFrom, Species spTo) {
             spTo.setSpeciesCode(spFrom.getSpeciesCode());
             spTo.setSpeciesName(spFrom.getSpeciesName());
             spTo.setSpeciesGroup(spFrom.getSpeciesGroup());
@@ -629,7 +629,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         this.saveAndReloadSession();
         this.loadOtherSpecies();
     }
-    private void copyOtherSpecies(OtherSpecies spFrom, OtherSpecies spTo){
+    private void copyOtherSpecies(OtherSpecies spFrom, OtherSpecies spTo) {
             spTo.setOtherSpeciesCode(spFrom.getOtherSpeciesCode());
             spTo.setOtherSpeciesName(spFrom.getOtherSpeciesName());
             spTo.setOtherSpeciesGroup(spFrom.getOtherSpeciesGroup());
@@ -718,7 +718,7 @@ public class SDFEditorView extends javax.swing.JFrame {
     }
     public boolean ownershipExists(Ownership ow) {
         Iterator itr = this.site.getSiteOwnerships().iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             if (((SiteOwnership) itr.next()).getOwnership().equals(ow)) {
                 return true;
             }
@@ -791,7 +791,7 @@ public class SDFEditorView extends javax.swing.JFrame {
     public boolean designationTypeExists(String code) {
         Iterator itr = this.modelDesignationTypes.iterator();
         while (itr.hasNext()) {
-            if(((NationalDtype)itr.next()).getNationalDtypeCode().equals(code)) {
+            if (((NationalDtype)itr.next()).getNationalDtypeCode().equals(code)) {
                 return true;
             }
         }
@@ -807,7 +807,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 DefaultTableModel modelBodies = (DefaultTableModel) this.tabMgmtBodies.getModel();
                 modelBodies.getDataVector().removeAllElements();
                 int i = 0;
-                while(itr.hasNext()) {
+                while (itr.hasNext()) {
                     MgmtBody mgmtB = (MgmtBody) itr.next();
                     Object[] tuple = {mgmtB.getMgmtBodyOrg(), mgmtB.getMgmtBodyEmail(),mgmtB.getMgmtBodyAddress(),mgmtB.getMgmtBodyAddressArea(),mgmtB.getMgmtBodyAdminUnit(),mgmtB.getMgmtBodyLocatorDesignator(),mgmtB.getMgmtBodyLocatorName(),mgmtB.getMgmtBodyPostCode(),mgmtB.getMgmtBodyPostName(),mgmtB.getMgmtBodyThroughFare()};
                     this.modelMgmtBodies.add(mgmtB);
@@ -847,7 +847,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             model.getDataVector().removeAllElements();
             Iterator itr = dTypes.iterator();
             int i = 0;
-            while(itr.hasNext()) {
+            while (itr.hasNext()) {
                 NationalDtype dType = (NationalDtype) itr.next();
                 Object[] tuple =   {dType.getNationalDtypeCode(),dType.getNationalDtypeCover()};
                 model.insertRow(i++, tuple);
@@ -882,7 +882,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) tabOwnership.getModel();
             model.getDataVector().removeAllElements();
             int i = 0;
-            while(itr.hasNext()) {
+            while (itr.hasNext()) {
                 SiteOwnership so = (SiteOwnership) itr.next();
                 Ownership ow = so.getOwnership();
                 Object[] tuple = {ow.getOwnershipType(),so.getOwnershipPercent(),ow.getOwnershipCode()};
@@ -906,7 +906,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             DefaultTableModel modelNational = (DefaultTableModel) this.tabNationalRelations.getModel();
             modelNational.getDataVector().removeAllElements();
             int i = 0,j = 0;
-            while(itr.hasNext()) {
+            while (itr.hasNext()) {
                 SiteRelation rel = (SiteRelation) itr.next();
                 if (rel.getSiteRelationScope().equals('I')) {
                     Object[] tuple = {rel.getSiteRelationConvention(),rel.getSiteRelationSitename(),rel.getSiteRelationCover()};
@@ -1001,20 +1001,20 @@ public class SDFEditorView extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 OtherSpecies sp = ((OtherSpecies)itr.next());
                 String otherSpeciesGroup = "";
-                 if(sp.getOtherSpeciesGroup() != null && !(("").equals(sp.getOtherSpeciesGroup().toString()))){
-                    if(sp.getOtherSpeciesGroup().toString().equals("A")){
+                 if (sp.getOtherSpeciesGroup() != null && !(("").equals(sp.getOtherSpeciesGroup().toString()))) {
+                    if (sp.getOtherSpeciesGroup().toString().equals("A")) {
                         otherSpeciesGroup = "Amphibians";
-                    }else if(sp.getOtherSpeciesGroup().toString().equals("B")){
+                    } else if (sp.getOtherSpeciesGroup().toString().equals("B")) {
                         otherSpeciesGroup = "Birds";
-                    }else if(sp.getOtherSpeciesGroup().toString().equals("F")){
+                    } else if (sp.getOtherSpeciesGroup().toString().equals("F")) {
                         otherSpeciesGroup = "Fish";
-                    }else if(sp.getOtherSpeciesGroup().toString().equals("I")){
+                    } else if (sp.getOtherSpeciesGroup().toString().equals("I")) {
                         otherSpeciesGroup = "Invertebrates";
-                    }else if(sp.getOtherSpeciesGroup().toString().equals("M")){
+                    } else if (sp.getOtherSpeciesGroup().toString().equals("M")) {
                         otherSpeciesGroup = "Mammals";
-                    }else if(sp.getOtherSpeciesGroup().toString().equals("P")){
+                    } else if (sp.getOtherSpeciesGroup().toString().equals("P")) {
                         otherSpeciesGroup = "Plants";
-                    }else {
+                    } else {
                         otherSpeciesGroup = "Reptiles";
                     }
 
@@ -1038,20 +1038,20 @@ public class SDFEditorView extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 Species sp = ((Species)itr.next());
                 String speciesGroup = "";
-                if(sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))){
-                    if(sp.getSpeciesGroup().toString().equals("A")){
+                if (sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))) {
+                    if (sp.getSpeciesGroup().toString().equals("A")) {
                         speciesGroup = "Amphibians";
-                    }else if(sp.getSpeciesGroup().toString().equals("B")){
+                    } else if (sp.getSpeciesGroup().toString().equals("B")) {
                         speciesGroup = "Birds";
-                    }else if(sp.getSpeciesGroup().toString().equals("F")){
+                    } else if (sp.getSpeciesGroup().toString().equals("F")) {
                         speciesGroup = "Fish";
-                    }else if(sp.getSpeciesGroup().toString().equals("I")){
+                    } else if (sp.getSpeciesGroup().toString().equals("I")) {
                         speciesGroup = "Invertebrates";
-                    }else if(sp.getSpeciesGroup().toString().equals("M")){
+                    } else if (sp.getSpeciesGroup().toString().equals("M")) {
                         speciesGroup = "Mamals";
-                    }else if(sp.getSpeciesGroup().toString().equals("P")){
+                    } else if (sp.getSpeciesGroup().toString().equals("P")) {
                         speciesGroup = "Plants";
-                    }else {
+                    } else {
                         speciesGroup = "Reptiles";
                     }
 
@@ -1118,7 +1118,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         this.tabBiogeo.getSelectionModel().clearSelection();
         this.tabBiogeo.repaint();
     }
-    private void loadRegions(){
+    private void loadRegions() {
         /** load or reload regions */
         Set regions = this.site.getRegions();
         this.modelRegions = new ArrayList();
@@ -3747,81 +3747,81 @@ public class SDFEditorView extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnMgmtExistsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMgmtExistsActionPerformed
+    private void btnMgmtExistsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnMgmtExistsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnMgmtExistsActionPerformed
+    } //GEN-LAST:event_btnMgmtExistsActionPerformed
 
-    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRegionActionPerformed
+    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddRegionActionPerformed
        // new EditorRegion(this).setVisible(true);
-    }//GEN-LAST:event_btnAddRegionActionPerformed
+    } //GEN-LAST:event_btnAddRegionActionPerformed
 
-    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddBiogeoActionPerformed
+    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddBiogeoActionPerformed
         //new EditorBioregion(this).setVisible(true);
-    }//GEN-LAST:event_btnAddBiogeoActionPerformed
+    } //GEN-LAST:event_btnAddBiogeoActionPerformed
 
-    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddHabitatActionPerformed
+    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatActionPerformed
         //new EditorHabitat(this).setVisible(true);
-    }//GEN-LAST:event_btnAddHabitatActionPerformed
+    } //GEN-LAST:event_btnAddHabitatActionPerformed
 
-    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditHabitatActionPerformed
+    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditHabitatActionPerformed
 
-    }//GEN-LAST:event_btnEditHabitatActionPerformed
+    } //GEN-LAST:event_btnEditHabitatActionPerformed
 
-    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSpeciesActionPerformed
+    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddSpeciesActionPerformed
 
-    }//GEN-LAST:event_btnAddSpeciesActionPerformed
+    } //GEN-LAST:event_btnAddSpeciesActionPerformed
 
-    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSpeciesActionPerformed
+    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditSpeciesActionPerformed
 
-    }//GEN-LAST:event_btnEditSpeciesActionPerformed
+    } //GEN-LAST:event_btnEditSpeciesActionPerformed
 
-    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
+    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
 
-    }//GEN-LAST:event_btnAddOtherSpeciesActionPerformed
+    } //GEN-LAST:event_btnAddOtherSpeciesActionPerformed
 
-    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
+    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
 
-    }//GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
+    } //GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
 
-    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddHabitatClassActionPerformed
+    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatClassActionPerformed
 
-    }//GEN-LAST:event_btnAddHabitatClassActionPerformed
+    } //GEN-LAST:event_btnAddHabitatClassActionPerformed
 
-    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNegImpactActionPerformed
+    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNegImpactActionPerformed
 
-    }//GEN-LAST:event_btnAddNegImpactActionPerformed
+    } //GEN-LAST:event_btnAddNegImpactActionPerformed
 
-    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPosImpactActionPerformed
+    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddPosImpactActionPerformed
 
-    }//GEN-LAST:event_btnAddPosImpactActionPerformed
+    } //GEN-LAST:event_btnAddPosImpactActionPerformed
 
-    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOwnerActionPerformed
+    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOwnerActionPerformed
 
-    }//GEN-LAST:event_btnAddOwnerActionPerformed
+    } //GEN-LAST:event_btnAddOwnerActionPerformed
 
-    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDesigTypeActionPerformed
+    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDesigTypeActionPerformed
 
-}//GEN-LAST:event_btnAddDesigTypeActionPerformed
+} //GEN-LAST:event_btnAddDesigTypeActionPerformed
 
-    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMgmtBodyActionPerformed
+    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtBodyActionPerformed
 
-    }//GEN-LAST:event_btnAddMgmtBodyActionPerformed
+    } //GEN-LAST:event_btnAddMgmtBodyActionPerformed
 
-    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMgmtPlanActionPerformed
+    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtPlanActionPerformed
 
-    }//GEN-LAST:event_btnAddMgmtPlanActionPerformed
+    } //GEN-LAST:event_btnAddMgmtPlanActionPerformed
 
-    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNatRelActionPerformed
+    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNatRelActionPerformed
 
-    }//GEN-LAST:event_btnAddNatRelActionPerformed
+    } //GEN-LAST:event_btnAddNatRelActionPerformed
 
-    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInterRelActionPerformed
+    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddInterRelActionPerformed
 
-    }//GEN-LAST:event_btnAddInterRelActionPerformed
+    } //GEN-LAST:event_btnAddInterRelActionPerformed
 
-    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelRegionActionPerformed
+    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelRegionActionPerformed
         int rows[] = this.lstRegions.getSelectedIndices();
         if (rows.length == 0) {
                 javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
@@ -3847,9 +3847,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadRegions(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelRegionActionPerformed
+    } //GEN-LAST:event_btnDelRegionActionPerformed
 
-    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelBiogeoActionPerformed
+    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelBiogeoActionPerformed
         int row = this.tabBiogeo.getSelectedRow();
         if (row == -1 || this.tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
@@ -3873,9 +3873,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadBiogeo(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelBiogeoActionPerformed
+    } //GEN-LAST:event_btnDelBiogeoActionPerformed
 
-    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelHabitatActionPerformed
+    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatActionPerformed
         int row = this.tabHabitats.getSelectedRow();
         if (row == -1 || this.tabHabitats.getRowCount() < 1 || row > this.tabHabitats.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat selected");
@@ -3900,9 +3900,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadHabitats(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelHabitatActionPerformed
+    } //GEN-LAST:event_btnDelHabitatActionPerformed
 
-    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelSpeciesActionPerformed
+    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelSpeciesActionPerformed
          int row = this.tabSpecies.getSelectedRow();
         if (row == -1 || this.tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
@@ -3926,13 +3926,13 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadSpecies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelSpeciesActionPerformed
+    } //GEN-LAST:event_btnDelSpeciesActionPerformed
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCloseActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCloseActionPerformed
+    } //GEN-LAST:event_btnCloseActionPerformed
 
-    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
+    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
          int row = this.tabOtherSpecies.getSelectedRow();
         if (row == -1 || this.tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
@@ -3956,9 +3956,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadOtherSpecies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelOtherSpeciesActionPerformed
+    } //GEN-LAST:event_btnDelOtherSpeciesActionPerformed
 
-    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelHabitatClassActionPerformed
+    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatClassActionPerformed
         int row = this.tabHabitatClass.getSelectedRow();
         if (row == -1 || this.tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat class selected");
@@ -3982,10 +3982,10 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadHabitatClasses(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelHabitatClassActionPerformed
+    } //GEN-LAST:event_btnDelHabitatClassActionPerformed
 
 
-    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelNegImpactActionPerformed
+    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNegImpactActionPerformed
         int row = this.tabNegativeImpacts.getSelectedRow();
         if (row == -1 || this.tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No impact selected");
@@ -4009,9 +4009,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    }//GEN-LAST:event_btnDelNegImpactActionPerformed
+    } //GEN-LAST:event_btnDelNegImpactActionPerformed
 
-    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelPosImpactActionPerformed
+    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelPosImpactActionPerformed
         int row = this.tabPositiveImpacts.getSelectedRow();
         if (row == -1 || this.tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No impact selected");
@@ -4035,9 +4035,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    }//GEN-LAST:event_btnDelPosImpactActionPerformed
+    } //GEN-LAST:event_btnDelPosImpactActionPerformed
 
-    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelOwnerActionPerformed
+    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOwnerActionPerformed
         int row = this.tabOwnership.getSelectedRow();
         if (row == -1 || this.tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No ownership class selected");
@@ -4061,13 +4061,13 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadOwnerships();
             }
         }
-    }//GEN-LAST:event_btnDelOwnerActionPerformed
+    } //GEN-LAST:event_btnDelOwnerActionPerformed
 
-    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDocLinkActionPerformed
+    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDocLinkActionPerformed
         //new EditorDocLink(this).setVisible(true);
-    }//GEN-LAST:event_btnAddDocLinkActionPerformed
+    } //GEN-LAST:event_btnAddDocLinkActionPerformed
 
-    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelDocLinkActionPerformed
+    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDocLinkActionPerformed
         int row = this.lstLinks.getSelectedIndex();
         if (row == -1 ) {
             javax.swing.JOptionPane.showMessageDialog(this, "No link class selected");
@@ -4094,9 +4094,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadDocLinks();
             }
         }
-    }//GEN-LAST:event_btnDelDocLinkActionPerformed
+    } //GEN-LAST:event_btnDelDocLinkActionPerformed
 
-    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelDesigTypeActionPerformed
+    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDesigTypeActionPerformed
         int row = this.tabDesigationTypes.getSelectedRow();
         if (row == -1 || this.tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No designation selected");
@@ -4120,9 +4120,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadDesignationTypes(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelDesigTypeActionPerformed
+    } //GEN-LAST:event_btnDelDesigTypeActionPerformed
 
-    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelNatRelActionPerformed
+    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNatRelActionPerformed
         int row = this.tabNationalRelations.getSelectedRow();
         if (row == -1 || this.tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No relation selected");
@@ -4146,9 +4146,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadRelations(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelNatRelActionPerformed
+    } //GEN-LAST:event_btnDelNatRelActionPerformed
 
-    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelInterRelActionPerformed
+    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelInterRelActionPerformed
         int row = this.tabInternationalRelations.getSelectedRow();
         if (row == -1 || this.tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No relation selected");
@@ -4172,9 +4172,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadRelations(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelInterRelActionPerformed
+    } //GEN-LAST:event_btnDelInterRelActionPerformed
 
-    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelMgmtBodyActionPerformed
+    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtBodyActionPerformed
         int row = this.tabMgmtBodies.getSelectedRow();
         if (row == -1 || this.tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No row selected");
@@ -4198,9 +4198,9 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadMgmtBodies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelMgmtBodyActionPerformed
+    } //GEN-LAST:event_btnDelMgmtBodyActionPerformed
 
-    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelMgmtPlanActionPerformed
+    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtPlanActionPerformed
                 int row = this.tabMgmtPlans.getSelectedRow();
         if (row == -1 || this.tabMgmtPlans.getRowCount() < 1 || row > this.tabMgmtPlans.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No row selected");
@@ -4224,30 +4224,30 @@ public class SDFEditorView extends javax.swing.JFrame {
                 this.loadMgmtPlans(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelMgmtPlanActionPerformed
+    } //GEN-LAST:event_btnDelMgmtPlanActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         this.save();
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
         new SDFExporterSite(sitecode).setVisible(true);
 
 
-    }//GEN-LAST:event_btnExportActionPerformed
+    } //GEN-LAST:event_btnExportActionPerformed
 
-    private void txtRespEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRespEmailActionPerformed
+    private void txtRespEmailActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_txtRespEmailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtRespEmailActionPerformed
+    } //GEN-LAST:event_txtRespEmailActionPerformed
 
-    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewButtonActionPerformed
+    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jViewButtonActionPerformed
          // TODO add your handling code here:
         File dbFile = new File("");
         ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode,dbFile.getAbsolutePath()+"\\logs\\log.txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
-    }//GEN-LAST:event_jViewButtonActionPerformed
+    } //GEN-LAST:event_jViewButtonActionPerformed
 
 
 

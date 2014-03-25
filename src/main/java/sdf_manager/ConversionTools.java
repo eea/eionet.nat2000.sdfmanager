@@ -75,13 +75,13 @@ public class ConversionTools {
     * @return
     */
    public static boolean checkInt(String s) {
-        try {            
-            Integer.parseInt(s);            
+        try {
+            Integer.parseInt(s);
             return true;
         }
         catch (Exception e) {
             return false;
-        }        
+        }
     }
 
    /**
@@ -105,7 +105,7 @@ public class ConversionTools {
      * @return
      */
     public static String convertDateToString(Date date) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");        
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");
         return fmt.format(date);
     }
 
@@ -118,7 +118,7 @@ public class ConversionTools {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");
         try {
             return fmt.parse(str);
-        } catch (ParseException ex) {            
+        } catch (ParseException ex) {
             ConversionTools.log.error("Couldn't parse date: " + str);
             return null;
         }
@@ -135,16 +135,16 @@ public class ConversionTools {
         String year = s.substring(0, 4);
         int imonth = converToInt(month);
         int iyear = converToInt(year);
-        if (imonth == -1){
+        if (imonth == -1) {
             return false;
         }
-        if (iyear == -1){
+        if (iyear == -1) {
             return false;
         }
-        if (imonth > 12){
+        if (imonth > 12) {
             return false;
         }
-        if (iyear < 1800 || iyear > 2100){
+        if (iyear < 1800 || iyear > 2100) {
             return false;
         }
         return true;
@@ -156,14 +156,14 @@ public class ConversionTools {
      * @param sdate
      * @return
      */
-    public static Date convertToDate(String sdate) {        
-         if (sdate == null){
+    public static Date convertToDate(String sdate) {
+         if (sdate == null) {
              return null;
          }
-         if (!checkDateStringFormat(sdate)){
+         if (!checkDateStringFormat(sdate)) {
              return null;
          }
-       
+
          String month = sdate.substring(5, 7);
          String year = sdate.substring(0, 4);
          int imonth = converToInt(month);
@@ -199,7 +199,7 @@ public class ConversionTools {
     public static String doubleToString(Double d) {
         try {
             String s = Double.toString(d);
-            if (s!=null){
+            if (s!=null) {
                 return s;
             }
             else{
@@ -219,7 +219,7 @@ public class ConversionTools {
     public static Double stringToDouble(String s) {
         try {
             Double d = Double.parseDouble(s);
-            if (d != null){
+            if (d != null) {
                 return d;
             }
             else{
@@ -255,7 +255,7 @@ public class ConversionTools {
         try {
             //return Double.toString(d);
             String s = Integer.toString(i);
-            if (s!=null){
+            if (s!=null) {
                 return s;
             }
             else{
@@ -275,7 +275,7 @@ public class ConversionTools {
     public static int stringToInt(String s) {
         try {
             int d = Integer.parseInt(s);
-            if (d >= 0){
+            if (d >= 0) {
                 return d;
             }
             else{
@@ -295,7 +295,7 @@ public class ConversionTools {
     public static String charToString(Character c) {
         try {
             String s = Character.toString(c);
-            if (s!=null){
+            if (s!=null) {
                 return s;
             }
             else{
@@ -315,7 +315,7 @@ public class ConversionTools {
     public static Character stringToChar(String s) {
         try {
             Character c = s.charAt(0);
-            if (c !=null){
+            if (c !=null) {
                 return c;
             }
             else{
@@ -333,7 +333,7 @@ public class ConversionTools {
      * @return
      */
     public static Short boolToSmall(boolean b) {
-        if (b){
+        if (b) {
             return 1;
 
         }
@@ -348,7 +348,7 @@ public class ConversionTools {
      * @return
      */
     public static boolean smallToBool(Short s) {
-        if (s != null && s > 0){
+        if (s != null && s > 0) {
             return true;
         }
         else{
@@ -362,7 +362,7 @@ public class ConversionTools {
      * @return
      */
     public static String stringToString(String s) {
-        if (s == null){
+        if (s == null) {
             return "";
         }
         else{
@@ -376,10 +376,10 @@ public class ConversionTools {
      * @return
      */
     public static boolean stringToBoolean(String s) {
-        if (s == null){
+        if (s == null) {
             return false;
         }
-        else if (s.equals("true")){
+        else if (s.equals("true")) {
 
             return true;
         }
@@ -394,10 +394,10 @@ public class ConversionTools {
      * @return
      */
     public static Short stringToShort(String s) {
-        if (s == null){
+        if (s == null) {
             return 0;
         }
-        else if (s.equals("true")){
+        else if (s.equals("true")) {
             return 1;
         }
         else{

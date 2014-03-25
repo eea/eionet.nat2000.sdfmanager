@@ -9,12 +9,12 @@ public class RefPopulation {
     private int refPopulationId;
     private String refPopulationName;
     private String refPopulationCode;
-    
+
     /**
-     * 
+     *
      */
     public RefPopulation(){
-        
+
     }
 
     /**

@@ -41,8 +41,8 @@ class ImporterWorker extends SwingWorker<Boolean, Void> {
         public void setImporter (Importer importer) {
             this.importer = importer;
         }
-        public void setFileName(String fileName) {                    
-            this.fileName = fileName;                     
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
         }
        @Override
         public void done() {
@@ -52,7 +52,7 @@ class ImporterWorker extends SwingWorker<Boolean, Void> {
 }
 
 public class SDFImporter extends javax.swing.JFrame implements Logger {
-       
+
 
      /** Creates new form SDFExporter */
     private String dirPath = "";
@@ -79,14 +79,14 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
 /**
      *
      * @return
-     */   
+     */
     public void log(String logMsg) {
         this.txtLogger.append(logMsg + "\n");
         this.txtLogger.setCaretPosition( this.txtLogger.getDocument().getLength());
     }
- 
+
     /**
-     * 
+     *
      */
     public void centerScreen() {
       Dimension dim = getToolkit().getScreenSize();
@@ -388,24 +388,24 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHelpActionPerformed
+    private void btHelpActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btHelpActionPerformed
        SDFHelpEditor help = new SDFHelpEditor();
-    }//GEN-LAST:event_btHelpActionPerformed
+    } //GEN-LAST:event_btHelpActionPerformed
 
-    private void chbImportOneSiteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chbImportOneSiteItemStateChanged
-         if (this.chbImportOneSite.isSelected()) {           
-            this.txtSiteCode.setEditable(true);  
-            this.txtSiteCode.setEnabled(true); 
+    private void chbImportOneSiteItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_chbImportOneSiteItemStateChanged
+         if (this.chbImportOneSite.isSelected()) {
+            this.txtSiteCode.setEditable(true);
+            this.txtSiteCode.setEnabled(true);
         }
         else {
             this.txtSiteCode.setText("");
-            this.txtSiteCode.setEditable(false);   
+            this.txtSiteCode.setEditable(false);
              this.txtSiteCode.setEnabled(false);
         }
-       
-    }//GEN-LAST:event_chbImportOneSiteItemStateChanged
+
+    } //GEN-LAST:event_chbImportOneSiteItemStateChanged
 
     /**
     * @param args the command line arguments
@@ -438,7 +438,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                 return;
             }
            String logFile;
-           if (dbFile.getParent().equals("")){
+           if (dbFile.getParent().equals("")) {
                logFile = "log.txt";
            }
            else{
@@ -446,71 +446,71 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
            }
            Importer importer = null;
            String accessVersion="2003";
-           if (this.radioXMl.isSelected()) {               
-               if(!dbFile.getName().toLowerCase().endsWith("xml")){
+           if (this.radioXMl.isSelected()) {
+               if (!dbFile.getName().toLowerCase().endsWith("xml")) {
                   javax.swing.JOptionPane.showMessageDialog(this,"The file must be an XML file");
                   return;
-               }else{
-                   if(this.chbImportOneSite.isSelected()){
-                       if(this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))){
+               } else {
+                   if (this.chbImportOneSite.isSelected()) {
+                       if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
                            importer = new ImporterOneSiteXML(this,encoding,logFile,this.txtPath.getText(), this.txtSiteCode.getText());
-                       }else{
+                       } else {
                           javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
-                          return; 
+                          return;
                        }
-                       
-                   }else{
-                      importer = new ImporterXMLStax(this,encoding,logFile,this.txtPath.getText()); 
-                       
+
+                   } else {
+                      importer = new ImporterXMLStax(this,encoding,logFile,this.txtPath.getText());
+
                    }
-                  
+
                }
-               
-           }else if (this.radioOldMDB.isSelected()) {
-               if(this.chbImportOneSite.isSelected()){
-                   if(this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))){
+
+           } else if (this.radioOldMDB.isSelected()) {
+               if (this.chbImportOneSite.isSelected()) {
+                   if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
                        importer = new ImporterSiteMDB(this,encoding,logFile,"2003", this.txtSiteCode.getText());
-                   }else{
+                   } else {
                       javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
-                      return; 
+                      return;
                    }
-               }else{
+               } else {
                    importer = new ImporterMDB(this,encoding,logFile,"2003");
-               }               
-           }else if (this.radioBold2007.isSelected()) {
-               if(this.chbImportOneSite.isSelected()){
-                   if(this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))){
+               }
+           } else if (this.radioBold2007.isSelected()) {
+               if (this.chbImportOneSite.isSelected()) {
+                   if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
                        importer = new ImporterSiteMDB(this,encoding,logFile,"2007", this.txtSiteCode.getText());
-                   }else{
+                   } else {
                       javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
-                      return; 
+                      return;
                    }
-               }else{
+               } else {
                   importer = new ImporterMDB(this,encoding,logFile,"2007");
-               } 
-               
-           }else if (this.radioNewMDB.isSelected()) {
-               if(this.chbImportOneSite.isSelected()){
-                   if(this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))){
+               }
+
+           } else if (this.radioNewMDB.isSelected()) {
+               if (this.chbImportOneSite.isSelected()) {
+                   if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
                        importer = new ImporterSiteNewMDB(this,encoding,logFile,"2003", this.txtSiteCode.getText());
-                   }else{
+                   } else {
                       javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
-                      return; 
+                      return;
                    }
-               }else{
+               } else {
                   importer = new ImporterNewMDB(this,encoding,logFile,"2003");
-               }                
-           }else if (this.radioNew2007.isSelected()) {
-               if(this.chbImportOneSite.isSelected()){
-                   if(this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))){
+               }
+           } else if (this.radioNew2007.isSelected()) {
+               if (this.chbImportOneSite.isSelected()) {
+                   if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
                        importer = new ImporterSiteNewMDB(this,encoding,logFile,"2007", this.txtSiteCode.getText());
-                   }else{
+                   } else {
                       javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
-                      return; 
+                      return;
                    }
-               }else{
+               } else {
                   importer = new ImporterNewMDB(this,encoding,logFile,"2007");
-               }                
+               }
            }
 
             ImporterWorker worker = new ImporterWorker();
@@ -521,8 +521,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
             worker.setImporter(importer);
             worker.setFileName(dbFile.getAbsolutePath());
             worker.execute();
-           
-        }catch(Exception e){
+
+        } catch (Exception e) {
             exit();
         }
     }

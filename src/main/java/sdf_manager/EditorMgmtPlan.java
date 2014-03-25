@@ -235,14 +235,14 @@ public class EditorMgmtPlan extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (this.editing){
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+        if (this.editing) {
             this.mgmtPlan.setMgmtPlanName(this.txtName.getText());
             this.mgmtPlan.setMgmtPlanUrl(this.txtLink.getText());
             this.parent.updateMgmtPlan(this.mgmtPlan);
@@ -261,17 +261,17 @@ public class EditorMgmtPlan extends javax.swing.JFrame {
             MgmtPlan plan = new MgmtPlan();
             plan.setMgmtPlanName(name);
             plan.setMgmtPlanUrl(link);
-            if(mgmtPlanOK){
+            if (mgmtPlanOK) {
                 this.parent.addMgmtPlan(plan);
                 EditorMgmtPlan.log.info("Management Plan added.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Management Plan added.");
                 this.exit();
-            }else{
+            } else {
                 this.setVisible(true);
             }
         }
 
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

@@ -147,7 +147,7 @@ public class ExporterSiteHTML implements Exporter {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
          }
-         catch(Exception e) {
+         catch (Exception e) {
              e.printStackTrace();
          }
      }
@@ -155,12 +155,12 @@ public class ExporterSiteHTML implements Exporter {
      /**
       *
       */
-     public void closeLogFile(){
+     public void closeLogFile() {
          try {
              out.close();
              outFile.close();
          }
-         catch(Exception e) {
+         catch (Exception e) {
              e.printStackTrace();
          }
      }
@@ -190,7 +190,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     public boolean processDatabase(String fileName) {
-        ExporterSiteHTML.log.error("Starting processDatabase. The file name is:::"+fileName);
+        ExporterSiteHTML.log.error("Starting processDatabase. The file name is:::" + fileName);
         try{
             SDF_Util.getProperties();
             this.fileName = fileName;
@@ -199,10 +199,10 @@ public class ExporterSiteHTML implements Exporter {
             this.processDatabase();
             this.finalizeWriter();
 
-        }catch (Exception e){
-            log("An error has occurred in processDatabase. Error Message:::"+e.getMessage()+"\n PLease check the log file for more details");
+        } catch (Exception e) {
+            log("An error has occurred in processDatabase. Error Message:::" + e.getMessage()+"\n PLease check the log file for more details");
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in processDatabase. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("An error has occurred in processDatabase. Error Message:::" + e.getMessage());
             return false;
         }
         return true;
@@ -219,23 +219,23 @@ public class ExporterSiteHTML implements Exporter {
             this.writer = new BufferedWriter(fstream);
             this.counter = 0;
             //Close the output stream
-        }catch (Exception e) {
-            log("ERROR initWriter()"+e.getMessage());
+        } catch (Exception e) {
+            log("ERROR initWriter()" + e.getMessage());
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in initwriter. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("An error has occurred in initwriter. Error Message:::" + e.getMessage());
         }
     }
 
     /**
      *
      */
-    public void finalizeWriter(){
+    public void finalizeWriter() {
         try {
             this.writer.close();
         } catch (IOException e) {
-            log("ERROR finalizeWriter()"+e.getMessage());
+            log("ERROR finalizeWriter()" + e.getMessage());
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in finalizeWriter. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("An error has occurred in finalizeWriter. Error Message:::" + e.getMessage());
         }
     }
 
@@ -243,12 +243,12 @@ public class ExporterSiteHTML implements Exporter {
      * Loads the data of the site
      */
     public void loadSitecodes() {
-        ExporterSiteHTML.log.info("Loading the data of the site:::"+siteCode);
+        ExporterSiteHTML.log.info("Loading the data of the site:::" + siteCode);
         try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            String hql = "select site.siteCode from Site as site where site.siteCode='"+siteCode+"' order by site.siteCode";
+            String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode+"' order by site.siteCode";
 
             Iterator itrSites = session.createQuery(hql).iterate();
 
@@ -261,9 +261,9 @@ public class ExporterSiteHTML implements Exporter {
             session.close();
         }
         catch (Exception e) {
-            log("An error has occurred in loadSitecodes. Error Message:::"+e.getMessage());
+            log("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in loadSitecodes. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
         }
     }
 
@@ -295,14 +295,14 @@ public class ExporterSiteHTML implements Exporter {
 
                 siteIdentification.appendChild(doc.createElement("siteType")).appendChild(doc.createTextNode(fmt(Character.toString(site.getSiteType()),"siteType")));
                 siteIdentification.appendChild(doc.createElement("siteCode")).appendChild(doc.createTextNode(fmt(site.getSiteCode().toUpperCase(),"siteCode")));
-                ExporterSiteHTML.log.info("Parsing sitecode:::"+site.getSiteCode());
+                ExporterSiteHTML.log.info("Parsing sitecode:::" + site.getSiteCode());
                 siteIdentification.appendChild(doc.createElement("siteName")).appendChild(doc.createTextNode(fmt(site.getSiteName(),"siteName")));
 
-                if(site.getSiteCompDate() != null){
+                if (site.getSiteCompDate() != null) {
                     siteIdentification.appendChild(doc.createElement("compilationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteCompDate()),"compilationDate")));
                 }
 
-                if(site.getSiteUpdateDate() != null){
+                if (site.getSiteUpdateDate() != null) {
                     siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteUpdateDate()),"updateDate")));
                 }
 
@@ -311,7 +311,7 @@ public class ExporterSiteHTML implements Exporter {
 
                     Element respNode = doc.createElement("respondent");
                     respNode.appendChild(doc.createElement("name")).appendChild(doc.createTextNode(fmt(resp.getRespName(),"respName")));
-                    if(resp.getRespAddressArea() != null && !resp.getRespAddressArea().equals("") ){
+                    if (resp.getRespAddressArea() != null && !resp.getRespAddressArea().equals("") ) {
 
                         Element addresElem = doc.createElement("address");
 
@@ -325,7 +325,7 @@ public class ExporterSiteHTML implements Exporter {
                         addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorDesig(),"locatorDesignator")));
                         respNode.appendChild(addresElem);
 
-                    }else{
+                    } else {
                         Element addresElem = doc.createElement("address");
                         addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespAddress(),"addressArea")));
                         respNode.appendChild(addresElem);
@@ -335,26 +335,26 @@ public class ExporterSiteHTML implements Exporter {
                     siteIdentification.appendChild(respNode);
                 }
 
-                if(site.getSiteSpaDate() != null){
-                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),"spaClassificationDate")));                    
+                if (site.getSiteSpaDate() != null) {
+                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),"spaClassificationDate")));
                 }
               //AMG.
-                else{                	
-                	siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( "0000-00","spaClassificationDate")));
+                else{
+                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( "0000-00","spaClassificationDate")));
                 }
                 //AMG.
 
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(),"spaLegalReference")));
 
-                if(site.getSiteSciPropDate() != null){
+                if (site.getSiteSciPropDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()),"sciProposalDate")));
                 }
 
-                if(site.getSiteSciConfDate() != null){
+                if (site.getSiteSciConfDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()),"sciConfirmationDate")));
                 }
 
-                if(site.getSiteSacDate() != null){
+                if (site.getSiteSacDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()),"sacDesignationDate")));
                 }
 
@@ -391,7 +391,7 @@ public class ExporterSiteHTML implements Exporter {
                 /*bioregions*/
                 Element biogeoRegions = doc.createElement("biogeoRegions");
                 Set siteBioRegions = site.getSiteBiogeos();
-                if(!(siteBioRegions.isEmpty())){
+                if (!(siteBioRegions.isEmpty())) {
                    Iterator itbr = siteBioRegions.iterator();
                    while (itbr.hasNext()) {
                         SiteBiogeo s = (SiteBiogeo) itbr.next();
@@ -440,7 +440,7 @@ public class ExporterSiteHTML implements Exporter {
                 Element specieses = doc.createElement("species");
                 Set siteSpecies = site.getSpecieses();
                 itr = siteSpecies.iterator();
-                while(itr.hasNext()) {
+                while (itr.hasNext()) {
 
                     Species s = (Species) itr.next();
                     Element sElem = doc.createElement("speciesPopulation");
@@ -458,8 +458,8 @@ public class ExporterSiteHTML implements Exporter {
                     popElem.appendChild(doc.createElement("countingUnit")).appendChild(doc.createTextNode(fmt(s.getSpeciesUnit(),"speciesUnit")));
                     sElem.appendChild(popElem);
 
-                    if(s.getSpeciesCategory() != null){
-                        if(!("").equals(s.getSpeciesCategory().toString())){
+                    if (s.getSpeciesCategory() != null) {
+                        if (!("").equals(s.getSpeciesCategory().toString())) {
                             sElem.appendChild(doc.createElement("abundanceCategory")).appendChild(doc.createTextNode(fmtToUpperCase(s.getSpeciesCategory(),"speciesCategory")));
                         }
                     }
@@ -478,7 +478,7 @@ public class ExporterSiteHTML implements Exporter {
 
                 siteSpecies = site.getOtherSpecieses();
                 itr = siteSpecies.iterator();
-                while(itr.hasNext()) {
+                while (itr.hasNext()) {
 
                     OtherSpecies s = (OtherSpecies) itr.next();
                     Element sElem = doc.createElement("speciesPopulation");
@@ -488,8 +488,8 @@ public class ExporterSiteHTML implements Exporter {
                     sElem.appendChild(doc.createElement("scientificName")).appendChild(doc.createTextNode(fmt(s.getOtherSpeciesName(),"ospeciesName")));
                     sElem.appendChild(doc.createElement("sensitiveInfo")).appendChild(doc.createTextNode(fmt(toBoolean(s.getOtherSpeciesSensitive()),"ospeciesSensitive")));
 
-                    if(s.getOtherSpeciesNp() != null ){
-                        if(!(("").equals(s.getOtherSpeciesNp().toString()))){
+                    if (s.getOtherSpeciesNp() != null ) {
+                        if (!(("").equals(s.getOtherSpeciesNp().toString()))) {
                             sElem.appendChild(doc.createElement("nonPresenceInSite")).appendChild(doc.createTextNode(fmt(toBoolean(s.getOtherSpeciesNp()),"ospeciesNP")));
                         }
                     }
@@ -499,8 +499,8 @@ public class ExporterSiteHTML implements Exporter {
                     popElem.appendChild(doc.createElement("upperBound")).appendChild(doc.createTextNode(fmt(s.getOtherSpeciesSizeMax(),"speciesSizeMax")));
                     popElem.appendChild(doc.createElement("countingUnit")).appendChild(doc.createTextNode(fmt(s.getOtherSpeciesUnit(),"speciesUnit")));
                     sElem.appendChild(popElem);
-                    if(s.getOtherSpeciesCategory() != null){
-                        if( !(("").equals(s.getOtherSpeciesCategory().toString()))){
+                    if (s.getOtherSpeciesCategory() != null) {
+                        if ( !(("").equals(s.getOtherSpeciesCategory().toString()))) {
                             sElem.appendChild(doc.createElement("abundanceCategory")).appendChild(doc.createTextNode(fmt(s.getOtherSpeciesCategory(),"ospeciesCategory")));
                         }
 
@@ -508,13 +508,13 @@ public class ExporterSiteHTML implements Exporter {
 
                      //modificar porque es un tree primero es motivations y despues el nodo motivation (solo en el caso que haya motivations es other species en caso contrario
                     //es species
-                     if(s.getOtherSpeciesMotivation() != null && !(("").equals(s.getOtherSpeciesMotivation()))){
+                     if (s.getOtherSpeciesMotivation() != null && !(("").equals(s.getOtherSpeciesMotivation()))) {
                         Element sElemMot = doc.createElement("motivations");
 
                         String strMotivation = s.getOtherSpeciesMotivation();
                         StringTokenizer st2 = new StringTokenizer(strMotivation,",");
 
-                        while(st2.hasMoreElements()){
+                        while (st2.hasMoreElements()) {
                            String mot = (String)st2.nextElement();
                            sElemMot.appendChild(doc.createElement("motivation")).appendChild(doc.createTextNode(fmt(mot,"ospeciesMotivation")));
                            sElem.appendChild(sElemMot);
@@ -555,8 +555,8 @@ public class ExporterSiteHTML implements Exporter {
 
                     iElem.appendChild(doc.createElement("rank")).appendChild(doc.createTextNode(fmt(im.getImpactRank(),"impactRank")));
 
-                    if(im.getImpactPollutionCode() != null){
-                        if(!("").equals(im.getImpactPollutionCode().toString())){
+                    if (im.getImpactPollutionCode() != null) {
+                        if (!("").equals(im.getImpactPollutionCode().toString())) {
                             iElem.appendChild(doc.createElement("pollutionCode")).appendChild(doc.createTextNode(fmt(im.getImpactPollutionCode(),"impactPollution")));
                         }
 
@@ -565,10 +565,10 @@ public class ExporterSiteHTML implements Exporter {
                     iElem.appendChild(doc.createElement("occurrence")).appendChild(doc.createTextNode(fmt(im.getImpactOccurrence(),"impactOccurrece")));
 
                     String impacType = "";
-                    if (im.getImpactType() != null){
-                         if(("P").equals(im.getImpactType().toString())){
+                    if (im.getImpactType() != null) {
+                         if (("P").equals(im.getImpactType().toString())) {
                             impacType ="Positive";
-                         }else{
+                         } else {
                              impacType = "Negative";
                          }
                     }
@@ -581,7 +581,7 @@ public class ExporterSiteHTML implements Exporter {
                 Element ownership = doc.createElement("ownership");
                 Set owners = site.getSiteOwnerships();
                 itr = owners.iterator();
-                while(itr.hasNext()) {
+                while (itr.hasNext()) {
                     SiteOwnership o = (SiteOwnership) itr.next();
                     Ownership o2 = o.getOwnership();
                     Element oElem = doc.createElement("ownershipPart");
@@ -615,7 +615,7 @@ public class ExporterSiteHTML implements Exporter {
                 Element natDesigs = doc.createElement("nationalDesignations");
                 Set dsigs = site.getNationalDtypes();
                 itr = dsigs.iterator();
-                while(itr.hasNext()) {
+                while (itr.hasNext()) {
                    NationalDtype dtype = (NationalDtype) itr.next();
                    Element nElem = doc.createElement("nationalDesignation");
                    nElem.appendChild(doc.createElement("designationCode")).appendChild(doc.createTextNode(fmt(dtype.getNationalDtypeCode(),"dtypecode")));
@@ -626,7 +626,7 @@ public class ExporterSiteHTML implements Exporter {
 
 
                 Set rels = site.getSiteRelations();
-                if(!rels.isEmpty()){
+                if (!rels.isEmpty()) {
                     Element relations = doc.createElement("relations");
                     Element nationalRelations = doc.createElement("nationalRelationships");
                     Element internationalRelations = doc.createElement("internationalRelationships");
@@ -680,7 +680,7 @@ public class ExporterSiteHTML implements Exporter {
                         Element bElem = doc.createElement("managementBody");
                         bElem.appendChild(doc.createElement("organisation")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyOrg(),"mgmtBodyOrg")));
                         //if el campo addressunestructured esta vacio entonces addres es un tipo complejo (implementar) en caso contrario
-                         if(bodyObj.getMgmtBodyAddressArea() != null && !bodyObj.getMgmtBodyAddressArea().equals("")){
+                         if (bodyObj.getMgmtBodyAddressArea() != null && !bodyObj.getMgmtBodyAddressArea().equals("")) {
                             Element addresElem = doc.createElement("address");
 
                             addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAdminUnit(),"adminUnit") + "  "));
@@ -707,7 +707,7 @@ public class ExporterSiteHTML implements Exporter {
                             // addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(resp.getRespPostCode(),"postCode")));
                             // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(resp.getRespThoroughFare(),"thoroughfare")));
                             bElem.appendChild(addresElem);
-                        }else{
+                        } else {
                             Element addresElem = doc.createElement("address");
                             addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAddress(),"addressArea")));
                             bElem.appendChild(addresElem);
@@ -749,7 +749,7 @@ public class ExporterSiteHTML implements Exporter {
                     mapElem.appendChild(doc.createElement("InspireID")).appendChild(doc.createTextNode(fmt(map.getMapInspire(),"mapInspireID")));
 
                     Boolean bMap;
-                    if (map.getMapPdf()!=null && map.getMapPdf().equals(Short.valueOf("1"))){
+                    if (map.getMapPdf()!=null && map.getMapPdf().equals(Short.valueOf("1"))) {
                         bMap=true;
                     } else {
                         bMap=false;
@@ -774,7 +774,7 @@ public class ExporterSiteHTML implements Exporter {
             Result result = new StreamResult(file.toURI().getPath());
 
             TransformerFactory tFactory =TransformerFactory.newInstance();
-            Source xsl = new StreamSource("."+File.separator+"xsl"+File.separator+"SiteXSL.xsl");
+            Source xsl = new StreamSource("." + File.separator+"xsl" + File.separator+"SiteXSL.xsl");
             Templates template = tFactory.newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -809,26 +809,26 @@ public class ExporterSiteHTML implements Exporter {
                 Desktop.getDesktop().open(file);
             }
             return null;
-        }catch (TransformerConfigurationException e) {
+        } catch (TransformerConfigurationException e) {
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("A TransformerConfigurationException has occurred in processDatabase. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("A TransformerConfigurationException has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
-        }catch (TransformerException e) {
+        } catch (TransformerException e) {
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("A TransformerException has occurred in processDatabase. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("A TransformerException has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
-        }catch (FileNotFoundException e) {
-            ExporterSiteHTML.log.error("A FileNotFoundException has occurred in processDatabase. Error Message:::"+e.getMessage());
+        } catch (FileNotFoundException e) {
+            ExporterSiteHTML.log.error("A FileNotFoundException has occurred in processDatabase. Error Message:::" + e.getMessage());
             //e.printStackTrace();
             return null;
-        }catch (IOException e) {
-            ExporterSiteHTML.log.error("An IOException has occurred in processDatabase. Error Message:::"+e.getMessage());
+        } catch (IOException e) {
+            ExporterSiteHTML.log.error("An IOException has occurred in processDatabase. Error Message:::" + e.getMessage());
             //e.printStackTrace();
             return null;
         }
         catch (Exception e) {
             //e.printStackTrace();
-            ExporterSiteHTML.log.error("A general exception has occurred in processDatabase. Error Message:::"+e.getMessage());
+            ExporterSiteHTML.log.error("A general exception has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
         }
 
@@ -840,10 +840,10 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     Boolean toBool(Short i) {
-         if (i == null){
+         if (i == null) {
              return false;
          }
-         if (i.compareTo(new Short(i)) > 0){
+         if (i.compareTo(new Short(i)) > 0) {
              return true;
          }
          else{
@@ -857,10 +857,10 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     Boolean toBoolean(Short i) {
-         if (i == null){
+         if (i == null) {
              return false;
          }
-         if (i > 0){
+         if (i > 0) {
              return true;
          }
          else{
@@ -892,7 +892,7 @@ public class ExporterSiteHTML implements Exporter {
       * @return
       */
       String fmt (Date date, String fieldName) {
-        if (date != null){
+        if (date != null) {
             return fmt(date.toString(),fieldName);
         }
         else{
@@ -907,7 +907,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     String fmt (Double val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString(),fieldName);
         }
         else {
@@ -922,7 +922,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     String fmt (Integer val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString(),fieldName);
         }
         else{
@@ -937,7 +937,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     String fmt (Boolean val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString(),fieldName);
         }
         else{
@@ -952,7 +952,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     String fmt (Character val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString(),fieldName);
         }
         else{
@@ -967,7 +967,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     String fmtToLowerCase (Character val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
         }
         else{
@@ -982,7 +982,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
      String fmtToUpperCase (Character val, String fieldName) {
-        if (val != null){
+        if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
         }
         else{

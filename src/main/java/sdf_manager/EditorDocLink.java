@@ -206,12 +206,12 @@ public class EditorDocLink extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
     /**
      *
      * @param evt
      */
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         System.out.println("btnSaveActionPerformed");
         if (this.txtLink.getText().equals("")) {
             EditorDocLink.log.error("No url ");
@@ -221,13 +221,13 @@ public class EditorDocLink extends javax.swing.JFrame {
             Session session = HibernateUtil.getSessionFactory().openSession();
             //String hql = "from DocLink link where link.docLinkUrl like '" + this.txtLink.getText() + "'";
             //Query q = session.createQuery(hql);
-            //if(q.uniqueResult() != null){
-            if (this.parent.isLinkInSite(this.txtLink.getText())){
+            //if (q.uniqueResult() != null) {
+            if (this.parent.isLinkInSite(this.txtLink.getText())) {
                EditorDocLink.log.error("The link already exists. Can't save.");
                javax.swing.JOptionPane.showMessageDialog(this, "The link already exists. Can't save.");
                setVisible(true);
-            }else{
-                if (this.editing){
+            } else {
+                if (this.editing) {
                     System.out.println(":: EDITING");
                     this.docLink.setDocLinkUrl(this.txtLink.getText());
                     this.parent.updateLink(docLink, index); ;
@@ -243,14 +243,14 @@ public class EditorDocLink extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
 
 

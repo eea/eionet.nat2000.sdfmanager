@@ -18,9 +18,9 @@ interface Importer {
     public boolean processDatabase(String fileName);
 
     /**
-     * 
+     *
      * @param fileName
      */
     public void initLogFile(String fileName);
-    
+
 }

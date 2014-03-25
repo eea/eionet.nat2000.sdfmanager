@@ -30,10 +30,10 @@ class ExporterWorkerSiteSelPDF extends SwingWorker<Boolean, Void> {
 
     @Override
    public Boolean doInBackground() {
-    	Boolean result = sDFExporterSelPDF.processDatabase();    	    	    	
-        return result;                               
+        Boolean result = sDFExporterSelPDF.processDatabase();
+        return result;
     }
-    
+
 
     /**
      *
@@ -59,8 +59,8 @@ class ExporterWorkerSiteSelPDF extends SwingWorker<Boolean, Void> {
         this.fileName = fileName;
     }
 
-    
-    
+
+
     @Override
     public void done() {
         dlg.setVisible(false);
@@ -117,10 +117,10 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
       */
     private String getFileName() {
         String name;
-        name = "Site_"+this.siteCode+".pdf";
+        name = "Site_" + this.siteCode+".pdf";
         return name;
     }
-     
+
     @Action
     public void exportDatabase() {
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
@@ -145,52 +145,52 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
             javax.swing.JOptionPane.showMessageDialog(this,"Please select a folder to export.");
             return false;
         }
-        
+
         String strPath = this.txtPath.getText();
         File dir = new File(strPath);
         if (dir.isDirectory()== false) {
-        	SDFExporterSelPDF.log.error("select an existing folder to generate PDF");
+            SDFExporterSelPDF.log.error("select an existing folder to generate PDF");
             javax.swing.JOptionPane.showMessageDialog(this,"Selected path is not valid, please select an existing folder to generate the pdfs.");
             return false;
         }
-        
+
         File dbFile = new File(this.txtPath.getText());
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
         String formatDate = sdf.format(cal.getTime());
         String logFile;
-        if (dbFile.getParent().equals("")){
-           logFile = "generatePDFSiteLog_"+formatDate+".log";
+        if (dbFile.getParent().equals("")) {
+           logFile = "generatePDFSiteLog_" + formatDate+".log";
         }
         else{
-           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_"+formatDate+".log";
+           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
         }
-        
+
        int rows = this.siteCodes.size();
        Boolean AllOK = true;
-       for (int i = 0; i < rows; i++) { 
-    	   
-    	   siteCode = this.siteCodes.get(i);
-    	   Exporter exporter = null;
+       for (int i = 0; i < rows; i++) {
+
+           siteCode = this.siteCodes.get(i);
+           Exporter exporter = null;
            exporter = new GenerateSitePDF(this,encoding,siteCode,this.dirPath);
            boolean isOK = exporter.processDatabase(this.dirPath+ System.getProperty("file.separator") + dbFile.getName());
-           
-           if(isOK){
+
+           if (isOK) {
               SDFExporterSelPDF.log.info(this.dirPath+ System.getProperty("file.separator") + dbFile.getName()+" PDF file has been saved properly.");
-              
-           }else{
-        	   AllOK = false;
-        	   SDFExporterSelPDF.log.info(this.dirPath+ System.getProperty("file.separator") + dbFile.getName()+" PDF file has not been generated.");
-           }  
-              	     	  
+
+           } else {
+               AllOK = false;
+               SDFExporterSelPDF.log.info(this.dirPath+ System.getProperty("file.separator") + dbFile.getName()+" PDF file has not been generated.");
+           }
+
        }
-                         
-       if (AllOK){ 
-    	   javax.swing.JOptionPane.showMessageDialog(this, "The selected sites has been saved properly to PDF","PDF",JOptionPane.INFORMATION_MESSAGE);
-    	   this.exit();                       
-       }else{
-    	   javax.swing.JOptionPane.showMessageDialog(this, "There has been an error generating the PDF, please see the log files","PDF",JOptionPane.INFORMATION_MESSAGE);            
-           this.exit();           
+
+       if (AllOK) {
+           javax.swing.JOptionPane.showMessageDialog(this, "The selected sites has been saved properly to PDF","PDF",JOptionPane.INFORMATION_MESSAGE);
+           this.exit();
+       } else {
+           javax.swing.JOptionPane.showMessageDialog(this, "There has been an error generating the PDF, please see the log files","PDF",JOptionPane.INFORMATION_MESSAGE);
+           this.exit();
        }
        return AllOK;
     }
@@ -218,16 +218,16 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         File fileLog = null;
         SDFExporterSelPDF.log.info("Creating specific log file for the export process");
         try {
-           
+
            fileLog = new File(logFileName);
            FileWriter logErrorFile = new FileWriter(fileLog);
-           if(!exportErrorList.isEmpty()){
+           if (!exportErrorList.isEmpty()) {
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat sdfFormat = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
             String dateLine = sdfFormat.format(calendar.getTime());
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
-            while(itSite.hasNext()){
+            while (itSite.hasNext()) {
                 String lineExport = (String)itSite.next();
                 logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
                 logErrorFile.flush();
@@ -235,14 +235,14 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
           }
           logErrorFile.flush();
           logErrorFile.close();
-       }catch (Exception e) {
-           SDFExporterSelPDF.log.error("An error has ocurred copying the errors in log file. Error Message :::"+e.getMessage());
+       } catch (Exception e) {
+           SDFExporterSelPDF.log.error("An error has ocurred copying the errors in log file. Error Message :::" + e.getMessage());
        }
        return fileLog;
     }
 
     /**
-     * 
+     *
      */
     public void centerParent () {
           int x;
@@ -254,14 +254,14 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
 
           Dimension mySize = getSize();
 
-          if (parentSize.width > mySize.width){
+          if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
           }
           else{
             x = topLeft.x;
           }
 
-          if (parentSize.height > mySize.height){
+          if (parentSize.height > mySize.height) {
             y = ((parentSize.height - mySize.height)/2) + topLeft.y;
           } else{
             y = topLeft.y;
@@ -425,31 +425,31 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
-    
-    
-    
-    
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnSavePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSavePDFActionPerformed
-    	
+
+
+
+
+    private void btnSavePDFActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSavePDFActionPerformed
+
         ExporterWorkerSiteSelPDF worker = new ExporterWorkerSiteSelPDF();
         final ProgressDialog dlg = new ProgressDialog(this, false);
-        dlg.setLabel("Generating pdfs...");      
+        dlg.setLabel("Generating pdfs...");
         dlg.setModal(false);
-        dlg.setVisible(false);     
+        dlg.setVisible(false);
         worker.setDialog(dlg);
-        worker.setSDFExporterSelPDF(this);        
-        worker.execute();       
+        worker.setSDFExporterSelPDF(this);
+        worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);
-        
-    }//GEN-LAST:event_btnSavePDFActionPerformed
 
-    
-    
-    
-    
+    } //GEN-LAST:event_btnSavePDFActionPerformed
+
+
+
+
+
 
     @Action
     private void toggleZipped() {
@@ -468,6 +468,6 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
     javax.swing.JTextArea txtLogger;
     javax.swing.JTextField txtPath;
     // End of variables declaration//GEN-END:variables
- 
+
 
 }

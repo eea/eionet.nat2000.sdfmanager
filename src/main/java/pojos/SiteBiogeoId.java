@@ -9,8 +9,8 @@ package pojos;
 public class SiteBiogeoId  implements java.io.Serializable {
 
 
-     private String siteCode;
-     private int biogeoId;
+    private String siteCode;
+    private int biogeoId;
 
     public SiteBiogeoId() {
     }
@@ -37,22 +37,22 @@ public class SiteBiogeoId  implements java.io.Serializable {
 
 
    public boolean equals(Object other) {
-         if ( (this == other ) ) return true;
-		 if ( (other == null ) ) return false;
-		 if ( !(other instanceof SiteBiogeoId) ) return false;
-		 SiteBiogeoId castOther = ( SiteBiogeoId ) other;
+     if ( (this == other ) ) return true;
+     if ( (other == null ) ) return false;
+     if ( !(other instanceof SiteBiogeoId) ) return false;
+     SiteBiogeoId castOther = ( SiteBiogeoId ) other;
 
-		 return ( (this.getSiteCode()==castOther.getSiteCode()) || ( this.getSiteCode()!=null && castOther.getSiteCode()!=null && this.getSiteCode().equals(castOther.getSiteCode()) ) )
+     return ( (this.getSiteCode()==castOther.getSiteCode()) || ( this.getSiteCode()!=null && castOther.getSiteCode()!=null && this.getSiteCode().equals(castOther.getSiteCode()) ) )
  && (this.getBiogeoId()==castOther.getBiogeoId());
    }
 
    public int hashCode() {
-         int result = 17;
+     int result = 17;
 
-         result = 37 * result + ( getSiteCode() == null ? 0 : this.getSiteCode().hashCode() );
-         result = 37 * result + this.getBiogeoId();
-         return result;
-   }
+     result = 37 * result + ( getSiteCode() == null ? 0 : this.getSiteCode().hashCode() );
+     result = 37 * result + this.getBiogeoId();
+     return result;
+}
 
 
 }

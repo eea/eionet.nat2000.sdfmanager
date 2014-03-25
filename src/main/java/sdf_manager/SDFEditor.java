@@ -43,7 +43,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /** Creates new form SDFEditor */
     private ArrayList modelRegions = new ArrayList();
-    private ArrayList modelBioregions = new ArrayList();        
+    private ArrayList modelBioregions = new ArrayList();
     private ArrayList modelBirds = new ArrayList();
     private ArrayList modelHabitats = new ArrayList();
     private ArrayList modelSpecies = new ArrayList();
@@ -142,7 +142,7 @@ public class SDFEditor extends javax.swing.JFrame {
     String wrap(Date value) {
         if (value != null) {
             return ConversionTools.convertDateToString(value);
-        }else{
+        } else {
             return "";
         }
     }
@@ -165,12 +165,12 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param value
      * @return
      */
-    String formatCoordinates(Double value){
+    String formatCoordinates(Double value) {
         String formatCoord="";
         try{
             if (value != null) {
                 Properties properties = new Properties();
-                properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+"\\database\\sdf.properties"));
+                properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+ "\\database\\sdf.properties"));
 
                 Locale locale = new Locale(properties.getProperty("locale"));
                 DecimalFormat nf = (DecimalFormat)NumberFormat.getInstance(locale);
@@ -179,12 +179,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 formatCoord = nf.format(value);
 
             }
-        }catch(FileNotFoundException e){
-            SDFEditor.logger.error("An error has occurred. Error message::"+e.getMessage());
-        }catch(IOException e){
-            SDFEditor.logger.error("An error has occurred. Error message::"+e.getMessage());
-        }catch(Exception e){
-            SDFEditor.logger.error("An error has occurred. Error message::"+e.getMessage());
+        } catch (FileNotFoundException e) {
+            SDFEditor.logger.error("An error has occurred. Error message::" + e.getMessage());
+        } catch (IOException e) {
+            SDFEditor.logger.error("An error has occurred. Error message::" + e.getMessage());
+        } catch (Exception e) {
+            SDFEditor.logger.error("An error has occurred. Error message::" + e.getMessage());
         }
         return formatCoord;
     }
@@ -212,8 +212,8 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param sitecode
      * @param dupSitecode
      */
-    void loadSite(String sitecode, String dupSitecode){
-        SDFEditor.logger.info("Loads the site::"+sitecode);
+    void loadSite(String sitecode, String dupSitecode) {
+        SDFEditor.logger.info("Loads the site::" + sitecode);
 
         this.session = HibernateUtil.getSessionFactory().openSession();
         this.session.close();
@@ -221,7 +221,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
         try{
             this.site = (Site) session.load(new Site().getClass(), sitecode);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             this.session = HibernateUtil.getSessionFactory().openSession();
         }
 
@@ -231,12 +231,12 @@ public class SDFEditor extends javax.swing.JFrame {
             site = new Site();
             site.setSiteCode(sitecode);
         } else if (mode.equals("edit")) {
-            SDFEditor.logger.info("sitecode::"+sitecode);
+            SDFEditor.logger.info("sitecode::" + sitecode);
             this.site = (Site) session.load(new Site().getClass(), sitecode);
 
-            SDFEditor.logger.info("this.site.getSiteCode()::"+this.site.getSiteCode());
+            SDFEditor.logger.info("this.site.getSiteCode()::" + this.site.getSiteCode());
             /* CRASH ON LOAD A SITE AFTER IMPORTING AN OLD MDB */
-            SDFEditor.logger.info("this.site.getSiteName()::"+this.site.getSiteName());
+            SDFEditor.logger.info("this.site.getSiteName()::" + this.site.getSiteName());
 
         } else if (mode.equals("duplicate")) {
             Site oldSite = (Site) session.load(new Site().getClass(), sitecode);
@@ -253,15 +253,15 @@ public class SDFEditor extends javax.swing.JFrame {
         this.txtSiteName.setText(wrap(site.getSiteName()));
         Character type = site.getSiteType();
         if (type != null) {
-            if(("A").equals(type.toString())){
+            if (("A").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(0);
-            }//SPA
-            else if(("B").equals(type.toString())){
+            } //SPA
+            else if (("B").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(1);
-            }//SCI
-            else if(("C").equals(type.toString())){
+            } //SCI
+            else if (("C").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(2);
-            }//Both
+            } //Both
         }
         this.txtCompDate.setText(wrap(site.getSiteCompDate()));
 
@@ -310,14 +310,14 @@ public class SDFEditor extends javax.swing.JFrame {
 
         if (mgmt != null) {
             Character status = mgmt.getMgmtStatus();
-            if(status != null){
-                if(("Y").equals(status.toString())){
+            if (status != null) {
+                if (("Y").equals(status.toString())) {
                    this.btnMgmtExists.setSelected(true);
-                }else if(("P").equals(status.toString())){
+                } else if (("P").equals(status.toString())) {
                    this.btnMgmtPrep.setSelected(true);
-                }else if(("N").equals(status.toString())){
+                } else if (("N").equals(status.toString())) {
                    this.btnMgmtNo.setSelected(true);
-                }else {
+                } else {
                 this.btnMgmtNo.setSelected(true);
                 }
 
@@ -333,13 +333,13 @@ public class SDFEditor extends javax.swing.JFrame {
             if (map.getMapInspire() != null) {
                 this.txtInspireID.setText(map.getMapInspire());
             }
-            if (map.getMapPdf() == null){
+            if (map.getMapPdf() == null) {
                 this.btnPDFNo.setSelected(true);
-            }else if(map.getMapPdf() != null && map.getMapPdf() == 0) {
+            } else if (map.getMapPdf() != null && map.getMapPdf() == 0) {
                 this.btnPDFNo.setSelected(true);
-            }else if(map.getMapPdf() != null && map.getMapPdf() == 1){
+            } else if (map.getMapPdf() != null && map.getMapPdf() == 1) {
                 this.btnPDFYes.setSelected(true);
-            }else{
+            } else {
                 this.btnPDFNo.setSelected(true);
             }
             if (map.getMapReference() != null) {
@@ -411,50 +411,50 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      */
     private void printSiteFields() {
-        SDFEditor.logger.info("Site Code:"+this.txtSiteCode.getText());
-        SDFEditor.logger.info("Site name:"+this.txtSiteName.getText());
-        SDFEditor.logger.info("Site Type:"+this.cmbSiteType.getSelectedItem());
-        SDFEditor.logger.info("Site Compilation Date:"+this.txtCompDate.getText());
-        SDFEditor.logger.info("Site Update Date:"+this.txtUpdateDate.getText());
+        SDFEditor.logger.info("Site Code:" + this.txtSiteCode.getText());
+        SDFEditor.logger.info("Site name:" + this.txtSiteName.getText());
+        SDFEditor.logger.info("Site Type:" + this.cmbSiteType.getSelectedItem());
+        SDFEditor.logger.info("Site Compilation Date:" + this.txtCompDate.getText());
+        SDFEditor.logger.info("Site Update Date:" + this.txtUpdateDate.getText());
         Resp resp = site.getResp();
         if (resp != null) {
-            SDFEditor.logger.info("Site Respondant Name:"+this.txtRespName.getText());
-            SDFEditor.logger.info("Site Respondant Unstructured Address:"+this.txtRespAddr.getText());
-            SDFEditor.logger.info("Site Respondant Email:"+this.txtRespEmail.getText());
-            SDFEditor.logger.info("Site Respondant Admin Unit:"+this.txtRespAdminUnit.getText());
-            SDFEditor.logger.info("Site Respondant Structured Address:"+this.txtRespAddressArea.getText());
-            SDFEditor.logger.info("Site Respondant Locator Designator:"+this.txtRespLocatorDesignator.getText());
-            SDFEditor.logger.info("Site Respondant Locator Name:"+this.txtRespLocatorName.getText());
-            SDFEditor.logger.info("Site Respondant Post Code:"+this.txtRespPostCode.getText());
-            SDFEditor.logger.info("Site Respondant Post Name:"+this.txtRespPostName.getText());
-            SDFEditor.logger.info("Site Respondant Thorough Fare:"+this.txtRespThoroughFare.getText());
+            SDFEditor.logger.info("Site Respondant Name:" + this.txtRespName.getText());
+            SDFEditor.logger.info("Site Respondant Unstructured Address:" + this.txtRespAddr.getText());
+            SDFEditor.logger.info("Site Respondant Email:" + this.txtRespEmail.getText());
+            SDFEditor.logger.info("Site Respondant Admin Unit:" + this.txtRespAdminUnit.getText());
+            SDFEditor.logger.info("Site Respondant Structured Address:" + this.txtRespAddressArea.getText());
+            SDFEditor.logger.info("Site Respondant Locator Designator:" + this.txtRespLocatorDesignator.getText());
+            SDFEditor.logger.info("Site Respondant Locator Name:" + this.txtRespLocatorName.getText());
+            SDFEditor.logger.info("Site Respondant Post Code:" + this.txtRespPostCode.getText());
+            SDFEditor.logger.info("Site Respondant Post Name:" + this.txtRespPostName.getText());
+            SDFEditor.logger.info("Site Respondant Thorough Fare:" + this.txtRespThoroughFare.getText());
         }
-        SDFEditor.logger.info("Site Spa Date:"+this.txtDateSpa.getText());
-        SDFEditor.logger.info("Site Spa Reference:"+this.txtSpaRef.getText());
-        SDFEditor.logger.info("Site Sci Porposal Date:"+this.txtDatePropSci.getText());
-        SDFEditor.logger.info("Site Sci Conf Date:"+this.txtDateConfSci.getText());
-        SDFEditor.logger.info("Site Sac Date:"+this.txtDateSac.getText());
-        SDFEditor.logger.info("Site Sac Reference:"+this.txtSacRef.getText());
-        SDFEditor.logger.info("Site Sac Explantions:"+this.txtSacExpl.getText());
-        SDFEditor.logger.info("Site Longitude:"+this.txtLongitude.getText());
-        SDFEditor.logger.info("Site Latitude:"+this.txtLatitude.getText());
-        SDFEditor.logger.info("Site Length:"+this.txtLength.getText());
-        SDFEditor.logger.info("Site Area:"+this.txtArea.getText());
-        SDFEditor.logger.info("Site Marine Area:"+this.txtMarineArea.getText());
-        SDFEditor.logger.info("Site Site Character:"+this.txtSiteCharacter.getText());
-        SDFEditor.logger.info("Site Quality:"+this.txtQuality.getText());
+        SDFEditor.logger.info("Site Spa Date:" + this.txtDateSpa.getText());
+        SDFEditor.logger.info("Site Spa Reference:" + this.txtSpaRef.getText());
+        SDFEditor.logger.info("Site Sci Porposal Date:" + this.txtDatePropSci.getText());
+        SDFEditor.logger.info("Site Sci Conf Date:" + this.txtDateConfSci.getText());
+        SDFEditor.logger.info("Site Sac Date:" + this.txtDateSac.getText());
+        SDFEditor.logger.info("Site Sac Reference:" + this.txtSacRef.getText());
+        SDFEditor.logger.info("Site Sac Explantions:" + this.txtSacExpl.getText());
+        SDFEditor.logger.info("Site Longitude:" + this.txtLongitude.getText());
+        SDFEditor.logger.info("Site Latitude:" + this.txtLatitude.getText());
+        SDFEditor.logger.info("Site Length:" + this.txtLength.getText());
+        SDFEditor.logger.info("Site Area:" + this.txtArea.getText());
+        SDFEditor.logger.info("Site Marine Area:" + this.txtMarineArea.getText());
+        SDFEditor.logger.info("Site Site Character:" + this.txtSiteCharacter.getText());
+        SDFEditor.logger.info("Site Quality:" + this.txtQuality.getText());
         Mgmt mgmt = site.getMgmt();
         if (mgmt != null) {
-            SDFEditor.logger.info("Site Exist Management plan?:"+Boolean.toString(this.btnMgmtExists.isSelected()));
-            SDFEditor.logger.info("Site Management Plan prepared?:"+Boolean.toString(this.btnMgmtPrep.isSelected()));
-            SDFEditor.logger.info("Site Management Plan doesn't exist?:"+Boolean.toString(this.btnMgmtNo.isSelected()));
-            SDFEditor.logger.info("Site Conservation Measures:"+this.txtConservationMeasures.getText());
+            SDFEditor.logger.info("Site Exist Management plan?:" + Boolean.toString(this.btnMgmtExists.isSelected()));
+            SDFEditor.logger.info("Site Management Plan prepared?:" + Boolean.toString(this.btnMgmtPrep.isSelected()));
+            SDFEditor.logger.info("Site Management Plan doesn't exist?:" + Boolean.toString(this.btnMgmtNo.isSelected()));
+            SDFEditor.logger.info("Site Conservation Measures:" + this.txtConservationMeasures.getText());
         }
         Map map = site.getMap();
         if (map != null) {
-            SDFEditor.logger.info("Site Map Inspire Id:"+this.txtInspireID.getText());
-            SDFEditor.logger.info("Site PDF Map no Exist:"+Boolean.toString(this.btnPDFNo.isSelected()));
-            SDFEditor.logger.info("Site PDF Map Exist:"+Boolean.toString(this.btnPDFYes.isSelected()));
+            SDFEditor.logger.info("Site Map Inspire Id:" + this.txtInspireID.getText());
+            SDFEditor.logger.info("Site PDF Map no Exist:" + Boolean.toString(this.btnPDFNo.isSelected()));
+            SDFEditor.logger.info("Site PDF Map Exist:" + Boolean.toString(this.btnPDFYes.isSelected()));
         }
     }
 
@@ -510,10 +510,10 @@ public class SDFEditor extends javax.swing.JFrame {
         //printSiteFields();
         SDFEditor.logger.info("Saving the Site");
         if (differentFields(this.site.getSiteName(), this.txtSiteName.getText())) {
-            if(this.txtSiteName.getText().length() >256){
+            if (this.txtSiteName.getText().length() >256) {
                 msgError = "The site name is too long.The lengh of the site name should be less than 256 characters\n";
                 SDFEditor.logger.error("The site name is too long.");
-            }else{
+            } else {
                 this.site.setSiteName(fmt(this.txtSiteName.getText()));
             }
 
@@ -544,30 +544,30 @@ public class SDFEditor extends javax.swing.JFrame {
 
         if (differentFields(this.site.getSiteCharacteristics(), this.txtSiteCharacter.getText())) {
             this.site.setSiteCharacteristics(fmt(this.txtSiteCharacter.getText()));
-        }else{
+        } else {
            this.site.setSiteCharacteristics(this.txtSiteCharacter.getText());
         }
         if (differentFields(this.site.getSiteQuality(), this.txtQuality.getText())) {
             this.site.setSiteQuality(fmt(this.txtQuality.getText()));
-        }else{
+        } else {
            this.site.setSiteQuality(this.txtQuality.getText());
         }
         this.saveDoc();
         if (differentFields(this.site.getSiteDesignation(), this.txtDesignation.getText())) {
             this.site.setSiteDesignation(fmt(this.txtDesignation.getText()));
-        }else{
+        } else {
            this.site.setSiteDesignation(this.txtDesignation.getText());
         }
         saveMgmt();
         saveMap();
 
-        if(msgError != null && !("").equals(msgError)){
-            JOptionPane.showMessageDialog(this,"There are some errors in the data:\n"+ msgError, "Dialog",JOptionPane.ERROR_MESSAGE);
-        }else{
+        if (msgError != null && !("").equals(msgError)) {
+            JOptionPane.showMessageDialog(this,"There are some errors in the data:\n" + msgError, "Dialog",JOptionPane.ERROR_MESSAGE);
+        } else {
             Calendar cal = Calendar.getInstance();
-            if(this.site.getSiteDateCreation() != null){
+            if (this.site.getSiteDateCreation() != null) {
                site.setSiteDateUpdate(cal.getTime());
-            }else{
+            } else {
                  site.setSiteDateCreation(cal.getTime());
             }
             this.saveAndReloadSession();
@@ -712,7 +712,7 @@ public class SDFEditor extends javax.swing.JFrame {
             } else {
                 SDFEditor.logger.error("SPA date illegal format");
             }
-        }else{
+        } else {
             this.site.setSiteSpaDate(null);
         }
         this.site.setSiteSpaLegalRef(this.txtSpaRef.getText());
@@ -725,7 +725,7 @@ public class SDFEditor extends javax.swing.JFrame {
             } else {
                 SDFEditor.logger.error("SCI proposition date illegal format");
             }
-        }else{
+        } else {
             this.site.setSiteSciPropDate(null);
         }
         String sciConfDate = this.txtDateConfSci.getText();
@@ -736,7 +736,7 @@ public class SDFEditor extends javax.swing.JFrame {
             } else {
                 SDFEditor.logger.error("SCI confirmation date illegal format");
             }
-        }else{
+        } else {
             this.site.setSiteSciConfDate(null);
         }
         String sacDate = this.txtDateSac.getText();
@@ -747,29 +747,29 @@ public class SDFEditor extends javax.swing.JFrame {
             } else {
                 SDFEditor.logger.error("SAC date illegal format");
             }
-        }else{
+        } else {
             this.site.setSiteSacDate(null);
         }
         String msgErrorDates="";
         String sacLegalRef = this.txtSacRef.getText();
         if (!("").equals(sacLegalRef)) {
-            /*if(this.txtSacRef.getText().length() >512){
+            /*if (this.txtSacRef.getText().length() >512) {
                 msgErrorDates +=".-Sac Reference\n";
                 saveOK=false;
-            }else{*/
+            } else {*/
                 this.site.setSiteSacLegalRef(this.txtSacRef.getText());
             //}
         }
         String explanations = this.txtSacExpl.getText();
         if (!explanations.equals("")) {
-           /* if(this.txtSacExpl.getText().length() >512){
+           /* if (this.txtSacExpl.getText().length() >512) {
                 msgErrorDates +=".-Explanations\n";
                 saveOK=false;
-            }else{*/
+            } else {*/
                 this.site.setSiteExplanations(this.txtSacExpl.getText());
             //}
         }
-        if(!saveOK){
+        if (!saveOK) {
             String msgError = "The following fields arere too long: \n";
             errorDates =msgError +msgErrorDates;
         }
@@ -804,19 +804,19 @@ public class SDFEditor extends javax.swing.JFrame {
         }
 
          String msgErrorResp = "";
-        if(respName.length() >1024){
+        if (respName.length() >1024) {
             msgErrorResp += ".- Name\n";
-        }else{
+        } else {
             resp.setRespName(respName);
         }
 
         String msgErrorEmail = "";
-        if ((respEmail != null && !(("").equals(respEmail)) && (respEmail.indexOf("@") == -1)) || (respEmail.length() >256)){
+        if ((respEmail != null && !(("").equals(respEmail)) && (respEmail.indexOf("@") == -1)) || (respEmail.length() >256)) {
             msgErrorResp += ".- Email\n";
 
             msgErrorEmail +="Please, Provide a valid email.";
             respOK = false;
-        }else{
+        } else {
             resp.setRespEmail(respEmail);
         }
 
@@ -830,11 +830,11 @@ public class SDFEditor extends javax.swing.JFrame {
             addresStructured = true;
         }
 
-        if(respAddr.length() >2048){
+        if (respAddr.length() >2048) {
             msgErrorResp += ".- Unstructured Address\n";
             SDFEditor.logger.error("The address is too long.");
             respOK = false;
-        }else{
+        } else {
             resp.setRespAddress(respAddr);
         }
 
@@ -851,65 +851,65 @@ public class SDFEditor extends javax.swing.JFrame {
                     respAddress = false;
                 }
                 respAddress = true;
-            }else {
+            } else {
                 respAddress = true;
             }
         }
 
         if (respOK) {
-            if(respAdminUnit.length() >256){
+            if (respAdminUnit.length() >256) {
                 msgErrorResp =".-Admin Unit\n";
                 SDFEditor.logger.error("The address is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespAdminUnit(respAdminUnit);
             }
 
-            if(respAddrArea.length() >256){
+            if (respAddrArea.length() >256) {
                 msgErrorResp =".-Structured Address\n";
                 SDFEditor.logger.error("The address is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespAddressArea(respAddrArea);
             }
 
-            if(respLocatorDesig.length() >256){
+            if (respLocatorDesig.length() >256) {
                 msgErrorResp =".-Locator Designators\n";
                 SDFEditor.logger.error("The locator designator is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespLocatorDesig(respLocatorDesig);
             }
 
-            if(respLocatorName.length() >256){
+            if (respLocatorName.length() >256) {
                 msgErrorResp =".-Locator Name\n";
                 SDFEditor.logger.error("The locator name is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespLocatorName(respLocatorName);
             }
 
-            if(respPostCode.length() >256){
+            if (respPostCode.length() >256) {
                 msgErrorResp =".-Post Code\n";
                 SDFEditor.logger.error("The post code is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespPostCode(respPostCode);
             }
 
-            if(respPostName.length() >256){
+            if (respPostName.length() >256) {
                 msgErrorResp =".-Post Name\n";
                 SDFEditor.logger.error("The post name is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespPostName(respPostName);
             }
 
-            if(respThoroughFare.length() >256){
+            if (respThoroughFare.length() >256) {
                 msgErrorResp =".-Thorough Fare\n";
                 SDFEditor.logger.error("The thorough fare  is too long.");
                 respOK = false;
-            }else{
+            } else {
                 resp.setRespThoroughFare(respThoroughFare);
             }
         }
@@ -923,13 +923,13 @@ public class SDFEditor extends javax.swing.JFrame {
             this.filterWindow.applyFilters(HibernateUtil.getSessionFactory().openSession());
             // this.parent.clearFilterSelections();
         } else {
-            if(!respAddress){
+            if (!respAddress) {
                 SDFEditor.logger.error("An error has occurred in address field.");
                 errorResp=msgErrorAddress;
-            }else{
+            } else {
                 errorResp += "The following fields are too long:\n ";
-                if(!("").equals(msgErrorResp) || !("").equals(msgErrorEmail)){
-                   errorResp += msgErrorResp+"\n"+msgErrorEmail;
+                if (!("").equals(msgErrorResp) || !("").equals(msgErrorEmail)) {
+                   errorResp += msgErrorResp+ "\n" + msgErrorEmail;
                 }
             }
          }
@@ -1011,7 +1011,7 @@ public class SDFEditor extends javax.swing.JFrame {
         spTo.setSpeciesGroup(spFrom.getSpeciesGroup());
         spTo.setSpeciesSensitive(spFrom.getSpeciesSensitive());
         spTo.setSpeciesNp(spFrom.getSpeciesNp());
-        if(spFrom.getSpeciesType() != null){
+        if (spFrom.getSpeciesType() != null) {
             spTo.setSpeciesType(Character.toLowerCase(spFrom.getSpeciesType()));
         }
         spTo.setSpeciesSizeMin(spFrom.getSpeciesSizeMin());
@@ -1214,7 +1214,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 SDFEditor.logger.error("Biogeo region already exists, not saving a new one.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Biogeo region already exists, not saving a new one.");
                 return false;
-            }else if((checkSumPercentBioReg()+percent) > 100){
+            } else if ((checkSumPercentBioReg()+percent) > 100) {
                 SDFEditor.logger.error("The sum of the percent of the Biographical regions is bigger than 100.");
                 javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
                 return false;
@@ -1245,10 +1245,10 @@ public class SDFEditor extends javax.swing.JFrame {
     public boolean saveBiogeo(Biogeo biogeo, Double percent, int index) {
         boolean saveOK = false;
         SDFEditor.logger.info("saving Biogeo region: " + biogeo.getBiogeoCode() + " (" + biogeo.getBiogeoName() + ")");
-        if(checkSumPercentBioReg(percent, biogeo) >100){
+        if (checkSumPercentBioReg(percent, biogeo) >100) {
             SDFEditor.logger.error("The sum of the percent of the Biographical regions is bigger than 100.");
             javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
-        }else{
+        } else {
             SiteBiogeo sb = new SiteBiogeo();
             sb.setSite(this.site);
             sb.setBiogeoPercent(percent);
@@ -1289,7 +1289,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param percent
      * @param index
      */
-    public void saveOwnership(Ownership ow, Double percent,int index){
+    public void saveOwnership(Ownership ow, Double percent,int index) {
 
         SiteOwnership so = new SiteOwnership();
         so.setSite(this.site);
@@ -1318,9 +1318,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         Set links = doc.getDocLinks();
         Iterator it = links.iterator();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             DocLink dl = (DocLink)it.next();
-            if (dl.getDocLinkUrl().equals(url)){
+            if (dl.getDocLinkUrl().equals(url)) {
                 return true;
             }
         }
@@ -1390,12 +1390,12 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     public boolean addHabitatClass(HabitatClass hC) {
         boolean hClassAdded= false;
-        if(checkHCPercent100(hC)){
+        if (checkHCPercent100(hC)) {
             hClassAdded= false;
             SDFEditor.logger.error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
             JOptionPane.showMessageDialog(this, "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.", "Dialog",JOptionPane.ERROR_MESSAGE);
 
-        }else{
+        } else {
             hClassAdded= true;
             hC.setSite(this.site);
             this.site.getHabitatClasses().add(hC);
@@ -1413,15 +1413,15 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param index
      * @return
      */
-   public boolean saveHabitatClass(HabitatClass h,int index){
+   public boolean saveHabitatClass(HabitatClass h,int index) {
        boolean hClassAdded= false;
        SDFEditor.logger.info("Saving existing habitat class Type: " + h.getHabitatClassCode());
-       if(checkHCPercentUpdate100(h, index)){
+       if (checkHCPercentUpdate100(h, index)) {
             hClassAdded= false;
             SDFEditor.logger.error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
             JOptionPane.showMessageDialog(this, "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.", "Dialog",JOptionPane.ERROR_MESSAGE);
 
-       }else{
+       } else {
             hClassAdded= true;
             HabitatClass hTo = (HabitatClass) this.modelHabitatClasses.get(index);
             copyHabitatClass(h, hTo);
@@ -1475,12 +1475,12 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param sr
      * @param index
      */
-    public void saveRelation(SiteRelation sr,int index ){
+    public void saveRelation(SiteRelation sr,int index ) {
         SDFEditor.logger.info("Saving existing relation: " + sr.getSiteRelationCode());
-        if(("N").equals(sr.getSiteRelationScope().toString())){
+        if (("N").equals(sr.getSiteRelationScope().toString())) {
             SiteRelation hTo = (SiteRelation) this.modelNationalRelations.get(index);
             copyRelations(sr, hTo);
-        }else{
+        } else {
             SiteRelation hTo = (SiteRelation) this.modelInternationalRelations.get(index);
             copyRelations(sr, hTo);
         }
@@ -1527,7 +1527,7 @@ public class SDFEditor extends javax.swing.JFrame {
         }
         mp.setMgmt(m);
 
-        if (btnMgmtPrep.isSelected() || btnMgmtNo.isSelected() ){
+        if (btnMgmtPrep.isSelected() || btnMgmtNo.isSelected() ) {
             btnMgmtExists.setSelected(true);
         }
 
@@ -1570,28 +1570,28 @@ public class SDFEditor extends javax.swing.JFrame {
     public boolean addImpact(Impact impact) {
         SDFEditor.logger.info("Adding Impact: " );
         boolean saveOK = false;
-        if(("P").equals(impact.getImpactType().toString())){
-            if(getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))){
+        if (("P").equals(impact.getImpactType().toString())) {
+            if (getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive High impacts is 5 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-            }else if(getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))){
+            } else if (getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
-            }else{
+            } else {
                 saveOK = true;
             }
-        }else{
-            if(getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))){
+        } else {
+            if (getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative High impacts is 5 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-            }else if(getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))){
+            } else if (getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with low or medium rank is 20");
-            }else{
+            } else {
                 saveOK = true;
             }
         }
-        if(saveOK){
+        if (saveOK) {
            impact.setSite(this.site);
            this.site.getImpacts().add(impact);
            saveOK = true;
@@ -1605,13 +1605,13 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @return
      */
-    private int getNumHighPImpacts(){
-        int numHighImpacts=0;
+    private int getNumHighPImpacts() {
+        int numHighImpacts = 0;
         Iterator itr = this.modelPositiveImpacts.iterator();
         while (itr.hasNext()) {
             Impact posImpact = (Impact) itr.next();
-            if(posImpact.getImpactRank() != null){
-                if(("H").equals(posImpact.getImpactRank().toString())){
+            if (posImpact.getImpactRank() != null) {
+                if (("H").equals(posImpact.getImpactRank().toString())) {
                     numHighImpacts++;
                 }
             }
@@ -1623,13 +1623,13 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @return
      */
-    private int getNumLowAndMediumImpacts(){
-        int numImpacts=0;
+    private int getNumLowAndMediumImpacts() {
+        int numImpacts = 0;
         Iterator itr = this.modelPositiveImpacts.iterator();
         while (itr.hasNext()) {
             Impact posImpact = (Impact) itr.next();
-            if(posImpact.getImpactRank() != null){
-                if(("L").equals(posImpact.getImpactRank().toString()) || ("M").equals(posImpact.getImpactRank().toString())){
+            if (posImpact.getImpactRank() != null) {
+                if (("L").equals(posImpact.getImpactRank().toString()) || ("M").equals(posImpact.getImpactRank().toString())) {
                     numImpacts++;
                 }
             }
@@ -1641,13 +1641,13 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @return
      */
-    private int getNumHighNImpacts(){
-        int numHighImpacts=0;
+    private int getNumHighNImpacts() {
+        int numHighImpacts = 0;
         Iterator itr = this.modelNegativeImpacts.iterator();
         while (itr.hasNext()) {
             Impact negImpact = (Impact) itr.next();
-            if(negImpact.getImpactRank() != null){
-                if(("H").equals(negImpact.getImpactRank().toString())){
+            if (negImpact.getImpactRank() != null) {
+                if (("H").equals(negImpact.getImpactRank().toString())) {
                     numHighImpacts++;
                 }
             }
@@ -1659,13 +1659,13 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @return
      */
-    private int getNumLowAndMediumNImpacts(){
-        int numImpacts=0;
+    private int getNumLowAndMediumNImpacts() {
+        int numImpacts = 0;
         Iterator itr = this.modelNegativeImpacts.iterator();
         while (itr.hasNext()) {
             Impact negImpact = (Impact) itr.next();
-            if(negImpact.getImpactRank() != null){
-                if(("L").equals(negImpact.getImpactRank().toString()) || ("M").equals(negImpact.getImpactRank().toString())){
+            if (negImpact.getImpactRank() != null) {
+                if (("L").equals(negImpact.getImpactRank().toString()) || ("M").equals(negImpact.getImpactRank().toString())) {
                     numImpacts++;
                 }
             }
@@ -1685,42 +1685,42 @@ public class SDFEditor extends javax.swing.JFrame {
         boolean saveOK = false;
         Impact impactTo = null;
 
-        if(("P").equals(impact.getImpactType().toString())){
+        if (("P").equals(impact.getImpactType().toString())) {
             SDFEditor.logger.info("index: " + index);
             impactTo = (Impact) this.modelPositiveImpacts.get(index);
             SDFEditor.logger.info("impact.getImpactRank(): " + impact.getImpactRank());
 
-            if(impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0){
+            if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
                 saveOK = true;
-            }else{
-                if(getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))){
+            } else {
+                if (getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive High impacts is 5 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-                }else if(getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))){
+                } else if (getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
-                }else{
+                } else {
                     saveOK = true;
                 }
             }
-        }else{
+        } else {
            impactTo = (Impact) this.modelNegativeImpacts.get(index);
-           if(impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0){
+           if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
                 saveOK = true;
-            }else{
-                if(getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))){
+            } else {
+                if (getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative High impacts is 5 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-                }else if(getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))){
+                } else if (getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative Low or Medium impacts is 20");
-                }else{
+                } else {
                     saveOK = true;
                 }
             }
         }
 
-        if(saveOK){
+        if (saveOK) {
             copyImpacts(impact, impactTo);
             this.saveAndReloadSession();
             this.loadImpacts();
@@ -1734,7 +1734,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @return
      */
     public boolean habitatClassExists(String code) {
-        SDFEditor.logger.info("Checking if the habitat class exist for this site::"+code );
+        SDFEditor.logger.info("Checking if the habitat class exist for this site::" + code );
         Iterator itr = this.modelHabitatClasses.iterator();
         while (itr.hasNext()) {
             if (((HabitatClass) itr.next()).getHabitatClassCode().equals(code)) {
@@ -1750,7 +1750,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @return
      */
     public boolean designationTypeExists(String code) {
-        SDFEditor.logger.info("Checking if the designation type exist for this site::"+code );
+        SDFEditor.logger.info("Checking if the designation type exist for this site::" + code );
         Iterator itr = this.modelDesignationTypes.iterator();
         while (itr.hasNext()) {
             if (((NationalDtype) itr.next()).getNationalDtypeCode().equals(code)) {
@@ -1848,7 +1848,7 @@ public class SDFEditor extends javax.swing.JFrame {
             SortedListModel model = new SortedListModel();
             while (itr.hasNext()) {
                 DocLink link = (DocLink) itr.next();
-                if (link!=null){
+                if (link!=null) {
                     modelDocLinks.add(link);
                     if (link.getDocLinkUrl()!=null)
                         model.add(link.getDocLinkUrl());
@@ -1880,7 +1880,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 SiteOwnership so = (SiteOwnership) itr.next();
                 Ownership ow = so.getOwnership();
                 double percent = 0;
-                if(so.getOwnershipPercent() != null){
+                if (so.getOwnershipPercent() != null) {
                     percent = ((Double)so.getOwnershipPercent()).doubleValue();
                 }
 
@@ -1942,7 +1942,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
         this.modelPositiveImpacts = new ArrayList();
         this.modelNegativeImpacts = new ArrayList();
-        if(!impacts.isEmpty()) {
+        if (!impacts.isEmpty()) {
 
             Iterator itr = impacts.iterator();
             while (itr.hasNext()) {
@@ -1993,14 +1993,14 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param impactCode
      * @return
      */
-    private String getImpactName(String impactCode){
+    private String getImpactName(String impactCode) {
         SDFEditor.logger.info("Getting impact Name");
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";
         Query q = session.createQuery(hql);
 
         String impactName = "";
-        if(q.uniqueResult() != null){
+        if (q.uniqueResult() != null) {
             impactName = (String)q.uniqueResult();
         }
         return impactName;
@@ -2047,12 +2047,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 OtherSpecies sp = ((OtherSpecies) itr.next());
                 String otherSpeciesGroup = "";
                 String sensitive ="";
-                if(sp.getOtherSpeciesSensitive() != null && sp.getOtherSpeciesSensitive() == 1){
+                if (sp.getOtherSpeciesSensitive() != null && sp.getOtherSpeciesSensitive() == 1) {
                     sensitive ="X";
                 }
 
                 String np ="";
-                if(sp.getOtherSpeciesNp() != null && sp.getOtherSpeciesNp() == 1){
+                if (sp.getOtherSpeciesNp() != null && sp.getOtherSpeciesNp() == 1) {
                     np ="X";
                 }
 
@@ -2061,12 +2061,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 }
 
                 String maxSize ="";
-                if(sp.getOtherSpeciesSizeMax() != null){
+                if (sp.getOtherSpeciesSizeMax() != null) {
                     maxSize = sp.getOtherSpeciesSizeMax().toString();
                 }
 
                 String minSize ="";
-                if(sp.getOtherSpeciesSizeMin() != null){
+                if (sp.getOtherSpeciesSizeMin() != null) {
                     minSize = sp.getOtherSpeciesSizeMin().toString();
                 }
 
@@ -2077,25 +2077,25 @@ public class SDFEditor extends javax.swing.JFrame {
                 String motC ="";
                 String motD ="";
 
-                if(sp.getOtherSpeciesMotivation() != null){
+                if (sp.getOtherSpeciesMotivation() != null) {
 
                     String strDatos=sp.getOtherSpeciesMotivation();
                     StringTokenizer tokens=new StringTokenizer(strDatos, ",");
-                    while(tokens.hasMoreTokens()){
+                    while (tokens.hasMoreTokens()) {
                         String token = tokens.nextToken();
-                        if(("IV").equals(token)){
+                        if (("IV").equals(token)) {
                             motIV ="X";
-                        }else if(("V").equals(token)){
+                        } else if (("V").equals(token)) {
                             motV ="X";
-                        }else if(("A").equals(token)){
+                        } else if (("A").equals(token)) {
                              motA ="X";
-                        }else if(("B").equals(token)){
+                        } else if (("B").equals(token)) {
                             motB ="X";
-                        }else if(("C").equals(token)){
+                        } else if (("C").equals(token)) {
                             motC ="X";
-                        }else if(("D").equals(token)){
+                        } else if (("D").equals(token)) {
                             motD ="X";
-                        }else{
+                        } else {
 
                         }
                     }
@@ -2128,21 +2128,21 @@ public class SDFEditor extends javax.swing.JFrame {
                 String speciesGroup = "";
 
                 String sensitive = "";
-                if(sp.getSpeciesSensitive() != null &&  sp.getSpeciesSensitive() == 1){
+                if (sp.getSpeciesSensitive() != null &&  sp.getSpeciesSensitive() == 1) {
                    sensitive = "X";
                 }
 
                 String np = "";
-                if(sp.getSpeciesNp() != null &&  sp.getSpeciesNp() == 1){
+                if (sp.getSpeciesNp() != null &&  sp.getSpeciesNp() == 1) {
                    np = "X";
                 }
                 String maxSize="";
-                if(sp.getSpeciesSizeMax() != null){
+                if (sp.getSpeciesSizeMax() != null) {
                     maxSize=sp.getSpeciesSizeMax().toString();
                 }
 
                 String minSize="";
-                if(sp.getSpeciesSizeMin() != null){
+                if (sp.getSpeciesSizeMin() != null) {
                     minSize=sp.getSpeciesSizeMin().toString();
                 }
 
@@ -2175,11 +2175,11 @@ public class SDFEditor extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 Habitat h = ((Habitat) itr.next());
                 String priority="";
-                if(h.getHabitatPriority()!= null &&  h.getHabitatPriority()== 1){
+                if (h.getHabitatPriority()!= null &&  h.getHabitatPriority()== 1) {
                     priority="X";
                 }
                 String nonPresence="";
-                if(h.getHabitatNp() != null && h.getHabitatNp() == 1){
+                if (h.getHabitatNp() != null && h.getHabitatNp() == 1) {
                     nonPresence="X";
                 }
                 Object[] tuple = {h.getHabitatCode(),priority,nonPresence, ConversionTools.doubleToString(h.getHabitatCoverHa()),ConversionTools.intToString(h.getHabitatCaves()),h.getHabitatDataQuality(),h.getHabitatRepresentativity(),h.getHabitatRelativeSurface(),h.getHabitatConservation(),h.getHabitatGlobal()};
@@ -2276,25 +2276,25 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param index
      * @return
      */
-    private boolean checkHCPercentUpdate100(HabitatClass h, int index){
+    private boolean checkHCPercentUpdate100(HabitatClass h, int index) {
         SDFEditor.logger.info("Checking the sum of the percent of the Habitat Classes");
         boolean percent100=false;
         double coverPercent = new Double(0);
-        for(int i=0;i<this.modelHabitatClasses.size();i++){
-            if(modelHabitatClasses.get(i) != null){
-                if(i == index){
+        for(int i = 0;i < this.modelHabitatClasses.size();i++) {
+            if (modelHabitatClasses.get(i) != null) {
+                if (i == index) {
                     coverPercent += h.getHabitatClassCover();
-                }else{
+                } else {
                    coverPercent += ((HabitatClass)modelHabitatClasses.get(i)).getHabitatClassCover();
                 }
             }
         }
 
-        if(coverPercent > 100){
+        if (coverPercent > 100) {
             percent100=true;
-        }else if(coverPercent== 100){
+        } else if (coverPercent== 100) {
             percent100=false;
-        }else{
+        } else {
            percent100=false;
         }
         return percent100;
@@ -2305,25 +2305,25 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param habClass
      * @return
      */
-    private boolean checkHCPercent100(HabitatClass habClass){
+    private boolean checkHCPercent100(HabitatClass habClass) {
         SDFEditor.logger.info("Checking the sum of the percent of the Habitat Classes (Edit)");
         boolean percent100=false;
         double coverPercent = new Double(0);
-        for(int i=0;i<this.modelHabitatClasses.size();i++){
-            if(modelHabitatClasses.get(i) != null){
+        for(int i = 0;i < this.modelHabitatClasses.size();i++) {
+            if (modelHabitatClasses.get(i) != null) {
                 coverPercent += ((HabitatClass)modelHabitatClasses.get(i)).getHabitatClassCover();
             }
         }
-        if(habClass != null){
+        if (habClass != null) {
              coverPercent +=habClass.getHabitatClassCover();
         }
-        if(coverPercent > 100){
+        if (coverPercent > 100) {
             percent100=true;
-        }else if(coverPercent== 100 && habClass != null){
+        } else if (coverPercent== 100 && habClass != null) {
             percent100=false;
-        }else if (coverPercent == 100 && habClass == null){
+        } else if (coverPercent == 100 && habClass == null) {
             percent100=true;
-        }else{
+        } else {
            percent100=false;
         }
         return percent100;
@@ -2333,16 +2333,16 @@ public class SDFEditor extends javax.swing.JFrame {
     *
     * @return
     */
-   public double checkSumPercentBioReg(){
-       double sumPercentBioReg =0;
+   public double checkSumPercentBioReg() {
+       double sumPercentBioReg = 0;
        try{
-           for(int i=0;i<this.modelBioregions.size();i++){
-                if(modelBioregions.get(i) != null){
+           for(int i = 0;i < this.modelBioregions.size();i++) {
+                if (modelBioregions.get(i) != null) {
                     sumPercentBioReg += ((SiteBiogeo)modelBioregions.get(i)).getBiogeoPercent();
                 }
             }
-       }catch(Exception e){
-           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::"+e.getMessage());
+       } catch (Exception e) {
+           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::" + e.getMessage());
        }
        return sumPercentBioReg;
    }
@@ -2352,22 +2352,22 @@ public class SDFEditor extends javax.swing.JFrame {
     *
     * @return
     */
-   private double checkSumPercentBioReg(Double percent,Biogeo biogeo){
-       double sumPercentBioReg =0;
+   private double checkSumPercentBioReg(Double percent,Biogeo biogeo) {
+       double sumPercentBioReg = 0;
        try{
-           for(int i=0;i<this.modelBioregions.size();i++){
-                if(modelBioregions.get(i) != null){
-                    if(!(biogeo.getBiogeoCode()).equals(modelBioregions.get(0))){
+           for(int i = 0;i < this.modelBioregions.size();i++) {
+                if (modelBioregions.get(i) != null) {
+                    if (!(biogeo.getBiogeoCode()).equals(modelBioregions.get(0))) {
                         sumPercentBioReg += ((SiteBiogeo)modelBioregions.get(i)).getBiogeoPercent();
-                    }else{
+                    } else {
                          sumPercentBioReg += percent;
                     }
 
                 }
         }
 
-       }catch(Exception e){
-           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::"+e.getMessage());
+       } catch (Exception e) {
+           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::" + e.getMessage());
        }
        return sumPercentBioReg;
 
@@ -5442,28 +5442,28 @@ public class SDFEditor extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRegionActionPerformed
+    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddRegionActionPerformed
         new EditorRegion(this,this.sitecode).setVisible(true);
-    }//GEN-LAST:event_btnAddRegionActionPerformed
+    } //GEN-LAST:event_btnAddRegionActionPerformed
 
-    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddBiogeoActionPerformed
-         if(checkSumPercentBioReg() ==100){
+    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddBiogeoActionPerformed
+         if (checkSumPercentBioReg() ==100) {
             SDFEditor.logger.error("The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
             javax.swing.JOptionPane.showMessageDialog(this, "The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
             return;
-        }else{
+        } else {
             new EditorBioregion(this).setVisible(true);
         }
 
-    }//GEN-LAST:event_btnAddBiogeoActionPerformed
+    } //GEN-LAST:event_btnAddBiogeoActionPerformed
 
-    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddHabitatActionPerformed
+    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatActionPerformed
         new EditorHabitat(this).setVisible(true);
-    }//GEN-LAST:event_btnAddHabitatActionPerformed
+    } //GEN-LAST:event_btnAddHabitatActionPerformed
 
-    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditHabitatActionPerformed
+    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditHabitatActionPerformed
         int row = tabHabitats.getSelectedRow();
         if (row < 0) {
             SDFEditor.logger.error("No habitat selected");
@@ -5471,47 +5471,47 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
 
             Habitat h = (Habitat) modelHabitats.get(row);
-            SDFEditor.logger.error("row==>"+row+"<==habitat code==>"+h.getHabitatCode());
+            SDFEditor.logger.error("row==>" + row+ "<==habitat code==>" + h.getHabitatCode());
             EditorHabitat eH = new EditorHabitat(this);
             eH.loadHabitat(h, row);
             eH.setVisible(true);
 
         }
-    }//GEN-LAST:event_btnEditHabitatActionPerformed
+    } //GEN-LAST:event_btnEditHabitatActionPerformed
 
-    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSpeciesActionPerformed
+    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddSpeciesActionPerformed
         EditorSpecies eS = new EditorSpecies(this);
         eS.init();
         eS.setVisible(true);
-    }//GEN-LAST:event_btnAddSpeciesActionPerformed
+    } //GEN-LAST:event_btnAddSpeciesActionPerformed
 
-    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditSpeciesActionPerformed
+    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditSpeciesActionPerformed
         int row = tabSpecies.getSelectedRow();
         if (row < 0 || tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             SDFEditor.logger.error("No species selected");
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
         } else {
             Species s = (Species) modelSpecies.get(row);
-            if(s.getSpeciesGroup() != null && s.getSpeciesGroup() == 'B'){
+            if (s.getSpeciesGroup() != null && s.getSpeciesGroup() == 'B') {
                 EditorBirds eS = new EditorBirds(this);
                 eS.loadBirds(s, row);
                 eS.setVisible(true);
-            }else{
+            } else {
                 EditorSpecies eS = new EditorSpecies(this);
                 eS.loadSpecies(s, row);
                 eS.setVisible(true);
             }
 
         }
-    }//GEN-LAST:event_btnEditSpeciesActionPerformed
+    } //GEN-LAST:event_btnEditSpeciesActionPerformed
 
-    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
+    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
         EditorOtherSpecies eS = new EditorOtherSpecies(this);
         eS.init();
         eS.setVisible(true);
-    }//GEN-LAST:event_btnAddOtherSpeciesActionPerformed
+    } //GEN-LAST:event_btnAddOtherSpeciesActionPerformed
 
-    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
+    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
         int row = tabOtherSpecies.getSelectedRow();
 
         if (row < 0 || tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
@@ -5525,66 +5525,66 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.setVisible(true);
 
         }
-    }//GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
+    } //GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
 
-    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddHabitatClassActionPerformed
-        if(this.modelHabitatClasses.size() >0){
-            if(checkHCPercent100(null)){
+    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatClassActionPerformed
+        if (this.modelHabitatClasses.size() >0) {
+            if (checkHCPercent100(null)) {
                 SDFEditor.logger.error("The sum of cover percentage is 100.New habitat class cannot be added.");
                 JOptionPane.showMessageDialog(this, "The sum of cover percentage is 100.New habitat class cannot be added.", "Dialog",JOptionPane.ERROR_MESSAGE);
-            }else{
+            } else {
                 new EditorHabitatClass(this).setVisible(true);
             }
-        }else{
+        } else {
             new EditorHabitatClass(this).setVisible(true);
         }
-    }//GEN-LAST:event_btnAddHabitatClassActionPerformed
+    } //GEN-LAST:event_btnAddHabitatClassActionPerformed
 
-    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNegImpactActionPerformed
-        if(this.modelNegativeImpacts.size() == 25){
+    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNegImpactActionPerformed
+        if (this.modelNegativeImpacts.size() == 25) {
             SDFEditor.logger.error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
            JOptionPane.showMessageDialog(this, "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts", "Dialog",JOptionPane.ERROR_MESSAGE);
-        }else{
+        } else {
             new EditorImpact(this, "N").setVisible(true);
         }
 
-    }//GEN-LAST:event_btnAddNegImpactActionPerformed
+    } //GEN-LAST:event_btnAddNegImpactActionPerformed
 
-    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPosImpactActionPerformed
-        if(this.modelPositiveImpacts.size() == 25){
+    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddPosImpactActionPerformed
+        if (this.modelPositiveImpacts.size() == 25) {
             SDFEditor.logger.error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
             JOptionPane.showMessageDialog(this, "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts", "Dialog",JOptionPane.ERROR_MESSAGE);
-        }else{
+        } else {
             new EditorImpact(this, "P").setVisible(true);
         }
 
-    }//GEN-LAST:event_btnAddPosImpactActionPerformed
+    } //GEN-LAST:event_btnAddPosImpactActionPerformed
 
-    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOwnerActionPerformed
+    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOwnerActionPerformed
         new EditorOwnership(this).setVisible(true);
-    }//GEN-LAST:event_btnAddOwnerActionPerformed
+    } //GEN-LAST:event_btnAddOwnerActionPerformed
 
-    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDesigTypeActionPerformed
+    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDesigTypeActionPerformed
         new EditorDesignationType(this).setVisible(true);
-}//GEN-LAST:event_btnAddDesigTypeActionPerformed
+} //GEN-LAST:event_btnAddDesigTypeActionPerformed
 
-    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMgmtBodyActionPerformed
+    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtBodyActionPerformed
         new EditorMgmtBody(this).setVisible(true);
-    }//GEN-LAST:event_btnAddMgmtBodyActionPerformed
+    } //GEN-LAST:event_btnAddMgmtBodyActionPerformed
 
-    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMgmtPlanActionPerformed
+    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtPlanActionPerformed
         new EditorMgmtPlan(this).setVisible(true);
-    }//GEN-LAST:event_btnAddMgmtPlanActionPerformed
+    } //GEN-LAST:event_btnAddMgmtPlanActionPerformed
 
-    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNatRelActionPerformed
+    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNatRelActionPerformed
         new EditorNationalRelation(this).setVisible(true);
-    }//GEN-LAST:event_btnAddNatRelActionPerformed
+    } //GEN-LAST:event_btnAddNatRelActionPerformed
 
-    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddInterRelActionPerformed
+    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddInterRelActionPerformed
         new EditorInternationalRelation(this).setVisible(true);
-    }//GEN-LAST:event_btnAddInterRelActionPerformed
+    } //GEN-LAST:event_btnAddInterRelActionPerformed
 
-    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelRegionActionPerformed
+    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelRegionActionPerformed
         int rows[] = this.lstRegions.getSelectedIndices();
         if (rows.length == 0) {
             SDFEditor.logger.error("No Regions selected.");
@@ -5606,9 +5606,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadRegions(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelRegionActionPerformed
+    } //GEN-LAST:event_btnDelRegionActionPerformed
 
-    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelBiogeoActionPerformed
+    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelBiogeoActionPerformed
         int row = this.tabBiogeo.getSelectedRow();
         if (row == -1 || this.tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
             SDFEditor.logger.error("No Regions selected.");
@@ -5630,9 +5630,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
             }
         }
-    }//GEN-LAST:event_btnDelBiogeoActionPerformed
+    } //GEN-LAST:event_btnDelBiogeoActionPerformed
 
-    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelHabitatActionPerformed
+    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatActionPerformed
         int row = this.tabHabitats.getSelectedRow();
         if (row == -1 || this.tabHabitats.getRowCount() < 1 || row > this.tabHabitats.getRowCount()) {
             SDFEditor.logger.error("No Habitat selected.");
@@ -5649,16 +5649,16 @@ public class SDFEditor extends javax.swing.JFrame {
                     null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 tabHabitats.setSelectionModel(new DefaultListSelectionModel()); //gotta do to quiet the listener already set
-                SDFEditor.logger.info("Site update Date:"+"Removing row: " + Integer.toString(row));
-                SDFEditor.logger.info("Site update Date:"+"Removing object: " + ((Habitat) this.modelHabitats.get(row)).getHabitatCode());
+                SDFEditor.logger.info("Site update Date:" + "Removing row: " + Integer.toString(row));
+                SDFEditor.logger.info("Site update Date:" + "Removing object: " + ((Habitat) this.modelHabitats.get(row)).getHabitatCode());
                 this.site.getHabitats().remove(this.modelHabitats.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadHabitats(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelHabitatActionPerformed
+    } //GEN-LAST:event_btnDelHabitatActionPerformed
 
-    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelSpeciesActionPerformed
+    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelSpeciesActionPerformed
         int row = this.tabSpecies.getSelectedRow();
         if (row == -1 || this.tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
@@ -5678,14 +5678,14 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadSpecies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelSpeciesActionPerformed
+    } //GEN-LAST:event_btnDelSpeciesActionPerformed
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCloseActionPerformed
         session.clear();
         this.exit();
-    }//GEN-LAST:event_btnCloseActionPerformed
+    } //GEN-LAST:event_btnCloseActionPerformed
 
-    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
+    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
         int row = this.tabOtherSpecies.getSelectedRow();
         if (row == -1 || this.tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
             SDFEditor.logger.error("No Species selected.");
@@ -5706,9 +5706,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadOtherSpecies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelOtherSpeciesActionPerformed
+    } //GEN-LAST:event_btnDelOtherSpeciesActionPerformed
 
-    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelHabitatClassActionPerformed
+    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatClassActionPerformed
         int row = this.tabHabitatClass.getSelectedRow();
         if (row == -1 || this.tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
             SDFEditor.logger.error("No Habitat Class selected.");
@@ -5729,9 +5729,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadHabitatClasses(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelHabitatClassActionPerformed
+    } //GEN-LAST:event_btnDelHabitatClassActionPerformed
 
-    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelNegImpactActionPerformed
+    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNegImpactActionPerformed
         int row = this.tabNegativeImpacts.getSelectedRow();
         if (row == -1 || this.tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
             SDFEditor.logger.error("No Negative Impact selected.");
@@ -5753,9 +5753,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    }//GEN-LAST:event_btnDelNegImpactActionPerformed
+    } //GEN-LAST:event_btnDelNegImpactActionPerformed
 
-    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelPosImpactActionPerformed
+    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelPosImpactActionPerformed
         int row = this.tabPositiveImpacts.getSelectedRow();
         if (row == -1 || this.tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             SDFEditor.logger.error("No positive impact selected.");
@@ -5777,9 +5777,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    }//GEN-LAST:event_btnDelPosImpactActionPerformed
+    } //GEN-LAST:event_btnDelPosImpactActionPerformed
 
-    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelOwnerActionPerformed
+    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOwnerActionPerformed
         int row = this.tabOwnership.getSelectedRow();
         if (row == -1 || this.tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
             SDFEditor.logger.error("No ownership selected.");
@@ -5801,13 +5801,13 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadOwnerships();
             }
         }
-    }//GEN-LAST:event_btnDelOwnerActionPerformed
+    } //GEN-LAST:event_btnDelOwnerActionPerformed
 
-    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDocLinkActionPerformed
+    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDocLinkActionPerformed
         new EditorDocLink(this).setVisible(true);
-    }//GEN-LAST:event_btnAddDocLinkActionPerformed
+    } //GEN-LAST:event_btnAddDocLinkActionPerformed
 
-    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelDocLinkActionPerformed
+    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDocLinkActionPerformed
         int row = this.lstLinks.getSelectedIndex();
         if (row == -1) {
             SDFEditor.logger.error("No link  selected.");
@@ -5832,9 +5832,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadDocLinks();
             }
         }
-    }//GEN-LAST:event_btnDelDocLinkActionPerformed
+    } //GEN-LAST:event_btnDelDocLinkActionPerformed
 
-    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelDesigTypeActionPerformed
+    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDesigTypeActionPerformed
         int row = this.tabDesigationTypes.getSelectedRow();
         if (row == -1 || this.tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
             SDFEditor.logger.error("No designation type selected.");
@@ -5855,9 +5855,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadDesignationTypes(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelDesigTypeActionPerformed
+    } //GEN-LAST:event_btnDelDesigTypeActionPerformed
 
-    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelNatRelActionPerformed
+    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNatRelActionPerformed
         int row = this.tabNationalRelations.getSelectedRow();
         if (row == -1 || this.tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
             SDFEditor.logger.error("No national relation selected.");
@@ -5878,9 +5878,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadRelations(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelNatRelActionPerformed
+    } //GEN-LAST:event_btnDelNatRelActionPerformed
 
-    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelInterRelActionPerformed
+    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelInterRelActionPerformed
         int row = this.tabInternationalRelations.getSelectedRow();
         if (row == -1 || this.tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
             SDFEditor.logger.error("No international relation selected.");
@@ -5901,9 +5901,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadRelations(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelInterRelActionPerformed
+    } //GEN-LAST:event_btnDelInterRelActionPerformed
 
-    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelMgmtBodyActionPerformed
+    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtBodyActionPerformed
         int row = this.tabMgmtBodies.getSelectedRow();
         if (row == -1 || this.tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             SDFEditor.logger.error("No management body selected.");
@@ -5928,9 +5928,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadMgmtBodies(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelMgmtBodyActionPerformed
+    } //GEN-LAST:event_btnDelMgmtBodyActionPerformed
 
-    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelMgmtPlanActionPerformed
+    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtPlanActionPerformed
         int row = this.tabMgmtPlans.getSelectedRow();
         if (row == -1 || this.tabMgmtPlans.getRowCount() < 1 || row > this.tabMgmtPlans.getRowCount()) {
             SDFEditor.logger.error("No management plan selected.");
@@ -5952,28 +5952,28 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadMgmtPlans(); //repopulate the list in the view
             }
         }
-    }//GEN-LAST:event_btnDelMgmtPlanActionPerformed
+    } //GEN-LAST:event_btnDelMgmtPlanActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         this.save();
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
         new SDFExporterSite(sitecode).setVisible(true);
 
 
-    }//GEN-LAST:event_btnExportActionPerformed
+    } //GEN-LAST:event_btnExportActionPerformed
 
-    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewButtonActionPerformed
+    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jViewButtonActionPerformed
         // TODO add your handling code here:
         File dbFile = new File("");
-        ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator+"logs"+File.separator+"log.txt");
+        ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator+ "logs" + File.separator+ "log.txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
-    }//GEN-LAST:event_jViewButtonActionPerformed
+    } //GEN-LAST:event_jViewButtonActionPerformed
 
-    private void editMgmtBodyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMgmtBodyButtonActionPerformed
+    private void editMgmtBodyButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editMgmtBodyButtonActionPerformed
         int row = tabMgmtBodies.getSelectedRow();
         if (row < 0 || tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No management body selected");
@@ -5983,9 +5983,9 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadMgmtBody(s, row);
             eS.setVisible(true);
         }
-    }//GEN-LAST:event_editMgmtBodyButtonActionPerformed
+    } //GEN-LAST:event_editMgmtBodyButtonActionPerformed
 
-    private void jEditImpactsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEditImpactsActionPerformed
+    private void jEditImpactsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jEditImpactsActionPerformed
        int row = tabNegativeImpacts.getSelectedRow();
        if (row < 0 || tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
            SDFEditor.logger.error("No negative impact selected.");
@@ -5998,9 +5998,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.setVisible(true);
        }
 
-    }//GEN-LAST:event_jEditImpactsActionPerformed
+    } //GEN-LAST:event_jEditImpactsActionPerformed
 
-    private void jImpactNegEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jImpactNegEditActionPerformed
+    private void jImpactNegEditActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jImpactNegEditActionPerformed
         int row = tabPositiveImpacts.getSelectedRow();
         if (row < 0 || tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             SDFEditor.logger.error("No positive impact selected.");
@@ -6011,13 +6011,13 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadImpact(s, row);
             eS.setVisible(true);
         }
-    }//GEN-LAST:event_jImpactNegEditActionPerformed
+    } //GEN-LAST:event_jImpactNegEditActionPerformed
 
-    private void validateSiteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateSiteButtonActionPerformed
+    private void validateSiteButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_validateSiteButtonActionPerformed
         ValidateSite validateSite = new ValidateSite();
 
         ArrayList xmlFieldsList = validateSite.validate(this.site);
-        if(!xmlFieldsList.isEmpty()){
+        if (!xmlFieldsList.isEmpty()) {
           File fileLog =null;
           try{
               SDFEditor.logger.error("The site is not valid.");
@@ -6026,29 +6026,29 @@ public class SDFEditor extends javax.swing.JFrame {
               SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyy_HHmm");
               String formatDate = sdf.format(cal.getTime());
               String dirPath = (new File("")).getAbsolutePath();
-              String logFileName = dirPath+System.getProperty("file.separator")+"logs"+ System.getProperty("file.separator")+"ErrorSite_"+formatDate+".log";
+              String logFileName = dirPath+System.getProperty("file.separator")+ "logs" + System.getProperty("file.separator")+ "ErrorSite_" + formatDate+ ".log";
               fileLog =SDF_Util.copyToLogErrorSite(xmlFieldsList,logFileName );
-              JOptionPane.showMessageDialog(this, "The site is not compliant with SDF schema.\n Please check the log file::"+fileLog.getName()+" for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(this, "The site is not compliant with SDF schema.\n Please check the log file::" + fileLog.getName()+ " for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
               Desktop desktop = null;
               if (Desktop.isDesktopSupported()) {
                  desktop = Desktop.getDesktop();
                  Desktop.getDesktop().open(fileLog);
               }
-          }catch(IOException e){
-              SDFEditor.logger.error("An error has occurred. Error Message::::"+e.getMessage());
+          } catch (IOException e) {
+              SDFEditor.logger.error("An error has occurred. Error Message::::" + e.getMessage());
               //e.printStackTrace();;
           }
 
           return;
-        }else{
+        } else {
             SDFEditor.logger.info("The Site is valid.");
            javax.swing.JOptionPane.showMessageDialog(this, "The Site is valid.");
             //this.exit();
             return;
         }
-    }//GEN-LAST:event_validateSiteButtonActionPerformed
+    } //GEN-LAST:event_validateSiteButtonActionPerformed
 
-    private void editDTypesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDTypesButtonActionPerformed
+    private void editDTypesButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editDTypesButtonActionPerformed
        int row = tabDesigationTypes.getSelectedRow();
        if (row < 0 || tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
            SDFEditor.logger.error("No Designation Type selected.");
@@ -6060,9 +6060,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadDesignations(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editDTypesButtonActionPerformed
+    } //GEN-LAST:event_editDTypesButtonActionPerformed
 
-    private void editNationRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNationRelationsButtonActionPerformed
+    private void editNationRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editNationRelationsButtonActionPerformed
        int row = tabNationalRelations.getSelectedRow();
        if (row < 0 || tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
            SDFEditor.logger.error("No national relation selected.");
@@ -6074,9 +6074,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadDesignations(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editNationRelationsButtonActionPerformed
+    } //GEN-LAST:event_editNationRelationsButtonActionPerformed
 
-    private void editIntRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editIntRelationsButtonActionPerformed
+    private void editIntRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editIntRelationsButtonActionPerformed
        int row = tabInternationalRelations.getSelectedRow();
        if (row < 0 || tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
            SDFEditor.logger.error("No international relation selected.");
@@ -6088,9 +6088,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadConventions(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editIntRelationsButtonActionPerformed
+    } //GEN-LAST:event_editIntRelationsButtonActionPerformed
 
-    private void editHabClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHabClassButtonActionPerformed
+    private void editHabClassButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editHabClassButtonActionPerformed
        int row = tabHabitatClass.getSelectedRow();
        if (row < 0 || tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
            SDFEditor.logger.error("No habitat class selected.");
@@ -6102,9 +6102,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadClasses(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editHabClassButtonActionPerformed
+    } //GEN-LAST:event_editHabClassButtonActionPerformed
 
-    private void editBioRegionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBioRegionButtonActionPerformed
+    private void editBioRegionButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editBioRegionButtonActionPerformed
        int row = tabBiogeo.getSelectedRow();
        if (row < 0 || tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
            SDFEditor.logger.error("No Biogeographical regions selected.");
@@ -6116,9 +6116,9 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadRegions(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editBioRegionButtonActionPerformed
+    } //GEN-LAST:event_editBioRegionButtonActionPerformed
 
-    private void editOwnershipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editOwnershipButtonActionPerformed
+    private void editOwnershipButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editOwnershipButtonActionPerformed
        int row = tabOwnership.getSelectedRow();
        if (row < 0 || tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
            SDFEditor.logger.error("No ownership selected.");
@@ -6130,20 +6130,20 @@ public class SDFEditor extends javax.swing.JFrame {
            eS.loadOwnership(s, row);
            eS.setVisible(true);
        }
-    }//GEN-LAST:event_editOwnershipButtonActionPerformed
+    } //GEN-LAST:event_editOwnershipButtonActionPerformed
 
-    private void btnPDFYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFYesActionPerformed
+    private void btnPDFYesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnPDFYesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPDFYesActionPerformed
+    } //GEN-LAST:event_btnPDFYesActionPerformed
 
-    private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFActionPerformed
+    private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGeneratePDFActionPerformed
          // TODO add your handling code here:
         new SDFExporterPDF(sitecode).setVisible(true);
 
 
-    }//GEN-LAST:event_btnGeneratePDFActionPerformed
+    } //GEN-LAST:event_btnGeneratePDFActionPerformed
 
-    private void editLinksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksActionPerformed
+    private void editLinksActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editLinksActionPerformed
         // TODO add your handling code here:
         int row = lstLinks.getSelectedIndex();
         if (row < 0 || lstLinks.isSelectionEmpty()) {
@@ -6157,12 +6157,12 @@ public class SDFEditor extends javax.swing.JFrame {
            linkEditor.setVisible(true);
 
         }
-    }//GEN-LAST:event_editLinksActionPerformed
+    } //GEN-LAST:event_editLinksActionPerformed
 
-    private void editMgmtBodyPlansButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMgmtBodyPlansButtonActionPerformed
+    private void editMgmtBodyPlansButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editMgmtBodyPlansButtonActionPerformed
 
         int row = this.tabMgmtPlans.getSelectedRow();
-        if (row == -1){
+        if (row == -1) {
             SDFEditor.logger.error("No management plan selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No management plan selected");
         } else {
@@ -6176,7 +6176,7 @@ public class SDFEditor extends javax.swing.JFrame {
             //this.loadMgmtPlans(); //repopulate the list in the view
         }
 
-    }//GEN-LAST:event_editMgmtBodyPlansButtonActionPerformed
+    } //GEN-LAST:event_editMgmtBodyPlansButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBiogeo;

@@ -9,12 +9,12 @@ public class RefImpactPollution {
     private int refPollutionId;
     private String refPollutionName;
     private String refPollutionCode;
-    
+
     /**
-     * 
+     *
      */
     public RefImpactPollution(){
-        
+
     }
 
     /**

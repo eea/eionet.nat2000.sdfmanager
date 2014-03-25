@@ -49,7 +49,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
 
        while (itr.hasNext()) {
            Object obj = (Object) itr.next();
-           if(("").equals((String)obj)){
+           if (("").equals((String)obj)) {
                continue;
            }
            cmbCode.insertItemAt(obj, i);
@@ -69,12 +69,12 @@ public class EditorHabitatClass extends javax.swing.JFrame {
    public void loadClasses(HabitatClass h, int index) {
         this.index = index;
         this.cmbCode.setSelectedItem(h.getHabitatClassCode());
-        EditorHabitatClass.log.info("Load the data of the habitat Class. ::"+h.getHabitatClassCode());
+        EditorHabitatClass.log.info("Load the data of the habitat Class. ::" + h.getHabitatClassCode());
         this.cmbCode.setEnabled(false);
         String habClassDesc = "";
-        if(h.getHabitatClassDescription() != null && !(("").equals(h.getHabitatClassDescription()))){
+        if (h.getHabitatClassDescription() != null && !(("").equals(h.getHabitatClassDescription()))) {
            habClassDesc =  h.getHabitatClassDescription();
-        }else{
+        } else {
             habClassDesc =  getHabClassDesc(h.getHabitatClassCode());
         }
         this.txtName.setText(habClassDesc);
@@ -88,18 +88,18 @@ public class EditorHabitatClass extends javax.swing.JFrame {
     * @param habClassCode
     * @return
     */
-   private String  getHabClassDesc(String habClassCode){
-       EditorHabitatClass.log.info("Get the description of the habitat Class. ::"+habClassCode);
+   private String  getHabClassDesc(String habClassCode) {
+       EditorHabitatClass.log.info("Get the description of the habitat Class. ::" + habClassCode);
        Session session = HibernateUtil.getSessionFactory().openSession();
        String habClassDesc="";
        String hql;
-       hql = "select distinct hC.refHabClassesDescrEn from RefHabClasses hC where hC.refHabClassesCode ='"+habClassCode+"'";
+       hql = "select distinct hC.refHabClassesDescrEn from RefHabClasses hC where hC.refHabClassesCode ='" + habClassCode+"'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
-       if(itr.hasNext()){
+       if (itr.hasNext()) {
            habClassDesc = (String)itr.next();
        }
-       EditorHabitatClass.log.info("The description of the habitat Class. ::"+habClassDesc);
+       EditorHabitatClass.log.info("The description of the habitat Class. ::" + habClassDesc);
        return habClassDesc;
    }
 
@@ -110,7 +110,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
 
         boolean saveOK = true;
         String code = (String)cmbCode.getSelectedItem();
-        EditorHabitatClass.log.info("Saving the habitat Class. ::"+code);
+        EditorHabitatClass.log.info("Saving the habitat Class. ::" + code);
         String desc = this.txtName.getText();
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
         HabitatClass hC = new HabitatClass();
@@ -127,7 +127,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
                 EditorHabitatClass.log.error("Habitat class is already declared.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Habitat class is already declared.");
                 saveOK = false;
-            }else{
+            } else {
                 saveOK = this.parent.addHabitatClass(hC);
             }
         }
@@ -320,27 +320,27 @@ public class EditorHabitatClass extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
          if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
-            EditorHabitatClass.log.info("Get the description of the habitat Class to fill the text field in the editor. ::"+code);
+            EditorHabitatClass.log.info("Get the description of the habitat Class to fill the text field in the editor. ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct refHab.refHabClassesDescrEn from RefHabClasses refHab where refHab.refHabClassesCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String descHabClass =(String) q.uniqueResult();
-            EditorHabitatClass.log.info("The description of the habitat Class. ::"+descHabClass);
+            EditorHabitatClass.log.info("The description of the habitat Class. ::" + descHabClass);
             this.txtName.setText(descHabClass);
         }
-    }//GEN-LAST:event_cmbCodeItemStateChanged
+    } //GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void tbnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbnCancelActionPerformed
+    private void tbnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_tbnCancelActionPerformed
+    } //GEN-LAST:event_tbnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
 
         if (((String)cmbCode.getSelectedItem()).equals("")) {
             EditorHabitatClass.log.error("No Habitat Class selected.");
@@ -351,20 +351,20 @@ public class EditorHabitatClass extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a cover for the habitat class.");
         }
         else if (!ConversionTools.checkDouble(txtCover.getText())) {
-            EditorHabitatClass.log.error("Value provided for cover is not a valid number.::"+txtCover.getText());
+            EditorHabitatClass.log.error("Value provided for cover is not a valid number.::" + txtCover.getText());
            javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
-        }else if(!SDF_Util.validatePercent(txtCover.getText())){
-            EditorHabitatClass.log.error("The percent of the cover is not valid.::"+txtCover.getText());
+        } else if (!SDF_Util.validatePercent(txtCover.getText())) {
+            EditorHabitatClass.log.error("The percent of the cover is not valid.::" + txtCover.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
-        }else {
-            if(saveHabitatClass()){
+        } else {
+            if (saveHabitatClass()) {
 
                 this.exit();
-            }else{
+            } else {
                 this.setVisible(true);
             }
         }
-    }//GEN-LAST:event_btnSaveActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
 
 
 

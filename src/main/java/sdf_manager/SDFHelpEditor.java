@@ -15,15 +15,15 @@ import pojos.Site;
  */
 public class SDFHelpEditor extends javax.swing.JDialog {
 
-   
-   
+
+
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFHelpEditor.class .getName());
 
     /**
-     * 
+     *
      */
-    public SDFHelpEditor() {        
-       
+    public SDFHelpEditor() {
+
         initComponents();
         centerScreen();
     }
@@ -46,8 +46,8 @@ public class SDFHelpEditor extends javax.swing.JDialog {
       super.setVisible(true);
       requestFocus();
     }
-   
-  
+
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -129,12 +129,12 @@ public class SDFHelpEditor extends javax.swing.JDialog {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
        // this.setVisible(false);
         this.exit();
-}//GEN-LAST:event_btnCancelActionPerformed
+} //GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments

@@ -120,7 +120,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      */
     public SDFFilter() {
-        initComponents();        
+        initComponents();
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -172,14 +172,14 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      * @return
      */
-    private String getNumberOfSites(Session session){
+    private String getNumberOfSites(Session session) {
         String nSites ="";
         String hql = "select count(*) from Site";
         try{
             Query q = session.createQuery(hql);
             nSites = ((Long)q.uniqueResult()).toString();
-        }catch(Exception e){
-            SDFFilter.log.error("An error has occurred, getting the number of the sites.\nError Message:::"+e.getMessage());
+        } catch (Exception e) {
+            SDFFilter.log.error("An error has occurred, getting the number of the sites.\nError Message:::" + e.getMessage());
         }
         return nSites;
 
@@ -192,16 +192,16 @@ public final class SDFFilter extends javax.swing.JFrame {
         SDFFilter.log.info("Apply Filters....");
         try{
             if (!filterSitename.getText().equals("") && filterSitename.getText().equals(filterSitename.getText().toUpperCase())) {
-                SDFFilter.log.error("Site name shouldn't be in capital letters:::"+filterSitename.getText());
+                SDFFilter.log.error("Site name shouldn't be in capital letters:::" + filterSitename.getText());
                 JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog",JOptionPane.ERROR_MESSAGE);
-            }else{
+            } else {
                 this.criteria =prepareQuery(session);
                 displaySites(session, this.criteria);
                 this.txtNumberSites.setText((new Integer(numReg)).toString());
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
-            SDFFilter.log.error("An error has ocurred applaying filters. Error Message::::"+e.getMessage());
+            SDFFilter.log.error("An error has ocurred applaying filters. Error Message::::" + e.getMessage());
         }
     }
 
@@ -211,7 +211,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @return
      */
     Criteria prepareQuery(Session session) {
-        SDFFilter.log.info("Preparing query::::"+filterSitecode.getText());
+        SDFFilter.log.info("Preparing query::::" + filterSitecode.getText());
         /*analyse the filter*/
         Criteria criteria = null;
         session.clear();
@@ -221,7 +221,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             criteria.add(Restrictions.eq("siteType",filterDirective.getSelectedItem()));
         }
         if (!filterSitecode.getText().equals("")) {
-            String siteCode = "%"+filterSitecode.getText()+"%";
+            String siteCode = "%" + filterSitecode.getText()+"%";
             criteria.add(Restrictions.ilike("siteCode",filterSitecode.getText(),MatchMode.ANYWHERE));
         }
         if (!filterSitename.getText().equals("")) {
@@ -375,19 +375,19 @@ public final class SDFFilter extends javax.swing.JFrame {
             Iterator itr = q.iterate();
             while (itr.hasNext()) {
                 Site site = (Site) itr.next();
-                if (site.getSiteSpaDate() != null){
+                if (site.getSiteSpaDate() != null) {
                     spaDate.add(site.getSiteSpaDate());
                 }
-                if (site.getSiteSciPropDate() != null){
+                if (site.getSiteSciPropDate() != null) {
                     sciPropDate.add(site.getSiteSciPropDate());
                 }
-                if (site.getSiteSciConfDate() != null){
+                if (site.getSiteSciConfDate() != null) {
                     sciDesigDate.add(site.getSiteSciConfDate());
                 }
-                if (site.getSiteSacDate() != null){
+                if (site.getSiteSacDate() != null) {
                     sacDate.add(site.getSiteSacDate());
                 }
-                if (site.getSiteType() != null){
+                if (site.getSiteType() != null) {
                     siteType.add(site.getSiteType());
                 }
             }
@@ -416,7 +416,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 filterSACDate.addItem(ConversionTools.convertDateToString((Date)itr.next()));
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             //e.printStackTrace();
         }
@@ -435,7 +435,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 Object[] obj = (Object[]) itr.next();
                 filterRegion.addItem(obj[0] + " - "  + obj[1]);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
            log.error(e.getMessage());
         }
     }
@@ -452,7 +452,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 filterBiogeo.addItem((String) itr.next());
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
@@ -478,13 +478,13 @@ public final class SDFFilter extends javax.swing.JFrame {
            filterSpeciesGroup.addItem("-");
            while (itrGroup.hasNext()) {
               Character c = (Character)itrGroup.next();
-               if (c!=null){
+               if (c!=null) {
                    String groupSName = TranslationCodeName.getGroupSpeciesByCode(c.toString());
                    filterSpeciesGroup.addItem(groupSName);
                }
            }
 
-       }catch(Exception e){
+       } catch (Exception e) {
            log.error(e.getMessage());
            //e.printStackTrace();
        }
@@ -511,12 +511,12 @@ public final class SDFFilter extends javax.swing.JFrame {
             filterOSpeciesGroup.addItem("-");
             while (itrGroup.hasNext()) {
                 String c = (String)itrGroup.next();
-                if (c!=null){
+                if (c!=null) {
                     String groupOSpecies = TranslationCodeName.getGroupOtherSpeciesByCode(c.toString());
                     filterOSpeciesGroup.addItem(groupOSpecies);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
@@ -534,12 +534,12 @@ public final class SDFFilter extends javax.swing.JFrame {
                 Object[] obj = (Object[])itr.next();
                 String habCode = (String)obj[0];
                 Short prior = (Short) obj[1];
-                if (prior != null && prior == 1){
+                if (prior != null && prior == 1) {
                     habCode = habCode + "*";
                 }
                 filterHabitats.addItem(habCode);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
@@ -557,7 +557,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 String habCode = (String) itr.next();
                 filterHabitatClass.addItem(habCode);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
     }
@@ -603,7 +603,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 Site site = (Site) itr.next();
                 boolean edited = false;
                 String dateModification="";
-                if(site.getSiteDateUpdate() != null){
+                if (site.getSiteDateUpdate() != null) {
                     Date updateDate = site.getSiteDateUpdate();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     dateModification = sdf.format(updateDate);
@@ -627,7 +627,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             col.setPreferredWidth(300);//+ margin
             col = tabDisplaySites.getColumnModel().getColumn(3);
             col.setPreferredWidth(100);//+ margin
-        }catch(Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
         }
@@ -645,7 +645,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         public void setValue(Object value) {
 
             Boolean edited = (Boolean)value;
-            if(edited.booleanValue()){
+            if (edited.booleanValue()) {
                 ImageIcon imageIcon = new ImageIcon((new File("")).getAbsolutePath()+"\\images\\checkmark.gif");
                 setIcon(imageIcon);
             }
@@ -751,14 +751,14 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnView = new javax.swing.JButton();
         btnNew = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();  
-        btnGeneratePdfs = new javax.swing.JButton();  
+        btnDelete = new javax.swing.JButton();
+        btnGeneratePdfs = new javax.swing.JButton();
         btnGenerateAllPdfs = new javax.swing.JButton();
         btnDeleteAll = new javax.swing.JButton();
         btnDuplicate = new javax.swing.JButton();
         pnlDisplaySites = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabDisplaySites = new javax.swing.JTable(){
+        tabDisplaySites = new javax.swing.JTable() {
             public TableCellRenderer getCellRenderer(int row, int column) {
                 if (column == 0) {
                     return new ThumbRenderer();
@@ -1141,16 +1141,16 @@ public final class SDFFilter extends javax.swing.JFrame {
                 btnDuplicateActionPerformed(evt);
             }
         });
-        
-        
-        btnGeneratePdfs.setText("Pdf");       
-        btnGeneratePdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N        
+
+
+        btnGeneratePdfs.setText("Pdf");
+        btnGeneratePdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGeneratePdfs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGeneratePDFsActionPerformed(evt);
             }
         });
-                                             
+
         btnGenerateAllPdfs.setText("Pdf All");
         btnGenerateAllPdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGenerateAllPdfs.addActionListener(new java.awt.event.ActionListener() {
@@ -1158,46 +1158,46 @@ public final class SDFFilter extends javax.swing.JFrame {
                 btnGenerateAllPDFsActionPerformed(evt);
             }
         });
-        
-        
-        
+
+
+
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9Layout.setHorizontalGroup(
-        	jPanel9Layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(jPanel9Layout.createSequentialGroup()
-        			.addContainerGap()
-        			.addGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(btnView, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        				.addComponent(btnDuplicate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        				.addComponent(btnEdit, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        				.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        				.addComponent(btnDeleteAll, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        				.addComponent(btnNew, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        				.addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
-        			.addContainerGap())
+            jPanel9Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(jPanel9Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(btnView, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(btnDuplicate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEdit, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(btnDeleteAll, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(btnNew, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                        .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
-        	jPanel9Layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(jPanel9Layout.createSequentialGroup()
-        			.addContainerGap()
-        			.addComponent(btnView, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnNew)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnDuplicate)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnEdit)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnDelete)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(btnDeleteAll)
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(82, Short.MAX_VALUE))
+            jPanel9Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(jPanel9Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(btnView, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(btnNew)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(btnDuplicate)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(btnEdit)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(btnDelete)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(btnDeleteAll)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(82, Short.MAX_VALUE))
         );
         jPanel9.setLayout(jPanel9Layout);
 
@@ -1333,30 +1333,30 @@ public final class SDFFilter extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyFilterActionPerformed
+    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnApplyFilterActionPerformed
           this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-}//GEN-LAST:event_btnApplyFilterActionPerformed
+} //GEN-LAST:event_btnApplyFilterActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnNewActionPerformed
         EditorSitecode editorSitecode = new EditorSitecode(this, this, true);
         if (editorSitecode.ok) {
             SDFEditor editor = new SDFEditor(this,"new");
             editor.loadSite(newSitecode,"");
             editor.setVisible(true);
-            SDFFilter.log.info("New site::::"+newSitecode);
+            SDFFilter.log.info("New site::::" + newSitecode);
         }
         editorSitecode.dispose();
-    }//GEN-LAST:event_btnNewActionPerformed
+    } //GEN-LAST:event_btnNewActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnDuplicateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDuplicateActionPerformed
+    private void btnDuplicateActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDuplicateActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
@@ -1371,20 +1371,20 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
             editorSitecode.dispose();
         }
-    }//GEN-LAST:event_btnDuplicateActionPerformed
+    } //GEN-LAST:event_btnDuplicateActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnResetFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetFilterActionPerformed
+    private void btnResetFilterActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnResetFilterActionPerformed
         this.clearFilterSelections();
         this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-    }//GEN-LAST:event_btnResetFilterActionPerformed
+    } //GEN-LAST:event_btnResetFilterActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
@@ -1393,17 +1393,17 @@ public final class SDFFilter extends javax.swing.JFrame {
             SDFEditor editor = new SDFEditor(this,"edit");
             try{
                 editor.loadSite(sitecode,"");
-            } catch (Exception e){
+            } catch (Exception e) {
                 editor.loadSite(sitecode,"");
             }
             editor.setVisible(true);
         }
-    }//GEN-LAST:event_btnEditActionPerformed
+    } //GEN-LAST:event_btnEditActionPerformed
     /**
      *
      * @param evt
      */
-    private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllActionPerformed
+    private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDeleteAllActionPerformed
 
         int crow = this.tabDisplaySites.getRowCount();
         if (crow != 0) {
@@ -1437,9 +1437,9 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         }
 
-    }//GEN-LAST:event_btnDeleteAllActionPerformed
+    } //GEN-LAST:event_btnDeleteAllActionPerformed
 
-    public void deleteAll(){
+    public void deleteAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         int crow = this.tabDisplaySites.getRowCount();
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
@@ -1467,13 +1467,13 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param evt
      */
-    
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDeleteActionPerformed
 
         int[] row = tabDisplaySites.getSelectedRows();
         if (row == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-        }else if(row != null && row.length ==0){
+        } else if (row != null && row.length ==0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
         }
         else {
@@ -1490,7 +1490,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-                for(int i=0; i<row.length;i++){
+                for(int i=0; i<row.length;i++) {
 
                     Transaction tx = session.beginTransaction();
 
@@ -1505,7 +1505,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 }
                 displaySites( session, this.criteria);
                 this.txtNumberSites.setText(getNumberOfSites(session));
-                if(session.isOpen()){
+                if (session.isOpen()) {
                     session.close();
                 }
 
@@ -1514,23 +1514,23 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_btnDeleteActionPerformed
-    
-    
+    } //GEN-LAST:event_btnDeleteActionPerformed
+
+
     /**
     *
     * @param evt
     */
-   
-   private void btnGeneratePDFsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFs
 
-	   
-	   ArrayList<String> siteCodes = new ArrayList<String>();
-	   
+   private void btnGeneratePDFsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGeneratePDFs
+
+
+       ArrayList<String> siteCodes = new ArrayList<String>();
+
        int[] row = tabDisplaySites.getSelectedRows();
        if (row == null) {
            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-       }else if(row != null && row.length ==0){
+       } else if (row != null && row.length ==0) {
            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
        }
        else {
@@ -1545,37 +1545,37 @@ public final class SDFFilter extends javax.swing.JFrame {
                 null
                 );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
-           */        	           	           	               
-               for(int i=0; i<row.length;i++){
-                  
+           */
+               for(int i=0; i<row.length;i++) {
+
                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
-                   siteCodes.add(sitecode);                  
-                                      
+                   siteCodes.add(sitecode);
+
                }
                new SDFExporterSelPDF(siteCodes).setVisible(true);
-               
-               
+
+
                this.tabDisplaySites.repaint();
            //}
-               
+
        }
 
-   }//GEN-LAST:event_btnGeneratePDFsActionPerformed
-    
-    
+   } //GEN-LAST:event_btnGeneratePDFsActionPerformed
+
+
    /**
    *
    * @param evt
    */
-  
-  private void btnGenerateAllPDFsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateAllPDFs
+
+  private void btnGenerateAllPDFsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGenerateAllPDFs
 
      ArrayList<String> siteCodes = new ArrayList<String>();
-	   
-      
+
+
       int row = this.tabDisplaySites.getRowCount();
-      
-     
+
+
       int answer = javax.swing.JOptionPane.showOptionDialog(
          this,
          "This operation will generate all sites and could take a long time. Do you want to continue?",
@@ -1587,30 +1587,30 @@ public final class SDFFilter extends javax.swing.JFrame {
          null
         );
        if (answer == javax.swing.JOptionPane.YES_OPTION) {
-       	           	           	               
-              for(int i=0; i<row;i++){
-                 
+
+              for(int i=0; i<row;i++) {
+
                   String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
-                  siteCodes.add(sitecode);                                                     
+                  siteCodes.add(sitecode);
 
               }
               new SDFExporterSelPDF(siteCodes).setVisible(true);
-              
-              
+
+
               this.tabDisplaySites.repaint();
 
           }
       //}
 
-  }//GEN-LAST:event_btnGenerateAllPDFs
-   
-    
-    
-    
-    
-    
-    
-    
+  } //GEN-LAST:event_btnGenerateAllPDFs
+
+
+
+
+
+
+
+
     /**
      *
      * @param evt
@@ -1618,7 +1618,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param evt
      */
-    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnViewActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
@@ -1629,7 +1629,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             exportHTML.processDatabase("xsl/exportSite.html");
         }
 
-    }//GEN-LAST:event_btnViewActionPerformed
+    } //GEN-LAST:event_btnViewActionPerformed
 
 
 
@@ -1637,7 +1637,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     private javax.swing.JButton btnApplyFilter;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnGeneratePdfs;
-    private javax.swing.JButton btnGenerateAllPdfs;    
+    private javax.swing.JButton btnGenerateAllPdfs;
     private javax.swing.JButton btnDeleteAll;
     private javax.swing.JButton btnDuplicate;
     private javax.swing.JButton btnEdit;

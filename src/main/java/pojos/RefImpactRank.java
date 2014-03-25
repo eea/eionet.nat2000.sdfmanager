@@ -9,12 +9,12 @@ public class RefImpactRank {
     private int refRankId;
     private String refRankName;
     private String refRankCode;
-    
+
     /**
-     * 
+     *
      */
     public RefImpactRank(){
-        
+
     }
 
     /**

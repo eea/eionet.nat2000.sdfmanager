@@ -69,7 +69,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
      * @param index
      */
     public void loadDesignations(SiteRelation h, int index) {
-        EditorNationalRelation.log.info("Loading the data of the national relation to modify them:::"+h.getSiteRelationCode());
+        EditorNationalRelation.log.info("Loading the data of the national relation to modify them:::" + h.getSiteRelationCode());
         this.index = index;
         this.cmbCode.setSelectedItem(h.getSiteRelationCode());
         this.txtType.setText(getRelationDescription(h.getSiteRelationCode()));
@@ -88,23 +88,23 @@ public class EditorNationalRelation extends javax.swing.JFrame {
      * @param desigCode
      * @return
      */
-    private String getRelationDescription(String desigCode){
-         EditorNationalRelation.log.info("Get Description of the national relation:::"+desigCode);
+    private String getRelationDescription(String desigCode) {
+         EditorNationalRelation.log.info("Get Description of the national relation:::" + desigCode);
          String desigName ="";
          try{
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
-            if(q.uniqueResult() != null){
+            if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
             }
 
-         }catch(Exception e){
+         } catch (Exception e) {
              //e.printStackTrace();
-             EditorNationalRelation.log.error("An error has occurred in searching the description of the nationla relation. Error Message:::"+e.getMessage());
+             EditorNationalRelation.log.error("An error has occurred in searching the description of the nationla relation. Error Message:::" + e.getMessage());
          }
-         EditorNationalRelation.log.info("The description of the national relation:::"+desigName);
+         EditorNationalRelation.log.info("The description of the national relation:::" + desigName);
          return desigName;
 
      }
@@ -114,7 +114,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
      */
     private void saveRelation() {
         String code = (String) this.cmbCode.getSelectedItem();
-        EditorNationalRelation.log.info("Saving the national relation:::"+code);
+        EditorNationalRelation.log.info("Saving the national relation:::" + code);
 
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
         String name = this.txtName.getText();
@@ -133,7 +133,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
             EditorNationalRelation.log.info("Relation  saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "Relation  saved.");
             this.exit();
-         }else {
+         } else {
             this.parent.addRelation(sr);
             EditorNationalRelation.log.info("Relation added.");
             javax.swing.JOptionPane.showMessageDialog(this, "Relation added.");
@@ -227,7 +227,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane2.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "+", "-", "*", "/" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", " + ", "-", "*", "/" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
@@ -382,51 +382,51 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
-            EditorNationalRelation.log.info("Get the description for the national relation.:::"+code);
+            EditorNationalRelation.log.info("Get the description for the national relation.:::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String descNatRelation = (String) q.uniqueResult();
-            EditorNationalRelation.log.info("The description for the national relation.:::"+descNatRelation);
+            EditorNationalRelation.log.info("The description for the national relation.:::" + descNatRelation);
             this.txtType.setText(descNatRelation);
         }
-}//GEN-LAST:event_cmbCodeItemStateChanged
+} //GEN-LAST:event_cmbCodeItemStateChanged
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         if (((String) cmbCode.getSelectedItem()).equals("")) {
             EditorNationalRelation.log.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected.");
         } else if (txtName.getText().equals("")) {
             EditorNationalRelation.log.error("Site Name is not provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a name for the site.");
-        } else if(txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256){
+        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256) {
             EditorNationalRelation.log.error("Site Name is not too long, more than 256 characters.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid site name (256 characters).");
         } else if (txtCover.getText().equals("")) {
             EditorNationalRelation.log.error("Cover is not provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a cover for the relation.");
         } else if (!ConversionTools.checkDouble(txtCover.getText())) {
-            EditorNationalRelation.log.error("The value of the Cover is not valid. (it's not a number):::"+txtCover.getText());
+            EditorNationalRelation.log.error("The value of the Cover is not valid. (it's not a number):::" + txtCover.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
-        } else if(!SDF_Util.validatePercent(txtCover.getText())){
-            EditorNationalRelation.log.error("The percent of the Cover is not valid.:::"+txtCover.getText());
+        } else if (!SDF_Util.validatePercent(txtCover.getText())) {
+            EditorNationalRelation.log.error("The percent of the Cover is not valid.:::" + txtCover.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
         }
         else {
             saveRelation();
 
         }
-}//GEN-LAST:event_btnSaveActionPerformed
+} //GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-}//GEN-LAST:event_btnCancelActionPerformed
+} //GEN-LAST:event_btnCancelActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;

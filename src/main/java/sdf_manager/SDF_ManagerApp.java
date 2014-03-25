@@ -56,24 +56,24 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         try{
             initializeLogger();
             errorMesg =SDF_MysqlDatabase.createNaturaDB();
-            if(errorMesg != null){
+            if (errorMesg != null) {
                log.info("Error");
-               
-            }else{
+
+            } else {
                  log.info("run importTool");
                 launch(SDF_ManagerApp.class, args);
             }
-            
-        }catch(Exception e){
-           
-            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred."+errorMesg, "Dialog",JOptionPane.ERROR_MESSAGE);
-            log.error("Error::::"+e.getMessage());
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred." + errorMesg, "Dialog",JOptionPane.ERROR_MESSAGE);
+            log.error("Error::::" + e.getMessage());
             //e.printStackTrace();
         }
        }
 
     /**
-     * 
+     *
      */
  private static void initializeLogger()
   {
@@ -86,7 +86,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
       PropertyConfigurator.configure(logProperties);
       log.info("Logging initialized.");
     }
-    catch(IOException e)
+    catch (IOException e)
     {
       JOptionPane.showMessageDialog(new JFrame(), "The process has been falied.::", "Dialog",JOptionPane.ERROR_MESSAGE);
       log.error(e.getMessage());

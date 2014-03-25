@@ -42,7 +42,7 @@ public class ProgressDialogAppOpen extends javax.swing.JDialog {
    }
 
     /**
-     * 
+     *
      * @param label
      */
     public void setLabel(String label) {
@@ -129,9 +129,9 @@ public class ProgressDialogAppOpen extends javax.swing.JDialog {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar progressBar;

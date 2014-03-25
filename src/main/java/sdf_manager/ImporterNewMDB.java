@@ -108,7 +108,7 @@ public class ImporterNewMDB implements Importer {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
         } catch (Exception e) {
-            ImporterNewMDB.log.error("Error::"+e.getMessage());
+            ImporterNewMDB.log.error("Error::" + e.getMessage());
             //////e.printStackTrace();
         }
     }
@@ -121,7 +121,7 @@ public class ImporterNewMDB implements Importer {
             out.close();
             outFile.close();
         } catch (Exception e) {
-            ImporterNewMDB.log.error("Error::"+e.getMessage());
+            ImporterNewMDB.log.error("Error::" + e.getMessage());
            //////e.printStackTrace();
         }
     }
@@ -149,7 +149,7 @@ public class ImporterNewMDB implements Importer {
      * @param fileName
      * @return
      */
-    public boolean processDatabase(String fileName){
+    public boolean processDatabase(String fileName) {
         Connection conn = null;
         boolean importOk = false;
         String msgValidError = "";
@@ -162,19 +162,19 @@ public class ImporterNewMDB implements Importer {
             ImporterNewMDB.log.info("Validation has finished");
             log("Validation has finished.",1);
 
-            if(sitesDB != null && (sitesDB.isEmpty())){
+            if (sitesDB != null && (sitesDB.isEmpty())) {
                ImporterNewMDB.log.info("Import process is starting");
                log("Import process is starting.",1);
                importOk =this.processSites(conn,fileName);
                //importOk = true;
-            }else{
+            } else {
                 importOk = false;
                 ImporterNewMDB.log.error("Error in validation");
                 ImporterNewMDB.log.error("Some sites are already stored in Data Base. Please check the log file for details");
                 log("Error in validation.",1);
                 JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
                 File fileLog = SDF_Util.copyToLogImportFile(sitesDB,"NewDB");
-                if(fileLog != null){
+                if (fileLog != null) {
                     Desktop desktop = null;
                     if (Desktop.isDesktopSupported()) {
                         desktop = Desktop.getDesktop();
@@ -186,25 +186,25 @@ public class ImporterNewMDB implements Importer {
 
             conn = getConnection(fileName);
 
-            if(conn != null){
+            if (conn != null) {
                 ArrayList<Site> siteList = this.loadSpecies(conn);
                 importOk = validateAndProcessSites(conn, siteList);
                 //HashMap<String,ArrayList<String>> sitesDB = validateSites(siteList);
                 ImporterNewMDB.log.info("Validation has finished");
                 log("Validation has finished.",1);
 /*
-                if(sitesDB != null && (sitesDB.isEmpty())){
+                if (sitesDB != null && (sitesDB.isEmpty())) {
                    ImporterNewMDB.log.info("Import process is starting");
                    log("Import process is starting.",1);
                    importOk =this.processSites(conn,fileName);
-                }else{
+                } else {
                     importOk = false;
                     ImporterNewMDB.log.error("Error in validation");
                     ImporterNewMDB.log.error("Some sites are already stored in Data Base. Please check the log file for details");
                     log("Error in validation.",1);
                     JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
                     File fileLog = SDF_Util.copyToLogImportFile(sitesDB,"NewDB");
-                    if(fileLog != null){
+                    if (fileLog != null) {
                         Desktop desktop = null;
                         if (Desktop.isDesktopSupported()) {
                             desktop = Desktop.getDesktop();
@@ -220,15 +220,15 @@ public class ImporterNewMDB implements Importer {
             }
 
         } catch (Exception e) {
-            ImporterNewMDB.log.error("Error in processDatabase::"+e.getMessage());
+            ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage());
             importOk= false;
             importOk = false;
              //e.printStackTrace();
             //return importOk;
-        }finally{
-            if(importOk){
+        } finally {
+            if (importOk) {
                 javax.swing.JOptionPane.showMessageDialog(new Frame(),"Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);;
-            }else{
+            } else {
                 log("Import is stopped.There are some errors in import process.",1);
                 javax.swing.JOptionPane.showMessageDialog(new Frame(),"There are some errors in import process.\n Please, check the SDF_Log file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);;
             }
@@ -248,7 +248,7 @@ public class ImporterNewMDB implements Importer {
         HashMap<String,ArrayList<String>> siteHasHDB = new HashMap<String,ArrayList<String>>();
         try {
             int j = 0;
-            for(int i=0;i<siteList.size();i++){
+            for(int i=0;i<siteList.size();i++) {
                try {
                    Site site = (Site)siteList.get(i);
                    Transaction tx = session.beginTransaction();
@@ -256,23 +256,23 @@ public class ImporterNewMDB implements Importer {
                    log("Validating site: " + site.getSiteCode(),1);
 
                    boolean siteInDB=false;
-                   if(SDF_Util.validateSite(session,site.getSiteCode())){
+                   if (SDF_Util.validateSite(session,site.getSiteCode())) {
                        siteInDB=true;
                    }
                    Set regionSiteList = site.getRegions();
                    Iterator itr = regionSiteList.iterator();
                    ArrayList<String> nutsNoOK = new ArrayList<String>();
-                   while(itr.hasNext()){
+                   while (itr.hasNext()) {
                        String nuts = (String)itr.next();
-                        if(!isRegionLevel2(nuts)){
+                        if (!isRegionLevel2(nuts)) {
                             nutsNoOK.add(nuts);
                         }
                    }
-                   if(siteInDB){
+                   if (siteInDB) {
                        siteHasHDB.put(site.getSiteCode(),nutsNoOK );
                    }
                    tx.commit();
-              }catch(Exception e){
+              } catch (Exception e) {
                 ImporterNewMDB.log.error("Error: " + e.getMessage());
                 break;
               }
@@ -282,7 +282,7 @@ public class ImporterNewMDB implements Importer {
              }
           }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             ImporterNewMDB.log.error("Error: " + e.getMessage());
             return siteHasHDB;
         }
@@ -302,14 +302,14 @@ public class ImporterNewMDB implements Importer {
      */
     Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         try{
-             if(accessVersion.equals("2003")){
+             if (accessVersion.equals("2003")) {
                  /*open read-only*/
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 //añadido , *.accdb) a la cadena db
                 String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
                 Connection conn = DriverManager.getConnection(db, "", "");
                 return conn;
-             }else{
+             } else {
                 /*open read-only*/
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 //añadido , *.accdb) a la cadena db
@@ -317,17 +317,17 @@ public class ImporterNewMDB implements Importer {
                 Connection conn = DriverManager.getConnection(db, "", "");
                 return conn;
              }
-         }catch(ClassNotFoundException e){
+         } catch (ClassNotFoundException e) {
              //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::"+e.getMessage());
+             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
-         }catch(SQLException e){
+         } catch (SQLException e) {
              //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::"+e.getMessage());
+             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
-         }catch(Exception e){
+         } catch (Exception e) {
              //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::"+e.getMessage());
+             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
          }
     }
@@ -383,7 +383,7 @@ public class ImporterNewMDB implements Importer {
                 this.log.info("Validating site: " + sitecode);
                 log("Validating site: " + sitecode,1);
                 try {
-                    if(SDF_Util.validateSite(session, sitecode)){
+                    if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
                     } else {
                         Transaction tx = session.beginTransaction();
@@ -402,8 +402,8 @@ public class ImporterNewMDB implements Importer {
                         tx.commit();
                         processOK = true;
                     }
-                } catch (Exception e){
-                    this.log.error("Failed processing site: " + sitecode+" .The error: "+e.getMessage());
+                } catch (Exception e) {
+                    this.log.error("Failed processing site: " + sitecode+" .The error: " + e.getMessage());
                     log("failed processing site: " + sitecode,1);
                     //break;
                 }
@@ -420,21 +420,21 @@ public class ImporterNewMDB implements Importer {
         /**
          * If a sitecode already exists, show log file with the conflictive sitecodes
          */
-        if(notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()){
+        if (notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()) {
 
             ImporterNewMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
             log("Error in validation.",1);
             //msgValidError ="Some sites are already stored in Data Base. Please check the log file for details";
 
             File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList,"OldDB");
-                if(fileLog != null){
+                if (fileLog != null) {
                     Desktop desktop = null;
                     if (Desktop.isDesktopSupported()) {
                         desktop = Desktop.getDesktop();
                         try {
                             Desktop.getDesktop().open(fileLog);
-                        } catch (Exception ex){
-                            this.log.error("The error: "+ex.getMessage());
+                        } catch (Exception ex) {
+                            this.log.error("The error: " + ex.getMessage());
                         }
                     }
                 }
@@ -457,10 +457,10 @@ public class ImporterNewMDB implements Importer {
         ResultSet rs = null;
 
         try {
-            if(conn == null){
+            if (conn == null) {
                 conn = getConnection(fileName);
             }
-            if(conn !=  null){
+            if (conn !=  null) {
                 String sql = "select site_code from site";
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(sql);
@@ -504,7 +504,7 @@ public class ImporterNewMDB implements Importer {
                 }
                 ImporterNewMDB.log.info("Finishing import process.Closing connection to Data Base");
                 log("Finishing import process.Closing connection to Data Base");
-            }else{
+            } else {
                 processOK = false;
 
             }
@@ -520,7 +520,7 @@ public class ImporterNewMDB implements Importer {
         } finally {
             stmt.close();
            // rs.close();
-            if(!conn.isClosed()){
+            if (!conn.isClosed()) {
                 conn.close();
             }
             session.close();
@@ -698,7 +698,7 @@ public class ImporterNewMDB implements Importer {
 
                 Set<SiteBiogeo> itSet = loadSiteBiogeoBySite(conn, session,site);
 
-                if(itSet !=null){
+                if (itSet !=null) {
                     Iterator itReg = itSet.iterator();
                     while (itReg.hasNext()) {
                         //String regionKey = (String) itReg.next();
@@ -768,10 +768,10 @@ public class ImporterNewMDB implements Importer {
                 site.getSiteBiogeos().add(siteBiogeo);
                 siteBiogeoSet.add(siteBiogeo);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
-            ImporterNewMDB.log.error("Error loading site biogeo data ::: Error Message:::"+e.getMessage());
-        }finally{
+            ImporterNewMDB.log.error("Error loading site biogeo data ::: Error Message:::" + e.getMessage());
+        } finally {
             stmt.close();
         }
         return siteBiogeoSet;
@@ -1173,9 +1173,9 @@ public class ImporterNewMDB implements Importer {
 
                             if (itr.hasNext()) {
                                 RefNuts rn = (RefNuts) itr.next();
-                                if(rn.getRefNutsDescription() != null){
+                                if (rn.getRefNutsDescription() != null) {
                                     region.setRegionName(rn.getRefNutsDescription());
-                                }else{
+                                } else {
                                     region.setRegionName(rn.getRefNutsDescription());
                                     log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);
                                 }
@@ -1185,7 +1185,7 @@ public class ImporterNewMDB implements Importer {
                             }
                         } catch (Exception e) {
                             ////e.printStackTrace();
-                            ImporterNewMDB.log.error("An error has occurred in import process. Region section::Error Message:::"+e.getMessage());
+                            ImporterNewMDB.log.error("An error has occurred in import process. Region section::Error Message:::" + e.getMessage());
                         }
                     }
                     region.setRegionCode(tmpStr);
@@ -1458,7 +1458,7 @@ public class ImporterNewMDB implements Importer {
 
             while (rs.next()) {
                 String description = rs.getString("DOC_DESCRIPTION");
-                if(description != null){
+                if (description != null) {
                     doc.setDocDescription(description);
                 }
             }
@@ -1511,34 +1511,34 @@ public class ImporterNewMDB implements Importer {
                 String respThoughfare = rs.getString("RESP_THOROUGHFARE");
 
 
-                if(respName != null && !(("").equals(respName))){
+                if (respName != null && !(("").equals(respName))) {
                     resp.setRespName(respName);
                 }
-                if(respAddress != null && !(("").equals(respAddress))){
+                if (respAddress != null && !(("").equals(respAddress))) {
                     resp.setRespAddress(respAddress);
                 }
-                if(respEmail != null && !(("").equals(respEmail))){
+                if (respEmail != null && !(("").equals(respEmail))) {
                     resp.setRespEmail(respEmail);
                 }
-                if(respAdminUnit != null && !(("").equals(respAdminUnit))){
+                if (respAdminUnit != null && !(("").equals(respAdminUnit))) {
                     resp.setRespAdminUnit(respAdminUnit);
                 }
-                if(respAddressArea != null && !(("").equals(respAddressArea))){
+                if (respAddressArea != null && !(("").equals(respAddressArea))) {
                     resp.setRespAddressArea(respAddressArea);
                 }
-                if(respLocatorDesig != null && !(("").equals(respLocatorDesig))){
+                if (respLocatorDesig != null && !(("").equals(respLocatorDesig))) {
                     resp.setRespLocatorDesig(respLocatorDesig);
                 }
-                if(respLocatorName != null && !(("").equals(respLocatorName))){
+                if (respLocatorName != null && !(("").equals(respLocatorName))) {
                     resp.setRespLocatorName(respLocatorName);
                 }
-                if(respPostCode != null && !(("").equals(respPostCode))){
+                if (respPostCode != null && !(("").equals(respPostCode))) {
                     resp.setRespPostCode(respPostCode);
                 }
-                if(respPostName != null && !(("").equals(respPostName))){
+                if (respPostName != null && !(("").equals(respPostName))) {
                     resp.setRespPostName(respPostName);
                 }
-                if(respThoughfare != null && !(("").equals(respThoughfare))){
+                if (respThoughfare != null && !(("").equals(respThoughfare))) {
                     resp.setRespThoroughFare(respThoughfare);
                 }
 
@@ -1584,13 +1584,13 @@ public class ImporterNewMDB implements Importer {
                 short mapPDF = rs.getShort("MAP_PDF");
                 String mapRef = rs.getString("MAP_REFERENCE");
 
-                if(mapInspired != null){
+                if (mapInspired != null) {
                     mapSite.setMapInspire(mapInspired);
                 }
-                if(mapPDF != 0){
+                if (mapPDF != 0) {
                     mapSite.setMapPdf(mapPDF);
                 }
-                if(mapRef != null){
+                if (mapRef != null) {
                     mapSite.setMapReference(mapRef);
                 }
 
@@ -1635,10 +1635,10 @@ public class ImporterNewMDB implements Importer {
                 String mgmtStatus = rs.getString("MGMT_STATUS");
                 String mgmtConsMeasures = rs.getString("MGMT_CONSERV_MEASURES");
 
-                if(mgmtStatus != null && !(("").equals(mgmtStatus))){
+                if (mgmtStatus != null && !(("").equals(mgmtStatus))) {
                     mgmt.setMgmtStatus(mgmtStatus.charAt(0));
                 }
-                if(mgmtConsMeasures != null && !(("").equals(mgmtConsMeasures))){
+                if (mgmtConsMeasures != null && !(("").equals(mgmtConsMeasures))) {
                     mgmt.setMgmtConservMeasures(mgmtConsMeasures);
                 }
 
@@ -1693,34 +1693,34 @@ public class ImporterNewMDB implements Importer {
                 String mgmtBodyThorughfare = rs.getString("MGMT_THOROUGHFARE");
 
 
-                if(mgmtBodyOrg != null && !(("").equals(mgmtBodyOrg))){
+                if (mgmtBodyOrg != null && !(("").equals(mgmtBodyOrg))) {
                     mgmtBody.setMgmtBodyOrg(mgmtBodyOrg);
                 }
-                if(mgmtBodyAddress != null && !(("").equals(mgmtBodyAddress))){
+                if (mgmtBodyAddress != null && !(("").equals(mgmtBodyAddress))) {
                     mgmtBody.setMgmtBodyAddress(mgmtBodyAddress);
                 }
-                if(mgmtBodyEmail != null && !(("").equals(mgmtBodyEmail))){
+                if (mgmtBodyEmail != null && !(("").equals(mgmtBodyEmail))) {
                     mgmtBody.setMgmtBodyEmail(mgmtBodyEmail);
                 }
-                if(mgmtBodyAdminUnit != null && !(("").equals(mgmtBodyAdminUnit))){
+                if (mgmtBodyAdminUnit != null && !(("").equals(mgmtBodyAdminUnit))) {
                     mgmtBody.setMgmtBodyAdminUnit(mgmtBodyAdminUnit);
                 }
-                if(mgmtBodyAddressArea != null && !(("").equals(mgmtBodyAddressArea))){
+                if (mgmtBodyAddressArea != null && !(("").equals(mgmtBodyAddressArea))) {
                     mgmtBody.setMgmtBodyAddressArea(mgmtBodyAddressArea);
                 }
-                if(mgmtBodyLocatorDesig != null && !(("").equals(mgmtBodyLocatorDesig))){
+                if (mgmtBodyLocatorDesig != null && !(("").equals(mgmtBodyLocatorDesig))) {
                     mgmtBody.setMgmtBodyLocatorDesignator(mgmtBodyLocatorDesig);
                 }
-                if(mgmtBodyLocatorName != null && !(("").equals(mgmtBodyLocatorName))){
+                if (mgmtBodyLocatorName != null && !(("").equals(mgmtBodyLocatorName))) {
                     mgmtBody.setMgmtBodyLocatorName(mgmtBodyLocatorName);
                 }
-                if(mgmtBodyPostCode != null && !(("").equals(mgmtBodyPostCode))){
+                if (mgmtBodyPostCode != null && !(("").equals(mgmtBodyPostCode))) {
                     mgmtBody.setMgmtBodyPostCode(mgmtBodyPostCode);
                 }
-                if(mgmtBodyPostName != null && !(("").equals(mgmtBodyPostName))){
+                if (mgmtBodyPostName != null && !(("").equals(mgmtBodyPostName))) {
                     mgmtBody.setMgmtBodyPostName(mgmtBodyPostName);
                 }
-                if(mgmtBodyThorughfare != null && !(("").equals(mgmtBodyThorughfare))){
+                if (mgmtBodyThorughfare != null && !(("").equals(mgmtBodyThorughfare))) {
                     mgmtBody.setMgmtBodyThroughFare(mgmtBodyThorughfare);
                 }
 
@@ -1769,10 +1769,10 @@ public class ImporterNewMDB implements Importer {
                 String mgmtPlanName = rs.getString("MGMT_PLAN_NAME");
                 String mgmtPlanUrl = rs.getString("MGMT_PLAN_URL");
 
-                if(mgmtPlanName != null && !(("").equals(mgmtPlanName))){
+                if (mgmtPlanName != null && !(("").equals(mgmtPlanName))) {
                     mgmtPlan.setMgmtPlanName(mgmtPlanName);
                 }
-                if(mgmtPlanUrl != null && !(("").equals(mgmtPlanUrl))){
+                if (mgmtPlanUrl != null && !(("").equals(mgmtPlanUrl))) {
                     mgmtPlan.setMgmtPlanUrl(mgmtPlanUrl);
                 }
 
@@ -1816,7 +1816,7 @@ public class ImporterNewMDB implements Importer {
                 DocLink docLink = new DocLink();
                 String docLinkUrl = rs.getString("DOC_LINK_URL");
 
-                if(docLinkUrl != null && !(("").equals(docLinkUrl))){
+                if (docLinkUrl != null && !(("").equals(docLinkUrl))) {
                     docLink.setDocLinkUrl(docLinkUrl);
                 }
 
@@ -1890,7 +1890,7 @@ public class ImporterNewMDB implements Importer {
             return rs.getDouble(fieldName);
         }
         catch (Exception e) {
-            ImporterNewMDB.log.error("Failed extracting field: "+fieldName+". Error:::" + e.getMessage());
+            ImporterNewMDB.log.error("Failed extracting field: " + fieldName+". Error:::" + e.getMessage());
             log("Failed extracting field: " + fieldName,1);
             return null;
         }
@@ -1903,12 +1903,12 @@ public class ImporterNewMDB implements Importer {
      * @param regionKey
      * @return
      */
-    private int loadBiogeoRegionId(String regionKey){
+    private int loadBiogeoRegionId(String regionKey) {
         int biogeoId = 0;
          try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            String hql = "select bio.biogeoId from Biogeo as bio where bio.biogeoCode='"+regionKey+"'";
+            String hql = "select bio.biogeoId from Biogeo as bio where bio.biogeoCode='" + regionKey+"'";
             Iterator itr = session.createQuery(hql).iterate();
 
             while (itr.hasNext()) {
@@ -1932,23 +1932,23 @@ public class ImporterNewMDB implements Importer {
      * @param regionCode
      * @return
      */
-    private boolean isRegionLevel2( String regionCode){
+    private boolean isRegionLevel2( String regionCode) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
         boolean nutsOK = false;
 
         ImporterNewMDB.log.info("Validating Region Code");
-        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='"+regionCode+"'";
+        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode+"'";
 
         try {
             Query q = session.createQuery(hql);
-            if(q.uniqueResult() != null){
+            if (q.uniqueResult() != null) {
                nutsOK = true;
             }
         } catch (Exception e) {
             ////e.printStackTrace();
-            ImporterNewMDB.log.error("Error loading Region Descrption:::"+e.getMessage());
+            ImporterNewMDB.log.error("Error loading Region Descrption:::" + e.getMessage());
 
         }
         return nutsOK;

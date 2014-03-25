@@ -37,7 +37,7 @@ class InitFactoryWorker extends SwingWorker<Boolean, Void> {
         Boolean initSessionFactory() {
             HibernateUtil.getSessionFactory();
             return true;
-        }                
+        }
         @Override
         public void done() {
             dlg.setVisible(false);
@@ -55,21 +55,21 @@ public class SDF_ManagerView extends FrameView {
      */
     public SDF_ManagerView(SingleFrameApplication app) {
         super(app);
-        
+
         initComponents();
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         initSessionFactory();
-       
-        
+
+
         this.getFrame().setResizable(false);
-        this.getFrame().pack();  
-        this.getFrame().setLocationRelativeTo(null);  
+        this.getFrame().pack();
+        this.getFrame().setLocationRelativeTo(null);
     }
 
     /**
-     * 
+     *
      */
     void initSessionFactory() {
         InitFactoryWorker worker = new InitFactoryWorker();
@@ -77,12 +77,12 @@ public class SDF_ManagerView extends FrameView {
         dlg.setModal(true);
         dlg.setVisible(false);
         dlg.setLabel("Initializing application...");
-        worker.setDialog(dlg);        
+        worker.setDialog(dlg);
         worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);
     }
-    
+
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -328,31 +328,31 @@ public class SDF_ManagerView extends FrameView {
         );
 
         setComponent(mainPanel);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnManage1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManage1ActionPerformed
+    private void btnManage1ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnManage1ActionPerformed
+    } //GEN-LAST:event_btnManage1ActionPerformed
 
-    private void btnManage3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManage3ActionPerformed
+    private void btnManage3ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage3ActionPerformed
         new QAQCMain().setVisible(true);
-    }//GEN-LAST:event_btnManage3ActionPerformed
+    } //GEN-LAST:event_btnManage3ActionPerformed
 
-    private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManage4ActionPerformed
+    private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage4ActionPerformed
         //String urlPdf = "http://212.145.147.187:8032/importtool/N2K%20Import%20Tool%20User%20Manual.pdf";
-        
-        
+
+
         try{
             Properties properties = new Properties();
             properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+"\\database\\sdf.properties"));
             String urlPdf =properties.getProperty("sdf.path.pdf");
             Desktop.getDesktop().browse(java.net.URI.create(urlPdf));
-        }catch(IOException ioe){
-            log.error("An error is occurred while system tries to open the pdf document.\nError Message::"+ioe.getMessage());
+        } catch (IOException ioe) {
+            log.error("An error is occurred while system tries to open the pdf document.\nError Message::" + ioe.getMessage());
         }
-    }//GEN-LAST:event_btnManage4ActionPerformed
+    } //GEN-LAST:event_btnManage4ActionPerformed
 
-    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_jLabel6MouseClicked
       if (evt.getClickCount() > 0) {
           if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
@@ -360,14 +360,14 @@ public class SDF_ManagerView extends FrameView {
                     URI uri = new URI("http://www.bilbomatica.es/en");
                     desktop.browse(uri);
                 } catch (IOException ex) {
-                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::"+ex.getMessage());
+                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::" + ex.getMessage());
                 } catch (URISyntaxException ex) {
-                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::"+ex.getMessage());
+                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::" + ex.getMessage());
                 }
         }
       }
 
-    }//GEN-LAST:event_jLabel6MouseClicked
+    } //GEN-LAST:event_jLabel6MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManage;

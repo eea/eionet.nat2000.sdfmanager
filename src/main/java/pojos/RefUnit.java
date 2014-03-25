@@ -9,12 +9,12 @@ public class RefUnit {
     private int refUnitId;
     private String refUnitName;
     private String refUnitCode;
-    
+
     /**
-     * 
+     *
      */
     public RefUnit(){
-        
+
     }
 
     /**

@@ -27,7 +27,7 @@ class ExporterWorker extends SwingWorker<Boolean, Void> {
 
     @Override
     public Boolean doInBackground() {
-        Boolean result = exporter.processDatabase(fileName);   
+        Boolean result = exporter.processDatabase(fileName);
         if (toZip) {
             zipFile();
         }
@@ -78,14 +78,14 @@ class ExporterWorker extends SwingWorker<Boolean, Void> {
             ZipEntry entry = new ZipEntry(fileName);
             out.putNextEntry(entry);
             int count;
-            while((count = origin.read(data, 0,BUFFER)) != -1) {
+            while ((count = origin.read(data, 0,BUFFER)) != -1) {
                out.write(data, 0, count);
             }
             origin.close();
             out.close();
             f.delete();
         }
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -110,8 +110,8 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
      *
      */
     String fileName = "";
-    
-    
+
+
 
     /**
      *
@@ -152,16 +152,16 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         String name="exportSites";
         if (this.rdioXML.isSelected()) {
             name += "ToXML.xml";
-        } else if (this.rdioAccess.isSelected()){
+        } else if (this.rdioAccess.isSelected()) {
             name += "ToDB.mdb";
-        }/*else if (chkZip.isSelected()){
+        } /*else if (chkZip.isSelected()) {
             name = name +".zip";
         }*/else{
            name = "";
         }
         return name;
     }
-    
+
      /**
      *
      * @return
@@ -169,14 +169,14 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
     private String getZipFileName() {
         String name=getFileName();
         String oldName = name.substring(0,name.indexOf("."));
-       /* if (chkZip.isSelected()){
+       /* if (chkZip.isSelected()) {
             name = oldName +".zip";
-        }else{
+        } else {
            name = getFileName();
         }*/
         return name;
     }
-     
+
     @Action
     public void exportDatabase() {
         SDFExporter.log.info("Init export data base");
@@ -208,12 +208,12 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
            String formatDate = sdf.format(cal.getTime());
            if (this.rdioXML.isSelected()) {
-              exporter = new ExporterXMLStax(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportXMLLog_"+formatDate+".log",dbFile.getAbsolutePath());
-           }else if (this.rdioAccess.isSelected()) {
-              exporter = new ExporterMDB(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportMDBLog_"+formatDate+".log",dbFile.getAbsolutePath());
-           }      
-          
-           
+              exporter = new ExporterXMLStax(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportXMLLog_" + formatDate+".log",dbFile.getAbsolutePath());
+           } else if (this.rdioAccess.isSelected()) {
+              exporter = new ExporterMDB(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportMDBLog_" + formatDate+".log",dbFile.getAbsolutePath());
+           }
+
+
            /*at least file exists here*/
             ExporterWorkerSite worker = new ExporterWorkerSite();
             final ProgressDialog dlg = new ProgressDialog(this, false);
@@ -226,14 +226,14 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
             worker.execute();
             dlg.setModal(true);
             dlg.setVisible(true);
-            
-           
-        }catch(Exception e){
-            SDFExporter.log.error("An error has occurred in export process. Error Message :::"+e.getMessage());
+
+
+        } catch (Exception e) {
+            SDFExporter.log.error("An error has occurred in export process. Error Message :::" + e.getMessage());
         }
     }
 
- 
+
     /**
      *
      */
@@ -259,13 +259,13 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
 
           Dimension mySize = getSize();
 
-          if (parentSize.width > mySize.width){
+          if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
           } else{
             x = topLeft.x;
           }
 
-          if (parentSize.height > mySize.height){
+          if (parentSize.height > mySize.height) {
             y = ((parentSize.height - mySize.height)/2) + topLeft.y;
           } else{
             y = topLeft.y;
@@ -477,27 +477,27 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
     /**
      *
      * @param evt
      */
-    private void updateFileName(ChangeEvent evt) {//GEN-FIRST:event_updateFileName
+    private void updateFileName(ChangeEvent evt) { //GEN-FIRST:event_updateFileName
         if (!this.dirPath.equals("")) {
             this.fileName = this.getFileName();
             this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
-    }//GEN-LAST:event_updateFileName
+    } //GEN-LAST:event_updateFileName
     /**
-     * 
+     *
      * @param evt
      */
-    private void rdioXMLStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rdioXMLStateChanged
+    private void rdioXMLStateChanged(javax.swing.event.ChangeEvent evt) { //GEN-FIRST:event_rdioXMLStateChanged
         if (!this.dirPath.equals("")) {
             this.fileName = this.getFileName();
             this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
-    }//GEN-LAST:event_rdioXMLStateChanged
+    } //GEN-LAST:event_rdioXMLStateChanged
 
 
     @Action
@@ -520,6 +520,6 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
     javax.swing.JTextArea txtLogger;
     javax.swing.JTextField txtPath;
     // End of variables declaration//GEN-END:variables
- 
+
 
 }

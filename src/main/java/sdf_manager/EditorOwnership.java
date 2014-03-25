@@ -23,7 +23,7 @@ public class EditorOwnership extends javax.swing.JFrame {
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorOwnership.class .getName());
 
     /**
-     * 
+     *
      * @param parent
      */
     public EditorOwnership(SDFEditor parent) {
@@ -46,10 +46,10 @@ public class EditorOwnership extends javax.swing.JFrame {
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
-       
+
        while (itr.hasNext()) {
            Object obj = (Object) itr.next();
-           if(((String)obj).equals("")) continue;
+           if (((String)obj).equals("")) continue;
            cmbCode.insertItemAt(obj, i);
            i++;
        }
@@ -65,7 +65,7 @@ public class EditorOwnership extends javax.swing.JFrame {
     * @param index
     */
    public void loadOwnership(SiteOwnership s,int index) {
-        EditorOwnership.log.info("Loading the data of the ownerhsip:::"+s.getOwnership().getOwnershipCode());
+        EditorOwnership.log.info("Loading the data of the ownerhsip:::" + s.getOwnership().getOwnershipCode());
         this.index = index;
         int ownerShipIndex = getOwnerShipNameByCode(s.getOwnership().getOwnershipCode());
         this.cmbCode.setSelectedIndex(ownerShipIndex-1);
@@ -75,19 +75,19 @@ public class EditorOwnership extends javax.swing.JFrame {
    }
 
    /**
-    * 
+    *
     * @param ownerShipCode
     * @return
     */
-   private int getOwnerShipNameByCode(String ownerShipCode){
+   private int getOwnerShipNameByCode(String ownerShipCode) {
        int indexOwnerShip=0;
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode='"+ownerShipCode+"'";
+       String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode='" + ownerShipCode+"'";
 
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
-       if (itr.hasNext()) {          
-           indexOwnerShip= ((Integer)itr.next()).intValue();           
+       if (itr.hasNext()) {
+           indexOwnerShip= ((Integer)itr.next()).intValue();
        }
        return indexOwnerShip;
    }
@@ -265,13 +265,13 @@ public class EditorOwnership extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    }//GEN-LAST:event_btnCancelActionPerformed
+    } //GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         String code = (String) cmbCode.getSelectedItem();
         Double percent;
         String msgInfo="";
@@ -280,15 +280,15 @@ public class EditorOwnership extends javax.swing.JFrame {
             EditorOwnership.log.error("No ownership class provided");
             javax.swing.JOptionPane.showMessageDialog(this, "No ownership class provided.");
         }
-        else if(txtPercent.getText().equals("")) {
+        else if (txtPercent.getText().equals("")) {
             EditorOwnership.log.error("No percentage provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "No percentage provided.");
         }
-        else if((ConversionTools.stringToDouble(txtPercent.getText())) == 0.0) {
-            EditorOwnership.log.error("The percent data is not valid:::"+txtPercent.getText());
+        else if ((ConversionTools.stringToDouble(txtPercent.getText())) == 0.0) {
+            EditorOwnership.log.error("The percent data is not valid:::" + txtPercent.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid percentage");
-        }else if(!SDF_Util.validatePercent(txtPercent.getText())){
-            EditorOwnership.log.error("The percent data is not valid:::"+txtPercent.getText());
+        } else if (!SDF_Util.validatePercent(txtPercent.getText())) {
+            EditorOwnership.log.error("The percent data is not valid:::" + txtPercent.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provided a valid percentage.");
         }
         else {
@@ -298,16 +298,16 @@ public class EditorOwnership extends javax.swing.JFrame {
             percent = ConversionTools.stringToDouble(txtPercent.getText());
             Query q = session.createQuery(hql);
             o = (Ownership) q.uniqueResult();
-            if (this.editing && this.index > -1) {               
+            if (this.editing && this.index > -1) {
                 /*we're editing an existing ownerShip*/
                 this.parent.saveOwnership(o, percent,this.index);
                 saveOK=true;
-                msgInfo="OwnerShip saved";                
-           }else {
-                if(this.parent.ownershipExists(o)){
+                msgInfo="OwnerShip saved";
+           } else {
+                if (this.parent.ownershipExists(o)) {
                     EditorOwnership.log.error("Ownership class already exists. Can't save.");
                     javax.swing.JOptionPane.showMessageDialog(this, "Ownership class already exists. Can't save.");
-                }else{
+                } else {
                     this.parent.addOwnership(o, percent);
                     saveOK=true;
                     msgInfo="OwnerShip added";
@@ -316,18 +316,18 @@ public class EditorOwnership extends javax.swing.JFrame {
         }
         EditorOwnership.log.error(msgInfo);
 
-        if(saveOK){
+        if (saveOK) {
             javax.swing.JOptionPane.showMessageDialog(this, msgInfo);
             this.exit();
-        }else{
+        } else {
             this.setVisible(true);
         }
-        
-    }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void cmbCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCodeActionPerformed
+    } //GEN-LAST:event_btnSaveActionPerformed
+
+    private void cmbCodeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_cmbCodeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmbCodeActionPerformed
+    } //GEN-LAST:event_cmbCodeActionPerformed
 
 
 

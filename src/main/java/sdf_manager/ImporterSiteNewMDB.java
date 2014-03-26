@@ -561,7 +561,7 @@ public class ImporterSiteNewMDB implements Importer {
      * @return
      * @throws SQLException
      */
-    private Set loadSiteBiogeoBySite(Connection conn, Session session,Site site) throws SQLException{
+    private Set loadSiteBiogeoBySite(Connection conn, Session session,Site site) throws SQLException {
         Set siteBiogeoSet=new HashSet(0);
         Statement stmt = null;
         ResultSet rs = null;
@@ -1656,7 +1656,7 @@ public class ImporterSiteNewMDB implements Importer {
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
                  }
-                 else{
+                 else {
                      return null;
                  }
              }

@@ -335,7 +335,7 @@ public class SDFEditorView extends javax.swing.JFrame {
        else if (this.cmbSiteType.getSelectedItem().equals("SCI")) {
            type = 'B';
        }
-       else{
+       else {
            type = 'C';
        }
        if (differentFields(type, this.site.getSiteType())) {
@@ -458,7 +458,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             if (date != null) {
                 this.site.setSiteSpaDate(date);
             }
-            else{
+            else {
                 log("SPA date illegal format");
             }
         }

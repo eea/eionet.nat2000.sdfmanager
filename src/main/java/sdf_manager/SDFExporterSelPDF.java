@@ -162,7 +162,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         if (dbFile.getParent().equals("")) {
            logFile = "generatePDFSiteLog_" + formatDate+".log";
         }
-        else{
+        else {
            logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
         }
 
@@ -214,7 +214,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
      * @return
      * @throws IOException
      */
-    private File copyToLogExportFile(ArrayList exportErrorList, String logFileName) throws IOException{
+    private File copyToLogExportFile(ArrayList exportErrorList, String logFileName) throws IOException {
         File fileLog = null;
         SDFExporterSelPDF.log.info("Creating specific log file for the export process");
         try {
@@ -257,13 +257,13 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
           if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
           }
-          else{
+          else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
             y = ((parentSize.height - mySize.height)/2) + topLeft.y;
-          } else{
+          } else {
             y = topLeft.y;
           }
 

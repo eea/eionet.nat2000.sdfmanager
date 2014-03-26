@@ -352,7 +352,7 @@ public class ExporterSiteXML implements Exporter {
          if (i.compareTo(new Short(i)) > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }
@@ -369,7 +369,7 @@ public class ExporterSiteXML implements Exporter {
         if (src == null) {
             return "";
         }
-        else{
+        else {
             //return getString(src);
             return src;
         }
@@ -385,7 +385,7 @@ public class ExporterSiteXML implements Exporter {
         if (date != null) {
             return fmt(date.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -423,7 +423,7 @@ public class ExporterSiteXML implements Exporter {
            }
             return fmt(strVal,fieldName);
         }
-        else{
+        else {
             return fmt("0",fieldName);
         }
     }
@@ -438,7 +438,7 @@ public class ExporterSiteXML implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -453,7 +453,7 @@ public class ExporterSiteXML implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -468,7 +468,7 @@ public class ExporterSiteXML implements Exporter {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -483,7 +483,7 @@ public class ExporterSiteXML implements Exporter {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -613,7 +613,7 @@ public class ExporterSiteXML implements Exporter {
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
                  }
-                 else{
+                 else {
                      return null;
                  }
              }
@@ -640,7 +640,7 @@ public class ExporterSiteXML implements Exporter {
          if (i > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }

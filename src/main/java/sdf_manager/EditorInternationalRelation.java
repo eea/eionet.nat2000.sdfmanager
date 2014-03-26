@@ -269,7 +269,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane2.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", " + ", "-", "*", "/" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "+", "-", "*", "/" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N

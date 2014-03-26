@@ -152,7 +152,7 @@ public class SDF_Util {
               ArrayList nutsList = (ArrayList)sitesDB.get(siteCode);
               if (nutsList != null && !(nutsList.isEmpty())) {
 
-                for(int i = 0;i < nutsList.size();i++ ) {
+                for (int i = 0;i < nutsList.size();i++ ) {
                     String nutCode = (String)nutsList.get(i);
                     logErrorFile.write("           " + nutCode + System.getProperty("line.separator"));
                 }
@@ -217,7 +217,7 @@ public class SDF_Util {
       * @return
       * @throws IOException
       */
-     public static File copyToLogErrorSite(ArrayList exportErrorList, String logFileName) throws IOException{
+     public static File copyToLogErrorSite(ArrayList exportErrorList, String logFileName) throws IOException {
         File fileLog = null;
         try {
 

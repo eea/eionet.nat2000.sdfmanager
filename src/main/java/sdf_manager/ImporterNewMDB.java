@@ -359,7 +359,7 @@ public class ImporterNewMDB implements Importer {
     /**
      * New method for validating and process only the ones that doesn't exist
      */
-    boolean validateAndProcessSites(Connection conn, ArrayList siteList) throws SQLException{
+    boolean validateAndProcessSites(Connection conn, ArrayList siteList) throws SQLException {
 
         ArrayList<String> notProcessedSiteCodesList = new ArrayList<String>();
         boolean processOK=false;
@@ -744,7 +744,7 @@ public class ImporterNewMDB implements Importer {
      * @return
      * @throws SQLException
      */
-    private Set<SiteBiogeo> loadSiteBiogeoBySite(Connection conn, Session session,Site site) throws SQLException{
+    private Set<SiteBiogeo> loadSiteBiogeoBySite(Connection conn, Session session,Site site) throws SQLException {
         Set<SiteBiogeo> siteBiogeoSet=new HashSet<SiteBiogeo>(0);
         Statement stmt = null;
         ResultSet rs = null;
@@ -1863,7 +1863,7 @@ public class ImporterNewMDB implements Importer {
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
                  }
-                 else{
+                 else {
                      return null;
                  }
              }

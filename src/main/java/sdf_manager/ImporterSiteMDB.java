@@ -494,7 +494,7 @@ public class ImporterSiteMDB implements Importer {
                          CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                          return cbuf.toString().trim();
                      }
-                     else{
+                     else {
                          return null;
                      }
                  }
@@ -520,7 +520,7 @@ public class ImporterSiteMDB implements Importer {
          if (tmp != null && !tmp.equals("")) {
              return tmp.charAt(0);
          }
-         else{
+         else {
 
              return null;
          }
@@ -927,7 +927,7 @@ public class ImporterSiteMDB implements Importer {
       * @return
       * @throws SQLException
       */
-     private Double getMarineArea(Connection conn, String siteCode) throws SQLException{
+     private Double getMarineArea(Connection conn, String siteCode) throws SQLException {
          Double marineArea = null;
          try{
              String sql = "select MarineArea from Areas where SiteCode='" + siteCode+"'";
@@ -998,7 +998,7 @@ public class ImporterSiteMDB implements Importer {
         if (uVal.equals("C") || uVal.equals("R") || uVal.equals("P") || uVal.equals("V")) {
             return val.toUpperCase();
         }
-        else{
+        else {
             return null;
         }
     }
@@ -1024,7 +1024,7 @@ public class ImporterSiteMDB implements Importer {
         if (val.startsWith("p") || val.endsWith("p")) {
                 return true;
         }
-        else{
+        else {
             return false;
         }
     }
@@ -1069,7 +1069,7 @@ public class ImporterSiteMDB implements Importer {
                 popType = val.substring(1, 2);
             }
             //else popType = unit = val.substring(0, 1);
-            else{
+            else {
                 popType = val.substring(0, 1);
             }
             result[0] = null;
@@ -1874,7 +1874,7 @@ public class ImporterSiteMDB implements Importer {
                             tmpChar = getChar(rs,this.fields.get("impact_type"));
                             if (tmpChar != null ) {
 
-                                if ((" + ").equals(tmpChar.toString())) {
+                                if (("+").equals(tmpChar.toString())) {
                                     impact.setImpactType('P');
                                 } else if (("-").equals(tmpChar.toString())) {
                                     impact.setImpactType('N');
@@ -1923,7 +1923,7 @@ public class ImporterSiteMDB implements Importer {
      * @return
      * @throws SQLException
      */
-    private String getImpactCode (String impactCodeOld) throws SQLException{
+    private String getImpactCode (String impactCodeOld) throws SQLException {
 
         String impactCode=null;
 

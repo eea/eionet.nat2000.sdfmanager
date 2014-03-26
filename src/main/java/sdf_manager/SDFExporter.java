@@ -156,7 +156,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
             name += "ToDB.mdb";
         } /*else if (chkZip.isSelected()) {
             name = name +".zip";
-        }*/else{
+        }*/else {
            name = "";
         }
         return name;
@@ -261,13 +261,13 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
 
           if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
-          } else{
+          } else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
             y = ((parentSize.height - mySize.height)/2) + topLeft.y;
-          } else{
+          } else {
             y = topLeft.y;
           }
           setLocation (x, y);

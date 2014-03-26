@@ -73,7 +73,7 @@ public class ValidateSite {
                 if (site.getSiteSpaDate() == null) {
                     errorList.add("Date site classificated as SPA in Identification section (Dates tab)\n");
                 }
-            }else if (("B").equals(site.getSiteType().toString())) {
+            } else if (("B").equals(site.getSiteType().toString())) {
                 if (site.getSiteSciPropDate() == null) {
                     errorList.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
                 }
@@ -119,7 +119,7 @@ public class ValidateSite {
                 boolean dAssesment = false;
                 if (h.getHabitatRepresentativity() == null || (("-").equals(h.getHabitatRepresentativity().toString()))) {
                     errorList.add("Representativity of the habitat whose code is: " + h.getHabitatCode() + ". (Ecological Info-Habitat Type  section)\n");
-                }else if (("D").equals(h.getHabitatRepresentativity().toString())) {
+                } else if (("D").equals(h.getHabitatRepresentativity().toString())) {
                     dAssesment = true;
                 }
     ValidateSite.log.info("*******************************Habitat==>" + h.getHabitatCode() + "<==h.getHabitatRepresentativity()==>" + h.getHabitatRepresentativity() + "<==");
@@ -219,7 +219,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                     Impact im = (Impact) itir.next();
                     if (("P").equals(im.getImpactType().toString())) {
                         posImpact= true;
-                    }else if (("N").equals(im.getImpactType().toString())) {
+                    } else if (("N").equals(im.getImpactType().toString())) {
                         negImpact= true;
                     } else {
 

@@ -580,7 +580,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
            }
             javax.swing.JOptionPane.showMessageDialog(this, msgMgmtBody);
             this.exit();
-        } else{
+        } else {
             EditorMgmtBody.log.info("There some errors in data:\n" + mgmtBodyErrors);
             javax.swing.JOptionPane.showMessageDialog(this, "There some errors in data:\n" + mgmtBodyErrors, "Dialog",JOptionPane.ERROR_MESSAGE);
             this.setVisible(true);

@@ -268,7 +268,7 @@ public class GenerateSitePDF implements Exporter {
                     siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),"spaClassificationDate")));
                  }
                 //AMG.
-                else{
+                else {
                     siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt( "0000-00","spaClassificationDate")));
                 }
                 //AMG.
@@ -748,7 +748,7 @@ public class GenerateSitePDF implements Exporter {
          if (i.compareTo(new Short(i)) > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }
@@ -765,7 +765,7 @@ public class GenerateSitePDF implements Exporter {
          if (i > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }
@@ -782,7 +782,7 @@ public class GenerateSitePDF implements Exporter {
         if (src == null) {
             return "";
         }
-        else{
+        else {
             return src;
         }
     }
@@ -797,7 +797,7 @@ public class GenerateSitePDF implements Exporter {
         if (date != null) {
             return fmt(date.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -827,7 +827,7 @@ public class GenerateSitePDF implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -842,7 +842,7 @@ public class GenerateSitePDF implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -857,7 +857,7 @@ public class GenerateSitePDF implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -872,7 +872,7 @@ public class GenerateSitePDF implements Exporter {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -887,7 +887,7 @@ public class GenerateSitePDF implements Exporter {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }

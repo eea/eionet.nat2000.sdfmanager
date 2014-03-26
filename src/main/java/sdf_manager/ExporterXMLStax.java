@@ -266,7 +266,7 @@ public class ExporterXMLStax implements Exporter {
          if (i.compareTo(new Short(i)) > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }
@@ -283,7 +283,7 @@ public class ExporterXMLStax implements Exporter {
         if (src == null) {
            return "";
         }
-        else{
+        else {
             //return getString(src);
             return src;
         }
@@ -299,7 +299,7 @@ public class ExporterXMLStax implements Exporter {
         if (date != null) {
             return fmt(date.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -336,7 +336,7 @@ public class ExporterXMLStax implements Exporter {
            }
             return fmt(strVal,fieldName);
         }
-        else{
+        else {
             return fmt("0",fieldName);
         }
     }
@@ -351,7 +351,7 @@ public class ExporterXMLStax implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -366,7 +366,7 @@ public class ExporterXMLStax implements Exporter {
         if (val != null) {
             return fmt(val.toString(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -391,7 +391,7 @@ public class ExporterXMLStax implements Exporter {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -405,7 +405,7 @@ public class ExporterXMLStax implements Exporter {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
         }
-        else{
+        else {
             return fmt((String)null,fieldName);
         }
     }
@@ -505,7 +505,7 @@ public class ExporterXMLStax implements Exporter {
          if (i > 0) {
              return true;
          }
-         else{
+         else {
              return false;
          }
      }
@@ -612,7 +612,7 @@ public class ExporterXMLStax implements Exporter {
      * @param value
      * @throws XMLStreamException
      */
-     private static void createItemNode(XMLEventFactory eventFactory, XMLEventWriter eventWriter, String elementName, String value) throws XMLStreamException{
+     private static void createItemNode(XMLEventFactory eventFactory, XMLEventWriter eventWriter, String elementName, String value) throws XMLStreamException {
         XMLEvent end = eventFactory.createDTD("\n");
         StartElement startElement = eventFactory.createStartElement("", "", elementName);
         eventWriter.add(startElement);

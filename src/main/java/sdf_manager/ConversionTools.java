@@ -202,7 +202,7 @@ public class ConversionTools {
             if (s!=null) {
                 return s;
             }
-            else{
+            else {
                 return "0.0";
             }
         }
@@ -222,7 +222,7 @@ public class ConversionTools {
             if (d != null) {
                 return d;
             }
-            else{
+            else {
                 return 0.0;
             }
         }
@@ -258,7 +258,7 @@ public class ConversionTools {
             if (s!=null) {
                 return s;
             }
-            else{
+            else {
                 return "0";
             }
         }
@@ -278,7 +278,7 @@ public class ConversionTools {
             if (d >= 0) {
                 return d;
             }
-            else{
+            else {
                 return 0;
             }
         }
@@ -298,7 +298,7 @@ public class ConversionTools {
             if (s!=null) {
                 return s;
             }
-            else{
+            else {
                 return null;
             }
         }
@@ -318,7 +318,7 @@ public class ConversionTools {
             if (c !=null) {
                 return c;
             }
-            else{
+            else {
                 return null;
             }
         }
@@ -337,7 +337,7 @@ public class ConversionTools {
             return 1;
 
         }
-        else{
+        else {
             return 0;
         }
     }
@@ -351,7 +351,7 @@ public class ConversionTools {
         if (s != null && s > 0) {
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
@@ -365,7 +365,7 @@ public class ConversionTools {
         if (s == null) {
             return "";
         }
-        else{
+        else {
             return s;
         }
     }
@@ -383,7 +383,7 @@ public class ConversionTools {
 
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
@@ -400,7 +400,7 @@ public class ConversionTools {
         else if (s.equals("true")) {
             return 1;
         }
-        else{
+        else {
             return 0;
         }
     }

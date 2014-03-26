@@ -40,7 +40,7 @@ public class SDF_MysqlDatabase {
      * @throws SQLException
      * @throws Exception
      */
-    public static String createNaturaDB() throws SQLException, Exception{
+    public static String createNaturaDB() throws SQLException, Exception {
 
       String msgError = null;
 
@@ -54,7 +54,7 @@ public class SDF_MysqlDatabase {
          properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
          Class.forName("com.mysql.jdbc.Driver");
          SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user") + "<==password==>" + properties.getProperty("password") + "<==");
-         con = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + ":" + properties.getProperty("port") + "/",properties.getProperty("user"),properties.getProperty("password"));
+         con = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + ":" + properties.getProperty("port") + "/", properties.getProperty("user"), properties.getProperty("password"));
 
          try {
 
@@ -78,7 +78,7 @@ public class SDF_MysqlDatabase {
                   String name = rsDBEXist.getString("name");
 
                   if (name != null && !(("").equals(name))) {
-                      if (isRefSpeciesUpdated(con,stDBExist)) {
+                      if (isRefSpeciesUpdated(con, stDBExist)) {
                            SDF_MysqlDatabase.log.info("natura2000 Schema DB already exists and ref species table is OK");
                       } else {
                           SDF_MysqlDatabase.log.info("Drop Schema");
@@ -86,7 +86,7 @@ public class SDF_MysqlDatabase {
                           Statement st = con.createStatement();
                           st.executeUpdate(sql);
                           SDF_MysqlDatabase.log.info("Recreate Schema");
-                          msgError = createMySQLDB (con,schemaFileName);
+                          msgError = createMySQLDB (con, schemaFileName);
                           String msgErrorPopulate = populateRefTables(con);
                           if (msgErrorPopulate != null) {
                              msgError = msgError + "\n" + msgErrorPopulate;
@@ -149,13 +149,13 @@ public class SDF_MysqlDatabase {
 
 
                   } else {
-                       msgError = createMySQLDB (con,schemaFileName);
+                       msgError = createMySQLDB (con, schemaFileName);
                        String msgErrorPopulate = populateRefTables(con);
                        if (msgErrorPopulate != null) {
                          msgError = msgError + "\n" + msgErrorPopulate;
                        }
                   }
-                  if (!isDateTypeColumnsLongText(con,stDBUser)) {
+                  if (!isDateTypeColumnsLongText(con, stDBUser)) {
                       String msgErrorPopulate = alterDateColumnsType(con);
                       if (msgErrorPopulate != null) {
                         msgError = msgError + "\n" + msgErrorPopulate;
@@ -165,7 +165,7 @@ public class SDF_MysqlDatabase {
 
               } else {
 
-                  msgError = createMySQLDB (con,schemaFileName);
+                  msgError = createMySQLDB (con, schemaFileName);
                   String msgErrorPopulate = populateRefTables(con);
                   if (msgErrorPopulate != null) {
                      msgError = msgError + "\n" + msgErrorPopulate;
@@ -204,14 +204,14 @@ public class SDF_MysqlDatabase {
 
           }  catch (SQLException s) {
 
-              JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog",JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
               SDF_MysqlDatabase.log.error("Error in Data Base:::" + s.getMessage());
               throw s;
           }
       }
       catch (Exception e) {
         msgError = "The connection to MySQL Data Base has failed.\n Please, Make sure that the parmeters (user and password) in the properties file are right";
-        JOptionPane.showMessageDialog(new JFrame(), msgError, "Dialog",JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(new JFrame(), msgError, "Dialog", JOptionPane.ERROR_MESSAGE);
         SDF_MysqlDatabase.log.error("The connection to MySQL Data Base has failed.\n Please, Make sure that the parmeters (user and password) in the properties file are right.::" + e.getMessage());
         throw e;
       } finally {
@@ -236,8 +236,8 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static boolean isDateTypeColumnsLongText(Connection con, Statement st) throws SQLException{
-        boolean refSpeciesUpdated=true;
+    private static boolean isDateTypeColumnsLongText(Connection con, Statement st) throws SQLException {
+        boolean refSpeciesUpdated = true;
 
         //It's necessary to compare not only datatyp but alos the size of the column
 
@@ -249,8 +249,8 @@ public class SDF_MysqlDatabase {
               ResultSet rs = st.executeQuery(sql);
               ResultSetMetaData rsmd = rs.getMetaData();
               int NumOfCol = rsmd.getColumnCount();
-              for(int i=1;i<=NumOfCol;i++) {
-                  if ((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i)<= columnSizeVarchar) {
+              for (int i = 1;i <= NumOfCol;i++) {
+                  if ((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i) <= columnSizeVarchar) {
                       refSpeciesUpdated = false;
                   }
 
@@ -272,7 +272,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String createMySQLDB (Connection con, String schemaFileName) throws SQLException{
+    private static String createMySQLDB (Connection con, String schemaFileName) throws SQLException {
       boolean mySQLDB = false;
       String msgErrorCreate = null;
       Statement st = null;
@@ -376,7 +376,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String alterDateColumnsType(Connection con) throws SQLException{
+    private static String alterDateColumnsType(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         try {
@@ -415,7 +415,7 @@ public class SDF_MysqlDatabase {
      * @return
      */
     private static boolean isRefSpeciesUpdated(Connection con, Statement st) {
-        boolean refSpeciesUpdated=false;
+        boolean refSpeciesUpdated = false;
 
         try {
               String sql = "select REF_SPECIES_CODE_NEW from natura2000.ref_species";
@@ -436,7 +436,7 @@ public class SDF_MysqlDatabase {
      * @return
      */
     private static boolean isHabitatUpdated(Connection con, Statement st) {
-        boolean habitatUpdated=false;
+        boolean habitatUpdated = false;
 
         try {
               String sql = "select HABITAT_COVER_HA from natura2000.habitat";
@@ -458,14 +458,14 @@ public class SDF_MysqlDatabase {
      * @return
      */
     private static boolean isRefBirdsUpdated(Connection con, Statement st) {
-        boolean refBirdsUpdated=false;
+        boolean refBirdsUpdated = false;
         try {
               String sql = "select REF_BIRDS_CODE_NEW from natura2000.ref_BIRDS";
               st = con.createStatement();
               st.executeQuery(sql);
               refBirdsUpdated = true;
         } catch (Exception e) {
-            refBirdsUpdated=false;
+            refBirdsUpdated = false;
             SDF_MysqlDatabase.log.error("Ref Birds is already updated");
         } finally {
 
@@ -482,7 +482,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String alterRefBirds(Connection con) throws SQLException{
+    private static String alterRefBirds(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
@@ -522,7 +522,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String populateRefBirds(Connection con) throws SQLException{
+    private static String populateRefBirds(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
@@ -564,7 +564,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String alterHabitat(Connection con) throws SQLException{
+    private static String alterHabitat(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
@@ -594,7 +594,7 @@ public class SDF_MysqlDatabase {
      * @return
      */
     private static boolean isRefTablesExist(Connection con, Statement st) {
-        boolean refBirdsUpdated=false;
+        boolean refBirdsUpdated = false;
 
         try {
               String sql = "select * from natura2000.ref_impact_rank";
@@ -602,7 +602,7 @@ public class SDF_MysqlDatabase {
               st.executeQuery(sql);
               refBirdsUpdated = true;
         } catch (Exception e) {
-            refBirdsUpdated=false;
+            refBirdsUpdated = false;
             SDF_MysqlDatabase.log.error("Ref tables not exist");
         } finally {
             return refBirdsUpdated;
@@ -614,7 +614,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String createRefTables(Connection con) throws SQLException{
+    private static String createRefTables(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         try {
@@ -650,7 +650,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String populateRefTables(Connection con) throws SQLException{
+    private static String populateRefTables(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         try {
@@ -717,7 +717,7 @@ public class SDF_MysqlDatabase {
     * Sept 201. Version 3
     */
    private static boolean isReleaseDBUpdatesExist(Connection con, Statement st) {
-       boolean tableExists=false;
+       boolean tableExists = false;
 
        try {
              String sql = "select * from natura2000.ReleaseDBUpdates";
@@ -725,14 +725,14 @@ public class SDF_MysqlDatabase {
              st.executeQuery(sql);
              tableExists = true;
        } catch (Exception e) {
-           tableExists=false;
+           tableExists = false;
            SDF_MysqlDatabase.log.error("ReleaseDBUpdates does not exist");
        } finally {
            return tableExists;
        }
    }
 
-   private static String createReleaseDBUpdates(Connection con) throws SQLException{
+   private static String createReleaseDBUpdates(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
        try {
@@ -766,7 +766,7 @@ public class SDF_MysqlDatabase {
 
    }
 
-   private static String PopulateReleaseDBUpdates(Connection con) throws SQLException{
+   private static String PopulateReleaseDBUpdates(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 
@@ -802,7 +802,7 @@ public class SDF_MysqlDatabase {
 
    }
 
-   private static String alterHabitatQual(Connection con) throws SQLException{
+   private static String alterHabitatQual(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 
@@ -826,7 +826,7 @@ public class SDF_MysqlDatabase {
    }
 
 
-   private static String InsertRefDataQual(Connection con) throws SQLException{
+   private static String InsertRefDataQual(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 
@@ -862,7 +862,7 @@ public class SDF_MysqlDatabase {
 
    }
 
-   private static String UpdateRefHabitats(Connection con) throws SQLException{
+   private static String UpdateRefHabitats(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 
@@ -898,7 +898,7 @@ public class SDF_MysqlDatabase {
 
    }
 
-   private static String UpdateVersion3Done(Connection con) throws SQLException{
+   private static String UpdateVersion3Done(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 
@@ -936,7 +936,7 @@ public class SDF_MysqlDatabase {
 
 
    private static boolean isSpecCroatiaExist(Connection con, Statement st) {
-       boolean tableExists=false;
+       boolean tableExists = false;
        Statement stDBSpec = null;
        ResultSet rsDBEXist = null;
 
@@ -947,20 +947,20 @@ public class SDF_MysqlDatabase {
 
            rsDBEXist = stDBSpec.executeQuery(hql);
            if (rsDBEXist.next()) {
-               tableExists=true;
+               tableExists = true;
            } else {
-               tableExists=false;
+               tableExists = false;
            }
 
        } catch (Exception e) {
-           tableExists=false;
+           tableExists = false;
            SDF_MysqlDatabase.log.error("New species Croatia does not exist");
        } finally {
            return tableExists;
        }
    }
 
-   private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException{
+   private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException {
        String msgErrorCreate = null;
        Statement st = null;
 

@@ -85,7 +85,7 @@ public class SDFVerifier {
         if (val.length() != 0) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -123,7 +123,7 @@ public class SDFVerifier {
         if (val.length() == 1) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -152,7 +152,7 @@ public class SDFVerifier {
         if (val != null && (val.equalsIgnoreCase("TRUE") || val.equalsIgnoreCase("FALSE"))) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -170,7 +170,7 @@ public class SDFVerifier {
         if (res) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -186,7 +186,7 @@ public class SDFVerifier {
         if (res) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -200,7 +200,7 @@ public class SDFVerifier {
         if (siteBiogeo.getBiogeo() == null) {
             return 1;
         }
-        else{
+        else {
             return 0;
         }
     }
@@ -228,7 +228,7 @@ public class SDFVerifier {
         if (species.getSpeciesCode() != null) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -256,7 +256,7 @@ public class SDFVerifier {
         if (hClass.getHabitatClassCode() != null) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }
@@ -270,7 +270,7 @@ public class SDFVerifier {
         if (impact.getImpactCode() != null) {
             return 0;
         }
-        else{
+        else {
             return 1;
         }
     }

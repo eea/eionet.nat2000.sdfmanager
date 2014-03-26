@@ -441,7 +441,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
            if (dbFile.getParent().equals("")) {
                logFile = "log.txt";
            }
-           else{
+           else {
                logFile = dbFile.getParent() + System.getProperty("file.separator") + "log.txt";
            }
            Importer importer = null;

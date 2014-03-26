@@ -90,8 +90,7 @@ public class QAQCMain extends javax.swing.JFrame {
         int row = tabDisplaySites.getSelectedRow();
         if (row == -1) {
             return null;
-        }
-        else {
+        } else {
             String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row, 0);
             return sitecode;
         }
@@ -361,29 +360,21 @@ public class QAQCMain extends javax.swing.JFrame {
         int index = this.cmbCriteria.getSelectedIndex();
         if (index == 1) {
             fetchUnknownSpeciesNames(session);
-        }
-        else if (index == 2) {
+        } else if (index == 2) {
             fetchUnknownSpeciesCodes(session);
-        }
-        else if (index == 3) {
+        } else if (index == 3) {
             fetchUnknownBirdsNames(session);
-        }
-        else if (index == 4) {
+        } else if (index == 4) {
             fetchUnknownBirdsCodes(session);
-        }
-        else if (index == 5) {
+        } else if (index == 5) {
             fetchUnknownOSpeciesNames(session);
-        }
-        else if (index == 6) {
+        } else if (index == 6) {
             fetchUnknownOSpeciesCodes(session);
-        }
-        else if (index == 7) {
+        } else if (index == 7) {
             fetchUnknownHabitatTypes(session);
-        }
-        else if (index == 8) {
+        } else if (index == 8) {
             fetchUnknownHabitatClasses(session);
-        }
-        else if (index == 9) {
+        } else if (index == 9) {
             fetchUnknownNUTSRegions(session);
         }
         return true;
@@ -531,8 +522,7 @@ public class QAQCMain extends javax.swing.JFrame {
         if (sitecode == null) {
             QAQCMain.log.error("No site selected");
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
-        }
-        else {
+        } else {
             SDFEditor editor = new SDFEditor(this,"edit");
             editor.loadSite(sitecode,"");
             editor.setVisible(true);

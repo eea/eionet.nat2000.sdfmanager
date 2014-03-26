@@ -1655,13 +1655,11 @@ public class ImporterSiteNewMDB implements Importer {
                      decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
-                 }
-                 else {
+                 } else {
                      return null;
                  }
              }
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterSiteNewMDB.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Error: " + e.getMessage());
              log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.",2);
              return null;

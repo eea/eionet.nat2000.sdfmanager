@@ -281,8 +281,7 @@ public class EditorRegion extends javax.swing.JFrame {
         } else if (!("").equals(code) && code.length() >4) {
             EditorRegion.log.error("Code is too long.(Maximum 4 characters).");
             javax.swing.JOptionPane.showMessageDialog(this, "Code is too long. Please, insert a valid code (4 characters).");
-        }
-        else if (name.equals("")) {
+        } else if (name.equals("")) {
             EditorRegion.log.error("No description found for NUTS region");
             javax.swing.JOptionPane.showMessageDialog(this, "No description found for NUTS region.");
         } else if (!("").equals(name) && name.length() >128) {
@@ -291,8 +290,7 @@ public class EditorRegion extends javax.swing.JFrame {
         } else if (isNutExisting(code)) {
             EditorRegion.log.error("The region is already exist for thi site");
             javax.swing.JOptionPane.showMessageDialog(this, "The region is already exist for thi site");
-        }
-        else {
+        } else {
             Region r = new Region();
             r.setRegionCode(code);
             r.setRegionName(name);

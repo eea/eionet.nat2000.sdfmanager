@@ -126,12 +126,10 @@ public class SDFEditorView extends javax.swing.JFrame {
         if (mode.equals("new")) {
             site = new Site();
             site.setSiteCode(sitecode);
-        }
-        else if (mode.equals("edit")) {
-            this.site = (Site) session.load(new Site().getClass(),sitecode);
-        }
-        else if (mode.equals("duplicate")) {
-            Site oldSite = (Site) session.load(new Site().getClass(),sitecode);
+        } else if (mode.equals("edit")) {
+            this.site = (Site) session.load(new Site().getClass(), sitecode);
+        } else if (mode.equals("duplicate")) {
+            Site oldSite = (Site) session.load(new Site().getClass(), sitecode);
             this.duplicateSite = new Site();
             this.duplicateSite.setSiteCode(dupSitecode);
             Duplicator duplicator = new Duplicator();
@@ -195,11 +193,9 @@ public class SDFEditorView extends javax.swing.JFrame {
             Character status = mgmt.getMgmtStatus();
             if (status != null && status.equals('e')) {
                 this.btnMgmtExists.setSelected(true);
-            }
-            else if (status != null && status.equals('p')) {
+            } else if (status != null && status.equals('p')) {
                 this.btnMgmtPrep.setSelected(true);
-            }
-            else if (status != null && status.equals('n')) {
+            } else if (status != null && status.equals('n')) {
                 this.btnMgmtNo.setSelected(true);
             }
             if (mgmt.getMgmtConservMeasures() != null) {
@@ -213,8 +209,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             }
             if (map.getMapPdf() == 0) {
                 this.btnPDFNo.setSelected(true);
-            }
-            else {
+            } else {
                 this.btnPDFYes.setSelected(true);
             }
             if (map.getMapReference() != null) {
@@ -225,34 +220,29 @@ public class SDFEditorView extends javax.swing.JFrame {
 
 
    private boolean differentFields(String val1, String val2) {
-       if (! ConversionTools.compFields(wrap(val1),wrap(val2))) {
+       if (! ConversionTools.compFields(wrap(val1), wrap(val2))) {
            return true;
-       }
-       else return false;
+       } else return false;
    }
    private boolean differentFields(Character val1, Character val2) {
-       if (! ConversionTools.compFields(val1,val2)) {
+       if (! ConversionTools.compFields(val1, val2)) {
            return true;
-       }
-       else return false;
+       } else return false;
    }
    private boolean differentFields(Date val1, Date val2) {
-       if (! ConversionTools.compFields(val1,val2)) {
+       if (! ConversionTools.compFields(val1, val2)) {
            return true;
-       }
-       else return false;
+       } else return false;
    }
    private boolean checkSitecode() {
-       if (! ConversionTools.compFields(this.txtSiteCode.getText(),wrap(this.site.getSiteCode()))) {
+       if (! ConversionTools.compFields(this.txtSiteCode.getText(), wrap(this.site.getSiteCode()))) {
            String code = fmtU(this.txtSiteCode.getText());
            if (code.length() != 9) {
                return false;
-           }
-           else {
+           } else {
                return true;
            }
-       }
-       else return false;
+       } else return false;
    }
    private void printSiteFields() {
         log(this.txtSiteCode.getText());
@@ -331,38 +321,36 @@ public class SDFEditorView extends javax.swing.JFrame {
        Character type;
        if (this.cmbSiteType.getSelectedItem().equals("SPA")) {
            type = 'A';
-       }
-       else if (this.cmbSiteType.getSelectedItem().equals("SCI")) {
+       } else if (this.cmbSiteType.getSelectedItem().equals("SCI")) {
            type = 'B';
-       }
-       else {
+       } else {
            type = 'C';
        }
        if (differentFields(type, this.site.getSiteType())) {
            log("Updating site type");
            this.site.setSiteType(type);
        }
-       if (differentFields(ConversionTools.convertToDate(this.txtCompDate.getText()),this.site.getSiteCompDate())) {
+       if (differentFields(ConversionTools.convertToDate(this.txtCompDate.getText()), this.site.getSiteCompDate())) {
            Date date = ConversionTools.convertToDate(this.txtCompDate.getText());
            if (date != null) this.site.setSiteCompDate(date);
        }
-       if (differentFields(ConversionTools.convertToDate(this.txtUpdateDate.getText()),this.site.getSiteUpdateDate())) {
+       if (differentFields(ConversionTools.convertToDate(this.txtUpdateDate.getText()), this.site.getSiteUpdateDate())) {
            Date date = ConversionTools.convertToDate(this.txtUpdateDate.getText());
            if (date != null) this.site.setSiteUpdateDate(date);
        }
        this.saveRespondent();
        this.saveDates();
        this.saveSpatial();
-       if (differentFields(this.site.getSiteCharacteristics(),this.txtSiteCharacter.getText())) {
+       if (differentFields(this.site.getSiteCharacteristics(), this.txtSiteCharacter.getText())) {
            log("Updating site characteristics");
            this.site.setSiteCharacteristics(fmt(this.txtSiteCharacter.getText()));
        }
-       if (differentFields(this.site.getSiteQuality(),this.txtQuality.getText())) {
+       if (differentFields(this.site.getSiteQuality(), this.txtQuality.getText())) {
            log("Updating site quality");
            this.site.setSiteQuality(fmt(this.txtQuality.getText()));
        }
        this.saveDoc();
-       if (differentFields(this.site.getSiteDesignation(),this.txtDesignation.getText())) {
+       if (differentFields(this.site.getSiteDesignation(), this.txtDesignation.getText())) {
            log("Updating site designation");
            this.site.setSiteDesignation(fmt(this.txtDesignation.getText()));
        }
@@ -383,10 +371,10 @@ public class SDFEditorView extends javax.swing.JFrame {
             this.site.setMap(map);
             //this.saveAndReloadSession();
         }
-        if (!id.equals("")  && differentFields(id,map.getMapInspire())) {
+        if (!id.equals("")  && differentFields(id, map.getMapInspire())) {
             map.setMapInspire(id);
         }
-        if (!ref.equals("") && differentFields(ref,map.getMapReference())) {
+        if (!ref.equals("") && differentFields(ref, map.getMapReference())) {
             map.setMapReference(ref);
         }
         Short mapExists = (new Integer(0)).shortValue();
@@ -408,7 +396,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         if (this.btnMgmtExists.isSelected()) c = 'Y';
         else if (this.btnMgmtPrep.isSelected()) c = 'P';
         m.setMgmtStatus(c);
-        if (!measures.equals("") && differentFields(measures,m.getMgmtConservMeasures())) {
+        if (!measures.equals("") && differentFields(measures, m.getMgmtConservMeasures())) {
             m.setMgmtConservMeasures(measures);
         }
         this.saveAndReloadObj(m);
@@ -417,10 +405,9 @@ public class SDFEditorView extends javax.swing.JFrame {
     private void saveDoc() {
         String description = this.txtDocumentation.getText();
         Doc doc = this.site.getDoc();
-        if (doc != null && differentFields(description,doc.getDocDescription())) {
+        if (doc != null && differentFields(description, doc.getDocDescription())) {
             doc.setDocDescription(description);
-        }
-        else if (doc == null && !description.equals("")) {
+        } else if (doc == null && !description.equals("")) {
             doc = new Doc();
             doc.getSites().add(this.site);
             this.site.setDoc(doc);
@@ -457,8 +444,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             Date date = ConversionTools.convertToDate(spaDate);
             if (date != null) {
                 this.site.setSiteSpaDate(date);
-            }
-            else {
+            } else {
                 log("SPA date illegal format");
             }
         }
@@ -471,8 +457,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             Date date = ConversionTools.convertToDate(sciPropDate);
             if (date != null) {
                 this.site.setSiteSciPropDate(date);
-            }
-            else {
+            } else {
                 log("SCI proposition date illegal format");
             }
         }
@@ -481,8 +466,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             Date date = ConversionTools.convertToDate(sciConfDate);
             if (date != null) {
                 this.site.setSiteSciConfDate(date);
-            }
-            else {
+            } else {
                 log("SCI confirmation date illegal format");
             }
         }
@@ -491,8 +475,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             Date date = ConversionTools.convertToDate(sacDate);
             if (date != null) {
                 this.site.setSiteSacDate(date);
-            }
-            else {
+            } else {
                 log("SAC date illegal format");
             }
         }
@@ -532,8 +515,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             resp.setRespPostCode(respPostCode);
             resp.setRespPostName(respPostName);
             resp.setRespThoroughFare(respThoroughFare);
-        }
-        else {
+        } else {
             //if (!respName.equals("") || !respAddr.equals("") || !respEmail.equals("")) {
             resp = new Resp();
             if (!("").equals(respName) || !("").equals(respEmail)) {
@@ -563,7 +545,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         /*saving existing at index 0*/
         log("Saving existing Habitat: " + h.getHabitatCode());
         Habitat hTo = (Habitat) this.modelHabitats.get(index);
-        copyHabitat(h,hTo);
+        copyHabitat(h, hTo);
         this.saveAndReloadSession();
         this.loadHabitats();
     }
@@ -571,7 +553,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         /*saving new*/
         log("Saving new Habitat: " + h.getHabitatCode());
         Habitat hTo = new Habitat();
-        copyHabitat(h,hTo);
+        copyHabitat(h, hTo);
         this.modelHabitats.add(hTo);
         this.site.getHabitats().add(hTo);
         hTo.setSite(this.site);
@@ -679,7 +661,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         sb.setSite(this.site);
         sb.setBiogeoPercent(percent);
         sb.setBiogeo(biogeo);
-        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(),biogeo.getBiogeoId());
+        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
         sb.setId(id);
         this.site.getSiteBiogeos().add(sb);
         this.saveAndReloadSession();
@@ -692,7 +674,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         so.setSite(this.site);
         so.setOwnershipPercent(percent);
         so.setOwnership(ow);
-        SiteOwnershipId id = new SiteOwnershipId(ow.getOwnershipId(),this.site.getSiteCode());
+        SiteOwnershipId id = new SiteOwnershipId(ow.getOwnershipId(), this.site.getSiteCode());
         so.setId(id);
         this.site.getSiteOwnerships().add(so);
         this.saveAndReloadSession();
@@ -782,7 +764,7 @@ public class SDFEditorView extends javax.swing.JFrame {
     public boolean habitatClassExists(String code) {
         Iterator itr = this.modelHabitatClasses.iterator();
         while (itr.hasNext()) {
-            if (((HabitatClass)itr.next()).getHabitatClassCode().equals(code)) {
+            if (((HabitatClass) itr.next()).getHabitatClassCode().equals(code)) {
                 return true;
             }
         }
@@ -791,7 +773,7 @@ public class SDFEditorView extends javax.swing.JFrame {
     public boolean designationTypeExists(String code) {
         Iterator itr = this.modelDesignationTypes.iterator();
         while (itr.hasNext()) {
-            if (((NationalDtype)itr.next()).getNationalDtypeCode().equals(code)) {
+            if (((NationalDtype) itr.next()).getNationalDtypeCode().equals(code)) {
                 return true;
             }
         }
@@ -809,7 +791,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 int i = 0;
                 while (itr.hasNext()) {
                     MgmtBody mgmtB = (MgmtBody) itr.next();
-                    Object[] tuple = {mgmtB.getMgmtBodyOrg(), mgmtB.getMgmtBodyEmail(),mgmtB.getMgmtBodyAddress(),mgmtB.getMgmtBodyAddressArea(),mgmtB.getMgmtBodyAdminUnit(),mgmtB.getMgmtBodyLocatorDesignator(),mgmtB.getMgmtBodyLocatorName(),mgmtB.getMgmtBodyPostCode(),mgmtB.getMgmtBodyPostName(),mgmtB.getMgmtBodyThroughFare()};
+                    Object[] tuple = {mgmtB.getMgmtBodyOrg(), mgmtB.getMgmtBodyEmail(), mgmtB.getMgmtBodyAddress(), mgmtB.getMgmtBodyAddressArea(), mgmtB.getMgmtBodyAdminUnit(), mgmtB.getMgmtBodyLocatorDesignator(), mgmtB.getMgmtBodyLocatorName(), mgmtB.getMgmtBodyPostCode(), mgmtB.getMgmtBodyPostName(), mgmtB.getMgmtBodyThroughFare()};
                     this.modelMgmtBodies.add(mgmtB);
                     modelBodies.insertRow(i++, tuple);
                 }
@@ -849,7 +831,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             int i = 0;
             while (itr.hasNext()) {
                 NationalDtype dType = (NationalDtype) itr.next();
-                Object[] tuple =   {dType.getNationalDtypeCode(),dType.getNationalDtypeCover()};
+                Object[] tuple =   {dType.getNationalDtypeCode(), dType.getNationalDtypeCover()};
                 model.insertRow(i++, tuple);
                 this.modelDesignationTypes.add(dType);
             }
@@ -885,7 +867,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 SiteOwnership so = (SiteOwnership) itr.next();
                 Ownership ow = so.getOwnership();
-                Object[] tuple = {ow.getOwnershipType(),so.getOwnershipPercent(),ow.getOwnershipCode()};
+                Object[] tuple = {ow.getOwnershipType(), so.getOwnershipPercent(), ow.getOwnershipCode()};
                 model.insertRow(i++, tuple);
                 sum += so.getOwnershipPercent();
                 this.modelOwnerships.add(so);
@@ -905,16 +887,15 @@ public class SDFEditorView extends javax.swing.JFrame {
             modelInternational.getDataVector().removeAllElements();
             DefaultTableModel modelNational = (DefaultTableModel) this.tabNationalRelations.getModel();
             modelNational.getDataVector().removeAllElements();
-            int i = 0,j = 0;
+            int i = 0, j = 0;
             while (itr.hasNext()) {
                 SiteRelation rel = (SiteRelation) itr.next();
                 if (rel.getSiteRelationScope().equals('I')) {
-                    Object[] tuple = {rel.getSiteRelationConvention(),rel.getSiteRelationSitename(),rel.getSiteRelationCover()};
+                    Object[] tuple = {rel.getSiteRelationConvention(), rel.getSiteRelationSitename(), rel.getSiteRelationCover()};
                     modelInternational.insertRow(j++, tuple);
                     this.modelInternationalRelations.add(rel);
-                }
-                else if (rel.getSiteRelationScope().equals('N')) {
-                    Object[] tuple = {rel.getSiteRelationCode(),rel.getSiteRelationSitename(),rel.getSiteRelationCover()};
+                } else if (rel.getSiteRelationScope().equals('N')) {
+                    Object[] tuple = {rel.getSiteRelationCode(), rel.getSiteRelationSitename(), rel.getSiteRelationCover()};
                     modelNational.insertRow(i++, tuple);
                     this.modelNationalRelations.add(rel);
                 }
@@ -938,8 +919,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 Impact impact = (Impact) itr.next();
                 if (impact.getImpactType().equals('N')) {
                     modelNegativeImpacts.add(impact);
-                }
-                else if (impact.getImpactType().equals('P')) {
+                } else if (impact.getImpactType().equals('P')) {
                     modelPositiveImpacts.add(impact);
                 }
                 else {
@@ -954,7 +934,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             int i = 0;
             while (itr.hasNext()) {
                 Impact impact = (Impact) itr.next();
-                Object[] tuple = {impact.getImpactRank(),impact.getImpactCode(),impact.getImpactPollutionCode(),impact.getImpactOccurrence()};
+                Object[] tuple = {impact.getImpactRank(), impact.getImpactCode(), impact.getImpactPollutionCode(), impact.getImpactOccurrence()};
                 model.insertRow(i++, tuple);
             }
             itr = modelPositiveImpacts.iterator();
@@ -963,7 +943,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             i = 0;
             while (itr.hasNext()) {
                 Impact impact = (Impact) itr.next();
-                Object[] tuple = {impact.getImpactRank(),impact.getImpactCode(),impact.getImpactPollutionCode(),impact.getImpactOccurrence()};
+                Object[] tuple = {impact.getImpactRank(), impact.getImpactCode(), impact.getImpactPollutionCode(), impact.getImpactOccurrence()};
                 model.insertRow(i++, tuple);
             }
         }
@@ -981,8 +961,8 @@ public class SDFEditorView extends javax.swing.JFrame {
             model.getDataVector().removeAllElements();
             int i = 0;
             while (itr.hasNext()) {
-                HabitatClass h = ((HabitatClass)itr.next());
-                Object[] tuple = {h.getHabitatClassCode(),h.getHabitatClassCover()};
+                HabitatClass h = ((HabitatClass) itr.next());
+                Object[] tuple = {h.getHabitatClassCode(), h.getHabitatClassCover()};
                 model.insertRow(i++, tuple);
                 this.modelHabitatClasses.add(h);
             }
@@ -999,7 +979,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             model.getDataVector().removeAllElements();
             int i = 0;
             while (itr.hasNext()) {
-                OtherSpecies sp = ((OtherSpecies)itr.next());
+                OtherSpecies sp = ((OtherSpecies) itr.next());
                 String otherSpeciesGroup = "";
                  if (sp.getOtherSpeciesGroup() != null && !(("").equals(sp.getOtherSpeciesGroup().toString()))) {
                     if (sp.getOtherSpeciesGroup().toString().equals("A")) {
@@ -1019,7 +999,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                     }
 
                 }
-                Object[] tuple = {otherSpeciesGroup,sp.getOtherSpeciesCode(),sp.getOtherSpeciesName()};
+                Object[] tuple = {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName()};
                 model.insertRow(i++, tuple);
                 modelOtherSpecies.add(sp);
             }
@@ -1036,7 +1016,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             model.getDataVector().removeAllElements();
             int i = 0;
             while (itr.hasNext()) {
-                Species sp = ((Species)itr.next());
+                Species sp = ((Species) itr.next());
                 String speciesGroup = "";
                 if (sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))) {
                     if (sp.getSpeciesGroup().toString().equals("A")) {
@@ -1056,8 +1036,8 @@ public class SDFEditorView extends javax.swing.JFrame {
                     }
 
                 }
-                //Object[] tuple = {sp.getSpeciesGroup(),sp.getSpeciesCode(),sp.getSpeciesName()};
-                Object[] tuple = {speciesGroup,sp.getSpeciesCode(),sp.getSpeciesName()};
+                //Object[] tuple = {sp.getSpeciesGroup(), sp.getSpeciesCode(), sp.getSpeciesName()};
+                Object[] tuple = {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName()};
                 model.insertRow(i++, tuple);
                 modelSpecies.add(sp);
             }
@@ -1075,8 +1055,8 @@ public class SDFEditorView extends javax.swing.JFrame {
             tabHabitats.setSelectionModel(new DefaultListSelectionModel()); //gotta do to quiet the listener already set
             int i = 0;
             while (itr.hasNext()) {
-                Habitat h = ((Habitat)itr.next());
-                Object[] tuple = {h.getHabitatCode(),h.getHabitatCover()};
+                Habitat h = ((Habitat) itr.next());
+                Object[] tuple = {h.getHabitatCode(), h.getHabitatCover()};
                 model.insertRow(i++, tuple);
                 modelHabitats.add(h);
             }
@@ -1087,7 +1067,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) return;
-                DefaultListSelectionModel dlsm = (DefaultListSelectionModel)e.getSource();
+                DefaultListSelectionModel dlsm = (DefaultListSelectionModel) e.getSource();
                 int selectedIndex = dlsm.getMinSelectionIndex();
                 String code = (String) tabHabitats.getModel().getValueAt(selectedIndex,0);
                 Session session = HibernateUtil.getSessionFactory().openSession();
@@ -1111,7 +1091,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 SiteBiogeo sb = (SiteBiogeo) itr.next();
                 Biogeo b =  sb.getBiogeo();
                 modelBioregions.add(sb);
-                Object[] tuple = {b.getBiogeoCode(),sb.getBiogeoPercent()};
+                Object[] tuple = {b.getBiogeoCode(), sb.getBiogeoPercent()};
                // model.insertRow(i++, tuple);
             }
         }
@@ -3825,8 +3805,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int rows[] = this.lstRegions.getSelectedIndices();
         if (rows.length == 0) {
                 javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected region(s)?",
@@ -3840,7 +3819,7 @@ public class SDFEditorView extends javax.swing.JFrame {
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 for (int i = 0; i < rows.length; i++) {
                     log("Removing row: " + Integer.toString(rows[i]));
-                    log("Removing object: " + ((Region)this.modelRegions.get(rows[i])).getRegionCode());
+                    log("Removing object: " + ((Region) this.modelRegions.get(rows[i])).getRegionCode());
                     this.site.getRegions().remove(this.modelRegions.get(rows[i])); //delete from persistent object
                 }
                 this.saveAndReloadSession(); //save and update to database
@@ -3853,8 +3832,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabBiogeo.getSelectedRow();
         if (row == -1 || this.tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected region(s)?",
@@ -3867,7 +3845,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((SiteBiogeo)this.modelBioregions.get(row)).getBiogeo().getBiogeoCode());
+                log("Removing object: " + ((SiteBiogeo) this.modelBioregions.get(row)).getBiogeo().getBiogeoCode());
                 this.site.getSiteBiogeos().remove(this.modelBioregions.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadBiogeo(); //repopulate the list in the view
@@ -3879,8 +3857,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabHabitats.getSelectedRow();
         if (row == -1 || this.tabHabitats.getRowCount() < 1 || row > this.tabHabitats.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected habitat?",
@@ -3894,7 +3871,7 @@ public class SDFEditorView extends javax.swing.JFrame {
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 tabHabitats.setSelectionModel(new DefaultListSelectionModel()); //gotta do to quiet the listener already set
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((Habitat)this.modelHabitats.get(row)).getHabitatCode());
+                log("Removing object: " + ((Habitat) this.modelHabitats.get(row)).getHabitatCode());
                 this.site.getHabitats().remove(this.modelHabitats.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadHabitats(); //repopulate the list in the view
@@ -3906,8 +3883,7 @@ public class SDFEditorView extends javax.swing.JFrame {
          int row = this.tabSpecies.getSelectedRow();
         if (row == -1 || this.tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected species?",
@@ -3920,7 +3896,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((Species)this.modelSpecies.get(row)).getSpeciesCode());
+                log("Removing object: " + ((Species) this.modelSpecies.get(row)).getSpeciesCode());
                 this.site.getSpecieses().remove(this.modelSpecies.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadSpecies(); //repopulate the list in the view
@@ -3936,8 +3912,7 @@ public class SDFEditorView extends javax.swing.JFrame {
          int row = this.tabOtherSpecies.getSelectedRow();
         if (row == -1 || this.tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected species?",
@@ -3950,7 +3925,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((OtherSpecies)this.modelOtherSpecies.get(row)).getOtherSpeciesCode());
+                log("Removing object: " + ((OtherSpecies) this.modelOtherSpecies.get(row)).getOtherSpeciesCode());
                 this.site.getOtherSpecieses().remove(this.modelOtherSpecies.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadOtherSpecies(); //repopulate the list in the view
@@ -3962,8 +3937,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabHabitatClass.getSelectedRow();
         if (row == -1 || this.tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat class selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected habitat class?",
@@ -3976,7 +3950,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((HabitatClass)this.modelHabitatClasses.get(row)).getHabitatClassCode());
+                log("Removing object: " + ((HabitatClass) this.modelHabitatClasses.get(row)).getHabitatClassCode());
                 this.site.getHabitatClasses().remove(this.modelHabitatClasses.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadHabitatClasses(); //repopulate the list in the view
@@ -3989,8 +3963,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabNegativeImpacts.getSelectedRow();
         if (row == -1 || this.tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No impact selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected impact?",
@@ -4003,7 +3976,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                Impact impact = (Impact)this.modelNegativeImpacts.get(row);
+                Impact impact = (Impact) this.modelNegativeImpacts.get(row);
                 this.site.getImpacts().remove(impact);
                 this.saveAndReloadSession(); //save and update to database
                 this.loadImpacts();
@@ -4015,8 +3988,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabPositiveImpacts.getSelectedRow();
         if (row == -1 || this.tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No impact selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected impact?",
@@ -4029,7 +4001,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                Impact impact = (Impact)this.modelPositiveImpacts.get(row);
+                Impact impact = (Impact) this.modelPositiveImpacts.get(row);
                 this.site.getImpacts().remove(impact);
                 this.saveAndReloadSession(); //save and update to database
                 this.loadImpacts();
@@ -4041,8 +4013,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabOwnership.getSelectedRow();
         if (row == -1 || this.tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No ownership class selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected ownership class?",
@@ -4071,8 +4042,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.lstLinks.getSelectedIndex();
         if (row == -1 ) {
             javax.swing.JOptionPane.showMessageDialog(this, "No link class selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected link?",
@@ -4100,8 +4070,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabDesigationTypes.getSelectedRow();
         if (row == -1 || this.tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No designation selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected designation?",
@@ -4114,7 +4083,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((NationalDtype)this.modelDesignationTypes.get(row)).getNationalDtypeCode());
+                log("Removing object: " + ((NationalDtype) this.modelDesignationTypes.get(row)).getNationalDtypeCode());
                 this.site.getNationalDtypes().remove(this.modelDesignationTypes.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadDesignationTypes(); //repopulate the list in the view
@@ -4126,8 +4095,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabNationalRelations.getSelectedRow();
         if (row == -1 || this.tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No relation selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected relation?",
@@ -4140,7 +4108,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((SiteRelation)this.modelNationalRelations.get(row)).getSiteRelationSitename());
+                log("Removing object: " + ((SiteRelation) this.modelNationalRelations.get(row)).getSiteRelationSitename());
                 this.site.getSiteRelations().remove(this.modelNationalRelations.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadRelations(); //repopulate the list in the view
@@ -4152,8 +4120,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabInternationalRelations.getSelectedRow();
         if (row == -1 || this.tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No relation selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected relation?",
@@ -4166,7 +4133,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((SiteRelation)this.modelInternationalRelations.get(row)).getSiteRelationSitename());
+                log("Removing object: " + ((SiteRelation) this.modelInternationalRelations.get(row)).getSiteRelationSitename());
                 this.site.getSiteRelations().remove(this.modelInternationalRelations.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadRelations(); //repopulate the list in the view
@@ -4178,8 +4145,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         int row = this.tabMgmtBodies.getSelectedRow();
         if (row == -1 || this.tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No row selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected Management Body?",
@@ -4192,7 +4158,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((MgmtBody)this.modelMgmtBodies.get(row)).getMgmtBodyOrg());
+                log("Removing object: " + ((MgmtBody) this.modelMgmtBodies.get(row)).getMgmtBodyOrg());
                 this.site.getMgmt().getMgmtBodies().remove(this.modelMgmtBodies.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadMgmtBodies(); //repopulate the list in the view
@@ -4204,8 +4170,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 int row = this.tabMgmtPlans.getSelectedRow();
         if (row == -1 || this.tabMgmtPlans.getRowCount() < 1 || row > this.tabMgmtPlans.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No row selected");
-        }
-        else {
+        } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "Are you sure you want to delete selected Management Plan?",
@@ -4218,7 +4183,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                  );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
-                log("Removing object: " + ((MgmtPlan)this.modelMgmtPlans.get(row)).getMgmtPlanName());
+                log("Removing object: " + ((MgmtPlan) this.modelMgmtPlans.get(row)).getMgmtPlanName());
                 this.site.getMgmt().getMgmtPlans().remove(this.modelMgmtPlans.get(row)); //delete from persistent object
                 this.saveAndReloadSession(); //save and update to database
                 this.loadMgmtPlans(); //repopulate the list in the view
@@ -4244,7 +4209,7 @@ public class SDFEditorView extends javax.swing.JFrame {
     private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jViewButtonActionPerformed
          // TODO add your handling code here:
         File dbFile = new File("");
-        ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode,dbFile.getAbsolutePath()+"\\logs\\log.txt");
+        ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + "\\logs\\log.txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
     } //GEN-LAST:event_jViewButtonActionPerformed

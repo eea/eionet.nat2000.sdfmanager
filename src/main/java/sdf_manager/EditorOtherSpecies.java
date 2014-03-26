@@ -66,25 +66,24 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
 
-       EditorOtherSpecies.log.info("Loading species group: " + (String)this.cmbGroup.getSelectedItem());
+       EditorOtherSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
        String groupSpecies = "-";
-       if (!(("-").equals((String)this.cmbGroup.getSelectedItem()))) {
-           String groupSpeciesName = (String)this.cmbGroup.getSelectedItem();
+       if (!(("-").equals((String) this.cmbGroup.getSelectedItem()))) {
+           String groupSpeciesName = (String) this.cmbGroup.getSelectedItem();
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
        }
 
        if (groupSpecies.equals("B")) {
            hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds where refBirds.refBirdsAnnexi='0' order by refBirds.refBirdsName";
-       }
-       else {
+       } else {
 
            hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName,refSp.refSpeciesAltName,refSp.refSpeciesHdName";
            hql += " from RefSpecies refSp";
            hql += " where refSp.refSpeciesGroup like '" + groupSpecies + "' and refSp.refSpeciesAnnexII ='0'";
            if (speciesCode == null) {
-               hql +=" and refSp.refSpeciesCodeNew='0'";
+               hql += " and refSp.refSpeciesCodeNew='0'";
            }
-           hql +=" order by refSp.refSpeciesName";
+           hql += " order by refSp.refSpeciesName";
 
        }
        Query q = session.createQuery(hql);
@@ -96,10 +95,9 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        int j=-1;
        while (itr.hasNext()) {
            Object obj[] = (Object[]) itr.next();
-           if (((String)obj[0]).equals("")) {
+           if (((String) obj[0]).equals("")) {
                continue;
-           }
-           else if (((String)obj[0]).equals(speciesCode)) {
+           } else if (((String) obj[0]).equals(speciesCode)) {
                j=i;
            }
            cmbCode.insertItemAt(obj[0], i);
@@ -134,7 +132,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        this.editing = true;
        this.index = index;
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String code, name ="";
+       String code, name = "";
        code = s.getOtherSpeciesCode();
 
        name = s.getOtherSpeciesName();
@@ -150,8 +148,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
        if (group != null && group.equals("B")) {
            hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code+ "'";
-       }
-       else {
+       } else {
            hql = "select count(*) from RefSpecies refSp where refSp.refSpeciesCode like '" + code + "' and refSp.refSpeciesAnnexII ='0'";
        }
 
@@ -197,7 +194,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        StringTokenizer st2 = new StringTokenizer(strMotivation,",");
 
         while (st2.hasMoreElements()) {
-           String mot = (String)st2.nextElement();
+           String mot = (String) st2.nextElement();
            if (("IV").equals(mot)) {
              this.chkMotivationAnnexIV.setSelected(true);
            }
@@ -231,12 +228,12 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         EditorOtherSpecies.log.info("Saving the other species");
         OtherSpecies s = new OtherSpecies();
         if (this.cmbGroup.getSelectedIndex() != 0) {
-            String groupSpCode = getGroupSpCodeByGroupSpName((String)this.cmbGroup.getSelectedItem());
+            String groupSpCode = getGroupSpCodeByGroupSpName((String) this.cmbGroup.getSelectedItem());
             s.setOtherSpeciesGroup(groupSpCode);
         }
-        s.setOtherSpeciesCode(((String)this.cmbCode.getSelectedItem()));
+        s.setOtherSpeciesCode(((String) this.cmbCode.getSelectedItem()));
 
-        s.setOtherSpeciesName(((String)this.cmbName.getSelectedItem()));
+        s.setOtherSpeciesName(((String) this.cmbName.getSelectedItem()));
         if (s.getOtherSpeciesName().equals("")) {
             s.setOtherSpeciesName(this.txtName.getText());
         }
@@ -246,12 +243,12 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         s.setOtherSpeciesSizeMax(ConversionTools.stringToInt(this.txtMaximum.getText()));
 
         if (!this.cmbUnit.getSelectedItem().equals("-")) {
-            String unitCode = getUnitTypeCodeByName((String)this.cmbUnit.getSelectedItem());
+            String unitCode = getUnitTypeCodeByName((String) this.cmbUnit.getSelectedItem());
             s.setOtherSpeciesUnit(unitCode);
         }
 
         if (!this.cmbCategory.getSelectedItem().equals("-")) {
-            String category = (String)this.cmbCategory.getSelectedItem();
+            String category = (String) this.cmbCategory.getSelectedItem();
             String categoryCode = getCategoryCodeByName(category);
             s.setOtherSpeciesCategory(ConversionTools.stringToChar(categoryCode));
         }
@@ -278,15 +275,14 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         String strMotiv = motivation.toString();
 
         if (strMotiv.endsWith(",")) {
-            strMotiv = strMotiv.substring(0,motivation.length()-1);
+            strMotiv = strMotiv.substring(0, motivation.length()-1);
         }
 
         s.setOtherSpeciesMotivation(strMotiv);
 
         if (this.editing && this.index > -1) {
-            this.parent.saveOtherSpecies(s,this.index);
-        }
-        else {
+            this.parent.saveOtherSpecies(s, this.index);
+        } else {
             this.parent.saveOtherSpecies(s);
         }
         printSpecies(s);
@@ -331,7 +327,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getUnitTypeNameByCode(String unitCode) {
        EditorOtherSpecies.log.info("Getting the unit name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitName from RefUnit where refUnitCode='" + unitCode+"'";
+       String hql = "select distinct refUnitName from RefUnit where refUnitCode='" + unitCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -347,7 +343,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getUnitTypeCodeByName(String unitName) {
        EditorOtherSpecies.log.info("Getting the unit code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitCode from RefUnit where refUnitName='" + unitName+"'";
+       String hql = "select distinct refUnitCode from RefUnit where refUnitName='" + unitName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -361,7 +357,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getCategoryNameByCode(String categoryCode) {
        EditorOtherSpecies.log.info("Getting the category type name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='" + categoryCode+"'";
+       String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='" + categoryCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -375,7 +371,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getCategoryCodeByName(String categoryName) {
        EditorOtherSpecies.log.info("Getting the category type code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='" + categoryName+"'";
+       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='" + categoryName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -389,7 +385,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getGroupSpCodeByGroupSpName(String groupSpName) {
        EditorOtherSpecies.log.info("Get group of species code by group of species name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refSpeciesGroupCode from RefSpeciesGroup where refSpeciesGroupName='" + groupSpName+"'";
+       String hql = "select distinct refSpeciesGroupCode from RefSpeciesGroup where refSpeciesGroupName='" + groupSpName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -403,7 +399,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    private String getGroupSpNameByGroupSpCode(String groupSpCode) {
        EditorOtherSpecies.log.info("Get group of species name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupCode='" + groupSpCode+"'";
+       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupCode='" + groupSpCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -919,8 +915,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
             this.cmbCode.setEnabled(false);
             this.cmbName.setSelectedIndex(0);
             this.cmbName.setEnabled(false);
-        }
-        else {
+        } else {
 
             this.txtName.setText("");
             this.txtName.setEditable(false);
@@ -964,8 +959,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
     private Integer isNum(String s) {
         try {
             return Integer.parseInt(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -1008,7 +1002,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         } else if (this.txtMinimum.getText() != null && !("").equals(this.txtMinimum.getText()) && isNum(this.txtMinimum.getText()) == null) {
             EditorOtherSpecies.log.error("Minimum Size field is not a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Minimum Size field should be a number.");
-        } else if (!isSizeOK(this.txtMaximum.getText(),this.txtMinimum.getText())) {
+        } else if (!isSizeOK(this.txtMaximum.getText(), this.txtMinimum.getText())) {
             EditorOtherSpecies.log.error("The minimum size is bigger than maximum size.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Check the size. The minimum size is bigger than maximum size.");
         } else {

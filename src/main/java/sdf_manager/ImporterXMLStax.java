@@ -78,8 +78,7 @@ public class ImporterXMLStax implements Importer {
          if (priority == 1) {
             this.logger.log(msg);
             logToFile(msg);
-         }
-         else {
+         } else {
             logToFile(msg);
          }
      }
@@ -235,7 +234,7 @@ public class ImporterXMLStax implements Importer {
         try {
             int j = 0;
 
-            for(int i=0;i<siteList.size();i++) {
+            for (int i=0;i<siteList.size();i++) {
                try {
                    Site site = (Site)siteList.get(i);
                    String sitecode = site.getSiteCode();

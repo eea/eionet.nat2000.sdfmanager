@@ -84,8 +84,7 @@ public class SDFVerifier {
     public static int verifyStringNotEmpty(String val) {
         if (val.length() != 0) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -122,8 +121,7 @@ public class SDFVerifier {
     public static int verifyChar(String val) {
         if (val.length() == 1) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -151,8 +149,7 @@ public class SDFVerifier {
     public static int verifyBoolean(String val) {
         if (val != null && (val.equalsIgnoreCase("TRUE") || val.equalsIgnoreCase("FALSE"))) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -169,8 +166,7 @@ public class SDFVerifier {
                 ! resp.getRespAddress().equals("") && !resp.getRespEmail().equals("");
         if (res) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -185,8 +181,7 @@ public class SDFVerifier {
                 !region.getRegionCode().equals("") && !region.getRegionName().equals("");
         if (res) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -199,8 +194,7 @@ public class SDFVerifier {
     public static int checkBioRegion (SiteBiogeo siteBiogeo) {
         if (siteBiogeo.getBiogeo() == null) {
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -213,8 +207,7 @@ public class SDFVerifier {
     public static int checkHabitat (Habitat habitat) {
         if (habitat.getHabitatCode() != null) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -227,8 +220,7 @@ public class SDFVerifier {
     public static int checkSpecies (Species species) {
         if (species.getSpeciesCode() != null) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -241,8 +233,7 @@ public class SDFVerifier {
     public static int checkOSpecies (OtherSpecies species) {
         if (species.getOtherSpeciesCode() != null) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -255,8 +246,7 @@ public class SDFVerifier {
     public static int checkhClass (HabitatClass hClass) {
         if (hClass.getHabitatClassCode() != null) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -269,8 +259,7 @@ public class SDFVerifier {
     public static int checkImpact (Impact impact) {
         if (impact.getImpactCode() != null) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }

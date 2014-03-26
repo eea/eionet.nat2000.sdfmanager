@@ -128,8 +128,7 @@ public class EditorBirds extends javax.swing.JFrame {
        if (count == 0) {
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
-       }
-       else {
+       } else {
            cmbCode.setSelectedItem(code);
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
@@ -283,8 +282,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
         if (this.editing && this.index > -1) {
             this.parent.saveSpecies(s,this.index);
-        }
-        else {
+        } else {
             this.parent.saveSpecies(s);
         }
         printSpecies(s);
@@ -1035,8 +1033,8 @@ public class EditorBirds extends javax.swing.JFrame {
      * @return
      */
     private boolean isSizeOK(String maxArea, String minArea) {
-        boolean sizeOK=true;
-        try{
+        boolean sizeOK = true;
+        try {
             if (maxArea != null && !(("").equals(maxArea)) && minArea != null && !(("").equals(minArea))) {
                 int intMaxArea = Integer.parseInt(maxArea);
                 int intMinArea = Integer.parseInt(minArea);

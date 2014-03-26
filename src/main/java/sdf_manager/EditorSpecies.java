@@ -73,8 +73,7 @@ public class EditorSpecies extends javax.swing.JFrame {
        }
        if (groupSpecies.equals("B")) {
            hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds order by refBirds.refBirdsName";
-       }
-       else {
+       } else {
 
            hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName";
            hql += " from RefSpecies refSp";
@@ -142,8 +141,7 @@ public class EditorSpecies extends javax.swing.JFrame {
        String hql;
        if (group != null && ("B").equals(group)) {
            hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code +"'";
-       }
-       else {
+       } else {
            hql = "select count(*) from RefSpecies refSp where refSp.refSpeciesCode like '" + code+"'";
        }
 
@@ -153,8 +151,7 @@ public class EditorSpecies extends javax.swing.JFrame {
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
            this.cmbGroup.setEnabled(false);
-       }
-       else {
+       } else {
            cmbCode.setSelectedItem(code);
            this.cmbCode.setEnabled(false);
            this.cmbName.setEnabled(false);
@@ -338,8 +335,7 @@ public class EditorSpecies extends javax.swing.JFrame {
 
         if (this.editing && this.index > -1) {
             this.parent.saveSpecies(s,this.index);
-        }
-        else {
+        } else {
             this.parent.saveSpecies(s);
         }
         printSpecies(s);

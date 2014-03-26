@@ -149,8 +149,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         String logFile;
         if (dbFile.getParent().equals("")) {
            logFile = "generatePDFSiteLog_" + formatDate+".log";
-        }
-        else {
+        } else {
            logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
         }
        Exporter exporter = null;
@@ -231,8 +230,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
 
           if (parentSize.width > mySize.width) {
             x = ((parentSize.width - mySize.width)/2) + topLeft.x;
-          }
-          else {
+          } else {
             x = topLeft.x;
           }
 

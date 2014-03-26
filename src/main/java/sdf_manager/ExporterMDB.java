@@ -275,7 +275,7 @@ public class ExporterMDB implements Exporter {
        if (root != null) {
            NodeList nl = root.getElementsByTagName(topElement);
            if (nl != null && nl.getLength() > 0) {
-                for(int i = 0 ; i < nl.getLength();i++) {
+                for (int i = 0 ; i < nl.getLength();i++) {
                     Element el = (Element)nl.item(i);
                     String key = this.getTextValue(el,fields[0]);
                     String value = this.getTextValue(el,fields[1]);
@@ -284,8 +284,7 @@ public class ExporterMDB implements Exporter {
             }
            //this.dManager.writeLog("Successfully loaded regions from file.\n");
            return true;
-       }
-       else {
+       } else {
            return false;
        }
 

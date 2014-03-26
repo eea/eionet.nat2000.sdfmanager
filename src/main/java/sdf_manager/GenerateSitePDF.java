@@ -562,13 +562,11 @@ public class GenerateSitePDF implements Exporter {
                             rElem = doc.createElement("nationalRelationship");
                             rElem.appendChild(doc.createElement("designationCode")).appendChild(doc.createTextNode(fmt(rel.getSiteRelationCode(),"relationCode")));
                             nationalRelations.appendChild(rElem);
-                        }
-                        else if (Character.toLowerCase(scope) == 'i') {
+                        } else if (Character.toLowerCase(scope) == 'i') {
                             rElem =  doc.createElement("internationalRelationship");
                             rElem.appendChild(doc.createElement("convention")).appendChild(doc.createTextNode(fmt(rel.getSiteRelationConvention(),"relationConvention")));
                             internationalRelations.appendChild(rElem);
-                        }
-                        else {
+                        } else {
 //                            log("Relation type undefined, ignoring relation: " + scope.toString());
                             continue;
                         }
@@ -747,8 +745,7 @@ public class GenerateSitePDF implements Exporter {
          }
          if (i.compareTo(new Short(i)) > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }
@@ -764,8 +761,7 @@ public class GenerateSitePDF implements Exporter {
          }
          if (i > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }
@@ -781,8 +777,7 @@ public class GenerateSitePDF implements Exporter {
            but could be used for other purposes as well */
         if (src == null) {
             return "";
-        }
-        else {
+        } else {
             return src;
         }
     }
@@ -796,8 +791,7 @@ public class GenerateSitePDF implements Exporter {
       String fmt (Date date, String fieldName) {
         if (date != null) {
             return fmt(date.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -811,8 +805,7 @@ public class GenerateSitePDF implements Exporter {
     String fmt (Double val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -826,8 +819,7 @@ public class GenerateSitePDF implements Exporter {
     String fmt (Integer val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -841,8 +833,7 @@ public class GenerateSitePDF implements Exporter {
     String fmt (Boolean val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -856,8 +847,7 @@ public class GenerateSitePDF implements Exporter {
     String fmt (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -871,8 +861,7 @@ public class GenerateSitePDF implements Exporter {
     String fmtToLowerCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -886,8 +875,7 @@ public class GenerateSitePDF implements Exporter {
      String fmtToUpperCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }

@@ -114,7 +114,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     private String newSitecode = "";
     private Criteria criteria;
     private final static Logger log = Logger.getLogger(SDFFilter.class .getName());
-    int numReg=0;
+    int numReg = 0;
 
     /**
      *
@@ -175,7 +175,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     private String getNumberOfSites(Session session) {
         String nSites ="";
         String hql = "select count(*) from Site";
-        try{
+        try {
             Query q = session.createQuery(hql);
             nSites = ((Long)q.uniqueResult()).toString();
         } catch (Exception e) {
@@ -190,7 +190,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     void applyFilters(Session session) {
         SDFFilter.log.info("Apply Filters....");
-        try{
+        try {
             if (!filterSitename.getText().equals("") && filterSitename.getText().equals(filterSitename.getText().toUpperCase())) {
                 SDFFilter.log.error("Site name shouldn't be in capital letters:::" + filterSitename.getText());
                 JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog",JOptionPane.ERROR_MESSAGE);
@@ -244,12 +244,10 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (area != null) {
                 if (filterAreaSign.getSelectedItem().equals(">")) {
                     criteria.add(Restrictions.gt("siteArea", area));
-                }
-                else {
+                } else {
                     criteria.add(Restrictions.lt("siteArea", area));
                 }
-            }
-            else {
+            } else {
                 filterArea.setText("");
             }
         }
@@ -258,12 +256,10 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (area != null) {
                 if (filterMarineAreaSign.getSelectedItem().equals(">")) {
                     criteria.add(Restrictions.gt("siteMarineArea", area));
-                }
-                else {
+                } else {
                     criteria.add(Restrictions.lt("siteMarineArea", area));
                 }
-            }
-            else {
+            } else {
                 filterMarineArea.setText("");
             }
         }
@@ -370,7 +366,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         TreeSet sacDate = new TreeSet();
         TreeSet siteType = new TreeSet();
         String hql = "select s from Site as s order by siteCode";
-        try{
+        try {
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
             while (itr.hasNext()) {
@@ -426,7 +422,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateRegions(Session session) {
-        try{
+        try {
             String hql = "select distinct r.regionCode, r.regionName from Region as r order by r.regionCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
@@ -444,7 +440,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateBioRegions(Session session) {
-        try{
+        try {
             String hql = "select distinct biogeo.biogeoCode from SiteBiogeo as sb inner join sb.biogeo as biogeo order by biogeo.biogeoCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
@@ -461,7 +457,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateSpecies(Session session) {
-        try{
+        try {
            String hql = "select distinct sp.speciesName from Species as sp order by sp.speciesName";
            Query q = session.createQuery(hql);
            Iterator itr = q.iterate();
@@ -494,7 +490,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateOSpecies(Session session) {
-        try{
+        try {
             String hql = "select distinct sp.otherSpeciesName from OtherSpecies as sp order by sp.otherSpeciesName";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
@@ -525,7 +521,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateHabitats(Session session) {
-        try{
+        try {
             String hql = "select distinct h.habitatCode, h.habitatPriority from Habitat as h order by h.habitatCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
@@ -548,7 +544,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param session
      */
     void populateHabitatClasses(Session session) {
-        try{
+        try {
             String hql = "select distinct h.habitatClassCode from HabitatClass as h order by h.habitatClassCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
@@ -578,15 +574,14 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param criteria
      */
     void displaySites(Session session, Criteria criteria) {
-        try{
+        try {
             emptySites();
             Iterator itr;
             if (criteria == null) {
                 String hql = "select distinct site from Site as site order by site.siteCode";
                 Query q = session.createQuery(hql);
                 itr = q.iterate();
-            }
-            else {
+            } else {
                 itr = criteria.list().iterator();
                 numReg = criteria.list().size();
             }
@@ -677,8 +672,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         int row = tabDisplaySites.getSelectedRow();
         if (row == -1) {
             return null;
-        }
-        else {
+        } else {
             String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row, 1);
             return sitecode;
         }
@@ -1360,8 +1354,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
-        }
-        else {
+        } else {
             EditorSitecode editorSitecode = new EditorSitecode(this, this, true);
             if (editorSitecode.ok) {
                 SDFEditor editor = new SDFEditor(this,"duplicate");
@@ -1388,10 +1381,9 @@ public final class SDFFilter extends javax.swing.JFrame {
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
-        }
-        else {
+        } else {
             SDFEditor editor = new SDFEditor(this,"edit");
-            try{
+            try {
                 editor.loadSite(sitecode,"");
             } catch (Exception e) {
                 editor.loadSite(sitecode,"");
@@ -1432,8 +1424,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 dialog.setVisible(true);
 
             }
-        }
-        else {
+        } else {
 
         }
 
@@ -1473,10 +1464,9 @@ public final class SDFFilter extends javax.swing.JFrame {
         int[] row = tabDisplaySites.getSelectedRows();
         if (row == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-        } else if (row != null && row.length ==0) {
+        } else if (row != null && row.length == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-        }
-        else {
+        } else {
             int answer = javax.swing.JOptionPane.showOptionDialog(
                  this,
                 "This will permanently delete the selected site . Continue?",
@@ -1490,7 +1480,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-                for(int i=0; i<row.length;i++) {
+                for (int i = 0; i < row.length;i++) {
 
                     Transaction tx = session.beginTransaction();
 
@@ -1530,10 +1520,9 @@ public final class SDFFilter extends javax.swing.JFrame {
        int[] row = tabDisplaySites.getSelectedRows();
        if (row == null) {
            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-       } else if (row != null && row.length ==0) {
+       } else if (row != null && row.length == 0) {
            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-       }
-       else {
+       } else {
            /*int answer = javax.swing.JOptionPane.showOptionDialog(
                 this,
                "This operation can take a long time. Do you want to continue?",
@@ -1546,7 +1535,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
            */
-               for(int i=0; i<row.length;i++) {
+               for (int i = 0; i < row.length;i++) {
 
                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
                    siteCodes.add(sitecode);
@@ -1588,7 +1577,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         );
        if (answer == javax.swing.JOptionPane.YES_OPTION) {
 
-              for(int i=0; i<row;i++) {
+              for (int i = 0; i < row;i++) {
 
                   String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
                   siteCodes.add(sitecode);
@@ -1622,8 +1611,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
-        }
-        else {
+        } else {
             File dbFile = new File("");
             ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode,dbFile.getAbsolutePath()+"\\logs\\SDF_HTMLSitelog.txt");
             exportHTML.processDatabase("xsl/exportSite.html");

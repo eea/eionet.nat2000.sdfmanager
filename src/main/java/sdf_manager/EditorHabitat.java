@@ -164,8 +164,7 @@ public class EditorHabitat extends javax.swing.JFrame {
           if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
                 this.parent.saveHabitat(h,this.index);
-           }
-           else {
+           } else {
                this.parent.saveHabitat(h);
            }
        }

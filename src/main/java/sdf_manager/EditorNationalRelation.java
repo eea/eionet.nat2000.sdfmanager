@@ -417,8 +417,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         } else if (!SDF_Util.validatePercent(txtCover.getText())) {
             EditorNationalRelation.log.error("The percent of the Cover is not valid.:::" + txtCover.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
-        }
-        else {
+        } else {
             saveRelation();
 
         }

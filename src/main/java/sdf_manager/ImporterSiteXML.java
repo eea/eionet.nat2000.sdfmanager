@@ -78,8 +78,7 @@ public class ImporterSiteXML implements Importer {
          if (priority == 1) {
             this.logger.log(msg);
             logToFile(msg);
-         }
-         else {
+         } else {
             logToFile(msg);
          }
      }
@@ -733,7 +732,7 @@ public class ImporterSiteXML implements Importer {
                 result = expr.evaluate(document, XPathConstants.NODESET);
                 if (result != null) {
                     NodeList nodeList = (NodeList)result;
-                    for(int i=1;i<=nodeList.getLength();i++) {
+                    for (int i=1;i<=nodeList.getLength();i++) {
                         Region region = new Region();
                         String regCode=null;
                         String regName=null;
@@ -782,7 +781,7 @@ public class ImporterSiteXML implements Importer {
                 if (result != null) {
                     NodeList nodeBio = (NodeList)result;
                     bioRegion = new HashSet();
-                    for(int i=1;i<=nodeBio.getLength();i++) {
+                    for (int i=1;i<=nodeBio.getLength();i++) {
                         SiteBiogeo siteBio = null;
                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/biogeoRegions[" + i + "]/code/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
@@ -826,7 +825,7 @@ public class ImporterSiteXML implements Importer {
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
                         NodeList nodeHab = (NodeList)result;
-                        for(int i=1;i<=nodeHab.getLength();i++) {
+                        for (int i=1;i<=nodeHab.getLength();i++) {
                            Habitat habitat = new Habitat();
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/habitatTypes/habitatType[" + i + "]/code/text()");
                             // Run the query and get a nodeset
@@ -947,7 +946,7 @@ public class ImporterSiteXML implements Importer {
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
                         NodeList nodeList = (NodeList) result;
-                        for(int i=1;i<=nodeList.getLength();i++) {
+                        for (int i=1;i<=nodeList.getLength();i++) {
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/species/speciesPopulation[" + i + "]/motivations/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
@@ -1056,7 +1055,7 @@ public class ImporterSiteXML implements Importer {
                                 if (result != null) {
                                     NodeList nodeMot = (NodeList)result;
                                     StringBuffer strMot = new StringBuffer();
-                                    for(int j=1;j<=nodeMot.getLength();j++) {
+                                    for (int j=1;j<=nodeMot.getLength();j++) {
                                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/species/speciesPopulation[" + i + "]/motivations/motivation[" + j + "]/text()");
                                         // Run the query and get a nodeset
                                         result = expr.evaluate(document, XPathConstants.NODE);
@@ -1258,7 +1257,7 @@ public class ImporterSiteXML implements Importer {
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
                         NodeList nodeHabClass = (NodeList)result;
-                        for(int i=1;i<=nodeHabClass.getLength();i++) {
+                        for (int i=1;i<=nodeHabClass.getLength();i++) {
                             HabitatClass habClass = new HabitatClass();
 
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/habitatClass[" + i + "]/code/text()");
@@ -1322,7 +1321,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeImpacts = (NodeList)result;
-                            for(int i=1;i<=nodeImpacts.getLength();i++) {
+                            for (int i=1;i<=nodeImpacts.getLength();i++) {
                                 Impact impact = new Impact();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/impacts/impact[" + i + "]/code/text()");
                                 // Run the query and get a nodeset
@@ -1395,7 +1394,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeOwner = (NodeList)result;
-                            for(int i=1;i<=nodeOwner.getLength();i++) {
+                            for (int i=1;i<=nodeOwner.getLength();i++) {
                                 SiteOwnership ownerShip = new SiteOwnership();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/ownership/ownershipPart[" + i + "]/ownershiptype/text()");
                                 // Run the query and get a nodeset
@@ -1459,7 +1458,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeLinks = (NodeList)result;
-                            for(int i=1;i<=nodeLinks.getLength();i++) {
+                            for (int i=1;i<=nodeLinks.getLength();i++) {
                                 DocLink link = new DocLink();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/documentation/links/link/text()");
                                 // Run the query and get a nodeset
@@ -1520,7 +1519,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeNDesig = (NodeList)result;
-                            for(int i=1;i<=nodeNDesig.getLength();i++) {
+                            for (int i=1;i<=nodeNDesig.getLength();i++) {
                                 NationalDtype nationalDType = new NationalDtype();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteProtection/nationalDesignations/nationalDesignation[" + i + "]/designationCode/text()");
                                 // Run the query and get a nodeset
@@ -1569,7 +1568,7 @@ public class ImporterSiteXML implements Importer {
                             result = expr.evaluate(document, XPathConstants.NODESET);
                             if (result != null) {
                                 NodeList nodeNRel = (NodeList)result;
-                                for(int i=1;i<=nodeNRel.getLength();i++) {
+                                for (int i=1;i<=nodeNRel.getLength();i++) {
                                     SiteRelation rel = new SiteRelation();
                                     rel.setSiteRelationScope('N');
 
@@ -1635,7 +1634,7 @@ public class ImporterSiteXML implements Importer {
                                 log("Processing Site Protection-International Relations");
                                 ImporterSiteXML.log.info("Processing Site Protection-International Relations");
                                 NodeList nodeNRel = (NodeList)result;
-                                for(int i=1;i<=nodeNRel.getLength();i++) {
+                                for (int i=1;i<=nodeNRel.getLength();i++) {
                                     SiteRelation rel = new SiteRelation();
                                     rel.setSiteRelationScope('I');
 
@@ -1722,7 +1721,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeMgmtBody = (NodeList)result;
-                            for(int i=1;i<=nodeMgmtBody.getLength();i++) {
+                            for (int i=1;i<=nodeMgmtBody.getLength();i++) {
                                 MgmtBody mgmtBody = new MgmtBody();
 
                                 //Site Management Body
@@ -1859,7 +1858,7 @@ public class ImporterSiteXML implements Importer {
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
                             NodeList nodeMgmtBody = (NodeList)result;
-                            for(int i=1;i<=nodeMgmtBody.getLength();i++) {
+                            for (int i=1;i<=nodeMgmtBody.getLength();i++) {
                                 MgmtPlan mgmtPlan = new MgmtPlan();
                                 //Site Management Plan
                                 log("         Processing Site Management Plan");

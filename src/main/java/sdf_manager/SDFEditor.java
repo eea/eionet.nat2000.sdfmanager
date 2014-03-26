@@ -771,7 +771,7 @@ public class SDFEditor extends javax.swing.JFrame {
         }
         if (!saveOK) {
             String msgError = "The following fields arere too long: \n";
-            errorDates =msgError +msgErrorDates;
+            errorDates = msgError +msgErrorDates;
         }
         return errorDates;
     }
@@ -925,11 +925,11 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
             if (!respAddress) {
                 SDFEditor.logger.error("An error has occurred in address field.");
-                errorResp=msgErrorAddress;
+                errorResp = msgErrorAddress;
             } else {
                 errorResp += "The following fields are too long:\n ";
                 if (!("").equals(msgErrorResp) || !("").equals(msgErrorEmail)) {
-                   errorResp += msgErrorResp+ "\n" + msgErrorEmail;
+                   errorResp += msgErrorResp + "\n" + msgErrorEmail;
                 }
             }
          }
@@ -1571,20 +1571,20 @@ public class SDFEditor extends javax.swing.JFrame {
         SDFEditor.logger.info("Adding Impact: " );
         boolean saveOK = false;
         if (("P").equals(impact.getImpactType().toString())) {
-            if (getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
+            if (getNumHighPImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive High impacts is 5 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-            } else if (getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+            } else if (getNumLowAndMediumImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
             } else {
                 saveOK = true;
             }
         } else {
-            if (getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
+            if (getNumHighNImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative High impacts is 5 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-            } else if (getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+            } else if (getNumLowAndMediumNImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 " );
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with low or medium rank is 20");
             } else {
@@ -1693,10 +1693,10 @@ public class SDFEditor extends javax.swing.JFrame {
             if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
                 saveOK = true;
             } else {
-                if (getNumHighPImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
+                if (getNumHighPImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive High impacts is 5 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-                } else if (getNumLowAndMediumImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+                } else if (getNumLowAndMediumImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
                 } else {
@@ -1708,10 +1708,10 @@ public class SDFEditor extends javax.swing.JFrame {
            if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
                 saveOK = true;
             } else {
-                if (getNumHighNImpacts() ==5 && (("H").equals(impact.getImpactRank().toString()))) {
+                if (getNumHighNImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative High impacts is 5 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-                } else if (getNumLowAndMediumNImpacts() ==20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+                } else if (getNumLowAndMediumNImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 " );
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative Low or Medium impacts is 20");
                 } else {
@@ -1848,15 +1848,15 @@ public class SDFEditor extends javax.swing.JFrame {
             SortedListModel model = new SortedListModel();
             while (itr.hasNext()) {
                 DocLink link = (DocLink) itr.next();
-                if (link!=null) {
+                if (link != null) {
                     modelDocLinks.add(link);
-                    if (link.getDocLinkUrl()!=null)
+                    if (link.getDocLinkUrl() != null)
                         model.add(link.getDocLinkUrl());
                     else
                         model.add(" ");
                 }
             }
-            if (modelDocLinks!=null && modelDocLinks.size()>0)
+            if (modelDocLinks != null && modelDocLinks.size()>0)
                 Collections.sort(modelDocLinks);
             this.lstLinks.setModel(model);
             this.lstLinks.repaint();
@@ -2079,8 +2079,8 @@ public class SDFEditor extends javax.swing.JFrame {
 
                 if (sp.getOtherSpeciesMotivation() != null) {
 
-                    String strDatos=sp.getOtherSpeciesMotivation();
-                    StringTokenizer tokens=new StringTokenizer(strDatos, ",");
+                    String strDatos = sp.getOtherSpeciesMotivation();
+                    StringTokenizer tokens = new StringTokenizer(strDatos, ",");
                     while (tokens.hasMoreTokens()) {
                         String token = tokens.nextToken();
                         if (("IV").equals(token)) {
@@ -2138,12 +2138,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 }
                 String maxSize= "";
                 if (sp.getSpeciesSizeMax() != null) {
-                    maxSize=sp.getSpeciesSizeMax().toString();
+                    maxSize = sp.getSpeciesSizeMax().toString();
                 }
 
                 String minSize= "";
                 if (sp.getSpeciesSizeMin() != null) {
-                    minSize=sp.getSpeciesSizeMin().toString();
+                    minSize = sp.getSpeciesSizeMin().toString();
                 }
 
                 if (sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))) {
@@ -2175,7 +2175,7 @@ public class SDFEditor extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 Habitat h = ((Habitat) itr.next());
                 String priority= "";
-                if (h.getHabitatPriority()!= null &&  h.getHabitatPriority()== 1) {
+                if (h.getHabitatPriority()!= null &&  h.getHabitatPriority() == 1) {
                     priority= "X";
                 }
                 String nonPresence= "";
@@ -2278,9 +2278,9 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     private boolean checkHCPercentUpdate100(HabitatClass h, int index) {
         SDFEditor.logger.info("Checking the sum of the percent of the Habitat Classes");
-        boolean percent100=false;
+        boolean percent100 = false;
         double coverPercent = new Double(0);
-        for(int i = 0;i < this.modelHabitatClasses.size();i++) {
+        for (int i = 0;i < this.modelHabitatClasses.size();i++) {
             if (modelHabitatClasses.get(i) != null) {
                 if (i == index) {
                     coverPercent += h.getHabitatClassCover();
@@ -2291,11 +2291,11 @@ public class SDFEditor extends javax.swing.JFrame {
         }
 
         if (coverPercent > 100) {
-            percent100=true;
-        } else if (coverPercent== 100) {
-            percent100=false;
+            percent100 = true;
+        } else if (coverPercent == 100) {
+            percent100 = false;
         } else {
-           percent100=false;
+           percent100 = false;
         }
         return percent100;
     }
@@ -2307,24 +2307,24 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     private boolean checkHCPercent100(HabitatClass habClass) {
         SDFEditor.logger.info("Checking the sum of the percent of the Habitat Classes (Edit)");
-        boolean percent100=false;
+        boolean percent100 = false;
         double coverPercent = new Double(0);
-        for(int i = 0;i < this.modelHabitatClasses.size();i++) {
+        for (int i = 0;i < this.modelHabitatClasses.size();i++) {
             if (modelHabitatClasses.get(i) != null) {
                 coverPercent += ((HabitatClass)modelHabitatClasses.get(i)).getHabitatClassCover();
             }
         }
         if (habClass != null) {
-             coverPercent +=habClass.getHabitatClassCover();
+             coverPercent += habClass.getHabitatClassCover();
         }
         if (coverPercent > 100) {
-            percent100=true;
-        } else if (coverPercent== 100 && habClass != null) {
-            percent100=false;
+            percent100 = true;
+        } else if (coverPercent == 100 && habClass != null) {
+            percent100 = false;
         } else if (coverPercent == 100 && habClass == null) {
-            percent100=true;
+            percent100 = true;
         } else {
-           percent100=false;
+           percent100 = false;
         }
         return percent100;
     }
@@ -2336,7 +2336,7 @@ public class SDFEditor extends javax.swing.JFrame {
    public double checkSumPercentBioReg() {
        double sumPercentBioReg = 0;
        try{
-           for(int i = 0;i < this.modelBioregions.size();i++) {
+           for (int i = 0;i < this.modelBioregions.size();i++) {
                 if (modelBioregions.get(i) != null) {
                     sumPercentBioReg += ((SiteBiogeo)modelBioregions.get(i)).getBiogeoPercent();
                 }
@@ -2355,7 +2355,7 @@ public class SDFEditor extends javax.swing.JFrame {
    private double checkSumPercentBioReg(Double percent, Biogeo biogeo) {
        double sumPercentBioReg = 0;
        try{
-           for(int i = 0;i < this.modelBioregions.size();i++) {
+           for (int i = 0;i < this.modelBioregions.size();i++) {
                 if (modelBioregions.get(i) != null) {
                     if (!(biogeo.getBiogeoCode()).equals(modelBioregions.get(0))) {
                         sumPercentBioReg += ((SiteBiogeo)modelBioregions.get(i)).getBiogeoPercent();
@@ -5449,7 +5449,7 @@ public class SDFEditor extends javax.swing.JFrame {
     } //GEN-LAST:event_btnAddRegionActionPerformed
 
     private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddBiogeoActionPerformed
-         if (checkSumPercentBioReg() ==100) {
+         if (checkSumPercentBioReg() == 100) {
             SDFEditor.logger.error("The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
             javax.swing.JOptionPane.showMessageDialog(this, "The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
             return;

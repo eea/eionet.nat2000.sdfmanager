@@ -121,8 +121,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
         if (this.editing && this.index > -1) {
             /*we're editing an existing habitat*/
             saveOK = this.parent.saveHabitatClass(hC,this.index);
-        }
-        else {
+        } else {
             if (this.parent.habitatClassExists((String)cmbCode.getSelectedItem())) {
                 EditorHabitatClass.log.error("Habitat class is already declared.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Habitat class is already declared.");
@@ -345,12 +344,10 @@ public class EditorHabitatClass extends javax.swing.JFrame {
         if (((String)cmbCode.getSelectedItem()).equals("")) {
             EditorHabitatClass.log.error("No Habitat Class selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No Habitat Class selected.");
-        }
-        else if (txtCover.getText().equals("")) {
+        } else if (txtCover.getText().equals("")) {
             EditorHabitatClass.log.error("No cover inserted for the habitat class.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a cover for the habitat class.");
-        }
-        else if (!ConversionTools.checkDouble(txtCover.getText())) {
+        } else if (!ConversionTools.checkDouble(txtCover.getText())) {
             EditorHabitatClass.log.error("Value provided for cover is not a valid number.::" + txtCover.getText());
            javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
         } else if (!SDF_Util.validatePercent(txtCover.getText())) {

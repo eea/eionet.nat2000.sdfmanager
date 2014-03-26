@@ -248,16 +248,16 @@ public class ImporterNewMDB implements Importer {
         HashMap<String,ArrayList<String>> siteHasHDB = new HashMap<String,ArrayList<String>>();
         try {
             int j = 0;
-            for(int i=0;i<siteList.size();i++) {
+            for (int i = 0; i < siteList.size(); i++) {
                try {
                    Site site = (Site)siteList.get(i);
                    Transaction tx = session.beginTransaction();
                    ImporterNewMDB.log.info("Validating site: " + site.getSiteCode());
                    log("Validating site: " + site.getSiteCode(),1);
 
-                   boolean siteInDB=false;
+                   boolean siteInDB = false;
                    if (SDF_Util.validateSite(session,site.getSiteCode())) {
-                       siteInDB=true;
+                       siteInDB = true;
                    }
                    Set regionSiteList = site.getRegions();
                    Iterator itr = regionSiteList.iterator();
@@ -285,8 +285,7 @@ public class ImporterNewMDB implements Importer {
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error: " + e.getMessage());
             return siteHasHDB;
-        }
-        finally {
+        } finally {
             session.close();
         }
         return siteHasHDB;
@@ -301,7 +300,7 @@ public class ImporterNewMDB implements Importer {
      * @throws SQLException
      */
     Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
-        try{
+        try {
              if (accessVersion.equals("2003")) {
                  /*open read-only*/
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
@@ -748,7 +747,7 @@ public class ImporterNewMDB implements Importer {
         Set<SiteBiogeo> siteBiogeoSet=new HashSet<SiteBiogeo>(0);
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from SITE_BIOGEO where site_code ='" + site.getSiteCode() + "'";
 
             stmt = conn.createStatement();
@@ -1862,8 +1861,7 @@ public class ImporterNewMDB implements Importer {
                      decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
-                 }
-                 else {
+                 } else {
                      return null;
                  }
              }

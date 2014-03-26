@@ -571,8 +571,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
                 this.parent.saveMgmtBody(body,this.index);
                 EditorMgmtBody.log.info("Management body has been updated.");
                 msgMgmtBody = "Management body has been updated.";
-           }
-           else {
+           } else {
                this.parent.addMgmtBody(body);
                EditorMgmtBody.log.info("Management body has been added.");
                msgMgmtBody = "Management body added.";

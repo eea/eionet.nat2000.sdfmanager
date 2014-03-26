@@ -307,20 +307,17 @@ public class EditorBioregion extends javax.swing.JFrame {
         if (code.equals("")) {
             EditorBioregion.log.error("There is not code for Biogeographical region .");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a code for Biogeographical region.");
-        }
-        else if (txtArea.getText().equals("")) {
+        } else if (txtArea.getText().equals("")) {
             EditorBioregion.log.error("There is not perecent for cover.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a percentage for cover.");
-        }
-        else if ((isNum(txtArea.getText())) == null) {
+        } else if ((isNum(txtArea.getText())) == null) {
             EditorBioregion.log.error("Percent field should be a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Percentage should be a number.");
 
         } else if (!SDF_Util.validatePercent(txtArea.getText())) {
             EditorBioregion.log.error("The percent is not valid.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a valid percentage.");
-        }
-        else {
+        } else {
             Double dblPercentage = null;
             if (txtArea.getText()!=null && !txtArea.getText().equals("")) {
                 dblPercentage = new Double(txtArea.getText());
@@ -350,8 +347,7 @@ public class EditorBioregion extends javax.swing.JFrame {
                 /*we're editing an existing habitat*/
                 saveOK = this.parent.saveBiogeo(b, percent,this.index);
                 msgInfo="Bioregion saved";
-           }
-           else {
+           } else {
                 EditorBioregion.log.info("Bioregion added");
                 saveOK =this.parent.addBiogeo(b, percent);
                 msgInfo="Bioregion added";

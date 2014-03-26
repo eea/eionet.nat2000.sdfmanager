@@ -279,19 +279,16 @@ public class EditorOwnership extends javax.swing.JFrame {
         if (code.equals("")) {
             EditorOwnership.log.error("No ownership class provided");
             javax.swing.JOptionPane.showMessageDialog(this, "No ownership class provided.");
-        }
-        else if (txtPercent.getText().equals("")) {
+        } else if (txtPercent.getText().equals("")) {
             EditorOwnership.log.error("No percentage provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "No percentage provided.");
-        }
-        else if ((ConversionTools.stringToDouble(txtPercent.getText())) == 0.0) {
+        } else if ((ConversionTools.stringToDouble(txtPercent.getText())) == 0.0) {
             EditorOwnership.log.error("The percent data is not valid:::" + txtPercent.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid percentage");
         } else if (!SDF_Util.validatePercent(txtPercent.getText())) {
             EditorOwnership.log.error("The percent data is not valid:::" + txtPercent.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provided a valid percentage.");
-        }
-        else {
+        } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Ownership o;
             String hql = "from Ownership ow where ow.ownershipType like '" + code + "'";

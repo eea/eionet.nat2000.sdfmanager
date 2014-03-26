@@ -112,8 +112,7 @@ public class ExporterXMLStax implements Exporter {
          if (priority == 1) {
             this.logger.log(msg);
             logToFile(msg);
-         }
-         else {
+         } else {
             logToFile(msg);
          }
      }
@@ -265,8 +264,7 @@ public class ExporterXMLStax implements Exporter {
          }
          if (i.compareTo(new Short(i)) > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }
@@ -282,8 +280,7 @@ public class ExporterXMLStax implements Exporter {
            but could be used for other purposes as well */
         if (src == null) {
            return "";
-        }
-        else {
+        } else {
             //return getString(src);
             return src;
         }
@@ -298,8 +295,7 @@ public class ExporterXMLStax implements Exporter {
     String fmt (Date date, String fieldName) {
         if (date != null) {
             return fmt(date.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -317,8 +313,7 @@ public class ExporterXMLStax implements Exporter {
            }
             //return fmt(val.toString(),fieldName);
             return fmt(strVal,fieldName);
-        }
-        else {
+        } else {
             return fmt("0.00",fieldName);
         }
     }
@@ -335,8 +330,7 @@ public class ExporterXMLStax implements Exporter {
                strVal = val.toString();
            }
             return fmt(strVal,fieldName);
-        }
-        else {
+        } else {
             return fmt("0",fieldName);
         }
     }
@@ -350,8 +344,7 @@ public class ExporterXMLStax implements Exporter {
     String fmt (Boolean val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -365,8 +358,7 @@ public class ExporterXMLStax implements Exporter {
     String fmt (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -390,8 +382,7 @@ public class ExporterXMLStax implements Exporter {
     String fmtToLowerCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -404,8 +395,7 @@ public class ExporterXMLStax implements Exporter {
      String fmtToUpperCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -504,8 +494,7 @@ public class ExporterXMLStax implements Exporter {
          }
          if (i > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }

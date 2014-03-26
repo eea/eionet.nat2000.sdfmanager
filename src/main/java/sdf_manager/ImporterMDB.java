@@ -288,7 +288,7 @@ public class ImporterMDB implements Importer {
       */
      private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
          Connection conn = null;
-         try{
+         try {
             // java.util.Properties prop = new java.util.Properties();
             // prop.put("charSet", "UTF-8");
 
@@ -1412,11 +1412,11 @@ public class ImporterMDB implements Importer {
         /***Add species groups**/
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
 
             String[] tables = {this.tables.get("amprep"),this.tables.get("bird"),this.tables.get("fishes"),this.tables.get("invert"),
                                 this.tables.get("mammal"),this.tables.get("plant"),this.tables.get("spec")};
-            for(int i = 0; i < tables.length;i++) {
+            for (int i = 0; i < tables.length;i++) {
                 Transaction tx = session.beginTransaction();
                 String sql = "select * from " + tables[i] + " where sitecode ='" + site.getSiteCode() + "'";
                 stmt = conn.createStatement();
@@ -1558,7 +1558,7 @@ public class ImporterMDB implements Importer {
 
                                     // Check all occurance
                                     while (matcher.find()) {
-                                        try{
+                                        try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             String[] arr = tmp.split("-");
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(arr[0]));
@@ -1705,7 +1705,7 @@ public class ImporterMDB implements Importer {
     private void processHabitats(Connection conn, Session session, Site site) throws SQLException {
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from " + tables.get("habit1") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1762,7 +1762,7 @@ public class ImporterMDB implements Importer {
     private void processDTypes(Connection conn, Session session, Site site) throws SQLException {
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from " + tables.get("desigc") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1808,7 +1808,7 @@ public class ImporterMDB implements Importer {
         Statement stmt = null;
         ResultSet rs = null;
 
-        try{
+        try {
             String sql = "select * from " + tables.get("desigr") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1868,7 +1868,7 @@ public class ImporterMDB implements Importer {
     private void processHabitatClasses(Connection conn, Session session, Site site) throws SQLException {
          Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from " + tables.get("habit2") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1935,7 +1935,7 @@ public class ImporterMDB implements Importer {
     private void processRegions(Connection conn, Session session, Site site) throws SQLException {
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from " + tables.get("regcod") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -2006,7 +2006,7 @@ public class ImporterMDB implements Importer {
 
         Statement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             String sql = "select * from " + tables.get("actvty") + " where sitecode ='" + site.getSiteCode() + "'";
 
             stmt = conn.createStatement();
@@ -2250,7 +2250,7 @@ public class ImporterMDB implements Importer {
        if (root != null) {
            NodeList nl = root.getElementsByTagName(topElement);
            if (nl != null && nl.getLength() > 0) {
-                for(int i = 0 ; i < nl.getLength();i++) {
+                for (int i = 0 ; i < nl.getLength();i++) {
                     Element el = (Element)nl.item(i);
                     String key = this.getTextValue(el,fields[0]);
                     String value = this.getTextValue(el,fields[1]);

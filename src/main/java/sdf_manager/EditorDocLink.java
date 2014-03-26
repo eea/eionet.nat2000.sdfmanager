@@ -216,8 +216,7 @@ public class EditorDocLink extends javax.swing.JFrame {
         if (this.txtLink.getText().equals("")) {
             EditorDocLink.log.error("No url ");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid URL.");
-        }
-        else {
+        } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
             //String hql = "from DocLink link where link.docLinkUrl like '" + this.txtLink.getText() + "'";
             //Query q = session.createQuery(hql);

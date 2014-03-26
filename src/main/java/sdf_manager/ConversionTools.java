@@ -201,8 +201,7 @@ public class ConversionTools {
             String s = Double.toString(d);
             if (s!=null) {
                 return s;
-            }
-            else {
+            } else {
                 return "0.0";
             }
         }
@@ -221,8 +220,7 @@ public class ConversionTools {
             Double d = Double.parseDouble(s);
             if (d != null) {
                 return d;
-            }
-            else {
+            } else {
                 return 0.0;
             }
         }
@@ -257,8 +255,7 @@ public class ConversionTools {
             String s = Integer.toString(i);
             if (s!=null) {
                 return s;
-            }
-            else {
+            } else {
                 return "0";
             }
         }
@@ -277,8 +274,7 @@ public class ConversionTools {
             int d = Integer.parseInt(s);
             if (d >= 0) {
                 return d;
-            }
-            else {
+            } else {
                 return 0;
             }
         }
@@ -297,8 +293,7 @@ public class ConversionTools {
             String s = Character.toString(c);
             if (s!=null) {
                 return s;
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -317,8 +312,7 @@ public class ConversionTools {
             Character c = s.charAt(0);
             if (c !=null) {
                 return c;
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -336,8 +330,7 @@ public class ConversionTools {
         if (b) {
             return 1;
 
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -350,8 +343,7 @@ public class ConversionTools {
     public static boolean smallToBool(Short s) {
         if (s != null && s > 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -364,8 +356,7 @@ public class ConversionTools {
     public static String stringToString(String s) {
         if (s == null) {
             return "";
-        }
-        else {
+        } else {
             return s;
         }
     }
@@ -378,12 +369,10 @@ public class ConversionTools {
     public static boolean stringToBoolean(String s) {
         if (s == null) {
             return false;
-        }
-        else if (s.equals("true")) {
+        } else if (s.equals("true")) {
 
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -396,11 +385,9 @@ public class ConversionTools {
     public static Short stringToShort(String s) {
         if (s == null) {
             return 0;
-        }
-        else if (s.equals("true")) {
+        } else if (s.equals("true")) {
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }

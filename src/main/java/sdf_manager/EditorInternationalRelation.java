@@ -88,7 +88,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
       * @return
       */
      private String getRelationDescription(String desigCode) {
-         String desigName ="";
+         String desigName = "";
          EditorInternationalRelation.log.info("Get the description of the relation.:::" + desigCode);
          try{
 
@@ -109,7 +109,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
      }
 
      private int getSelectedindexbyCode(String conventionCode) {
-         int code=0;
+         int code = 0;
          if (("ramsar").equals(conventionCode)) {
             code = 0;
         } else if (("biogenetic").equals(conventionCode)) {
@@ -121,19 +121,19 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         } else if (("barcelona").equals(conventionCode)) {
             code = 4;
         } else if (("bucharest").equals(conventionCode)) {
-             code=5;
+             code = 5;
         } else if (("worldHeritage").equals(conventionCode)) {
-            code=6;
+            code = 6;
         } else if (("helcom").equals(conventionCode)) {
-            code=7;
+            code = 7;
         } else if (("ospar").equals(conventionCode)) {
-            code=8;
+            code = 8;
         } else if (("protectedMarine").equals(conventionCode)) {
-             code=9;
+             code = 9;
         } else if (("other").equals(conventionCode)) {
-            code=10;
+            code = 10;
         } else {
-             code=0;
+             code = 0;
         }
          return code;
      }
@@ -433,8 +433,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         } else if (!SDF_Util.validatePercent(txtCover.getText())) {
             EditorInternationalRelation.log.error("The percent of the cover is not a valid.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid percentage for cover.");
-        }
-        else {
+        } else {
             saveRelation();
 
         }

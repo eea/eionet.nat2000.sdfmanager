@@ -381,12 +381,10 @@ public class EditorDesignationType extends javax.swing.JFrame {
         if (((String)cmbCode.getSelectedItem()).equals("")) {
             EditorDesignationType.log.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected.");
-        }
-        else if (txtCover.getText().equals("")) {
+        } else if (txtCover.getText().equals("")) {
             EditorDesignationType.log.error("No cover is filled.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a cover for the designation type.");
-        }
-        else if (!ConversionTools.checkDouble(txtCover.getText())) {
+        } else if (!ConversionTools.checkDouble(txtCover.getText())) {
             EditorDesignationType.log.error("Cover is not a valid number.");
            javax.swing.JOptionPane.showMessageDialog(this, "Value provided for cover is not a valid number.");
         } else if (!SDF_Util.validatePercent(txtCover.getText())) {

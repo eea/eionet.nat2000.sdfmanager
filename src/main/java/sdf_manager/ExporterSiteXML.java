@@ -129,8 +129,7 @@ public class ExporterSiteXML implements Exporter {
          if (priority == 1) {
             this.logger.log(msg);
             logToFile(msg);
-         }
-         else {
+         } else {
             logToFile(msg);
          }
      }
@@ -351,8 +350,7 @@ public class ExporterSiteXML implements Exporter {
          }
          if (i.compareTo(new Short(i)) > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }
@@ -368,8 +366,7 @@ public class ExporterSiteXML implements Exporter {
            but could be used for other purposes as well */
         if (src == null) {
             return "";
-        }
-        else {
+        } else {
             //return getString(src);
             return src;
         }
@@ -384,8 +381,7 @@ public class ExporterSiteXML implements Exporter {
      public static String fmt (Date date, String fieldName) {
         if (date != null) {
             return fmt(date.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -403,8 +399,7 @@ public class ExporterSiteXML implements Exporter {
                strVal = val.toString();
            }
            return fmt(strVal,fieldName);
-        }
-        else {
+        } else {
             return fmt("0.00",fieldName);
         }
     }
@@ -422,8 +417,7 @@ public class ExporterSiteXML implements Exporter {
                strVal = val.toString();
            }
             return fmt(strVal,fieldName);
-        }
-        else {
+        } else {
             return fmt("0",fieldName);
         }
     }
@@ -437,8 +431,7 @@ public class ExporterSiteXML implements Exporter {
      public static String fmt (Boolean val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -452,8 +445,7 @@ public class ExporterSiteXML implements Exporter {
      public static String fmt (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -467,8 +459,7 @@ public class ExporterSiteXML implements Exporter {
      public static String fmtToLowerCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toLowerCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -482,8 +473,7 @@ public class ExporterSiteXML implements Exporter {
      public static String fmtToUpperCase (Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toUpperCase(),fieldName);
-        }
-        else {
+        } else {
             return fmt((String)null,fieldName);
         }
     }
@@ -612,8 +602,7 @@ public class ExporterSiteXML implements Exporter {
                      decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
                      CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                      return cbuf.toString().trim();
-                 }
-                 else {
+                 } else {
                      return null;
                  }
              }
@@ -639,8 +628,7 @@ public class ExporterSiteXML implements Exporter {
          }
          if (i > 0) {
              return true;
-         }
-         else {
+         } else {
              return false;
          }
      }
@@ -1190,8 +1178,7 @@ public class ExporterSiteXML implements Exporter {
                     if (im.getImpactType() != null && (im.getImpactType().toString()).equals("P")) {
                         impacType ="Positive";
                         posImpact= true;
-                    }
-                    else if (im.getImpactType() != null && (im.getImpactType().toString()).equals("N")) {
+                    } else if (im.getImpactType() != null && (im.getImpactType().toString()).equals("N")) {
                         negImpact= true;
                         impacType = "Negative";
                     } else {
@@ -1284,13 +1271,11 @@ public class ExporterSiteXML implements Exporter {
                         rElem = doc.createElement("nationalRelationship");
                         rElem.appendChild(doc.createElement("designationCode")).appendChild(doc.createTextNode(fmt(rel.getSiteRelationCode(),"relationCode")));
                         nationalRelations.appendChild(rElem);
-                    }
-                    else if (("I").equals(scope.toString())) {
+                    } else if (("I").equals(scope.toString())) {
                         rElem =  doc.createElement("internationalRelationship");
                         rElem.appendChild(doc.createElement("convention")).appendChild(doc.createTextNode(fmt(rel.getSiteRelationConvention(),"relationConvention")));
                         internationalRelations.appendChild(rElem);
-                    }
-                    else {
+                    } else {
 //                        log("Relation type undefined, ignoring relation: " + scope.toString());
                         continue;
                     }

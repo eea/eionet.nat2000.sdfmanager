@@ -127,14 +127,12 @@ public class EditorImpact extends javax.swing.JFrame {
           Font font = new java.awt.Font("Tahoma",Font.BOLD,18);
           this.labTitle.setFont(font);
           this.labTitle.setText("Positive Impact");
-       }
-       else if (type.equals("N")) {
+       } else if (type.equals("N")) {
           this.type = type;
           Font font = new java.awt.Font("Tahoma",Font.BOLD,18);
           this.labTitle.setFont(font);
           this.labTitle.setText("Negative Impact");
-       }
-       else {
+       } else {
            /* invalid type */
        }
    }

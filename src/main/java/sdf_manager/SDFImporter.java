@@ -398,11 +398,10 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
          if (this.chbImportOneSite.isSelected()) {
             this.txtSiteCode.setEditable(true);
             this.txtSiteCode.setEnabled(true);
-        }
-        else {
+        } else {
             this.txtSiteCode.setText("");
             this.txtSiteCode.setEditable(false);
-             this.txtSiteCode.setEnabled(false);
+            this.txtSiteCode.setEnabled(false);
         }
 
     } //GEN-LAST:event_chbImportOneSiteItemStateChanged
@@ -421,8 +420,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = chooser.getSelectedFile().getName();
             this.txtPath.setText(chooser.getSelectedFile().getAbsolutePath()) ;
-        }
-        else {
+        } else {
               //this.dManager.writeLog("No folder selected.");
         }
     }
@@ -440,8 +438,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
            String logFile;
            if (dbFile.getParent().equals("")) {
                logFile = "log.txt";
-           }
-           else {
+           } else {
                logFile = dbFile.getParent() + System.getProperty("file.separator") + "log.txt";
            }
            Importer importer = null;

@@ -85,7 +85,7 @@ class ComboBoxSorterModel extends javax.swing.DefaultComboBoxModel {
     public void addElement(Object object) {
         int size = getSize();
         int lstcmp = -99;
-        for(int i = 0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             lstcmp = ((Comparable)getElementAt(i)).compareTo((Comparable)object);
             if (lstcmp > 0) {
                 insertElementAt(object, i);

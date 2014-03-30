@@ -4,11 +4,8 @@
  */
 package sdf_manager.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Properties;
 import org.apache.log4j.Logger;
-import java.io.IOException;
 import java.util.StringTokenizer;
 import javax.swing.JComboBox;
 
@@ -29,11 +26,11 @@ public class PopulateCombo {
            String assesmentABCD = prop.getProperty("assessmentTypeABCD");
            comboBox.insertItemAt("-", 0);
            StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
-           int i=1;
+           int i = 1;
            while (st.hasMoreElements()) {
                String token = st.nextToken();
                comboBox.insertItemAt(token, i);
-               i++ ;
+               i++;
            }
            comboBox.setSelectedIndex(0);
         } catch (Exception e) {
@@ -52,11 +49,11 @@ public class PopulateCombo {
            String assesmentABCD = prop.getProperty("assessmentTypeABC");
            comboBox.insertItemAt("-", 0);
            StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
-           int i=1;
+           int i = 1;
            while (st.hasMoreElements()) {
                String token = st.nextToken();
                comboBox.insertItemAt(token, i);
-               i++ ;
+               i++;
            }
            comboBox.setSelectedIndex(0);
         } catch (Exception e) {

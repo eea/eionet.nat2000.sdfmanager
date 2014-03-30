@@ -49,7 +49,7 @@ public class ValidateSite {
             }
 
             if (site.getSiteCompDate() != null && site.getSiteUpdateDate() != null) {
-                if (site.getSiteCompDate().compareTo(site.getSiteUpdateDate())>0) {
+                if (site.getSiteCompDate().compareTo(site.getSiteUpdateDate()) > 0) {
                    errorList.add("Compilation Date and Update Date, in  Identification section\n");
                 }
             }
@@ -104,7 +104,7 @@ public class ValidateSite {
             Set siteHabs = site.getHabitats();
             Iterator itr = siteHabs.iterator();
             boolean habitatInfo = false;
-            boolean speciesInfo= false;
+            boolean speciesInfo = false;
 
             if (!siteHabs.isEmpty()) {
                 habitatInfo = true;
@@ -146,7 +146,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
             boolean birdsSPA = false;
             if (!siteSpecies.isEmpty()) {
                 Iterator itsr = siteSpecies.iterator();
-                while(itsr.hasNext()) {
+                while (itsr.hasNext()) {
                     Species s = (Species) itsr.next();
                     if (s.getSpeciesGroup() != null && !(("-").equals(s.getSpeciesGroup().toString()))) {
                         if ((s.getSpeciesGroup().toString()).equals("B")) {
@@ -179,14 +179,14 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                           errorList.add("Global of the species for the code : " + s.getSpeciesCode() + ", species name : " + s.getSpeciesName() + " and the group  :" + s.getSpeciesGroup() + ". (Ecological Info - Species Type  section)\n");
                     }
                 }
-                speciesInfo=true;
+                speciesInfo = true;
             }
 
 
             Set siteOtherSpecies = site.getOtherSpecieses();
             if (!siteOtherSpecies.isEmpty()) {
                 Iterator itosr = siteOtherSpecies.iterator();
-                 while(itosr.hasNext()) {
+                 while (itosr.hasNext()) {
                     OtherSpecies s = (OtherSpecies) itosr.next();
                     if (s.getOtherSpeciesGroup() == null || (("-").equals(s.getOtherSpeciesGroup()))) {
                         errorList.add("Group of the species (Other species). (Ecological Info - Other Species Type  section)\n");
@@ -211,16 +211,16 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
 
             /**************DESCRIPTION***********************/
             Set siteImpacts = site.getImpacts();
-            boolean posImpact= false;
-            boolean negImpact= false;
+            boolean posImpact = false;
+            boolean negImpact = false;
             if (!siteImpacts.isEmpty()) {
                 Iterator itir = siteImpacts.iterator();
                 while (itir.hasNext()) {
                     Impact im = (Impact) itir.next();
                     if (("P").equals(im.getImpactType().toString())) {
-                        posImpact= true;
+                        posImpact = true;
                     } else if (("N").equals(im.getImpactType().toString())) {
-                        negImpact= true;
+                        negImpact = true;
                     } else {
 
                     }

@@ -126,8 +126,7 @@ public class ExporterXMLStax implements Exporter {
 
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
             // e.printStackTrace();
              ExporterXMLStax.log.error("An error has accurred in initLogFile. Error Message :::" + e.getMessage());
          }
@@ -140,8 +139,7 @@ public class ExporterXMLStax implements Exporter {
          try {
              out.close();
              outFile.close();
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              // e.printStackTrace();
              ExporterXMLStax.log.error("An error has accurred in initLogFile. Error Message :::" + e.getMessage());
          }
@@ -173,7 +171,7 @@ public class ExporterXMLStax implements Exporter {
       */
     public boolean processDatabase(String fileName) {
         this.fileName = fileName;
-        log("Creating requested XML document: "  + fileName);
+        log("Creating requested XML document: " + fileName);
         log("Processing data...");
         this.loadSitecodes();
         this.initWriter();
@@ -244,8 +242,7 @@ public class ExporterXMLStax implements Exporter {
             }
             tx.commit();
             session.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterXMLStax.log.error("ERROR loadSitecodes():::" + e.getMessage());
         }
@@ -294,9 +291,9 @@ public class ExporterXMLStax implements Exporter {
      */
     String fmt (Date date, String fieldName) {
         if (date != null) {
-            return fmt(date.toString(),fieldName);
+            return fmt(date.toString(), fieldName);
         } else {
-            return fmt((String)null,fieldName);
+            return fmt((String)null, fieldName);
         }
     }
      /**
@@ -311,10 +308,10 @@ public class ExporterXMLStax implements Exporter {
            if (val != new Double(0)) {
                strVal = val.toString();
            }
-            //return fmt(val.toString(),fieldName);
-            return fmt(strVal,fieldName);
+            //return fmt(val.toString(), fieldName);
+            return fmt(strVal, fieldName);
         } else {
-            return fmt("0.00",fieldName);
+            return fmt("0.00", fieldName);
         }
     }
     /**
@@ -329,9 +326,9 @@ public class ExporterXMLStax implements Exporter {
            if (val != new Integer(0)) {
                strVal = val.toString();
            }
-            return fmt(strVal,fieldName);
+            return fmt(strVal, fieldName);
         } else {
-            return fmt("0",fieldName);
+            return fmt("0", fieldName);
         }
     }
 
@@ -343,9 +340,9 @@ public class ExporterXMLStax implements Exporter {
      */
     String fmt (Boolean val, String fieldName) {
         if (val != null) {
-            return fmt(val.toString(),fieldName);
+            return fmt(val.toString(), fieldName);
         } else {
-            return fmt((String)null,fieldName);
+            return fmt((String)null, fieldName);
         }
     }
 
@@ -357,9 +354,9 @@ public class ExporterXMLStax implements Exporter {
      */
     String fmt (Character val, String fieldName) {
         if (val != null) {
-            return fmt(val.toString(),fieldName);
+            return fmt(val.toString(), fieldName);
         } else {
-            return fmt((String)null,fieldName);
+            return fmt((String) null, fieldName);
         }
     }
 
@@ -381,9 +378,9 @@ public class ExporterXMLStax implements Exporter {
      */
     String fmtToLowerCase (Character val, String fieldName) {
         if (val != null) {
-            return fmt(val.toString().toLowerCase(),fieldName);
+            return fmt(val.toString().toLowerCase(), fieldName);
         } else {
-            return fmt((String)null,fieldName);
+            return fmt((String) null, fieldName);
         }
     }
     /**
@@ -394,9 +391,9 @@ public class ExporterXMLStax implements Exporter {
      */
      String fmtToUpperCase (Character val, String fieldName) {
         if (val != null) {
-            return fmt(val.toString().toUpperCase(),fieldName);
+            return fmt(val.toString().toUpperCase(), fieldName);
         } else {
-            return fmt((String)null,fieldName);
+            return fmt((String) null, fieldName);
         }
     }
 
@@ -435,7 +432,7 @@ public class ExporterXMLStax implements Exporter {
         } catch (Exception e) {
              ExporterXMLStax.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.\nError:::" + e.getMessage());
 
-             JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+             JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
              return null;
          }
      }
@@ -459,24 +456,24 @@ public class ExporterXMLStax implements Exporter {
               String dateLine = sdf.format(cal.getTime());
               String siteCode = (String) it.next();
 
-//              logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: " + siteCode+ System.getProperty("line.separator") );
-              ArrayList arraySites = (ArrayList)exportErrorMap.get(siteCode);
+//              logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: " + siteCode+ System.getProperty("line.separator"));
+              ArrayList arraySites = (ArrayList) exportErrorMap.get(siteCode);
 
               if (!arraySites.isEmpty()) {
                   logErrorFile.write(dateLine + ": Please, check the following sites' fields in the SDF editor:" + System.getProperty("line.separator"));
                   Iterator itSite = arraySites.iterator();
                   while (itSite.hasNext()) {
-                     String lineExport = (String)itSite.next();
-                     logErrorFile.write("     " + dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                     String lineExport = (String) itSite.next();
+                     logErrorFile.write("     " + dateLine + ": " + lineExport + System.getProperty("line.separator"));
                      logErrorFile.flush();
                   }
               }
-              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator") );
+              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator"));
           }
           logErrorFile.flush();
           logErrorFile.close();
        } catch (Exception e) {
-           JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+           JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
            //e.printStackTrace();
            ExporterXMLStax.log.error("Error copyToLogExportFile(). " + e.getMessage());
        }
@@ -507,12 +504,12 @@ public class ExporterXMLStax implements Exporter {
         // Create a XMLOutputFactory
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         Session session = HibernateUtil.getSessionFactory().openSession();
-        boolean xmlOK=false;
+        boolean xmlOK = false;
         // Create XMLEventWriter
 //        boolean xmlOK = true;
         final ArrayList xmlValidFields = new ArrayList();
 
-        try{
+        try {
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             URL schemaFile = new URL("http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd");
@@ -561,11 +558,11 @@ public class ExporterXMLStax implements Exporter {
            if (xmlValidFields.isEmpty()) {
                 log("Export done.");
                 ExporterXMLStax.log.error("Export process has finished succesfully");
-                JOptionPane.showMessageDialog(new JFrame(), "Export process has finished succesfully.", "Dialog",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "Export process has finished succesfully.", "Dialog", JOptionPane.ERROR_MESSAGE);
            } else {
                 xmlErrorSiteHash.put("", xmlValidFields);
                 log("The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.");
-                JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed, the XML is not compliant with SDF the schema.\n Please check the log file, for more details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed, the XML is not compliant with SDF the schema.\n Please check the log file, for more details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
                 File fileLog = this.copyToLogExportFile(xmlErrorSiteHash);
                 if (fileLog != null) {
                     Desktop desktop = null;
@@ -582,7 +579,7 @@ public class ExporterXMLStax implements Exporter {
         } catch (Exception e) {
             //e.printStackTrace();
             ExporterXMLStax.log.error("Error processing xml file:::" + e.getMessage());
-            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
 
         } finally {
             session.close();

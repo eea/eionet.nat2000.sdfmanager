@@ -478,11 +478,11 @@ public class EditorMgmtBody extends javax.swing.JFrame {
         String postName = this.txtPostName.getText();
         String thoroughFare = this.txtThoroughFare.getText();
         if (org.equals("")) {
-            mgmtBodyErrors +="Please provide a name organisation.\n";
+            mgmtBodyErrors += "Please provide a name organisation.\n";
             mgmtBodyOK = false;
         }
-        if (email !=null && !(("").equals(email)) && (email.indexOf("@") ==-1)) {
-            mgmtBodyErrors +="Please provide a valid email.\n";
+        if (email != null && !(("").equals(email)) && (email.indexOf("@") == -1)) {
+            mgmtBodyErrors += "Please provide a valid email.\n";
             mgmtBodyOK = false;
         }
 
@@ -496,61 +496,61 @@ public class EditorMgmtBody extends javax.swing.JFrame {
         if (!addr.equals("")) {
             addresUnStructured = true;
         }
-        if (!(addressArea.equals("")) || !(adminUnit.equals("")) || !(locatorDesignator.equals("")) ||!(locatorName.equals("")) || !(postCode.equals("")) || !(postName.equals("") || !(thoroughFare.equals("")))) {
+        if (!(addressArea.equals("")) || !(adminUnit.equals("")) || !(locatorDesignator.equals("")) || !(locatorName.equals("")) || !(postCode.equals("")) || !(postName.equals("") || !(thoroughFare.equals("")))) {
 
             addresStructured = true;
 
         }
         if (addresUnStructured && addresStructured) {
             EditorMgmtBody.log.error("Address is not unique");
-            javax.swing.JOptionPane.showMessageDialog(this, "You should provide an unique address.", "Dialog",JOptionPane.ERROR_MESSAGE);
-            mgmtBodyOK=false;
+            javax.swing.JOptionPane.showMessageDialog(this, "You should provide an unique address.", "Dialog", JOptionPane.ERROR_MESSAGE);
+            mgmtBodyOK = false;
         } else {
             if (addresStructured) {
-                if (adminUnit == null || (("").equals(adminUnit)) ) {
+                if (adminUnit == null || (("").equals(adminUnit))) {
                     EditorMgmtBody.log.error("Admin Unit is mandatory");
-                    javax.swing.JOptionPane.showMessageDialog(this, "You should provide an Admin Unit.", "Dialog",JOptionPane.ERROR_MESSAGE);
-                    mgmtBodyOK=false;
+                    javax.swing.JOptionPane.showMessageDialog(this, "You should provide an Admin Unit.", "Dialog", JOptionPane.ERROR_MESSAGE);
+                    mgmtBodyOK = false;
                 }
             }
         }
         if (mgmtBodyOK) {
 
             body.setMgmtBodyId(this.mgmtBodyId);
-            if (org.length() >256) {
-                mgmtBodyErrors +=" .- Organisation (256 characters maximum)\n";
+            if (org.length() > 256) {
+                mgmtBodyErrors += " .- Organisation (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (email.length() >64) {
-                mgmtBodyErrors +=" .- Email (64 characters maximum)\n";
+                mgmtBodyErrors += " .- Email (64 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (addr.length() > 1024) {
-                mgmtBodyErrors +=" .- Unstructured Address (1024 characters maximum)\n";
+                mgmtBodyErrors += " .- Unstructured Address (1024 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (adminUnit.length() > 256) {
-                mgmtBodyErrors +=" .- Admin Unit (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Admin Unit (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (locatorDesignator.length() > 256) {
-                mgmtBodyErrors +=" .- Locator Designator (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Locator Designator (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (locatorName.length() > 256) {
-                mgmtBodyErrors +=" .- Locator Name (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Locator Name (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (postCode.length() > 256) {
-                mgmtBodyErrors +=" .- Post Code (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Post Code (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (postName.length() > 256) {
-                mgmtBodyErrors +=" .- Post Name (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Post Name (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             if (thoroughFare.length() > 256) {
-                mgmtBodyErrors +=" .- Thorough Fare (256 characters maximum)\n";
+                mgmtBodyErrors += " .- Thorough Fare (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
             body.setMgmtBodyOrg(org);
@@ -565,7 +565,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
             body.setMgmtBodyThroughFare(thoroughFare);
         }
         if (mgmtBodyOK) {
-            String msgMgmtBody ="";
+            String msgMgmtBody = "";
             if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
                 this.parent.saveMgmtBody(body,this.index);
@@ -581,7 +581,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
             this.exit();
         } else {
             EditorMgmtBody.log.info("There some errors in data:\n" + mgmtBodyErrors);
-            javax.swing.JOptionPane.showMessageDialog(this, "There some errors in data:\n" + mgmtBodyErrors, "Dialog",JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "There some errors in data:\n" + mgmtBodyErrors, "Dialog", JOptionPane.ERROR_MESSAGE);
             this.setVisible(true);
         }
 

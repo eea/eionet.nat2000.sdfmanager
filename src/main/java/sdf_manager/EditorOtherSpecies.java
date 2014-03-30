@@ -89,23 +89,23 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
-       cmbCode.insertItemAt("", i);//initialize
-       cmbName.insertItemAt("", i);//initialize
+       cmbCode.insertItemAt("", i); //initialize
+       cmbName.insertItemAt("", i); //initialize
        i++;
-       int j=-1;
+       int j = -1;
        while (itr.hasNext()) {
            Object obj[] = (Object[]) itr.next();
            if (((String) obj[0]).equals("")) {
                continue;
            } else if (((String) obj[0]).equals(speciesCode)) {
-               j=i;
+               j = i;
            }
            cmbCode.insertItemAt(obj[0], i);
            cmbName.insertItemAt(obj[1], i);
            i++;
        }
        if (i > 0) {
-           if (j>-1) {
+           if (j > -1) {
                cmbCode.setSelectedIndex(j);
                cmbCode.repaint();
            } else {
@@ -147,7 +147,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        String hql;
 
        if (group != null && group.equals("B")) {
-           hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code+ "'";
+           hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code + "'";
        } else {
            hql = "select count(*) from RefSpecies refSp where refSp.refSpeciesCode like '" + code + "' and refSp.refSpeciesAnnexII ='0'";
        }
@@ -191,7 +191,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
        }
 
        String strMotivation = s.getOtherSpeciesMotivation();
-       StringTokenizer st2 = new StringTokenizer(strMotivation,",");
+       StringTokenizer st2 = new StringTokenizer(strMotivation, ",");
 
         while (st2.hasMoreElements()) {
            String mot = (String) st2.nextElement();
@@ -275,7 +275,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         String strMotiv = motivation.toString();
 
         if (strMotiv.endsWith(",")) {
-            strMotiv = strMotiv.substring(0, motivation.length()-1);
+            strMotiv = strMotiv.substring(0, motivation.length() - 1);
         }
 
         s.setOtherSpeciesMotivation(strMotiv);
@@ -552,7 +552,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        cmbGroup.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "Amphibians", "Birds", "Fish", "Fungi", "Invertebrates", "Lichens", "Mamals", "Plants", "Reptiles" }));
+        cmbGroup.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Amphibians", "Birds", "Fish", "Fungi", "Invertebrates", "Lichens", "Mamals", "Plants", "Reptiles" }));
         cmbGroup.setName("cmbGroup"); // NOI18N
         cmbGroup.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -658,14 +658,14 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
         jLabel15.setName("jLabel15"); // NOI18N
 
-        cmbUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "i", "p", "adults", "subadults", "cmales", "males", "shoots", "tufts", "fstems", "localities", "colonies", "logs", "trees", "stones", "length", "grids1x1", "grids5x5", "grids10x10" }));
+        cmbUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "i", "p", "adults", "subadults", "cmales", "males", "shoots", "tufts", "fstems", "localities", "colonies", "logs", "trees", "stones", "length", "grids1x1", "grids5x5", "grids10x10" }));
         cmbUnit.setName("cmbUnit"); // NOI18N
 
         jLabel16.setIcon(resourceMap.getIcon("jLabel16.icon")); // NOI18N
         jLabel16.setText(resourceMap.getString("jLabel16.text")); // NOI18N
         jLabel16.setName("jLabel16"); // NOI18N
 
-        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "Common", "Rare", "Very Rare" }));
+        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Common", "Rare", "Very Rare" }));
         cmbCategory.setName("cmbCategory"); // NOI18N
 
         jLabel7.setName("jLabel7"); // NOI18N
@@ -971,12 +971,12 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
      * @return
      */
     private boolean isSizeOK(String maxArea, String minArea) {
-        boolean sizeOK=true;
-        try{
+        boolean sizeOK = true;
+        try {
             if (maxArea != null && !(("").equals(maxArea)) && minArea != null && !(("").equals(minArea))) {
                 int intMaxArea = Integer.parseInt(maxArea);
                 int intMinArea = Integer.parseInt(minArea);
-                if (intMinArea >intMaxArea) {
+                if (intMinArea > intMaxArea) {
                     sizeOK = false;
                 }
             }
@@ -990,7 +990,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
 
-        if (this.txtName.getText() != null && !("").equals(this.txtName.getText()) && this.txtName.getText().length() >128) {
+        if (this.txtName.getText() != null && !("").equals(this.txtName.getText()) && this.txtName.getText().length() > 128) {
            EditorOtherSpecies.log.error("The name of the other species is too long, more than 256 characters.");
            javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).");
         } else if (this.cmbGroup.getSelectedItem().equals("-")) {

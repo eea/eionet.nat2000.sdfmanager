@@ -74,14 +74,14 @@ public class SDF_MysqlDatabase {
             try {
 
                //dataBase exist??
-                String schemaFileName ="CreateSDFSchema.sql";
+                String schemaFileName = "CreateSDFSchema.sql";
                 String sqlDBUser = "select * from mysql.user where user='sa'";
                 stDBUser = con.createStatement();
 
                 rsDBEXist = stDBUser.executeQuery(sqlDBUser);
                 if (rsDBEXist.next()) {
                     SDF_MysqlDatabase.log.info("User=sa, already exist");
-                    schemaFileName ="CreateSDFOnlySchema.sql";
+                    schemaFileName = "CreateSDFOnlySchema.sql";
                 }
 
                 String sqlDBExist = "SELECT SCHEMA_NAME as name FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'natura2000'";
@@ -101,7 +101,7 @@ public class SDF_MysqlDatabase {
                             Statement st = con.createStatement();
                             st.executeUpdate(sql);
                             SDF_MysqlDatabase.log.info("Recreate Schema");
-                            msgError = createMySQLDB (con, schemaFileName);
+                            msgError = createMySQLDB(con, schemaFileName);
                             String msgErrorPopulate = populateRefTables(con);
                             if (msgErrorPopulate != null) {
                                msgError = msgError + "\n" + msgErrorPopulate;
@@ -181,8 +181,7 @@ public class SDF_MysqlDatabase {
                     }
 
                 } else {
-
-                    msgError = createMySQLDB (con, schemaFileName);
+                    msgError = createMySQLDB(con, schemaFileName);
                     String msgErrorPopulate = populateRefTables(con);
                     if (msgErrorPopulate != null) {
                        msgError = msgError + "\n" + msgErrorPopulate;
@@ -290,110 +289,110 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String createMySQLDB (Connection con, String schemaFileName) throws SQLException {
-      boolean mySQLDB = false;
-      String msgErrorCreate = null;
-      Statement st = null;
-      Statement st2 = null;
-      Statement stAlter = null;
-      Statement stInsert = null;
-      try {
-          SDF_MysqlDatabase.log.info("Creating Schema Data Base");
+    private static String createMySQLDB(Connection con, String schemaFileName) throws SQLException {
+        boolean mySQLDB = false;
+        String msgErrorCreate = null;
+        Statement st = null;
+        Statement st2 = null;
+        Statement stAlter = null;
+        Statement stInsert = null;
+        try {
+            SDF_MysqlDatabase.log.info("Creating Schema Data Base");
 
-          FileInputStream fstreamSchema = openScriptFile(schemaFileName);
-          //FileInputStream fstreamSchema = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + schemaFileName);
-          InputStreamReader inSchema = new InputStreamReader(fstreamSchema);
-          BufferedReader brSchema = new BufferedReader(inSchema);
-          String strLineSchema ;
-          st = con.createStatement();
-          //Read File Line By Line
-          while ((strLineSchema = brSchema.readLine()) != null) {
-              st.executeUpdate(strLineSchema);
-          }
-          //Close the input stream
-          inSchema.close();
+            FileInputStream fstreamSchema = openScriptFile(schemaFileName);
+            //FileInputStream fstreamSchema = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + schemaFileName);
+            InputStreamReader inSchema = new InputStreamReader(fstreamSchema);
+            BufferedReader brSchema = new BufferedReader(inSchema);
+            String strLineSchema;
+            st = con.createStatement();
+            //Read File Line By Line
+            while ((strLineSchema = brSchema.readLine()) != null) {
+                st.executeUpdate(strLineSchema);
+            }
+            //Close the input stream
+            inSchema.close();
 
-          // Open the file that is the first
-          // Create tables in Data Base
-          SDF_MysqlDatabase.log.info("Creating tables in Data Base");
-          FileInputStream fstream = openScriptFile("CreateMySqlTables.sql");
-          //FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "CreateMySqlTables.sql");
+            // Open the file that is the first
+            // Create tables in Data Base
+            SDF_MysqlDatabase.log.info("Creating tables in Data Base");
+            FileInputStream fstream = openScriptFile("CreateMySqlTables.sql");
+            //FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "CreateMySqlTables.sql");
 
-          InputStreamReader in = new InputStreamReader(fstream, "UTF-8");
-          BufferedReader br = new BufferedReader(in);
-          String strLine ;
-          st2 = con.createStatement();
-          //Read File Line By Line
-          while ((strLine = br.readLine()) != null) {
-              st2.executeUpdate(strLine);
-          }
-          //Close the input stream
-          in.close();
+            InputStreamReader in = new InputStreamReader(fstream, "UTF-8");
+            BufferedReader br = new BufferedReader(in);
+            String strLine;
+            st2 = con.createStatement();
+            //Read File Line By Line
+            while ((strLine = br.readLine()) != null) {
+                st2.executeUpdate(strLine);
+            }
+            //Close the input stream
+            in.close();
 
-          //Populate data base
-          SDF_MysqlDatabase.log.info("Populating tables");
-          File dir = new File(getScriptPath("populateDB"));
-          //File dir = new File(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB");
+            //Populate data base
+            SDF_MysqlDatabase.log.info("Populating tables");
+            File dir = new File(getScriptPath("populateDB"));
+            //File dir = new File(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB");
 
-          // The list of files can also be retrieved as File objects
-          File[] files = dir.listFiles();
+            // The list of files can also be retrieved as File objects
+            File[] files = dir.listFiles();
 
-            // This filter only returns directories
-          FileFilter fileFilter = new FileFilter() {
-              public boolean accept(File file) {
-                  return !file.isDirectory();
-              }
-          };
-          files = dir.listFiles(fileFilter);
-          if (files == null) {
-             // Either dir does not exist or is not a directory
-          } else {
-              Comparator<File> cmpFunc = new Comparator<File>() {
-                  public int compare(File f1, File f2) {
-                      return f1.getPath().compareToIgnoreCase(f2.getPath());
-                  }
-              };
-              Arrays.sort(files, cmpFunc);
-              for (int i = 0; i < files.length; i++) {
-
-               // Get filename of file or directory
-                File filename = files[i];
-                SDF_MysqlDatabase.log.debug("Loading: " + filename);
-                FileInputStream fsInsert = new FileInputStream(filename);
-
-                InputStreamReader inInsert = new InputStreamReader(fsInsert, "UTF-8");
-
-                BufferedReader brInsert = new BufferedReader(inInsert);
-                String strLineInsert;
-                stInsert = con.createStatement();
-                //Read File Line By Line
-                while ((strLineInsert = brInsert.readLine()) != null) {
-                    stInsert.executeUpdate(strLineInsert);
+              // This filter only returns directories
+            FileFilter fileFilter = new FileFilter() {
+                public boolean accept(File file) {
+                    return !file.isDirectory();
                 }
-               //Close the input stream
-               inInsert.close();
+            };
+            files = dir.listFiles(fileFilter);
+            if (files == null) {
+               // Either dir does not exist or is not a directory
+            } else {
+                Comparator<File> cmpFunc = new Comparator<File>() {
+                    public int compare(File f1, File f2) {
+                        return f1.getPath().compareToIgnoreCase(f2.getPath());
+                    }
+                };
+                Arrays.sort(files, cmpFunc);
+                for (int i = 0; i < files.length; i++) {
 
-             }
-         }
-          mySQLDB = true;
-      } catch (SQLException e) {
-          msgErrorCreate ="An error has been produced in database";
-          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
-      } catch (Exception e) {
-          msgErrorCreate ="A general error has been produced";
-          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
-      } finally {
-          if (st != null) {
-             st.close();
-          }
-          if (st2 != null) {
-             st2.close();
-          }
-          if (stInsert != null) {
-             stInsert.close();
-          }
-          return msgErrorCreate;
-      }
+                    // Get filename of file or directory
+                    File filename = files[i];
+                    SDF_MysqlDatabase.log.debug("Loading: " + filename);
+                    FileInputStream fsInsert = new FileInputStream(filename);
+
+                    InputStreamReader inInsert = new InputStreamReader(fsInsert, "UTF-8");
+
+                    BufferedReader brInsert = new BufferedReader(inInsert);
+                    String strLineInsert;
+                    stInsert = con.createStatement();
+                    //Read File Line By Line
+                    while ((strLineInsert = brInsert.readLine()) != null) {
+                        stInsert.executeUpdate(strLineInsert);
+                    }
+                    //Close the input stream
+                    inInsert.close();
+
+                }
+            }
+            mySQLDB = true;
+        } catch (SQLException e) {
+            msgErrorCreate = "An error has been produced in database";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
+            msgErrorCreate = "A general error has been produced";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+            if (st != null) {
+               st.close();
+            }
+            if (st2 != null) {
+               st2.close();
+            }
+            if (stInsert != null) {
+               stInsert.close();
+            }
+            return msgErrorCreate;
+        }
 
 
     }
@@ -413,7 +412,7 @@ public class SDF_MysqlDatabase {
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
               BufferedReader brAlter = new BufferedReader(inAlter);
-              String strLineAlter ;
+              String strLineAlter;
               st = con.createStatement();
               //Read File Line By Line
               while ((strLineAlter = brAlter.readLine()) != null) {
@@ -422,10 +421,10 @@ public class SDF_MysqlDatabase {
               inAlter.close();
 
         } catch (SQLException e) {
-          msgErrorCreate ="alteColumnDatatype.sql:::An error has been produced in database";
+          msgErrorCreate = "alteColumnDatatype.sql:::An error has been produced in database";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-          msgErrorCreate ="alteColumnDatatype.sql:A general error has been produced";
+          msgErrorCreate = "alteColumnDatatype.sql:A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
           if (st != null) {
@@ -522,7 +521,7 @@ public class SDF_MysqlDatabase {
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter);
               BufferedReader brAlter = new BufferedReader(inAlter);
-              String strLineAlter ;
+              String strLineAlter;
               st = con.createStatement();
               //Read File Line By Line
               String sqlAlter = "ALTER TABLE `natura2000`.`ref_birds` ADD COLUMN `REF_BIRDS_CODE_NEW` VARCHAR(1) NULL  AFTER `REF_BIRDS_ANNEXIIIPB` , ADD COLUMN `REF_BIRDS_ALT_SCIENTIFIC_NAME` VARCHAR(1024) NULL  AFTER `REF_BIRDS_CODE_NEW` ;";
@@ -533,10 +532,10 @@ public class SDF_MysqlDatabase {
 
 
         } catch (SQLException e) {
-          msgErrorCreate ="Alter_Ref_Birds_table.sql:::An error has been produced in database";
+          msgErrorCreate = "Alter_Ref_Birds_table.sql:::An error has been produced in database";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
       } catch (Exception e) {
-          msgErrorCreate ="Alter_Ref_Birds_table.sql::A general error has been produced";
+          msgErrorCreate = "Alter_Ref_Birds_table.sql::A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
       } finally {
           if (st != null) {
@@ -564,7 +563,7 @@ public class SDF_MysqlDatabase {
 
               InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
               BufferedReader brInsert = new BufferedReader(inInsert);
-              String strLineInsert ;
+              String strLineInsert;
               st = con.createStatement();
               //Read File Line By Line
               while ((strLineInsert = brInsert.readLine()) != null) {
@@ -575,10 +574,10 @@ public class SDF_MysqlDatabase {
               inInsert.close();
 
         } catch (SQLException e) {
-          msgErrorCreate ="insert_birds_new.sql:::An error has been produced in database";
+          msgErrorCreate = "insert_birds_new.sql:::An error has been produced in database";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-          msgErrorCreate ="insert_birds_new.sql::A general error has been produced";
+          msgErrorCreate = "insert_birds_new.sql::A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
       } finally {
           if (st != null) {
@@ -605,10 +604,10 @@ public class SDF_MysqlDatabase {
               String sqlAlter = "ALTER TABLE `natura2000`.`habitat` ADD COLUMN `HABITAT_COVER_HA` DOUBLE NULL;";
               st.executeUpdate(sqlAlter);
         } catch (SQLException e) {
-          msgErrorCreate ="alterHabitat:::An error has been produced in database";
+          msgErrorCreate = "alterHabitat:::An error has been produced in database";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-          msgErrorCreate ="alterHabitat::A general error has been produced";
+          msgErrorCreate = "alterHabitat::A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
           if (st != null) {
@@ -654,7 +653,7 @@ public class SDF_MysqlDatabase {
 
               InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
               BufferedReader brAlter = new BufferedReader(inAlter);
-              String strLineAlter ;
+              String strLineAlter;
               st = con.createStatement();
               //Read File Line By Line
               while ((strLineAlter = brAlter.readLine()) != null) {
@@ -663,10 +662,10 @@ public class SDF_MysqlDatabase {
               inAlter.close();
 
         } catch (SQLException e) {
-          msgErrorCreate ="CreateRefTables.sqll:::An error has been produced in database";
+          msgErrorCreate = "CreateRefTables.sqll:::An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
       } catch (Exception e) {
-          msgErrorCreate ="CreateRefTables.sql::A general error has been produced";
+          msgErrorCreate = "CreateRefTables.sql::A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
       } finally {
           if (st != null) {
@@ -729,10 +728,10 @@ public class SDF_MysqlDatabase {
 
 
         } catch (SQLException e) {
-          msgErrorCreate ="insert_birds_new.sql:::An error has been produced in database";
+          msgErrorCreate = "insert_birds_new.sql:::An error has been produced in database";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-          msgErrorCreate ="insert_birds_new.sql::A general error has been produced";
+          msgErrorCreate = "insert_birds_new.sql::A general error has been produced";
           SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             SDF_MysqlDatabase.log.info("st==" + st);
@@ -778,7 +777,7 @@ public class SDF_MysqlDatabase {
 
             InputStreamReader inAlter = new InputStreamReader(fstreamAlter, "UTF-8");
             BufferedReader brAlter = new BufferedReader(inAlter);
-            String strLineAlter ;
+            String strLineAlter;
             st = con.createStatement();
             //Read File Line By Line
             while ((strLineAlter = brAlter.readLine()) != null) {
@@ -787,10 +786,10 @@ public class SDF_MysqlDatabase {
             inAlter.close();
 
        } catch (SQLException e) {
-           msgErrorCreate ="ReleaseDBUpdates.sql:::An error has been produced in database";
+           msgErrorCreate = "ReleaseDBUpdates.sql:::An error has been produced in database";
            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-           msgErrorCreate ="ReleaseDBUpdates.sql::A general error has been produced";
+           msgErrorCreate = "ReleaseDBUpdates.sql::A general error has been produced";
            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } finally {
            if (st != null) {
@@ -810,10 +809,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             st.executeUpdate("insert ignore into natura2000.ReleaseDBUpdates values(1,'3','Version3','N')");
         } catch (SQLException e) {
-            msgErrorCreate ="insert_ReleaseDBUpdates_version3:An error has been produced in database";
+            msgErrorCreate = "insert_ReleaseDBUpdates_version3:An error has been produced in database";
             SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-            msgErrorCreate ="insert_ReleaseDBUpdates_version3:A general error has been produced";
+            msgErrorCreate = "insert_ReleaseDBUpdates_version3:A general error has been produced";
             SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
@@ -833,10 +832,10 @@ public class SDF_MysqlDatabase {
              String sqlAlter = "ALTER TABLE `natura2000`.`habitat` MODIFY COLUMN `HABITAT_DATA_QUALITY` varchar(2);";
              st.executeUpdate(sqlAlter);
        } catch (SQLException e) {
-         msgErrorCreate ="alterHabitatDataQuality:An error has been produced in database";
+         msgErrorCreate = "alterHabitatDataQuality:An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-         msgErrorCreate ="alterHabitatDataQuality:A general error has been produced";
+         msgErrorCreate = "alterHabitatDataQuality:A general error has been produced";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } finally {
          if (st != null) {
@@ -859,7 +858,7 @@ public class SDF_MysqlDatabase {
 
             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
             BufferedReader brInsert = new BufferedReader(inInsert);
-            String strLineInsert ;
+            String strLineInsert;
             st = con.createStatement();
             //Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
@@ -870,10 +869,10 @@ public class SDF_MysqlDatabase {
             inInsert.close();
 
        } catch (SQLException e) {
-         msgErrorCreate ="insert_RefDataQual_version3.sql:An error has been produced in database";
+         msgErrorCreate = "insert_RefDataQual_version3.sql:An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-         msgErrorCreate ="insert_RefDataQual_version3:A general error has been produced";
+         msgErrorCreate = "insert_RefDataQual_version3:A general error has been produced";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
      } finally {
          if (st != null) {
@@ -896,7 +895,7 @@ public class SDF_MysqlDatabase {
 
             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
             BufferedReader brInsert = new BufferedReader(inInsert);
-            String strLineInsert ;
+            String strLineInsert;
             st = con.createStatement();
             //Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
@@ -907,10 +906,10 @@ public class SDF_MysqlDatabase {
             inInsert.close();
 
        } catch (SQLException e) {
-         msgErrorCreate ="UpdateRefHabitats.sql:An error has been produced in database";
+         msgErrorCreate = "UpdateRefHabitats.sql:An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-         msgErrorCreate ="UpdateRefHabitats:A general error has been produced";
+         msgErrorCreate = "UpdateRefHabitats:A general error has been produced";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
      } finally {
          if (st != null) {
@@ -930,10 +929,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             st.executeUpdate("update natura2000.ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = 3");
        } catch (SQLException e) {
-         msgErrorCreate ="UpdateVersion3Done: An error has been produced in database";
+         msgErrorCreate = "UpdateVersion3Done: An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-         msgErrorCreate ="UpdateVersion3Done general error has been produced";
+         msgErrorCreate = "UpdateVersion3Done general error has been produced";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
      } finally {
          if (st != null) {
@@ -982,7 +981,7 @@ public class SDF_MysqlDatabase {
 
             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
             BufferedReader brInsert = new BufferedReader(inInsert);
-            String strLineInsert ;
+            String strLineInsert;
             st = con.createStatement();
             //Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
@@ -993,10 +992,10 @@ public class SDF_MysqlDatabase {
             inInsert.close();
 
        } catch (SQLException e) {
-            msgErrorCreate ="UpdateRefHabitats.sql:An error has been produced in database";
+            msgErrorCreate = "UpdateRefHabitats.sql:An error has been produced in database";
             SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
-            msgErrorCreate ="UpdateRefHabitats:A general error has been produced";
+            msgErrorCreate = "UpdateRefHabitats:A general error has been produced";
             SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {

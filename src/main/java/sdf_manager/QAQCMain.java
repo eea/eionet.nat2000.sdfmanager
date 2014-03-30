@@ -35,7 +35,7 @@ class QAQCWorker extends SwingWorker<Boolean, Void> {
      *
      * @param qaqc
      */
-    public void setQAQC (QAQCMain qaqc) {
+    public void setQAQC(QAQCMain qaqc) {
         this.qaqc = qaqc;
     }
 
@@ -104,7 +104,7 @@ public class QAQCMain extends javax.swing.JFrame {
 
         int crow = this.tabDisplaySites.getRowCount();
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-        for (int i = crow -1; i >= 0; i--) {
+        for (int i = crow - 1; i >= 0; i--) {
             model.removeRow(i);
         }
         tabDisplaySites.repaint();
@@ -135,12 +135,12 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
 
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Species Name"};
+        Object[] columnNames = {"Site", "Species Name"};
         model.setColumnIdentifiers(columnNames);
 
         updateNumResults(i);
@@ -162,12 +162,12 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
 
-        Object[] columnNames = {"Site","Species Code"};
+        Object[] columnNames = {"Site", "Species Code"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -188,11 +188,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Birds Name"};
+        Object[] columnNames = {"Site", "Birds Name"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -213,11 +213,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Birds Code"};
+        Object[] columnNames = {"Site", "Birds Code"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -238,11 +238,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Other Species Name"};
+        Object[] columnNames = {"Site", "Other Species Name"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
 
@@ -266,12 +266,12 @@ public class QAQCMain extends javax.swing.JFrame {
         while (itr.hasNext()) {
 
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
 
-        Object[] columnNames = {"Site","Other Species Code"};
+        Object[] columnNames = {"Site", "Other Species Code"};
         model.setColumnIdentifiers(columnNames);
 
         updateNumResults(i);
@@ -293,11 +293,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Habitat Type"};
+        Object[] columnNames = {"Site", "Habitat Type"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -317,11 +317,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Habitat Class"};
+        Object[] columnNames = {"Site", "Habitat Class"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -341,11 +341,11 @@ public class QAQCMain extends javax.swing.JFrame {
         int i = 0;
         while (itr.hasNext()) {
             Object[] tabRes = (Object[]) itr.next();
-            Object[] tuple = {tabRes[1],tabRes[0]};
+            Object[] tuple = {tabRes[1], tabRes[0]};
             model.insertRow(i, tuple);
             i++;
         }
-        Object[] columnNames = {"Site","Regions"};
+        Object[] columnNames = {"Site", "Regions"};
         model.setColumnIdentifiers(columnNames);
         updateNumResults(i);
     }
@@ -404,7 +404,7 @@ public class QAQCMain extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.setName("jPanel1"); // NOI18N
 
-        cmbCriteria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "Unknown species names (3.2)", "Unknown species codes (3.2)", "Unknown birds names (3.2)", "Unknown birds codes (3.2)", "Unknown otherspecies names (3.3)", "Unknown other species codes (3.3)", "Unknown habitat types", "Unknown habitat classes", "Unknown NUTS regions" }));
+        cmbCriteria.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Unknown species names (3.2)", "Unknown species codes (3.2)", "Unknown birds names (3.2)", "Unknown birds codes (3.2)", "Unknown otherspecies names (3.3)", "Unknown other species codes (3.3)", "Unknown habitat types", "Unknown habitat classes", "Unknown NUTS regions" }));
         cmbCriteria.setName("cmbCriteria"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext().getResourceMap(QAQCMain.class);
@@ -523,8 +523,8 @@ public class QAQCMain extends javax.swing.JFrame {
             QAQCMain.log.error("No site selected");
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
         } else {
-            SDFEditor editor = new SDFEditor(this,"edit");
-            editor.loadSite(sitecode,"");
+            SDFEditor editor = new SDFEditor(this, "edit");
+            editor.loadSite(sitecode, "");
             editor.setVisible(true);
         }
     } //GEN-LAST:event_btnEditActionPerformed

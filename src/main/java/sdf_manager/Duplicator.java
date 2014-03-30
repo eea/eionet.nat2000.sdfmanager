@@ -140,7 +140,7 @@ public class Duplicator {
             nSb.setBiogeo(sb.getBiogeo());
             nSb.setBiogeoPercent(sb.getBiogeoPercent());
             nSb.setSite(outSite);
-            SiteBiogeoId id= new SiteBiogeoId(outSite.getSiteCode(),nSb.getBiogeo().getBiogeoId());
+            SiteBiogeoId id = new SiteBiogeoId(outSite.getSiteCode(), nSb.getBiogeo().getBiogeoId());
             nSb.setId(id);
             outSite.getSiteBiogeos().add(nSb);
             //saveAndReloadObj(outSite);
@@ -148,7 +148,7 @@ public class Duplicator {
         Set habitats = inSite.getHabitats();
         itr = habitats.iterator();
         while (itr.hasNext()) {
-            Habitat h = ((Habitat)itr.next());
+            Habitat h = ((Habitat) itr.next());
             Habitat nH = new Habitat();
             nH.setHabitatCaves(h.getHabitatCaves());
             nH.setHabitatCode(h.getHabitatCode());
@@ -237,7 +237,7 @@ public class Duplicator {
             SiteOwnership nO = new SiteOwnership();
             nO.setOwnership(o.getOwnership());
             nO.setOwnershipPercent(o.getOwnershipPercent());
-            SiteOwnershipId id = new SiteOwnershipId(o.getOwnership().getOwnershipId(),outSite.getSiteCode());
+            SiteOwnershipId id = new SiteOwnershipId(o.getOwnership().getOwnershipId(), outSite.getSiteCode());
             nO.setId(id);
             outSite.getSiteOwnerships().add(nO);
             //saveAndReloadObj(outSite);

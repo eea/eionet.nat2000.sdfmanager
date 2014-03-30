@@ -49,7 +49,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
 
        while (itr.hasNext()) {
            Object obj = (Object) itr.next();
-           if (("").equals((String)obj)) {
+           if (("").equals((String) obj)) {
                continue;
            }
            cmbCode.insertItemAt(obj, i);
@@ -91,13 +91,13 @@ public class EditorHabitatClass extends javax.swing.JFrame {
    private String  getHabClassDesc(String habClassCode) {
        EditorHabitatClass.log.info("Get the description of the habitat Class. ::" + habClassCode);
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String habClassDesc="";
+       String habClassDesc = "";
        String hql;
-       hql = "select distinct hC.refHabClassesDescrEn from RefHabClasses hC where hC.refHabClassesCode ='" + habClassCode+"'";
+       hql = "select distinct hC.refHabClassesDescrEn from RefHabClasses hC where hC.refHabClassesCode ='" + habClassCode + "'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        if (itr.hasNext()) {
-           habClassDesc = (String)itr.next();
+           habClassDesc = (String) itr.next();
        }
        EditorHabitatClass.log.info("The description of the habitat Class. ::" + habClassDesc);
        return habClassDesc;
@@ -109,7 +109,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
    private boolean saveHabitatClass() {
 
         boolean saveOK = true;
-        String code = (String)cmbCode.getSelectedItem();
+        String code = (String) cmbCode.getSelectedItem();
         EditorHabitatClass.log.info("Saving the habitat Class. ::" + code);
         String desc = this.txtName.getText();
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
@@ -122,7 +122,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
             /*we're editing an existing habitat*/
             saveOK = this.parent.saveHabitatClass(hC,this.index);
         } else {
-            if (this.parent.habitatClassExists((String)cmbCode.getSelectedItem())) {
+            if (this.parent.habitatClassExists((String) cmbCode.getSelectedItem())) {
                 EditorHabitatClass.log.error("Habitat class is already declared.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Habitat class is already declared.");
                 saveOK = false;
@@ -341,7 +341,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
 
-        if (((String)cmbCode.getSelectedItem()).equals("")) {
+        if (((String) cmbCode.getSelectedItem()).equals("")) {
             EditorHabitatClass.log.error("No Habitat Class selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No Habitat Class selected.");
         } else if (txtCover.getText().equals("")) {

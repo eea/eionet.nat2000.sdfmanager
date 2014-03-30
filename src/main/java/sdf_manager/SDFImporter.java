@@ -38,13 +38,13 @@ class ImporterWorker extends SwingWorker<Boolean, Void> {
         public void setDialog(JDialog dlg) {
             this.dlg = dlg;
         }
-        public void setImporter (Importer importer) {
+        public void setImporter(Importer importer) {
             this.importer = importer;
         }
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }
-       @Override
+        @Override
         public void done() {
             dlg.setVisible(false);
             dlg.dispose();
@@ -54,13 +54,13 @@ class ImporterWorker extends SwingWorker<Boolean, Void> {
 public class SDFImporter extends javax.swing.JFrame implements Logger {
 
 
-     /** Creates new form SDFExporter */
+     /** Creates new form SDFExporter. */
     private String dirPath = "";
     /**
      *
      */
     private String fileName = "";
-    /** Creates new form SDFImporter */
+    /** Creates new form SDFImporter. */
     public SDFImporter() {
         initComponents();
         this.addWindowListener(null);
@@ -82,7 +82,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
      */
     public void log(String logMsg) {
         this.txtLogger.append(logMsg + "\n");
-        this.txtLogger.setCaretPosition( this.txtLogger.getDocument().getLength());
+        this.txtLogger.setCaretPosition(this.txtLogger.getDocument().getLength());
     }
 
     /**
@@ -285,7 +285,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel6.border.title"))); // NOI18N
         jPanel6.setName("jPanel6"); // NOI18N
 
-        cmbLang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ISO-8859-1", "ISO-8859-2", "UTF-8", "US-ASCII", "UTF-16BE", "UTF-16LE", "UTF-16" }));
+        cmbLang.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+             "ISO-8859-1", "ISO-8859-2", "UTF-8", "US-ASCII", "UTF-16BE", "UTF-16LE", "UTF-16" }));
         cmbLang.setName("cmbLang"); // NOI18N
 
         txtSiteCode.setText(resourceMap.getString("txtSiteCode.text")); // NOI18N
@@ -419,7 +420,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = chooser.getSelectedFile().getName();
-            this.txtPath.setText(chooser.getSelectedFile().getAbsolutePath()) ;
+            this.txtPath.setText(chooser.getSelectedFile().getAbsolutePath());
         } else {
               //this.dManager.writeLog("No folder selected.");
         }
@@ -428,11 +429,11 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
 
     @Action
     public void processDatabase() {
-        try{
+        try {
            String encoding = (String) cmbLang.getModel().getSelectedItem();
            File dbFile = new File(this.txtPath.getText());
            if ((!dbFile.exists())) {
-                javax.swing.JOptionPane.showMessageDialog(this,"Please select a file for import.");
+                javax.swing.JOptionPane.showMessageDialog(this, "Please select a file for import.");
                 return;
             }
            String logFile;
@@ -442,22 +443,22 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                logFile = dbFile.getParent() + System.getProperty("file.separator") + "log.txt";
            }
            Importer importer = null;
-           String accessVersion="2003";
+           String accessVersion = "2003";
            if (this.radioXMl.isSelected()) {
                if (!dbFile.getName().toLowerCase().endsWith("xml")) {
-                  javax.swing.JOptionPane.showMessageDialog(this,"The file must be an XML file");
+                  javax.swing.JOptionPane.showMessageDialog(this, "The file must be an XML file");
                   return;
                } else {
                    if (this.chbImportOneSite.isSelected()) {
                        if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
-                           importer = new ImporterOneSiteXML(this,encoding,logFile,this.txtPath.getText(), this.txtSiteCode.getText());
+                           importer = new ImporterOneSiteXML(this, encoding, logFile, this.txtPath.getText(), this.txtSiteCode.getText());
                        } else {
-                          javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
+                          javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a site code to import.");
                           return;
                        }
 
                    } else {
-                      importer = new ImporterXMLStax(this,encoding,logFile,this.txtPath.getText());
+                      importer = new ImporterXMLStax(this, encoding, logFile, this.txtPath.getText());
 
                    }
 
@@ -466,47 +467,47 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
            } else if (this.radioOldMDB.isSelected()) {
                if (this.chbImportOneSite.isSelected()) {
                    if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
-                       importer = new ImporterSiteMDB(this,encoding,logFile,"2003", this.txtSiteCode.getText());
+                       importer = new ImporterSiteMDB(this, encoding, logFile, "2003", this.txtSiteCode.getText());
                    } else {
-                      javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
+                      javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a site code to import.");
                       return;
                    }
                } else {
-                   importer = new ImporterMDB(this,encoding,logFile,"2003");
+                   importer = new ImporterMDB(this, encoding, logFile, "2003");
                }
            } else if (this.radioBold2007.isSelected()) {
                if (this.chbImportOneSite.isSelected()) {
                    if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
-                       importer = new ImporterSiteMDB(this,encoding,logFile,"2007", this.txtSiteCode.getText());
+                       importer = new ImporterSiteMDB(this, encoding, logFile, "2007", this.txtSiteCode.getText());
                    } else {
-                      javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
+                      javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a site code to import.");
                       return;
                    }
                } else {
-                  importer = new ImporterMDB(this,encoding,logFile,"2007");
+                  importer = new ImporterMDB(this, encoding, logFile, "2007");
                }
 
            } else if (this.radioNewMDB.isSelected()) {
                if (this.chbImportOneSite.isSelected()) {
                    if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
-                       importer = new ImporterSiteNewMDB(this,encoding,logFile,"2003", this.txtSiteCode.getText());
+                       importer = new ImporterSiteNewMDB(this, encoding, logFile, "2003", this.txtSiteCode.getText());
                    } else {
-                      javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
+                      javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a site code to import.");
                       return;
                    }
                } else {
-                  importer = new ImporterNewMDB(this,encoding,logFile,"2003");
+                  importer = new ImporterNewMDB(this, encoding, logFile, "2003");
                }
            } else if (this.radioNew2007.isSelected()) {
                if (this.chbImportOneSite.isSelected()) {
                    if (this.txtSiteCode.getText() != null && !(("").equals(this.txtSiteCode.getText()))) {
-                       importer = new ImporterSiteNewMDB(this,encoding,logFile,"2007", this.txtSiteCode.getText());
+                       importer = new ImporterSiteNewMDB(this, encoding, logFile, "2007", this.txtSiteCode.getText());
                    } else {
-                      javax.swing.JOptionPane.showMessageDialog(this,"Please, provide a site code to import.");
+                      javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a site code to import.");
                       return;
                    }
                } else {
-                  importer = new ImporterNewMDB(this,encoding,logFile,"2007");
+                  importer = new ImporterNewMDB(this, encoding, logFile, "2007");
                }
            }
 

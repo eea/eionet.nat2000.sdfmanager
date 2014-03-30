@@ -90,7 +90,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
      private String getRelationDescription(String desigCode) {
          String desigName = "";
          EditorInternationalRelation.log.info("Get the description of the relation.:::" + desigCode);
-         try{
+         try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsCode from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
@@ -269,7 +269,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane2.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "+", "-", "*", "/" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"=", "+", "-", "*", "/" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
@@ -421,7 +421,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         } else if (txtName.getText().equals("")) {
             EditorInternationalRelation.log.error("No name for the relation is provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a name for the site.");
-        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256) {
+        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length() > 256) {
             EditorInternationalRelation.log.error("The site Name is too long, more than 256 characters.:::" + txtName.getText() );
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid site name (256 characters).");
         } else if (txtCover.getText().equals("")) {

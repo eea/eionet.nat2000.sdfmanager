@@ -84,7 +84,7 @@ public class SDF_Util {
         boolean percentOK = true;
         try {
             double percent = (new Double(strPercent)).doubleValue();
-            if (percent >100) {
+            if (percent > 100) {
                 percentOK = false;
             }
             if (percent < 0) {
@@ -104,7 +104,7 @@ public class SDF_Util {
      * @param sitecode
      * @return
      */
-     public static boolean validateSite (Session session, String sitecode) {
+     public static boolean validateSite(Session session, String sitecode) {
         String hql = " from Site where siteCode='" + sitecode + "'";
         try {
             Query q = session.createQuery(hql);
@@ -129,7 +129,7 @@ public class SDF_Util {
       * @param importType
       * @return
       */
-     public static File copyToLogImportFile(HashMap sitesDB,String importType) {
+     public static File copyToLogImportFile(HashMap sitesDB, String importType) {
         File fileLog = null;
         try {
           Calendar cal = Calendar.getInstance();
@@ -143,17 +143,17 @@ public class SDF_Util {
 
           Set sitesSet = sitesDB.keySet();
 
-          Iterator it=sitesSet.iterator();
+          Iterator it = sitesSet.iterator();
           //logErrorFile.write(dateLine + ":  following sites are already stored in Data Base: " + System.getProperty("line.separator") );
           while(it.hasNext()) {
               String siteCode = (String) it.next();
               logErrorFile.write(dateLine + "The following nuts of the site ::" + siteCode + " don't belong to level 2." + System.getProperty("line.separator"));
 
-              ArrayList nutsList = (ArrayList)sitesDB.get(siteCode);
+              ArrayList nutsList = (ArrayList) sitesDB.get(siteCode);
               if (nutsList != null && !(nutsList.isEmpty())) {
 
-                for (int i = 0;i < nutsList.size();i++ ) {
-                    String nutCode = (String)nutsList.get(i);
+                for (int i = 0; i < nutsList.size(); i++) {
+                    String nutCode = (String) nutsList.get(i);
                     logErrorFile.write("           " + nutCode + System.getProperty("line.separator"));
                 }
 
@@ -178,7 +178,7 @@ public class SDF_Util {
       * @param importType
       * @return
       */
-     public static File copyToLogImportFileList(ArrayList sitesDB,String importType) {
+     public static File copyToLogImportFileList(ArrayList sitesDB, String importType) {
         File fileLog = null;
         try {
           Calendar cal = Calendar.getInstance();
@@ -192,9 +192,9 @@ public class SDF_Util {
 
           //Set sitesSet = sitesDB.entrySet();
 
-          Iterator it=sitesDB.iterator();
-          logErrorFile.write(dateLine + ": The following sites are already stored in Data Base: " + System.getProperty("line.separator") );
-          while(it.hasNext()) {
+          Iterator it = sitesDB.iterator();
+          logErrorFile.write(dateLine + ": The following sites are already stored in Data Base: " + System.getProperty("line.separator"));
+          while (it.hasNext()) {
               String siteCode = (String) it.next();
               logErrorFile.write("     " + siteCode + System.getProperty("line.separator"));
 
@@ -230,8 +230,8 @@ public class SDF_Util {
             String dateLine = sdfFormat.format(calendar.getTime());
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
-            while(itSite.hasNext()) {
-                String lineExport = (String)itSite.next();
+            while (itSite.hasNext()) {
+                String lineExport = (String) itSite.next();
                 logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }

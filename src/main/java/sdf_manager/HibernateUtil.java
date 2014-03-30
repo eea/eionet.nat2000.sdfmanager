@@ -28,12 +28,12 @@ public class HibernateUtil {
         try {
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database" + File.separator+"sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
             annotationConfig.setProperty("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
             annotationConfig.setProperty("hibernate.connection.driver_class","com.mysql.jdbc.Driver");
-            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host")+"/natura2000?autoReconnect=true" );
+            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true");
             annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("user"));
             annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("password"));
             annotationConfig.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");

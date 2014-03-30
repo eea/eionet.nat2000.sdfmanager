@@ -115,7 +115,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
       */
     private String getFileName() {
         String name;
-        name = "Site_" + this.siteCode+".pdf";
+        name = "Site_" + this.siteCode + ".pdf";
         return name;
     }
 
@@ -129,7 +129,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = getFileName();
-            this.txtPath.setText(this.dirPath+ System.getProperty("file.separator") + this.fileName);
+            this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
     }
 
@@ -148,21 +148,21 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         String formatDate = sdf.format(cal.getTime());
         String logFile;
         if (dbFile.getParent().equals("")) {
-           logFile = "generatePDFSiteLog_" + formatDate+".log";
+           logFile = "generatePDFSiteLog_" + formatDate + ".log";
         } else {
-           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
+           logFile = dbFile.getParent() + System.getProperty("file.separator") + "exportSiteLog_" + formatDate + ".log";
         }
        Exporter exporter = null;
-       exporter = new GenerateSitePDF(this,encoding,siteCode,this.dirPath);
-       boolean isOK = exporter.processDatabase(this.dirPath+ System.getProperty("file.separator") + dbFile.getName());
+       exporter = new GenerateSitePDF(this, encoding, siteCode, this.dirPath);
+       boolean isOK = exporter.processDatabase(this.dirPath + System.getProperty("file.separator") + dbFile.getName());
 
        if (isOK) {
           SDFExporterPDF.log.info("PDF file has been saved properly.");
-          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly","PDF",JOptionPane.INFORMATION_MESSAGE);
+          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly","PDF", JOptionPane.INFORMATION_MESSAGE);
           this.exit();
           return;
        } else {
-          JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "PDF",JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "PDF", JOptionPane.ERROR_MESSAGE);
           this.exit();
           return;
        }
@@ -203,7 +203,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
             Iterator itSite = exportErrorList.iterator();
             while (itSite.hasNext()) {
                 String lineExport = (String)itSite.next();
-                logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }
           }
@@ -229,13 +229,13 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
           Dimension mySize = getSize();
 
           if (parentSize.width > mySize.width) {
-            x = ((parentSize.width - mySize.width)/2) + topLeft.x;
+            x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
           } else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
-            y = ((parentSize.height - mySize.height)/2) + topLeft.y;
+            y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
           } else {
             y = topLeft.y;
           }

@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Properties;
 import javax.swing.JFrame;
@@ -145,7 +147,9 @@ public class SDF_MysqlDatabase {
                             //tabla ref species
                             String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
                             if (msgErrorPopulate != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null) {
-                              msgError = msgError + "\n" + msgErrorPopulate  + "\n" + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n" + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
+                              msgError = msgError + "\n" + msgErrorPopulate  + "\n"
+                                      + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n"
+                                      + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
                             }
                        }
                        if (isSpecCroatiaExist(con, stDBExist)) {
@@ -197,7 +201,9 @@ public class SDF_MysqlDatabase {
                         //tabla ref species
                         String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
                         if (msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null || msgErrorUpdateRefHabitats != null ||msgErrorUpdateVersion3Done != null) {
-                            msgError = msgError + "\n" + msgErrorPopulate  + "\n" + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n" + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
+                            msgError = msgError + "\n" + msgErrorPopulate  + "\n"
+                                    + msgErrorAlterHabitat  + "\n" + msgErrorAlterDataQual  + "\n"
+                                    + msgErrorUpdateRefHabitats  + "\n" + msgErrorUpdateVersion3Done;
                         }
                     }
                     if (isSpecCroatiaExist(con, stDBExist)) {
@@ -253,15 +259,15 @@ public class SDF_MysqlDatabase {
 
         //It's necessary to compare not only datatyp but alos the size of the column
 
-        String columnTypeVarchar= "VARCHAR";
-        int columnSizeVarchar= 512;
+        String columnTypeVarchar = "VARCHAR";
+        int columnSizeVarchar = 512;
         try {
               String sql = "SELECT SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF FROM natura2000.site";
               st = con.createStatement();
               ResultSet rs = st.executeQuery(sql);
               ResultSetMetaData rsmd = rs.getMetaData();
               int NumOfCol = rsmd.getColumnCount();
-              for (int i = 1;i <= NumOfCol;i++) {
+              for (int i = 1; i <= NumOfCol; i++) {
                   if ((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i) <= columnSizeVarchar) {
                       refSpeciesUpdated = false;
                   }
@@ -342,11 +348,17 @@ public class SDF_MysqlDatabase {
           if (files == null) {
              // Either dir does not exist or is not a directory
           } else {
+              Comparator<File> cmpFunc = new Comparator<File>() {
+                  public int compare(File f1, File f2) {
+                      return f1.getPath().compareToIgnoreCase(f2.getPath());
+                  }
+              };
+              Arrays.sort(files, cmpFunc);
               for (int i = 0; i < files.length; i++) {
 
                // Get filename of file or directory
                 File filename = files[i];
-                SDF_MysqlDatabase.log.debug("Loading:" + filename);
+                SDF_MysqlDatabase.log.debug("Loading: " + filename);
                 FileInputStream fsInsert = new FileInputStream(filename);
 
                 InputStreamReader inInsert = new InputStreamReader(fsInsert, "UTF-8");
@@ -693,7 +705,8 @@ public class SDF_MysqlDatabase {
           if (files == null) {
              // Either dir does not exist or is not a directory
           } else {
-              for (int i = 0; i<files.length; i++) {
+              Arrays.sort(files);
+              for (int i = 0; i < files.length; i++) {
 
                // Get filename of file or directory
                 File filename = files[i];
@@ -788,42 +801,27 @@ public class SDF_MysqlDatabase {
 
    }
 
-   private static String PopulateReleaseDBUpdates(Connection con) throws SQLException {
-       String msgErrorCreate = null;
-       Statement st = null;
+    private static String PopulateReleaseDBUpdates(Connection con) throws SQLException {
+        String msgErrorCreate = null;
+        Statement st = null;
 
-       try {
+        try {
             SDF_MysqlDatabase.log.info("populate ReleaseDBUpdates....");
-
-            FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "insert_ReleaseDBUpdates_version3.sql");
-            //FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "insert_ReleaseDBUpdates_version3.sql");
-
-             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
-             BufferedReader brInsert = new BufferedReader(inInsert);
-             String strLineInsert ;
-             st = con.createStatement();
-             //Read File Line By Line
-             while ((strLineInsert = brInsert.readLine()) != null) {
-                st.executeUpdate(strLineInsert);
-             }
-         //Close the input stream
-
-             inInsert.close();
-
-       } catch (SQLException e) {
-         msgErrorCreate ="insert_ReleaseDBUpdates_version3.sql:An error has been produced in database";
-         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
-       } catch (Exception e) {
-         msgErrorCreate ="insert_ReleaseDBUpdates_version3.sql:A general error has been produced";
-         SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
-     } finally {
-         if (st != null) {
-            st.close();
-         }
-         return msgErrorCreate;
-     }
-
-   }
+            st = con.createStatement();
+            st.executeUpdate("insert ignore into natura2000.ReleaseDBUpdates values(1,'3','Version3','N')");
+        } catch (SQLException e) {
+            msgErrorCreate ="insert_ReleaseDBUpdates_version3:An error has been produced in database";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
+            msgErrorCreate ="insert_ReleaseDBUpdates_version3:A general error has been produced";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            return msgErrorCreate;
+        }
+    }
 
    private static String alterHabitatQual(Connection con) throws SQLException {
        String msgErrorCreate = null;
@@ -929,24 +927,10 @@ public class SDF_MysqlDatabase {
 
        try {
             SDF_MysqlDatabase.log.info("Updating UpdateVersion3Done ...");
-
-            FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "UpdateVersion3Done_version3.sql");
-            //FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "UpdateVersion3Done_version3.sql");
-
-            InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
-            BufferedReader brInsert = new BufferedReader(inInsert);
-            String strLineInsert ;
             st = con.createStatement();
-            //Read File Line By Line
-            while ((strLineInsert = brInsert.readLine()) != null) {
-                st.executeUpdate(strLineInsert);
-            }
-         //Close the input stream
-
-            inInsert.close();
-
+            st.executeUpdate("update natura2000.ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = 3");
        } catch (SQLException e) {
-         msgErrorCreate ="UpdateVersion3Done.sql:An error has been produced in database";
+         msgErrorCreate ="UpdateVersion3Done: An error has been produced in database";
          SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
        } catch (Exception e) {
          msgErrorCreate ="UpdateVersion3Done general error has been produced";

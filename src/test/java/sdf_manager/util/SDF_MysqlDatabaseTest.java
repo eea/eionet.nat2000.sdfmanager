@@ -89,25 +89,25 @@ public class SDF_MysqlDatabaseTest {
         assertEquals(4 + 1, num);
 
         // Check that Alter_Ref_Birds_table.sql and insert_birds.sql are run
-        // 78 from insert_birds.sql have an alternative scientific name
+        // 78 from insert_birds.sql plus one from insert_birds_new.sql have an alternative scientific name
         rs = st.executeQuery("SELECT COUNT(*) FROM ref_birds WHERE REF_BIRDS_ALT_SCIENTIFIC_NAME != ''");
         rs.next();
         num = rs.getInt(1);
-        assertEquals(78, num);
+        assertEquals(78 + 1, num);
 
         // Check that the REF_BIRDS_CODE_NEW is up to date - i.e. insert_birds_new.sql has been run
         // birds A527 and A567 are being changed to 1 by insert_birds_new.sql
         rs = st.executeQuery("SELECT COUNT(*) FROM ref_birds WHERE REF_BIRDS_CODE_NEW='1' AND REF_BIRDS_CODE IN ('A527','A567')");
         rs.next();
         num = rs.getInt(1);
-        //assertEquals(2, num);
+        assertEquals(2, num);
         
         // Check that the REF_BIRDS_CODE_NEW is up to date - i.e. insert_birds_new.sql has been run
         // birds A261 and A276 are being changed to 0 by insert_birds_new.sql
         rs = st.executeQuery("SELECT COUNT(*) FROM ref_birds WHERE REF_BIRDS_CODE_NEW='0' AND REF_BIRDS_CODE IN ('A261','A276')");
         rs.next();
         num = rs.getInt(1);
-        //assertEquals(2, num);
+        assertEquals(2, num);
 
     }
 

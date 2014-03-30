@@ -1,1 +1,0 @@
-insert ignore into natura2000.ReleaseDBUpdates values(1,'3','Version3','N');

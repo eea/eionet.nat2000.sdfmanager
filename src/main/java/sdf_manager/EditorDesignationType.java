@@ -17,7 +17,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorDesignationType.class .getName());
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
     private SDFEditor parent;
     private boolean editing = false; //no cascaded actionPerformed
     private int index = -1; //in case of edit of existing mgmt body
@@ -35,7 +35,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
     }
 
     /**
-     * Load Designations to add a new deisgnation type to the site
+     * Load Designations to add a new deisgnation type to the site.
      */
     private void loadDesignations() {
        EditorDesignationType.log.info("Load Designations to fill the drop downlist, to add a new designation type for the site");
@@ -48,7 +48,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
        int i = 0;
        while (itr.hasNext()) {
            Object obj = itr.next();
-           if (((String)obj).equals("")) continue;
+           if (((String) obj).equals("")) continue;
            cmbCode.insertItemAt(obj, i);
            i++;
        }
@@ -60,7 +60,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
     }
 
     /**
-     * Load Designations to edit a new deisgnation type to the site
+     * Load Designations to edit a new deisgnation type to the site.
      * @param h
      * @param index
      */
@@ -79,14 +79,14 @@ public class EditorDesignationType extends javax.swing.JFrame {
     }
 
      /**
-      * Get the name of the designation type
+      * Get the name of the designation type.
       * @param desigCode
       * @return
       */
      private String getDesigNationName(String desigCode) {
          EditorDesignationType.log.info("Get the name of the designation type for the code :::" + desigCode);
-         String desigName ="";
-         try{
+         String desigName = "";
+         try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
@@ -105,11 +105,11 @@ public class EditorDesignationType extends javax.swing.JFrame {
      }
 
     /**
-     * Saving the designation type in data base
+     * Saving the designation type in data base.
      */
     private void saveDesignation() {
         EditorDesignationType.log.info("Saving the designation type in data base");
-        String code = (String)this.cmbCode.getSelectedItem();
+        String code = (String) this.cmbCode.getSelectedItem();
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
         NationalDtype dtype = new NationalDtype();
         dtype.setNationalDtypeCode(code);
@@ -119,11 +119,11 @@ public class EditorDesignationType extends javax.swing.JFrame {
         if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
             EditorDesignationType.log.info("National designation type saved.");
-            this.parent.saveDesignation(dtype,this.index );
+            this.parent.saveDesignation(dtype, this.index);
             javax.swing.JOptionPane.showMessageDialog(this, "National designation type saved.");
             this.exit();
          } else {
-            if (this.parent.designationTypeExists((String)cmbCode.getSelectedItem())) {
+            if (this.parent.designationTypeExists((String) cmbCode.getSelectedItem())) {
                 EditorDesignationType.log.error("Designation type is already declared.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Designation type is already declared.");
                 this.setVisible(true);
@@ -140,7 +140,7 @@ public class EditorDesignationType extends javax.swing.JFrame {
 
     }
     /**
-     * Close the Designation type editor
+     * Close the Designation type editor.
      */
     private void exit() {
        this.dispose();
@@ -348,8 +348,9 @@ public class EditorDesignationType extends javax.swing.JFrame {
 
         pack();
     } // </editor-fold>//GEN-END:initComponents
+
     /**
-     * Added the description of the designtation type
+     * Added the description of the designtation type.
      * @param evt
      */
     private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
@@ -373,12 +374,13 @@ public class EditorDesignationType extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
     } //GEN-LAST:event_btnCancelActionPerformed
+
     /**
      *
      * @param evt
      */
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
-        if (((String)cmbCode.getSelectedItem()).equals("")) {
+        if (((String) cmbCode.getSelectedItem()).equals("")) {
             EditorDesignationType.log.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected.");
         } else if (txtCover.getText().equals("")) {

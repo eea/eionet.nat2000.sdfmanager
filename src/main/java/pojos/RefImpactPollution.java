@@ -13,7 +13,7 @@ public class RefImpactPollution {
     /**
      *
      */
-    public RefImpactPollution(){
+    public RefImpactPollution() {
 
     }
 

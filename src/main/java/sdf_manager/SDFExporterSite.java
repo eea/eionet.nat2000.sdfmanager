@@ -46,7 +46,7 @@ class ExporterWorkerSite extends SwingWorker<Boolean, Void> {
      *
      * @param exporter
      */
-    public void setExporter (Exporter exporter) {
+    public void setExporter(Exporter exporter) {
         this.exporter = exporter;
     }
 
@@ -135,7 +135,7 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
         if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = getFileName();
-            this.txtPath.setText(this.dirPath+ System.getProperty("file.separator") + this.fileName);
+            this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
     }
 
@@ -154,19 +154,19 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
         String formatDate = sdf.format(cal.getTime());
         String logFile;
         if (dbFile.getParent().equals("")) {
-           logFile = "exportSiteLog_" + formatDate+".log";
+           logFile = "exportSiteLog_" + formatDate + ".log";
         } else {
-           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
+           logFile = dbFile.getParent() + System.getProperty("file.separator") + "exportSiteLog_" + formatDate + ".log";
         }
        Exporter exporter = null;
-       exporter = new ExporterSiteXML(this,encoding,siteCode,logFile);
-       ArrayList xmlFieldsList = exporter.createXMLFromDataBase(this.dirPath+ System.getProperty("file.separator") + dbFile.getName());
+       exporter = new ExporterSiteXML(this, encoding, siteCode, logFile);
+       ArrayList xmlFieldsList = exporter.createXMLFromDataBase(this.dirPath + System.getProperty("file.separator") + dbFile.getName());
        if (!xmlFieldsList.isEmpty()) {
           File fileLog =null;
-          try{
+          try {
               JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "Dialog",JOptionPane.INFORMATION_MESSAGE);
-              fileLog = copyToLogExportFile(xmlFieldsList,logFile );
-              SDFExporterSite.log.error("The validation of the data has been failed, the XML is not compliant with SDF the schema. Please check the log file::" + fileLog.getName()+" for more details");
+              fileLog = copyToLogExportFile(xmlFieldsList, logFile);
+              SDFExporterSite.log.error("The validation of the data has been failed, the XML is not compliant with SDF the schema. Please check the log file::" + fileLog.getName() + " for more details");
               Desktop desktop = null;
               if (Desktop.isDesktopSupported()) {
                  desktop = Desktop.getDesktop();
@@ -219,8 +219,8 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
             while (itSite.hasNext()) {
-                String lineExport = (String)itSite.next();
-                logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                String lineExport = (String) itSite.next();
+                logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }
           }
@@ -235,7 +235,7 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
     /**
      *
      */
-    public void centerParent () {
+    public void centerParent() {
           int x;
           int y;
           // Find out our parent
@@ -246,18 +246,18 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
           Dimension mySize = getSize();
 
           if (parentSize.width > mySize.width) {
-            x = ((parentSize.width - mySize.width)/2) + topLeft.x;
+            x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
           } else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
-            y = ((parentSize.height - mySize.height)/2) + topLeft.y;
+            y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
           } else {
             y = topLeft.y;
           }
 
-          setLocation (x, y);
+          setLocation(x, y);
           super.setVisible(true);
           requestFocus();
 }

@@ -55,7 +55,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
     * @param mgmtBody
     * @param index
     */
-    public void loadMgmtBody(MgmtBody mgmtBody,int index) {
+    public void loadMgmtBody(MgmtBody mgmtBody, int index) {
         this.mgmtBodyId = mgmtBody.getMgmtBodyId();
         EditorMgmtBody.log.info("Loading the data of the Management Body to modify them");
         this.index = index;
@@ -521,7 +521,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
                 mgmtBodyErrors += " .- Organisation (256 characters maximum)\n";
                 mgmtBodyOK = false;
             }
-            if (email.length() >64) {
+            if (email.length() > 64) {
                 mgmtBodyErrors += " .- Email (64 characters maximum)\n";
                 mgmtBodyOK = false;
             }
@@ -568,7 +568,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
             String msgMgmtBody = "";
             if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
-                this.parent.saveMgmtBody(body,this.index);
+                this.parent.saveMgmtBody(body, this.index);
                 EditorMgmtBody.log.info("Management body has been updated.");
                 msgMgmtBody = "Management body has been updated.";
            } else {

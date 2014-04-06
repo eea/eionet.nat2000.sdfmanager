@@ -190,9 +190,9 @@ public class EditorSitecode extends javax.swing.JDialog {
        Session session = HibernateUtil.getSessionFactory().openSession();
        //Check if the site code is valid (it must start with country code
        String cuntryCode = this.txtSitecode.getText();
-       cuntryCode = cuntryCode.substring(0,2);
+       cuntryCode = cuntryCode.substring(0, 2);
 
-       String hqlCountry = "from Country where countryCode='" + cuntryCode+ "'";
+       String hqlCountry = "from Country where countryCode='" + cuntryCode + "'";
        Iterator itrCountry = session.createQuery(hqlCountry).iterate();
        if (!itrCountry.hasNext()) {
             EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::" + this.txtSitecode.getText());
@@ -201,8 +201,8 @@ public class EditorSitecode extends javax.swing.JDialog {
        }
 
 
-       String hql = "select count(*) from Site as site where site.siteCode like '" +
-               this.txtSitecode.getText()+ "'";
+       String hql = "select count(*) from Site as site where site.siteCode like '"
+               + this.txtSitecode.getText() + "'";
        Query q = session.createQuery(hql);
        Number n = (Number) session.createCriteria(Site.class).add(Restrictions.eq("siteCode", this.txtSitecode.getText())).setProjection(Projections.rowCount()).uniqueResult();
        if (n.intValue() > 0) {

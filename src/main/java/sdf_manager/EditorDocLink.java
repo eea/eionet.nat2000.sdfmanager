@@ -16,10 +16,10 @@ public class EditorDocLink extends javax.swing.JFrame {
 
     int index;
     DocLink docLink;
-    boolean editing=false;
+    boolean editing = false;
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorDocLink.class .getName());
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
     private SDFEditor parent;
 
     /**
@@ -39,7 +39,7 @@ public class EditorDocLink extends javax.swing.JFrame {
      * @param s
      * @param index
      */
-    public void loadDoc(DocLink link,int index) {
+    public void loadDoc(DocLink link, int index) {
         this.index = index;
         docLink = link;
         this.txtLink.setText(link.getDocLinkUrl());

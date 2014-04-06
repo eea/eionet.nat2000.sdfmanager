@@ -78,14 +78,13 @@ class ExporterWorker extends SwingWorker<Boolean, Void> {
             ZipEntry entry = new ZipEntry(fileName);
             out.putNextEntry(entry);
             int count;
-            while ((count = origin.read(data, 0,BUFFER)) != -1) {
-               out.write(data, 0, count);
+            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                out.write(data, 0, count);
             }
             origin.close();
             out.close();
             f.delete();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -121,7 +120,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
-        public void windowClosing(java.awt.event.WindowEvent e) {
+            public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
         });
@@ -149,7 +148,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
      * @return
      */
     private String getFileName() {
-        String name="exportSites";
+        String name = "exportSites";
         if (this.rdioXML.isSelected()) {
             name += "ToXML.xml";
         } else if (this.rdioAccess.isSelected()) {
@@ -167,8 +166,8 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
      * @return
      */
     private String getZipFileName() {
-        String name=getFileName();
-        String oldName = name.substring(0,name.indexOf("."));
+        String name = getFileName();
+        String oldName = name.substring(0, name.indexOf("."));
        /* if (chkZip.isSelected()) {
             name = oldName +".zip";
         } else {
@@ -188,19 +187,19 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = getFileName();
-            this.txtPath.setText(this.dirPath+ System.getProperty("file.separator") + this.fileName);
+            this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
     }
 
     @Action
     public void processDatabase() {
-       try{
+       try {
            String encoding = "UTF-8";
 
            File dbFile = new File(this.txtPath.getText());
            if (this.txtPath.getText().equals("")) {
                 SDFExporter.log.error("Select a folder to export");
-                javax.swing.JOptionPane.showMessageDialog(this,"Please, select a folder to export.");
+                javax.swing.JOptionPane.showMessageDialog(this, "Please, select a folder to export.");
                 return;
            }
            Exporter exporter = null;
@@ -208,9 +207,9 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
            String formatDate = sdf.format(cal.getTime());
            if (this.rdioXML.isSelected()) {
-              exporter = new ExporterXMLStax(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportXMLLog_" + formatDate+".log",dbFile.getAbsolutePath());
+              exporter = new ExporterXMLStax(this, encoding, this.dirPath + System.getProperty("file.separator") + "exportXMLLog_" + formatDate + ".log", dbFile.getAbsolutePath());
            } else if (this.rdioAccess.isSelected()) {
-              exporter = new ExporterMDB(this,encoding,this.dirPath+ System.getProperty("file.separator")+"exportMDBLog_" + formatDate+".log",dbFile.getAbsolutePath());
+              exporter = new ExporterMDB(this, encoding, this.dirPath + System.getProperty("file.separator") + "exportMDBLog_" + formatDate + ".log", dbFile.getAbsolutePath());
            }
 
 
@@ -249,7 +248,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
     /**
      *
      */
-    public void centerParent () {
+    public void centerParent() {
           int x;
           int y;
           // Find out our parent
@@ -260,17 +259,17 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
           Dimension mySize = getSize();
 
           if (parentSize.width > mySize.width) {
-            x = ((parentSize.width - mySize.width)/2) + topLeft.x;
+            x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
           } else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
-            y = ((parentSize.height - mySize.height)/2) + topLeft.y;
+            y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
           } else {
             y = topLeft.y;
           }
-          setLocation (x, y);
+          setLocation(x, y);
           super.setVisible(true);
           requestFocus();
 }

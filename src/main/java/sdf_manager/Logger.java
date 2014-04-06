@@ -11,7 +11,7 @@ package sdf_manager;
  */
 public interface Logger {
 
-       public void log(String logMsg);
+    public void log(String logMsg);
 
 }
 

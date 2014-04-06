@@ -46,7 +46,7 @@ class ExporterWorkerSitePDF extends SwingWorker<Boolean, Void> {
      *
      * @param exporter
      */
-    public void setExporter (Exporter exporter) {
+    public void setExporter(Exporter exporter) {
         this.exporter = exporter;
     }
 
@@ -74,7 +74,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
     private String dirPath = "";
     private String fileName = "";
     private String siteCode;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFExporterPDF.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFExporterPDF.class.getName());
 
     /**
      *
@@ -94,7 +94,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
     }
 
     /**
-     * Close the Export Site Editor
+     * Close the Export Site Editor.
      */
      void exit() {
         this.dispose();
@@ -139,7 +139,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
         String encoding = "UTF-8";
         if (this.txtPath.getText().equals("")) {
             SDFExporterPDF.log.error("select a folder to export");
-            javax.swing.JOptionPane.showMessageDialog(this,"Please select a folder to export.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a folder to export.");
             return;
         }
         File dbFile = new File(this.txtPath.getText());
@@ -158,7 +158,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
 
        if (isOK) {
           SDFExporterPDF.log.info("PDF file has been saved properly.");
-          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly","PDF", JOptionPane.INFORMATION_MESSAGE);
+          javax.swing.JOptionPane.showMessageDialog(this, "PDF file has been saved properly", "PDF", JOptionPane.INFORMATION_MESSAGE);
           this.exit();
           return;
        } else {
@@ -202,7 +202,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
             while (itSite.hasNext()) {
-                String lineExport = (String)itSite.next();
+                String lineExport = (String) itSite.next();
                 logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }
@@ -218,7 +218,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
     /**
      *
      */
-    public void centerParent () {
+    public void centerParent() {
           int x;
           int y;
           // Find out our parent
@@ -240,7 +240,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
             y = topLeft.y;
           }
 
-          setLocation (x, y);
+          setLocation(x, y);
           super.setVisible(true);
           requestFocus();
 }

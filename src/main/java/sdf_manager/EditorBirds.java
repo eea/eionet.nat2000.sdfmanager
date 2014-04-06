@@ -51,14 +51,14 @@ public class EditorBirds extends javax.swing.JFrame {
     }
 
     /**
-     * Close the Species Editor
+     * Close the Species Editor.
      */
     private void exit() {
        this.dispose();
     }
 
     /**
-     * Loads the species from reference table
+     * Loads the species from reference table.
      */
     private void loadBirds(String speciesCode) {
        cmbCode.removeAllItems();
@@ -92,7 +92,7 @@ public class EditorBirds extends javax.swing.JFrame {
            i++;
        }
        if (i > 0) {
-           if (j>-1) {
+           if (j > -1) {
               cmbCode.setSelectedIndex(j);
            } else {
              cmbCode.setSelectedIndex(0);
@@ -104,7 +104,7 @@ public class EditorBirds extends javax.swing.JFrame {
     }
 
    /**
-    * Loads existing species
+    * Loads existing species.
     * @param s
     * @param index
     */
@@ -120,7 +120,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
        loadBirds(s.getSpeciesCode());
        loadBirdsName(s.getSpeciesCode());
-       String hql= "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code + "'";
+       String hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code + "'";
 
 
        Query q = session.createQuery(hql);
@@ -141,7 +141,7 @@ public class EditorBirds extends javax.swing.JFrame {
            this.chkNP.setSelected(true);
        }
 
-       if (s.getSpeciesType() != null ) {
+       if (s.getSpeciesType() != null) {
            String popTypeName = getPopulationTypeNameByCode(s.getSpeciesType().toString());
            if (popTypeName != null && popTypeName != "null") this.cmbType.setSelectedItem(popTypeName);
        } else {
@@ -191,7 +191,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
 
    /**
-    * Loads the name of th species
+    * Loads the name of the species.
     * @param speciesCode
     */
    private void loadBirdsName(String speciesCode) {
@@ -223,7 +223,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
 
    /**
-    * saves species
+    * saves species.
     */
    private void saveSpecies() {
         EditorBirds.log.info("Saving birds");
@@ -281,7 +281,7 @@ public class EditorBirds extends javax.swing.JFrame {
         }
 
         if (this.editing && this.index > -1) {
-            this.parent.saveSpecies(s,this.index);
+            this.parent.saveSpecies(s, this.index);
         } else {
             this.parent.saveSpecies(s);
         }
@@ -289,7 +289,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Print the data of the species in console
+    * Print the data of the species in console.
     * @param s
     */
    private void printSpecies(Species s) {
@@ -323,7 +323,7 @@ public class EditorBirds extends javax.swing.JFrame {
     }
 
     /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -337,7 +337,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -351,7 +351,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -367,7 +367,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -381,7 +381,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -395,7 +395,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -438,7 +438,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
 
     /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populatePopulationType() {
        EditorBirds.log.info("Populate population type data");
@@ -464,7 +464,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
    /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateUnit() {
        EditorBirds.log.info("Populate unit data");
@@ -488,7 +488,7 @@ public class EditorBirds extends javax.swing.JFrame {
    }
 
     /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateQuality() {
        EditorBirds.log.info("Populate quality data");
@@ -509,8 +509,9 @@ public class EditorBirds extends javax.swing.JFrame {
             cmbQuality.repaint();
        }
    }
+
    /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateCategory() {
        EditorBirds.log.info("Populate category data");
@@ -1013,15 +1014,14 @@ public class EditorBirds extends javax.swing.JFrame {
     } //GEN-LAST:event_btnCancelActionPerformed
 
     /**
-     * Checks if the param is a number
+     * Checks if the param is a number.
      * @param s
      * @return
      */
     private Integer isNum(String s) {
         try {
             return Integer.parseInt(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -1038,7 +1038,7 @@ public class EditorBirds extends javax.swing.JFrame {
             if (maxArea != null && !(("").equals(maxArea)) && minArea != null && !(("").equals(minArea))) {
                 int intMaxArea = Integer.parseInt(maxArea);
                 int intMinArea = Integer.parseInt(minArea);
-                if (intMinArea >intMaxArea) {
+                if (intMinArea > intMaxArea) {
                     sizeOK = false;
                 }
             }
@@ -1057,7 +1057,7 @@ public class EditorBirds extends javax.swing.JFrame {
         } else if (this.txtMinimum.getText() != null && !("").equals(this.txtMinimum.getText()) && isNum(this.txtMinimum.getText()) == null) {
             EditorBirds.log.error("Minimum Size field is not a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Minimum Size field should be a number.");
-        } else if (!isSizeOK(this.txtMaximum.getText(),this.txtMinimum.getText())) {
+        } else if (!isSizeOK(this.txtMaximum.getText(), this.txtMinimum.getText())) {
             EditorBirds.log.error("The minimum size is bigger than maximum size.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Check the size. The minimum size is bigger than maximum size.");
         } else {

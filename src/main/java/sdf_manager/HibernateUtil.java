@@ -31,8 +31,8 @@ public class HibernateUtil {
             properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
-            annotationConfig.setProperty("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
-            annotationConfig.setProperty("hibernate.connection.driver_class","com.mysql.jdbc.Driver");
+            annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+            annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
             annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true");
             annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("user"));
             annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("password"));
@@ -67,7 +67,7 @@ public class HibernateUtil {
             cfg.configure();
             cfg.setProperty("hibernate.dialect", "sdf_manager.MSAccessDialect");
             cfg.setProperty("hibernate.connection.driver_class", "sun.jdbc.odbc.JdbcOdbcDriver");
-            cfg.setProperty("hibernate.connection.url", "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + fileName+"");
+            cfg.setProperty("hibernate.connection.url", "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + fileName + "");
             cfg.setProperty("hibernate.connection.username", "");
     }
 }

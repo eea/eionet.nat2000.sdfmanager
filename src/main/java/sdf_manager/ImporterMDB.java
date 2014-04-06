@@ -72,10 +72,10 @@ public class ImporterMDB implements Importer {
      private String field_file = "config" + System.getProperty("file.separator") + "field_maps.xml";
      private String table_element = "table";
      private String field_element = "field";
-     private HashMap<String,String> tables;
-     private HashMap<String,String> fields;
-     private String[] tableKeys = {"name","used_name"};
-     private String[] fieldKeys = {"reference","oldname"};
+     private HashMap<String, String> tables;
+     private HashMap<String, String> fields;
+     private String[] tableKeys = {"name", "used_name"};
+     private String[] fieldKeys = {"reference", "oldname"};
      private Logger logger;
      private String encoding;
      private HashMap speciesByCode = new HashMap();
@@ -94,10 +94,10 @@ public class ImporterMDB implements Importer {
       * @param logFile
       * @param accessVersion
       */
-     public ImporterMDB(Logger logger, String encoding,String logFile, String accessVersion) {
+     public ImporterMDB(Logger logger, String encoding, String logFile, String accessVersion) {
          this.logger = logger;
          this.encoding = encoding;
-         this.accessVersion=accessVersion;
+         this.accessVersion = accessVersion;
          this.initLogFile(logFile);
          this.init();
      }
@@ -106,10 +106,10 @@ public class ImporterMDB implements Importer {
       *
       */
      void init() {
-         this.tables = new HashMap<String,String>();
-         this.fields = new HashMap<String,String>();
-         this.parse(this.table_file,this.tables,this.table_element,this.tableKeys);
-         this.parse(this.field_file,this.fields,this.field_element,this.fieldKeys);
+         this.tables = new HashMap<String, String>();
+         this.fields = new HashMap<String, String>();
+         this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
+         this.parse(this.field_file, this.fields, this.field_element, this.fieldKeys);
      }
 
      /**
@@ -198,18 +198,18 @@ public class ImporterMDB implements Importer {
       */
      public boolean processDatabase(String fileName) {
         Connection conn;
-        boolean saveOK =false;
+        boolean saveOK = false;
         String msgValidError = "";
         try {
             conn = getConnection(fileName);
 
             if (conn != null) {
 
-                if (! checkTables(conn)) {
-                    log("Failed to find all tables in the database. Please check the database schema and configuration files.",1);
+                if (!checkTables(conn)) {
+                    log("Failed to find all tables in the database. Please check the database schema and configuration files.", 1);
                     ImporterMDB.log.error("Failed to find all tables in the database. Please check the database schema and configuration files");
                     msgValidError = "Failed to find all tables in the database. Please check the database schema and configuration files";
-                    saveOK= false;
+                    saveOK = false;
                     return false;
                 }
                 this.importDate = getImportDate();
@@ -219,21 +219,21 @@ public class ImporterMDB implements Importer {
 
                 /*
                 ImporterMDB.log.info("Validation has finished");
-                log("Validation has finished.",1);
+                log("Validation has finished.", 1);
 
                 if (this.sitesDB != null && (this.sitesDB.isEmpty())) {
                     ImporterMDB.log.info("Import process is starting");
-                    log("Import process is starting.",1);
+                    log("Import process is starting.", 1);
 
                     saveOK =  processSites(conn);
 
                     if (this.nutsKO != null && !(this.nutsKO.isEmpty())) {
                         saveOK = false;
                         ImporterMDB.log.error("Error in validation:. Error Message: The code of some regions are wrong. Please check the log file for details");
-                        log("Error in validation.",1);
-                        msgValidError ="The code of some regions are wrong. Please check the log file for details";
+                        log("Error in validation.", 1);
+                        msgValidError = "The code of some regions are wrong. Please check the log file for details";
 
-                        File fileLog = SDF_Util.copyToLogImportFile(this.nutsKO,"OldDB");
+                        File fileLog = SDF_Util.copyToLogImportFile(this.nutsKO, "OldDB");
                         if (fileLog != null) {
                             Desktop desktop = null;
                             if (Desktop.isDesktopSupported()) {
@@ -244,12 +244,12 @@ public class ImporterMDB implements Importer {
                         }
                     }
                 } else {
-                    saveOK= false;
+                    saveOK = false;
                     ImporterMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-                    log("Error in validation.",1);
-                    msgValidError ="Some sites are already stored in Data Base. Please check the log file for details";
+                    log("Error in validation.", 1);
+                    msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
 
-                    File fileLog = SDF_Util.copyToLogImportFileList(this.sitesDB,"OldDB");
+                    File fileLog = SDF_Util.copyToLogImportFileList(this.sitesDB, "OldDB");
                     if (fileLog != null) {
                         Desktop desktop = null;
                         if (Desktop.isDesktopSupported()) {
@@ -264,17 +264,16 @@ public class ImporterMDB implements Importer {
                 saveOK = false;
                 msgValidError = "A DB error occurs. Please check the SDF_log file for more details";
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             ImporterMDB.log.error("ERROR in processDatabase::" + e.getMessage());
             //e.printStackTrace();
-            saveOK= false;
+            saveOK = false;
         } finally {
           if (saveOK) {
-                JOptionPane.showMessageDialog(new JFrame(),"Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);
           } else {
               String msgError = "There are some errors in import process";
-              JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError, "Dialog",JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError, "Dialog", JOptionPane.INFORMATION_MESSAGE);
           }
           return saveOK;
         }
@@ -332,16 +331,15 @@ public class ImporterMDB implements Importer {
 
             Iterator itr = this.tables.keySet().iterator();
              while (itr.hasNext()) {
-                String tmpStr = this.tables.get((String)itr.next());
+                String tmpStr = this.tables.get((String) itr.next());
                 ResultSet rs = dbm.getTables(null, null, tmpStr , null);
                 if (!rs.next()) {
                    ImporterMDB.log.error("Could not find table: " + tmpStr);
-                    log("Could not find table: " + tmpStr,1);
+                    log("Could not find table: " + tmpStr, 1);
                     return false;
                 }
             }
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
             ImporterMDB.log.error("Failed processing tables: " + e.getMessage());
             //e.printStackTrace();
              log("Failed processing tables.");
@@ -360,7 +358,7 @@ public class ImporterMDB implements Importer {
       *
       * @param conn
       */
-     void loadSpecies (Connection conn,Session session) {
+     void loadSpecies(Connection conn, Session session) {
         String hql = "from RefSpecies";
         try {
             Query q = session.createQuery(hql);
@@ -371,10 +369,10 @@ public class ImporterMDB implements Importer {
                 String name = rs.getRefSpeciesName();
                 Character group = rs.getRefSpeciesGroup();
                 if (code != null) {
-                    this.speciesByCode.put(code,new Object[]{name,group});
+                    this.speciesByCode.put(code, new Object[]{name, group});
                 }
                 if (name != null) {
-                    this.speciesByName.put(name,new Object[]{code,group});
+                    this.speciesByName.put(name, new Object[]{code, group});
                 }
             }
             hql = "select refBirds from RefBirds as refBirds";
@@ -387,10 +385,10 @@ public class ImporterMDB implements Importer {
                 String name = rs.getRefBirdsName();
                 Character group = 'B';
                 if (code != null) {
-                    this.speciesByCode.put(code,new Object[]{name,group});
+                    this.speciesByCode.put(code, new Object[]{name, group});
                 }
                 if (name != null) {
-                    this.speciesByName.put(name,new Object[]{code,group});
+                    this.speciesByName.put(name, new Object[]{code, group});
                 }
             }
         } catch (Exception e) {
@@ -407,16 +405,16 @@ public class ImporterMDB implements Importer {
     boolean validateAndProcessSites(Connection conn) throws SQLException {
 
         ArrayList<String> notProcessedSiteCodesList = new ArrayList<String>();
-        boolean processOK=false;
+        boolean processOK = false;
 
-        String sql = "select sitecode from " + this.tables.get("biotop")+ " order by sitecode";
-        Session session =null;
+        String sql = "select sitecode from " + this.tables.get("biotop") + " order by sitecode";
+        Session session = null;
         Statement stmt = null;
 
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-              loadSpecies(conn,session);
+              loadSpecies(conn, session);
               stmt = conn.createStatement();
               ResultSet rs = stmt.executeQuery(sql);
 
@@ -431,70 +429,69 @@ public class ImporterMDB implements Importer {
                        try {
 
                           ImporterMDB.log.info("Validating site: " + sitecode);
-                          log("Validating site: " + sitecode,1);
+                          log("Validating site: " + sitecode, 1);
 
-                          if (SDF_Util.validateSite(session,sitecode)) {
+                          if (SDF_Util.validateSite(session, sitecode)) {
                               notProcessedSiteCodesList.add(sitecode);
                           } else {
-                              log("Processing: " + sitecode,1);
+                              log("Processing: " + sitecode, 1);
                               ImporterMDB.log.info("Processing: " + sitecode);
 
                               // BIOTOP
                               Transaction tx = session.beginTransaction();
                               site.setSiteCode(sitecode);
-                              processBiotop(conn,session,site);
+                              processBiotop(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // HABITATS
                               tx = session.beginTransaction();
-                              processHabitats(conn,session,site);
+                              processHabitats(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // HABITAT CLASSES
                               tx = session.beginTransaction();
-                              processHabitatClasses(conn,session,site);
+                              processHabitatClasses(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // REGIONS
                               tx = session.beginTransaction();
-                              processRegions(conn,session,site);
+                              processRegions(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // RELATIONS
                               tx = session.beginTransaction();
-                              processRelations(conn,session,site);
+                              processRelations(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // DTYPES
                               tx = session.beginTransaction();
-                              processDTypes(conn,session,site);
+                              processDTypes(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // IMPACTS
                               tx = session.beginTransaction();
-                              processImpacts(conn,session,site);
+                              processImpacts(conn, session, site);
                               tx.commit();
                               session.flush();
 
                               // SPECIES
-                              processSpecies(conn,session,site);
+                              processSpecies(conn, session, site);
 
-                              processOK=true;
+                              processOK = true;
                               session.flush();
                               session.evict(site);
 
                           }
 
-                      }
-                      catch (Exception e) {
-                          ImporterMDB.log.error("Failed processing site: " + sitecode+". Error:::" + e.getMessage());
-                          log("Failed processing site: " + sitecode,1);
+                      } catch (Exception e) {
+                          ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
+                          log("Failed processing site: " + sitecode, 1);
                           break;
                       }
 
@@ -503,15 +500,13 @@ public class ImporterMDB implements Importer {
                     ImporterMDB.log.info("Finishing import process.Closing connection to Data Base");
                     log("Finishing import process.Closing connection to Data Base");
 
-                }
-          catch (Exception e) {
+                } catch (Exception e) {
 
                    ImporterMDB.log.error("The error: " + e.getMessage());
                    //e.printStackTrace();
-                   processOK=false;
+                   processOK = false;
                    return false;
-          }
-          finally {
+          } finally {
                     if (stmt != null) {
                         stmt.close();
                     }
@@ -525,10 +520,10 @@ public class ImporterMDB implements Importer {
           if (notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()) {
 
               ImporterMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-              log("Error in validation.",1);
-              //msgValidError ="Some sites are already stored in Data Base. Please check the log file for details";
+              log("Error in validation.", 1);
+              //msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
 
-              File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList,"OldDB");
+              File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList, "OldDB");
               if (fileLog != null) {
                   Desktop desktop = null;
                   if (Desktop.isDesktopSupported()) {
@@ -554,14 +549,14 @@ public class ImporterMDB implements Importer {
       */
      /*boolean processSites(Connection conn) throws SQLException {
 
-        boolean processOK=false;
-        String sql = "select sitecode from " + this.tables.get("biotop")+ " order by sitecode";
-        Session session =null;
+        boolean processOK = false;
+        String sql = "select sitecode from " + this.tables.get("biotop") + " order by sitecode";
+        Session session = null;
         Statement stmt = null;
 
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            loadSpecies(conn,session);
+            loadSpecies(conn, session);
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             int i = 0;
@@ -571,68 +566,67 @@ public class ImporterMDB implements Importer {
                try {
                    Transaction tx = session.beginTransaction();
 
-                   log("Processing: " + sitecode,1);
+                   log("Processing: " + sitecode, 1);
                    ImporterMDB.log.info("Processing: " + sitecode);
 
                    site.setSiteCode(sitecode);
 
-                   processBiotop(conn,session,site);
+                   processBiotop(conn, session, site);
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
 
-                   processHabitats(conn,session,site);
+                   processHabitats(conn, session, site);
 
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
-                   processHabitatClasses(conn,session,site);
+                   processHabitatClasses(conn, session, site);
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
 
-                   processRegions(conn,session,site);
+                   processRegions(conn, session, site);
 
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
-                   processRelations(conn,session,site);
+                   processRelations(conn, session, site);
 
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
-                   processDTypes(conn,session,site);
+                   processDTypes(conn, session, site);
                    tx.commit();
                    session.flush();
 
                    tx = session.beginTransaction();
 
-                   processImpacts(conn,session,site);
+                   processImpacts(conn, session, site);
 
                    tx.commit();
                    session.flush();
 
-                   processSpecies(conn,session,site);
+                   processSpecies(conn, session, site);
 
-                   processOK=true;
+                   processOK = true;
                    session.flush();
                    session.evict(site);
 
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //e.printStackTrace();
-                   processOK=false;
-                   ImporterMDB.log.error("Failed processing site: " + sitecode+" .The error: " + e.getMessage());
-                   log("failed processing site: " + sitecode,1);
+                   processOK = false;
+                   ImporterMDB.log.error("Failed processing site: " + sitecode + " .The error: " + e.getMessage());
+                   log("failed processing site: " + sitecode, 1);
                    break;
 
                 }
-               if ( ++i % 50 == 0 ) {
+               if (++i % 50 == 0) {
                     session.flush();
                     session.clear();
                }
@@ -641,14 +635,12 @@ public class ImporterMDB implements Importer {
             }
             ImporterMDB.log.info("Finishing import process.Closing connection to Data Base");
             log("Finishing import process.Closing connection to Data Base");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
            ImporterMDB.log.error("The error: " + e.getMessage());
            //e.printStackTrace();
-           processOK=false;
+           processOK = false;
            return false;
-        }
-        finally {
+        } finally {
             if (stmt != null) {
                 stmt.close();
             }
@@ -673,7 +665,7 @@ public class ImporterMDB implements Importer {
         Statement stmt = null;
 
         try {
-            loadSpecies(conn,session);
+            loadSpecies(conn, session);
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             int i = 0;
@@ -686,32 +678,29 @@ public class ImporterMDB implements Importer {
                 try {
                    Transaction tx = session.beginTransaction();
                    ImporterMDB.log.info("Validating site: " + sitecode);
-                   log("Validating site: " + sitecode,1);
+                   log("Validating site: " + sitecode, 1);
 
-                   if (SDF_Util.validateSite(session,sitecode)) {
+                   if (SDF_Util.validateSite(session, sitecode)) {
                        siteCodeDB.add(sitecode);
                    }
                    tx.commit();
 
-                }
-                catch (Exception e) {
-                   ImporterMDB.log.error("Failed processing site: " + sitecode+". Error:::" + e.getMessage());
-                   log("Failed processing site: " + sitecode,1);
+                } catch (Exception e) {
+                   ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
+                   log("Failed processing site: " + sitecode, 1);
                    break;
                 }
 
-                if ( ++i % 20 == 0 ) {
+                if (++i % 20 == 0) {
                     session.flush();
                     session.clear();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //e.printStackTrace();
            ImporterMDB.log.error("Error: " + e.getMessage());
             return siteCodeDB;
-        }
-        finally {
+        } finally {
             if (stmt != null) {
                 stmt.close();
             }
@@ -728,14 +717,13 @@ public class ImporterMDB implements Importer {
       * @param fieldName
       * @return
       */
-      Double getDouble(ResultSet rs,String fieldName) {
+      Double getDouble(ResultSet rs, String fieldName) {
          try {
              return rs.getDouble(fieldName);
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              //e.printStackTrace();
-             ImporterMDB.log.error("Failed extracting field: " + fieldName+". Error:::" + e.getMessage());
-             log("Failed extracting field: " + fieldName,1);
+             ImporterMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
+             log("Failed extracting field: " + fieldName, 1);
              return null;
          }
       }
@@ -746,7 +734,7 @@ public class ImporterMDB implements Importer {
       * @param fieldName
       * @return
       */
-     private String getString(ResultSet rs,String fieldName) {
+     private String getString(ResultSet rs, String fieldName) {
         try {
             if (!("UTF-8").equals(this.encoding)) {
                 byte[] result = rs.getBytes(fieldName);
@@ -768,7 +756,7 @@ public class ImporterMDB implements Importer {
             } else {
 
                 String tmp = rs.getString(fieldName);
-                if (fieldName==this.fields.get("sitename")) {
+                if (fieldName == this.fields.get("sitename")) {
                     PrintStream sysout = new PrintStream(System.out, true, "UTF-8");
                     sysout.print(">>" + tmp);
                 }
@@ -776,11 +764,10 @@ public class ImporterMDB implements Importer {
 
             }
 
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              e.printStackTrace();
              log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
-             ImporterMDB.log.error("Failed extracting field: " + fieldName+".The field could have an erroneous name.Error:::" + e.getMessage());
+             ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
              return null;
          }
      }
@@ -790,8 +777,8 @@ public class ImporterMDB implements Importer {
       * @param fieldName
       * @return
       */
-     Character getChar(ResultSet rs,String fieldName) {
-         String tmp = getString(rs,fieldName);
+     Character getChar(ResultSet rs, String fieldName) {
+         String tmp = getString(rs, fieldName);
          if (tmp != null && !tmp.equals("")) {
              return tmp.charAt(0);
          } else {
@@ -806,13 +793,12 @@ public class ImporterMDB implements Importer {
       * @param fieldName
       * @return
       */
-      Boolean getBoolean(ResultSet rs,String fieldName) {
+      Boolean getBoolean(ResultSet rs, String fieldName) {
          try {
              Boolean bol = rs.getBoolean(fieldName);
              return bol;
-         }
-         catch (Exception e) {
-             //ImporterMDB.log.error("Failed extracting field: " + fieldName+".The field could have an erroneous name.Error:::" + e.getMessage());
+         } catch (Exception e) {
+             //ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
              return Boolean.valueOf(false);
          }
      }
@@ -850,14 +836,14 @@ public class ImporterMDB implements Importer {
       * @param sitecode
       * @return
       */
-     boolean validateSite (Connection conn,Session session, String sitecode) {
-        String hql = " from Site where siteCode='" + sitecode+"'";
-        boolean isOK= false;
+     boolean validateSite(Connection conn, Session session, String sitecode) {
+        String hql = " from Site where siteCode='" + sitecode + "'";
+        boolean isOK = false;
         try {
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
             if (itr.hasNext()) {
-                isOK=true;
+                isOK = true;
             }
 
         } catch (Exception e) {
@@ -876,12 +862,12 @@ public class ImporterMDB implements Importer {
       * @param session
       * @param site
       */
-     void processBiotop (Connection conn, Session session, Site site) {
+     void processBiotop(Connection conn, Session session, Site site) {
 
         Statement stmt = null;
 
         try {
-            String sql = "select * from " + this.tables.get("biotop")+ " where sitecode ='" + site.getSiteCode() + "'";
+            String sql = "select * from " + this.tables.get("biotop") + " where sitecode ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             String tmpStr;
@@ -890,42 +876,42 @@ public class ImporterMDB implements Importer {
             Character tmpChar;
 
             while (rs.next()) {
-                tmpStr = getString(rs,this.fields.get("sitename"));
+                tmpStr = getString(rs, this.fields.get("sitename"));
 
-                ImporterMDB.log.info("tmpStr==>" + tmpStr+"<==");
+                ImporterMDB.log.info("tmpStr==>" + tmpStr + "<==");
                 if (tmpStr != null) {
                     site.setSiteName(tmpStr);
                 }
 
-                tmpChar = getChar(rs,this.fields.get("sitetype"));
+                tmpChar = getChar(rs, this.fields.get("sitetype"));
                 if (tmpChar != null) {
                     site.setSiteType(getType(tmpChar));
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("compilation_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("compilation_date")));
                 if (tmpDate != null) {
                     site.setSiteCompDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("update_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("update_date")));
                 if (tmpDate != null) {
                     site.setSiteUpdateDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("sci_prop_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_prop_date")));
                 if (tmpDate != null) {
                     site.setSiteSciPropDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("sci_conf_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_conf_date")));
                 if (tmpDate != null) {
                     site.setSiteSciConfDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("spa_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
                 if (tmpDate != null) {
                     site.setSiteSpaDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs,this.fields.get("sac_date")));
+                tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
                 if (tmpDate != null) {
                     site.setSiteSacDate(tmpDate);
                 }
-                 tmpStr = getString(rs,this.fields.get("respondent"));
+                 tmpStr = getString(rs, this.fields.get("respondent"));
                  if (tmpStr != null) {
                     Resp resp = new Resp();
                     resp.setRespAddress(tmpStr);
@@ -933,45 +919,45 @@ public class ImporterMDB implements Importer {
                     session.save(resp);
                     site.setResp(resp);
                  }
-                 tmpDouble = getDouble(rs,this.fields.get("area"));
+                 tmpDouble = getDouble(rs, this.fields.get("area"));
                  if (tmpDouble != null) {
                      site.setSiteArea(tmpDouble);
                  }
 
-                 tmpDouble = getDouble(rs,this.fields.get("site_length"));
+                 tmpDouble = getDouble(rs, this.fields.get("site_length"));
                  if (tmpDouble != null) {
                      site.setSiteLength(tmpDouble);
                  }
-                 String sign = getString(rs,this.fields.get("lon_ew"));
-                 Double deg = getDouble(rs,this.fields.get("lon_deg"));
-                 Double min = getDouble(rs,this.fields.get("lon_min"));
-                 Double sec = getDouble(rs,this.fields.get("lon_sec"));
+                 String sign = getString(rs, this.fields.get("lon_ew"));
+                 Double deg = getDouble(rs, this.fields.get("lon_deg"));
+                 Double min = getDouble(rs, this.fields.get("lon_min"));
+                 Double sec = getDouble(rs, this.fields.get("lon_sec"));
                  Double longitude = this.convertCoordinate(1, sign, deg, min, sec);
                  if (longitude != null) {
                      site.setSiteLongitude(longitude);
                  }
-                 deg = getDouble(rs,this.fields.get("lat_deg"));
-                 min = getDouble(rs,this.fields.get("lat_min"));
-                 sec = getDouble(rs,this.fields.get("lat_sec"));
+                 deg = getDouble(rs, this.fields.get("lat_deg"));
+                 min = getDouble(rs, this.fields.get("lat_min"));
+                 sec = getDouble(rs, this.fields.get("lat_sec"));
                  Double latitude = this.convertCoordinate(2, sign, deg, min, sec);
                  if (latitude != null) {
                      site.setSiteLatitude(latitude);
                  }
-                 tmpStr = getString(rs,this.fields.get("designation"));
+                 tmpStr = getString(rs, this.fields.get("designation"));
                  if (tmpStr != null) {
                      site.setSiteDesignation(tmpStr);
                  }
-                 tmpStr = getString(rs,this.fields.get("quality"));
+                 tmpStr = getString(rs, this.fields.get("quality"));
                  if (tmpStr != null) {
                      site.setSiteQuality(tmpStr);
                  }
 
-                 tmpStr = getString(rs,this.fields.get("characteristics"));
+                 tmpStr = getString(rs, this.fields.get("characteristics"));
                  if (tmpStr != null) {
                      site.setSiteCharacteristics(tmpStr);
                  }
 
-                 tmpStr = getString(rs,this.fields.get("documentation"));
+                 tmpStr = getString(rs, this.fields.get("documentation"));
 
                  if (tmpStr != null) {
                     Doc doc = new Doc();
@@ -980,9 +966,9 @@ public class ImporterMDB implements Importer {
                     session.save(doc);
                     site.setDoc(doc);
                  }
-                 tmpStr = getString(rs,this.fields.get("mgmt_plan"));
+                 tmpStr = getString(rs, this.fields.get("mgmt_plan"));
 
-                 String tmpStrMgmtBody = getString(rs,this.fields.get("mgmt_body"));
+                 String tmpStrMgmtBody = getString(rs, this.fields.get("mgmt_body"));
 
                  if (tmpStr != null) {
 
@@ -1042,13 +1028,13 @@ public class ImporterMDB implements Importer {
                 regions.add("BLACKSEA");
 
                 for (int i = 0; i < regions.size(); i++) {
-                    Boolean region = getBoolean(rs,regions.get(i));
-                    region = region == null? false : region;
+                    Boolean region = getBoolean(rs, regions.get(i));
+                    region = region == null ? false : region;
                     if (region) {
                         String bioRegCode = translateBioRegions(regions.get(i));
-                        int biogeoId = getBioRegionId(session,bioRegCode);
-                        Biogeo biogeo = (Biogeo) session.load(Biogeo.class,biogeoId);
-                        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(),biogeo.getBiogeoId());
+                        int biogeoId = getBioRegionId(session, bioRegCode);
+                        Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeoId);
+                        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
                         SiteBiogeo siteBiogeo = new SiteBiogeo(id, biogeo, site);
                         site.getSiteBiogeos().add(siteBiogeo);
                     }
@@ -1059,8 +1045,7 @@ public class ImporterMDB implements Importer {
                 session.save(site);
            }
            stmt.close();
-         }
-         catch (SQLException e) {
+         } catch (SQLException e) {
              //e.printStackTrace();
            ImporterMDB.log.error("Error:::" + e.getMessage());
          } catch (Exception e) {
@@ -1076,31 +1061,31 @@ public class ImporterMDB implements Importer {
       * @return
       */
      private String translateBioRegions(String oldBioRegName) {
-         String newBioRegCode="";
+         String newBioRegCode = "";
          if (oldBioRegName.equals("ALPINE")) {
-             newBioRegCode="alpine";
+             newBioRegCode = "alpine";
          } else if (oldBioRegName.equals("ATLANTIC")) {
-             newBioRegCode="atlantic";
+             newBioRegCode = "atlantic";
          } else if (oldBioRegName.equals("BOREAL")) {
-             newBioRegCode="boreal";
+             newBioRegCode = "boreal";
          } else if (oldBioRegName.equals("CONTINENT")) {
-             newBioRegCode="continental";
+             newBioRegCode = "continental";
          } else if (oldBioRegName.equals("MACARONES")) {
-             newBioRegCode="macaronesian";
+             newBioRegCode = "macaronesian";
          } else if (oldBioRegName.equals("MEDITERR")) {
-             newBioRegCode="mediterranean";
+             newBioRegCode = "mediterranean";
          } else if (oldBioRegName.equals("PANNONIC")) {
-             newBioRegCode="pannonian";
+             newBioRegCode = "pannonian";
          } else if (oldBioRegName.equals("STEPPIC")) {
-             newBioRegCode="steppic";
+             newBioRegCode = "steppic";
          } else if (oldBioRegName.equals("ANATOL")) {
-             newBioRegCode="anatolian";
+             newBioRegCode = "anatolian";
          } else if (oldBioRegName.equals("ARCTIC")) {
-             newBioRegCode="arctic";
+             newBioRegCode = "arctic";
          } else if (oldBioRegName.equals("PONTIC")) {
-              newBioRegCode="blacksea";
+              newBioRegCode = "blacksea";
          } else if (oldBioRegName.equals("BLACKSEA")) {
-              newBioRegCode="blacksea";
+              newBioRegCode = "blacksea";
          } else {
 
          }
@@ -1114,7 +1099,7 @@ public class ImporterMDB implements Importer {
       * @return
       */
      private int getBioRegionId(Session session, String bioRegCode) {
-        Integer b =0;
+        Integer b = 0;
         try {
              String hql = "select biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + bioRegCode + "'";
              Query q = session.createQuery(hql);
@@ -1135,7 +1120,7 @@ public class ImporterMDB implements Importer {
       * @param name
       * @return
       */
-    Character getGroup(String table,String code, String name) {
+    Character getGroup(String table, String code, String name) {
         Character c = null;
         if (table.equals(this.tables.get("bird"))) {
             c = 'B';
@@ -1213,7 +1198,7 @@ public class ImporterMDB implements Importer {
      * @return
      */
     private Object[] getMinMax(String value) {
-        Object[] result = {null,null,null,null,null};
+        Object[] result = {null, null, null, null, null};
         String val = value.toLowerCase();
             /* some know cases with direct translation */
         if (val.matches("[0-9]+")) {
@@ -1229,7 +1214,7 @@ public class ImporterMDB implements Importer {
             if (val.startsWith("i") || val.startsWith("p")) {
                 unit = val.substring(0, 1);
             } else if (val.endsWith("i") || val.endsWith("p")) {
-                unit = val.substring(val.length()-1, val.length()-0);
+                unit = val.substring(val.length() - 1, val.length() - 0);
             }
             Integer intVal = convertToIntN(val);
             result[0] = intVal;
@@ -1259,10 +1244,10 @@ public class ImporterMDB implements Importer {
                 result[2] = val.substring(0, 1);
                 sign = val.substring(1, 2).toUpperCase();
             } else if (val.endsWith("i") || val.endsWith("p")) {
-                result[2] = val.substring(val.length()-1, val.length());
+                result[2] = val.substring(val.length() - 1, val.length());
                 sign = val.substring(0, 1).toUpperCase();
             } else {
-                sign = val.substring(0,1).toUpperCase();
+                sign = val.substring(0, 1).toUpperCase();
             }
             Integer intVal = convertToIntN(val);
             if (sign.equals(">")) {
@@ -1323,27 +1308,27 @@ public class ImporterMDB implements Importer {
     private void processPopulationSize(Species species, String popString) {
         /* set population min/max/unit/category/data quality */
         String val = preparePopField(popString);
-        Object[] tokens = {null,null,null,null,null};
+        Object[] tokens = {null, null, null, null, null};
         tokens = getMinMax(val);
         if (tokens[0] != null) {
-            species.setSpeciesSizeMin((Integer)tokens[0]);
+            species.setSpeciesSizeMin((Integer) tokens[0]);
         }
         if (tokens[1] != null) {
-            species.setSpeciesSizeMax((Integer)tokens[1]);
+            species.setSpeciesSizeMax((Integer) tokens[1]);
         }
         if (tokens[2] != null) {
-            species.setSpeciesUnit((String)tokens[2]);
+            species.setSpeciesUnit((String) tokens[2]);
         }
         if (tokens[3] != null) {
-            species.setSpeciesCategory(((String)tokens[3]).charAt(0));
+            species.setSpeciesCategory(((String) tokens[3]).charAt(0));
         }
         if (tokens[4] != null) {
-            //species.setSpeciesDataQuality(((String)tokens[4]).charAt(0));
-            species.setSpeciesDataQuality((String)tokens[4]);
+            //species.setSpeciesDataQuality(((String) tokens[4]).charAt(0));
+            species.setSpeciesDataQuality((String) tokens[4]);
         }
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]),2);
-        ImporterMDB.log.info(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
+                popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+        ImporterMDB.log.info(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
     }
 
 
@@ -1358,11 +1343,11 @@ public class ImporterMDB implements Importer {
      */
     private Object[] processPopulationSize(String spName, String resident, String breeding, String wintering, String staging) {
         /*return population min/max/unit/catgory/data quality */
-        Object[] result = {null,null,null,null,null};
+        Object[] result = {null, null, null, null, null};
         String resident2 = preparePopField(resident);
         String breeding2 = preparePopField(breeding);
         String wintering2 = preparePopField(wintering);
-        String staging2= preparePopField(staging);
+        String staging2 = preparePopField(staging);
         int min = 0;
         int max = 0;
         String popType = null;
@@ -1377,7 +1362,7 @@ public class ImporterMDB implements Importer {
         if (popType == null) {
             popType = getPopCategoryN(staging2);
         }
-        Object[] tokens = {null,null,null,null,null};
+        Object[] tokens = {null, null, null, null, null};
         if (!resident2.equals("")) {
             tokens = getMinMax(resident2);
             literal = resident;
@@ -1397,7 +1382,7 @@ public class ImporterMDB implements Importer {
         result[3] = tokens[3];
         result[4] = tokens[4];
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                literal, spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]),2);
+                literal, spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
         return result;
     }
     /**
@@ -1414,9 +1399,9 @@ public class ImporterMDB implements Importer {
         ResultSet rs = null;
         try {
 
-            String[] tables = {this.tables.get("amprep"),this.tables.get("bird"),this.tables.get("fishes"),this.tables.get("invert"),
-                                this.tables.get("mammal"),this.tables.get("plant"),this.tables.get("spec")};
-            for (int i = 0; i < tables.length;i++) {
+            String[] tables = {this.tables.get("amprep"), this.tables.get("bird"), this.tables.get("fishes"), this.tables.get("invert"),
+                                this.tables.get("mammal"), this.tables.get("plant"), this.tables.get("spec")};
+            for (int i = 0; i < tables.length; i++) {
                 Transaction tx = session.beginTransaction();
                 String sql = "select * from " + tables[i] + " where sitecode ='" + site.getSiteCode() + "'";
                 stmt = conn.createStatement();
@@ -1429,87 +1414,87 @@ public class ImporterMDB implements Importer {
                     if (!tables[i].equals("spec")) {
 
                         Species species = new Species();
-                        tmpStr = getString(rs,this.fields.get("species_code"));
-                        if (tmpStr!=null) {
+                        tmpStr = getString(rs, this.fields.get("species_code"));
+                        if (tmpStr != null) {
                             species.setSpeciesCode(tmpStr);
                         }
-                        tmpChar = getChar(rs,this.fields.get("species_population"));
+                        tmpChar = getChar(rs, this.fields.get("species_population"));
                         if (tmpChar != null) {
                             species.setSpeciesPopulation(tmpChar);
                         }
-                        tmpStr = getString(rs,this.fields.get("species_name"));
-                        if (tmpStr!=null) {
+                        tmpStr = getString(rs, this.fields.get("species_name"));
+                        if (tmpStr != null) {
                             species.setSpeciesName(tmpStr);
                         }
 
-                        tmpChar = getChar(rs,this.fields.get("species_conservation"));
+                        tmpChar = getChar(rs, this.fields.get("species_conservation"));
                         if (tmpChar != null) {
                             species.setSpeciesConservation(tmpChar);
                         }
-                        tmpChar = getChar(rs,this.fields.get("species_isolation"));
+                        tmpChar = getChar(rs, this.fields.get("species_isolation"));
                         if (tmpChar != null) {
                             species.setSpeciesIsolation(tmpChar);
                         }
-                        tmpChar = getChar(rs,this.fields.get("species_global"));
+                        tmpChar = getChar(rs, this.fields.get("species_global"));
                         if (tmpChar != null) {
                             species.setSpeciesGlobal(tmpChar);
                         }
-                        tmpChar = getGroup(tables[i],species.getSpeciesCode(),species.getSpeciesName());
+                        tmpChar = getGroup(tables[i], species.getSpeciesCode(), species.getSpeciesName());
                         if (tmpChar != null) {
                             species.setSpeciesGroup(tmpChar);
                         }
 
-                        String resident ="";
-                        String breeding ="";
-                        String wintering ="";
+                        String resident = "";
+                        String breeding = "";
+                        String wintering = "";
                         String staging = "";
 
-                        tmpStr = getString(rs,this.fields.get("species_resident"));
+                        tmpStr = getString(rs, this.fields.get("species_resident"));
 
                         boolean saveDefault = true; //if no other category is found, the default will be saved.
                         if (tmpStr != null && !tmpStr.trim().equals("")) {
                             saveDefault = false;
                             resident = tmpStr;
                             species.setSpeciesType('p');
-                            processPopulationSize(species,resident);
+                            processPopulationSize(species, resident);
                             species.setSite(site);
-                            site.getSpecieses().add(species) ;
+                            site.getSpecieses().add(species);
                         }
                         if (!tables[i].equals("plant")) {
-                            tmpStr = getString(rs,this.fields.get("species_breeding"));
+                            tmpStr = getString(rs, this.fields.get("species_breeding"));
                             if (tmpStr != null && !tmpStr.trim().equals("")) {
                                 saveDefault = false;
                                 breeding = tmpStr;
                                 Species newSpecies = new Duplicator().duplicateSpeciesNoPopulation(species);
                                 newSpecies.setSpeciesType('r');
-                                processPopulationSize(newSpecies,breeding);
+                                processPopulationSize(newSpecies, breeding);
                                 newSpecies.setSite(site);
                                 site.getSpecieses().add(newSpecies);
                             }
-                            tmpStr = getString(rs,this.fields.get("species_wintering"));
+                            tmpStr = getString(rs, this.fields.get("species_wintering"));
                             if (tmpStr != null && !tmpStr.trim().equals("")) {
                                 saveDefault = false;
                                 wintering = tmpStr;
                                 Species newSpecies = new Duplicator().duplicateSpeciesNoPopulation(species);
                                 newSpecies.setSpeciesType('w');
-                                processPopulationSize(newSpecies,wintering);
+                                processPopulationSize(newSpecies, wintering);
                                 newSpecies.setSite(site);
                                 site.getSpecieses().add(newSpecies);
                             }
-                            tmpStr = getString(rs,this.fields.get("species_staging"));
+                            tmpStr = getString(rs, this.fields.get("species_staging"));
                             if (tmpStr != null && !tmpStr.trim().equals("")) {
                                 saveDefault = false;
                                 staging = tmpStr;
                                 Species newSpecies = new Duplicator().duplicateSpeciesNoPopulation(species);
                                 newSpecies.setSpeciesType('c');
-                                processPopulationSize(newSpecies,staging);
+                                processPopulationSize(newSpecies, staging);
                                 newSpecies.setSite(site);
                                 site.getSpecieses().add(newSpecies);
                             }
                         }
                         if (saveDefault) {
                             species.setSite(site);
-                            site.getSpecieses().add(species) ;
+                            site.getSpecieses().add(species);
                         }
                         //session.save(species);
                     } else if (tables[i].equals(this.tables.get("spec"))) {
@@ -1517,28 +1502,26 @@ public class ImporterMDB implements Importer {
 
                         System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
-                        tmpStr = getString(rs,this.fields.get("species_code"));
-                        if (tmpStr!=null) {
+                        tmpStr = getString(rs, this.fields.get("species_code"));
+                        if (tmpStr != null) {
                             oSpecies.setOtherSpeciesCode(tmpStr);
                         }
-                        tmpStr = getString(rs,this.fields.get("species_name"));
-                        if (tmpStr!=null) {
+                        tmpStr = getString(rs, this.fields.get("species_name"));
+                        if (tmpStr != null) {
                             System.out.println(":: NAME ==> " + tmpStr);
                             oSpecies.setOtherSpeciesName(tmpStr);
                         }
 
 
                         String strPopulationInput = getString(rs, this.fields.get("species_population"));
-                        if (strPopulationInput!=null) {
+                        if (strPopulationInput != null) {
 
-                            if (Pattern.matches("([C,V,R,P])", strPopulationInput) && strPopulationInput.length()==1)
-                            {
+                            if (Pattern.matches("([C,V,R,P])", strPopulationInput) && strPopulationInput.length() == 1) {
                                 System.out.println(":: MATCH 0");
 
                                 // Get Population Char
                                 oSpecies.setOtherSpeciesCategory(strPopulationInput.charAt(0));
-                            } else if (strPopulationInput.length()>1)
-                            {
+                            } else if (strPopulationInput.length() > 1) {
 
                                 String strMinMaxPatterString = "(\\d+)-(\\d+).*";
                                 String strNumberAndCharacter = "(\\d+)+\\W*+([C,V,R,P]).*";
@@ -1563,7 +1546,7 @@ public class ImporterMDB implements Importer {
                                             String[] arr = tmp.split("-");
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(arr[0]));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(arr[1]));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
 
                                 // Finds patterns like "100 A" and get min and max from number and type from char
@@ -1577,7 +1560,7 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
 
                                     pattern = Pattern.compile("([C,V,R,P])");
@@ -1586,7 +1569,7 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesCategory(tmp.charAt(0));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
 
                                 // Finds patterns like ">100" and get min
@@ -1599,7 +1582,7 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
 
                                 // Finds patterns like "<100" and get max
@@ -1613,7 +1596,7 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
 
                                 } else if (Pattern.matches(strOnlyNumbers, strPopulationInput)) {
@@ -1626,7 +1609,7 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
                                 } else if (Pattern.matches(strOnlyNumber, strPopulationInput)) {
                                     System.out.println(":: MATCH 6");
@@ -1638,7 +1621,7 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) {}
+                                        } catch (Exception ex) { }
                                     }
                                 }
 
@@ -1652,23 +1635,23 @@ public class ImporterMDB implements Importer {
                                         String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                         oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                         oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                    } catch (Exception ex) {}
+                                    } catch (Exception ex) { }
                                 }
                             }
 
                         }
 
-                        tmpStr = getString(rs,this.fields.get("species_motivation"));
+                        tmpStr = getString(rs, this.fields.get("species_motivation"));
                         if (tmpStr != null) {
                             /* value is either A, B, C or D*/
                             tmpStr = tmpStr.toUpperCase();
                             oSpecies.setOtherSpeciesMotivation(tmpStr);
                         }
-                        tmpChar = getChar(rs,this.fields.get("species_group"));
+                        tmpChar = getChar(rs, this.fields.get("species_group"));
                         if (tmpChar != null) {
                             oSpecies.setOtherSpeciesGroup(tmpChar.toString());
                         }
-                        tmpChar = getGroup(tables[i],oSpecies.getOtherSpeciesCode(),oSpecies.getOtherSpeciesName());
+                        tmpChar = getGroup(tables[i], oSpecies.getOtherSpeciesCode(), oSpecies.getOtherSpeciesName());
                         if (tmpChar != null) {
                             oSpecies.setOtherSpeciesGroup(tmpChar.toString());
                         }
@@ -1714,32 +1697,32 @@ public class ImporterMDB implements Importer {
             Double tmpDouble;
             while (rs.next()) {
                 Habitat habitat = new Habitat();
-                tmpStr = getString(rs,this.fields.get("habitat_code"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("habitat_code"));
+                if (tmpStr != null) {
                     habitat.setHabitatCode(tmpStr);
                 }
-                tmpDouble = getDouble(rs,this.fields.get("habitat_cover"));
+                tmpDouble = getDouble(rs, this.fields.get("habitat_cover"));
                 if (tmpDouble != null) {
                     habitat.setHabitatCover(tmpDouble);
                 }
-                tmpChar = getChar(rs,this.fields.get("habitat_global"));
+                tmpChar = getChar(rs, this.fields.get("habitat_global"));
                 if (tmpChar != null) {
                     habitat.setHabitatGlobal(tmpChar);
                 }
-                tmpChar = getChar(rs,this.fields.get("habitat_representativity"));
+                tmpChar = getChar(rs, this.fields.get("habitat_representativity"));
                 if (tmpChar != null) {
                     habitat.setHabitatRepresentativity(tmpChar);
                 }
-                tmpChar = getChar(rs,this.fields.get("habitat_relative_surface"));
+                tmpChar = getChar(rs, this.fields.get("habitat_relative_surface"));
                 if (tmpChar != null) {
                     habitat.setHabitatRelativeSurface(tmpChar);
                 }
-                tmpChar = getChar(rs,this.fields.get("habitat_conservation"));
+                tmpChar = getChar(rs, this.fields.get("habitat_conservation"));
                 if (tmpChar != null) {
                     habitat.setHabitatConservation(tmpChar);
                 }
                 habitat.setSite(site);
-                site.getHabitats().add(habitat) ;
+                site.getHabitats().add(habitat);
             }
         } catch (SQLException e) {
            ImporterMDB.log.error("Error:::" + e.getMessage());
@@ -1772,11 +1755,11 @@ public class ImporterMDB implements Importer {
 
             while (rs.next()) {
                 NationalDtype dType = new NationalDtype();
-                tmpStr = getString(rs,this.fields.get("national_designation_code"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("national_designation_code"));
+                if (tmpStr != null) {
                     dType.setNationalDtypeCode(tmpStr);
                 }
-                tmpDouble = getDouble(rs,this.fields.get("national_designation_cover"));
+                tmpDouble = getDouble(rs, this.fields.get("national_designation_cover"));
                 if (tmpDouble != null) {
                     dType.setNationalDtypeCover(tmpDouble);
                 }
@@ -1818,8 +1801,8 @@ public class ImporterMDB implements Importer {
 
             while (rs.next()) {
                 SiteRelation relation = new SiteRelation();
-                tmpStr = getString(rs,this.fields.get("relation_code"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("relation_code"));
+                if (tmpStr != null) {
                     relation.setSiteRelationCode(tmpStr);
                     if (tmpStr.toUpperCase().startsWith("IN")) {
                         relation.setSiteRelationScope('I');
@@ -1828,15 +1811,15 @@ public class ImporterMDB implements Importer {
                     }
                 }
 
-                tmpStr = getString(rs,this.fields.get("relation_name"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("relation_name"));
+                if (tmpStr != null) {
                     relation.setSiteRelationSitename(tmpStr);
                 }
-                tmpChar = getChar(rs,this.fields.get("relation_type"));
-                if (tmpChar!=null) {
+                tmpChar = getChar(rs, this.fields.get("relation_type"));
+                if (tmpChar != null) {
                     relation.setSiteRelationType(tmpChar);
                 }
-                tmpDouble = getDouble(rs,this.fields.get("relation_cover"));
+                tmpDouble = getDouble(rs, this.fields.get("relation_cover"));
                 if (tmpDouble != null) {
                     relation.setSiteRelationCover(tmpDouble);
                 }
@@ -1878,11 +1861,11 @@ public class ImporterMDB implements Importer {
             while (rs.next()) {
                 HabitatClass habitat = new HabitatClass();
 
-                tmpStr = getString(rs,this.fields.get("habitat_class_code"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("habitat_class_code"));
+                if (tmpStr != null) {
                     habitat.setHabitatClassCode(tmpStr);
                 }
-                tmpDouble = getDouble(rs,this.fields.get("habitat_class_cover"));
+                tmpDouble = getDouble(rs, this.fields.get("habitat_class_cover"));
                 if (tmpDouble != null) {
                     habitat.setHabitatClassCover(tmpDouble);
                 }
@@ -1912,14 +1895,14 @@ public class ImporterMDB implements Importer {
      * @return
      */
     private String getDescHabitatClass(Session session, String habClassCode) {
-        String descHabClass="";
+        String descHabClass = "";
         String hql = "select refHabClassesDescrEn from RefHabClasses where refHabClassesCode like '" + habClassCode + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
             descHabClass =(String) itr.next();
         } else {
-            log.info("The description of the habitat class::" + habClassCode+" is missing.");
+            log.info("The description of the habitat class::" + habClassCode + " is missing.");
         }
         return descHabClass;
     }
@@ -1943,16 +1926,16 @@ public class ImporterMDB implements Importer {
             ArrayList nutsList = new ArrayList();
             while (rs.next()) {
                 Region region = new Region();
-                tmpStr = getString(rs,this.fields.get("region_code"));
-                if (tmpStr!=null) {
+                tmpStr = getString(rs, this.fields.get("region_code"));
+                if (tmpStr != null) {
                     /*just get NUT2 level*/
-                    if (tmpStr.length()>4) {
+                    if (tmpStr.length() > 4) {
                         tmpStr = tmpStr.substring(0, 4);
                     }
                     if (tmpStr.equals("0") || tmpStr.equals("00")) {
-                        tmpStr = site.getSiteCode().substring(0,2) + "ZZ";
+                        tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
                         region.setRegionName("Marine");
-                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'",tmpStr),2);
+                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
                     } else {
                         try {
                             Iterator itr =  session.createQuery(" from RefNuts as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
@@ -1962,11 +1945,10 @@ public class ImporterMDB implements Importer {
                                 region.setRegionName(rn.getRefNutsDescription());
                             } else {
                                 nutsList.add(tmpStr);
-                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.",tmpStr),2);
+                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);
 
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                            ImporterMDB.log.error("Error:::" + e.getMessage());
                             //e.printStackTrace();
                         }
@@ -1976,7 +1958,7 @@ public class ImporterMDB implements Importer {
                 }
 
                 if (nutsList != null && !(nutsList.isEmpty())) {
-                    this.nutsKO.put(site.getSiteCode(),nutsList);
+                    this.nutsKO.put(site.getSiteCode(), nutsList);
                 }
                 region.setSite(site);
                 site.getRegions().add(region);
@@ -2019,7 +2001,7 @@ public class ImporterMDB implements Importer {
 
                 Impact impact = new Impact();
                 Impact impactClon = null;
-                String impactCodeOld = getString(rs,this.fields.get("impact_code"));
+                String impactCodeOld = getString(rs, this.fields.get("impact_code"));
 
                 if (impactCodeOld != null) {
 
@@ -2027,18 +2009,18 @@ public class ImporterMDB implements Importer {
 
                         tmpStr = getImpactCode(impactCodeOld);
 
-                        if (tmpStr!=null) {
+                        if (tmpStr != null) {
 
                             impact.setImpactCode(tmpStr);
 
                             // IN_OUT
-                            tmpChar = getChar(rs,this.fields.get("impact_ocurrence"));
+                            tmpChar = getChar(rs, this.fields.get("impact_ocurrence"));
                             if (tmpChar != null) {
                                 impact.setImpactOccurrence(Character.toLowerCase(tmpChar));
                             }
 
                             // INTENSITY
-                            tmpChar = getChar(rs,this.fields.get("impact_rank"));
+                            tmpChar = getChar(rs, this.fields.get("impact_rank"));
                             if (tmpChar != null) {
                                 if (tmpChar.equals('A')) {
                                     impact.setImpactRank('H');
@@ -2052,9 +2034,9 @@ public class ImporterMDB implements Importer {
                             }
 
                             // INFLUENCE
-                            tmpChar = getChar(rs,this.fields.get("impact_type"));
+                            tmpChar = getChar(rs, this.fields.get("impact_type"));
 
-                            if (tmpChar != null && tmpStr!="null") {
+                            if (tmpChar != null && tmpStr != "null") {
 
                                 if (("+").equals(tmpChar.toString())) {
                                     impact.setImpactType('P');
@@ -2111,13 +2093,13 @@ public class ImporterMDB implements Importer {
      * @throws SQLException
      */
     private String getImpactCode (String impactCodeOld) throws SQLException {
-        String impactCode=null;
+        String impactCode = null;
 
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "from RefImpacts where refImpactsOldcode ='" + impactCodeOld+"' order by ref_Impacts_Code";
+        String hql = "from RefImpacts where refImpactsOldcode ='" + impactCodeOld + "' order by ref_Impacts_Code";
         try {
             Query q = session.createQuery(hql);
-            RefImpacts impact = (RefImpacts)q.uniqueResult();
+            RefImpacts impact = (RefImpacts) q.uniqueResult();
             if (impact != null) {
                impactCode = impact.getRefImpactsCode();
             }
@@ -2140,20 +2122,20 @@ public class ImporterMDB implements Importer {
      * @param sec
      * @return
      */
-     Double convertCoordinate(int type, String sig, Double degree, Double minute, Double second  ) {
+     Double convertCoordinate(int type, String sig, Double degree, Double minute, Double second) {
 
         /**
          * 1 = longitude; 2 = latitude
          */
-        Double deg = degree == null? 0.0 : degree;
-        Double min = minute == null? 0.0 : second;
-        Double sec = second == null? 0.0 : second;
+        Double deg = degree == null ? 0.0 : degree;
+        Double min = minute == null ? 0.0 : second;
+        Double sec = second == null ? 0.0 : second;
 
-        Double tmp = degree + (minute/60) + (second/3600);
+        Double tmp = degree + (minute / 60) + (second / 3600);
 
         if (type == 1) {
-             String sign = sig == null ? "E" : sig.toUpperCase();//default to east
-             tmp = sign.equals("E") ? tmp : (sign.equals("W") ? - tmp : tmp); //unknown default to east as well
+             String sign = sig == null ? "E" : sig.toUpperCase(); //default to east
+             tmp = sign.equals("E") ? tmp : (sign.equals("W") ? -tmp : tmp); //unknown default to east as well
         }
         return tmp == 0.0 ? null : tmp;
 
@@ -2167,8 +2149,8 @@ public class ImporterMDB implements Importer {
      String convertType(char oldType) {
 
          Character charOldType = Character.toUpperCase(oldType);
-         char[] spa = {'A','D','F','H','J'};
-         char[] sci = {'B','E','G','I','K'};
+         char[] spa = {'A', 'D', 'F', 'H', 'J'};
+         char[] sci = {'B', 'E', 'G', 'I', 'K'};
          if (ArrayUtils.contains(spa, charOldType)) {
              return "A";
          } else if (ArrayUtils.contains(sci, charOldType)) {
@@ -2200,7 +2182,7 @@ public class ImporterMDB implements Importer {
          int iyear = this.converToInt(year);
          Date d = new Date();
          Calendar cal = GregorianCalendar.getInstance();
-         cal.set(iyear, imonth-1, 1);
+         cal.set(iyear, imonth - 1, 1);
          d = cal.getTime();
          return d;
      }
@@ -2213,8 +2195,7 @@ public class ImporterMDB implements Importer {
      int converToInt(String num) {
          try {
              return Integer.parseInt(num);
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
             ImporterMDB.log.error("Error:::" + e.getMessage());
             return 1;
          }
@@ -2229,8 +2210,7 @@ public class ImporterMDB implements Importer {
      Integer convertToIntN(String num) {
          try {
              return Integer.parseInt(num.replaceAll("[^0-9]", ""));
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterMDB.log.error("Error:::" + e.getMessage());
              return null;
          }
@@ -2250,10 +2230,10 @@ public class ImporterMDB implements Importer {
        if (root != null) {
            NodeList nl = root.getElementsByTagName(topElement);
            if (nl != null && nl.getLength() > 0) {
-                for (int i = 0 ; i < nl.getLength();i++) {
-                    Element el = (Element)nl.item(i);
-                    String key = this.getTextValue(el,fields[0]);
-                    String value = this.getTextValue(el,fields[1]);
+                for (int i = 0; i < nl.getLength(); i++) {
+                    Element el = (Element) nl.item(i);
+                    String key = this.getTextValue(el, fields[0]);
+                    String value = this.getTextValue(el, fields[1]);
                     map.put(key, value);
                 }
             }
@@ -2277,7 +2257,7 @@ public class ImporterMDB implements Importer {
             //Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             //parse using builder to get DOM representation of the XML file
-            log("Parsing: " + fileName,1);
+            log("Parsing: " + fileName, 1);
             dom = db.parse(fileName);
             return dom.getDocumentElement();
         } catch (ParserConfigurationException pce) {
@@ -2302,19 +2282,19 @@ public class ImporterMDB implements Importer {
      * @param tagName
      * @return
      */
-     private String getTextValue(Element ele, String tagName) {
-            String textVal = "";
-            NodeList nl = ele.getElementsByTagName(tagName);
-            if (nl != null && nl.getLength() > 0) {
-                Element el = (Element)nl.item(0);
-                Node n = el.getFirstChild();
-                if (n != null) {
-                    textVal = el.getFirstChild().getNodeValue();
-                } else {
-                    textVal = "";
-                }
+    private String getTextValue(Element ele, String tagName) {
+        String textVal = "";
+        NodeList nl = ele.getElementsByTagName(tagName);
+        if (nl != null && nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            Node n = el.getFirstChild();
+            if (n != null) {
+                textVal = el.getFirstChild().getNodeValue();
+            } else {
+                textVal = "";
             }
-            return textVal;
-      }
+        }
+        return textVal;
+    }
 
 }

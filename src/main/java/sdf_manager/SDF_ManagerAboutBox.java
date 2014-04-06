@@ -53,7 +53,7 @@ public class SDF_ManagerAboutBox extends javax.swing.JDialog {
         closeButton.setIcon(resourceMap.getIcon("closeButton.icon")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
 
-        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
+        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize() + 4));
         appTitleLabel.setText(resourceMap.getString("Application.title")); // NOI18N
         appTitleLabel.setName("appTitleLabel"); // NOI18N
 

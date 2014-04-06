@@ -237,7 +237,7 @@ public class ExporterXMLStax implements Exporter {
             log("iterating...");
             while (itrSites.hasNext()) {
                 Object tuple = itrSites.next();
-                String sitecode = (String)tuple;
+                String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
             tx.commit();
@@ -272,7 +272,7 @@ public class ExporterXMLStax implements Exporter {
       * @param fieldName
       * @return
       */
-     String fmt (String src, String fieldName) {
+     String fmt(String src, String fieldName) {
         /* basically a debugging function, printing out null fields
            but could be used for other purposes as well */
         if (src == null) {
@@ -289,11 +289,11 @@ public class ExporterXMLStax implements Exporter {
      * @param fieldName
      * @return
      */
-    String fmt (Date date, String fieldName) {
+    String fmt(Date date, String fieldName) {
         if (date != null) {
             return fmt(date.toString(), fieldName);
         } else {
-            return fmt((String)null, fieldName);
+            return fmt((String) null, fieldName);
         }
     }
      /**
@@ -302,7 +302,7 @@ public class ExporterXMLStax implements Exporter {
      * @param fieldName
      * @return
      */
-    String fmt (Double val, String fieldName) {
+    String fmt(Double val, String fieldName) {
         if (val != null) {
            String strVal = "0.00";
            if (val != new Double(0)) {
@@ -320,7 +320,7 @@ public class ExporterXMLStax implements Exporter {
      * @param fieldName
      * @return
      */
-    String fmt (Integer val, String fieldName) {
+    String fmt(Integer val, String fieldName) {
         if (val != null) {
            String strVal = "0";
            if (val != new Integer(0)) {
@@ -338,11 +338,11 @@ public class ExporterXMLStax implements Exporter {
      * @param fieldName
      * @return
      */
-    String fmt (Boolean val, String fieldName) {
+    String fmt(Boolean val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(), fieldName);
         } else {
-            return fmt((String)null, fieldName);
+            return fmt((String) null, fieldName);
         }
     }
 
@@ -352,7 +352,7 @@ public class ExporterXMLStax implements Exporter {
      * @param fieldName
      * @return
      */
-    String fmt (Character val, String fieldName) {
+    String fmt(Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString(), fieldName);
         } else {

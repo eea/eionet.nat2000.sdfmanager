@@ -47,8 +47,8 @@ public class ExporterMDB implements Exporter {
 
     private String table_file = "config" + System.getProperty("file.separator") + "table_names.xml";
     private String table_element = "table";
-    private HashMap<String,String> tables;
-    private String[] tableKeys = {"name","used_name"};
+    private HashMap<String, String> tables;
+    private String[] tableKeys = {"name", "used_name"};
     private String encoding;
     private Logger logger;
     private String logExportFileName;
@@ -65,7 +65,7 @@ public class ExporterMDB implements Exporter {
      */
     public ExporterMDB(Logger logger, String encoding) {
         this.logger = logger;
-        this.encoding=encoding;
+        this.encoding = encoding;
         init();
     }
 
@@ -75,7 +75,7 @@ public class ExporterMDB implements Exporter {
      */
     public ExporterMDB(Logger logger, String encoding,  String logFileName, String mdbFileName) {
         this.logger = logger;
-        this.encoding=encoding;
+        this.encoding = encoding;
         this.logExportFileName = logFileName;
         this.fileName = mdbFileName;
         init();
@@ -95,7 +95,7 @@ public class ExporterMDB implements Exporter {
             HashMap errorMsgMap = new HashMap();
 
             while (itrSites.hasNext()) {
-                Site site = (Site)itrSites.next();
+                Site site = (Site) itrSites.next();
                 ArrayList errMsgList = ValidateSite.validate(site);
                 errorMsgMap.put(site.getSiteCode(), errMsgList);
                 log("Validating::" + site.getSiteCode());
@@ -107,8 +107,7 @@ public class ExporterMDB implements Exporter {
                 fileMDBLog = copyToLogExportFile(errorMsgMap);
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterMDB.log.error("ERROR loadSitecodes():::" + e.getMessage());
             e.printStackTrace();
@@ -125,7 +124,7 @@ public class ExporterMDB implements Exporter {
      */
     void init() {
          this.tables = new HashMap();
-         this.parse(this.table_file,this.tables,this.table_element,this.tableKeys);
+         this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
      }
     /**
      *
@@ -137,7 +136,7 @@ public class ExporterMDB implements Exporter {
         File fileLog = this.validateSites();
 
         this.createDatabase(fileName);
-        this.copyData(fileName,fileLog);
+        this.copyData(fileName, fileLog);
 
         return true;
     }
@@ -166,7 +165,7 @@ public class ExporterMDB implements Exporter {
         try {
             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
             String database = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + fileName + ";create=true";
-            Connection conn = DriverManager.getConnection( database ,"","");
+            Connection conn = DriverManager.getConnection(database, "", "");
             Configuration cfg = new Configuration();
             cfg.configure();
             String[] cmds = cfg.generateSchemaCreationScript(new MSAccessDialect());
@@ -180,13 +179,12 @@ public class ExporterMDB implements Exporter {
                 log.info("Executing command in database: " + sql);
             }
             conn.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //e.printStackTrace();
             log.error("Error createSchema().:::" + e.getMessage());
-            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
         } finally {
-            try{
+            try {
                 stmt.close();
             } catch (SQLException e) {
                 log.error("Error createSchema().:::" + e.getMessage());
@@ -199,18 +197,18 @@ public class ExporterMDB implements Exporter {
      */
     void copyData(String fileName, File fileLog) {
         try {
-            Class.forName("com.mysql.jdbc.Driver" );
+            Class.forName("com.mysql.jdbc.Driver");
             Configuration cfg = new Configuration();
             cfg.configure();
             Properties props = cfg.getProperties();
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+"\\database\\sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf_database.properties"));
             Class.forName("com.mysql.jdbc.Driver");
 
             log("Conecting to MySQL");
             log.info("Connecting to MySQL");
 
-            Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host")+"/natura2000?autoReconnect=true",properties.getProperty("user"),properties.getProperty("password"));
+            Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true", properties.getProperty("user"), properties.getProperty("password"));
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet rs = dbm.getTables(null, "natura2000", "%" , null);
             com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
@@ -235,7 +233,7 @@ public class ExporterMDB implements Exporter {
             ExporterMDB.log.info("Finishing export process");
             if (fileLog != null) {
                 log("The validation of the data has been failed,the data in DB is not compliant with SDF the schema.\nPlease check the log file, for more details.");
-                JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe data is not compliant with SDF the schema.\n Please check the log file, for more details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe data is not compliant with SDF the schema.\n Please check the log file, for more details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
 
                 Desktop desktop = null;
                 if (Desktop.isDesktopSupported()) {
@@ -244,13 +242,13 @@ public class ExporterMDB implements Exporter {
                 }
             } else {
                 ExporterMDB.log.error("Export process has finished succesfully");
-                JOptionPane.showMessageDialog(new JFrame(), "Export process has finished succesfully.", "Dialog",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "Export process has finished succesfully.", "Dialog", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             log("Failed exporting data to database.");
             //e.printStackTrace();
             log.error("Error copyData().:::" + e.getMessage());
-            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
 
         } finally {
 
@@ -275,10 +273,10 @@ public class ExporterMDB implements Exporter {
        if (root != null) {
            NodeList nl = root.getElementsByTagName(topElement);
            if (nl != null && nl.getLength() > 0) {
-                for (int i = 0 ; i < nl.getLength();i++) {
-                    Element el = (Element)nl.item(i);
-                    String key = this.getTextValue(el,fields[0]);
-                    String value = this.getTextValue(el,fields[1]);
+                for (int i = 0; i < nl.getLength(); i++) {
+                    Element el = (Element) nl.item(i);
+                    String key = this.getTextValue(el, fields[0]);
+                    String value = this.getTextValue(el, fields[1]);
                     map.put(key, value);
                 }
             }
@@ -328,7 +326,7 @@ public class ExporterMDB implements Exporter {
             String textVal = "";
             NodeList nl = ele.getElementsByTagName(tagName);
             if (nl != null && nl.getLength() > 0) {
-                Element el = (Element)nl.item(0);
+                Element el = (Element) nl.item(0);
                 Node n = el.getFirstChild();
                 if (n != null) {
                     textVal = el.getFirstChild().getNodeValue();
@@ -370,25 +368,27 @@ public class ExporterMDB implements Exporter {
               String dateLine = sdf.format(cal.getTime());
               String siteCode = (String) it.next();
 
-              logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: " + siteCode+ System.getProperty("line.separator") );
-              ArrayList arraySites = (ArrayList)exportErrorMap.get(siteCode);
+              logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: "
+                      + siteCode + System.getProperty("line.separator"));
+              ArrayList arraySites = (ArrayList) exportErrorMap.get(siteCode);
 
               if (!arraySites.isEmpty()) {
-                  logErrorFile.write(dateLine + ": Please, check the following fields of te site in the SDF editor:" + System.getProperty("line.separator"));
+                  logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:"
+                          + System.getProperty("line.separator"));
                   Iterator itSite = arraySites.iterator();
                   while (itSite.hasNext()) {
-                     String lineExport = (String)itSite.next();
-                     logErrorFile.write("     " + dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                     String lineExport = (String) itSite.next();
+                     logErrorFile.write("     " + dateLine + ": " + lineExport + System.getProperty("line.separator"));
                      logErrorFile.flush();
                   }
               }
-              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator") );
+              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator"));
           }
           logErrorFile.flush();
           logErrorFile.close();
-         // write("LOG file : exportLog" + formatDate+".log");
+         // write("LOG file : exportLog" + formatDate + ".log");
        } catch (Exception e) {
-           JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+           JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
            e.printStackTrace();
            ExporterMDB.log.error("Error copyToLogExportFile(). " + e.getMessage());
        }

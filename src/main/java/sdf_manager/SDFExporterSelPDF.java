@@ -117,7 +117,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
       */
     private String getFileName() {
         String name;
-        name = "Site_" + this.siteCode+".pdf";
+        name = "Site_" + this.siteCode + ".pdf";
         return name;
     }
 
@@ -131,7 +131,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
             this.dirPath = chooser.getSelectedFile().getAbsolutePath();
             this.fileName = getFileName();
-            //this.txtPath.setText(this.dirPath+ System.getProperty("file.separator") + this.fileName);
+            //this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
             this.txtPath.setText(this.dirPath);
         }
     }
@@ -142,7 +142,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         String encoding = "UTF-8";
         if (this.txtPath.getText().equals("")) {
             SDFExporterSelPDF.log.error("select a folder to export");
-            javax.swing.JOptionPane.showMessageDialog(this,"Please select a folder to export.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a folder to export.");
             return false;
         }
 
@@ -150,7 +150,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         File dir = new File(strPath);
         if (dir.isDirectory()== false) {
             SDFExporterSelPDF.log.error("select an existing folder to generate PDF");
-            javax.swing.JOptionPane.showMessageDialog(this,"Selected path is not valid, please select an existing folder to generate the pdfs.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Selected path is not valid, please select an existing folder to generate the pdfs.");
             return false;
         }
 
@@ -160,9 +160,9 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         String formatDate = sdf.format(cal.getTime());
         String logFile;
         if (dbFile.getParent().equals("")) {
-           logFile = "generatePDFSiteLog_" + formatDate+".log";
+           logFile = "generatePDFSiteLog_" + formatDate + ".log";
         } else {
-           logFile = dbFile.getParent() + System.getProperty("file.separator")+"exportSiteLog_" + formatDate+".log";
+           logFile = dbFile.getParent() + System.getProperty("file.separator") + "exportSiteLog_" + formatDate + ".log";
         }
 
        int rows = this.siteCodes.size();
@@ -171,24 +171,24 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
 
            siteCode = this.siteCodes.get(i);
            Exporter exporter = null;
-           exporter = new GenerateSitePDF(this,encoding,siteCode,this.dirPath);
-           boolean isOK = exporter.processDatabase(this.dirPath+ System.getProperty("file.separator") + dbFile.getName());
+           exporter = new GenerateSitePDF(this, encoding, siteCode, this.dirPath);
+           boolean isOK = exporter.processDatabase(this.dirPath + System.getProperty("file.separator") + dbFile.getName());
 
            if (isOK) {
-              SDFExporterSelPDF.log.info(this.dirPath+ System.getProperty("file.separator") + dbFile.getName()+" PDF file has been saved properly.");
+              SDFExporterSelPDF.log.info(this.dirPath + System.getProperty("file.separator") + dbFile.getName() + " PDF file has been saved properly.");
 
            } else {
                AllOK = false;
-               SDFExporterSelPDF.log.info(this.dirPath+ System.getProperty("file.separator") + dbFile.getName()+" PDF file has not been generated.");
+               SDFExporterSelPDF.log.info(this.dirPath + System.getProperty("file.separator") + dbFile.getName() + " PDF file has not been generated.");
            }
 
        }
 
        if (AllOK) {
-           javax.swing.JOptionPane.showMessageDialog(this, "The selected sites has been saved properly to PDF","PDF",JOptionPane.INFORMATION_MESSAGE);
+           javax.swing.JOptionPane.showMessageDialog(this, "The selected sites has been saved properly to PDF", "PDF", JOptionPane.INFORMATION_MESSAGE);
            this.exit();
        } else {
-           javax.swing.JOptionPane.showMessageDialog(this, "There has been an error generating the PDF, please see the log files","PDF",JOptionPane.INFORMATION_MESSAGE);
+           javax.swing.JOptionPane.showMessageDialog(this, "There has been an error generating the PDF, please see the log files", "PDF", JOptionPane.INFORMATION_MESSAGE);
            this.exit();
        }
        return AllOK;
@@ -227,8 +227,8 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
             logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:" + System.getProperty("line.separator"));
             Iterator itSite = exportErrorList.iterator();
             while (itSite.hasNext()) {
-                String lineExport = (String)itSite.next();
-                logErrorFile.write(dateLine + ": " + lineExport+ System.getProperty("line.separator"));
+                String lineExport = (String) itSite.next();
+                logErrorFile.write(dateLine + ": " + lineExport + System.getProperty("line.separator"));
                 logErrorFile.flush();
            }
           }
@@ -254,13 +254,13 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
           Dimension mySize = getSize();
 
           if (parentSize.width > mySize.width) {
-            x = ((parentSize.width - mySize.width)/2) + topLeft.x;
+            x = ((parentSize.width - mySize.width) / 2) + topLeft.x;
           } else {
             x = topLeft.x;
           }
 
           if (parentSize.height > mySize.height) {
-            y = ((parentSize.height - mySize.height)/2) + topLeft.y;
+            y = ((parentSize.height - mySize.height) / 2) + topLeft.y;
           } else {
             y = topLeft.y;
           }

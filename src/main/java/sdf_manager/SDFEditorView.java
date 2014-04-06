@@ -220,22 +220,22 @@ public class SDFEditorView extends javax.swing.JFrame {
 
 
    private boolean differentFields(String val1, String val2) {
-       if (! ConversionTools.compFields(wrap(val1), wrap(val2))) {
+       if (!ConversionTools.compFields(wrap(val1), wrap(val2))) {
            return true;
        } else return false;
    }
    private boolean differentFields(Character val1, Character val2) {
-       if (! ConversionTools.compFields(val1, val2)) {
+       if (!ConversionTools.compFields(val1, val2)) {
            return true;
        } else return false;
    }
    private boolean differentFields(Date val1, Date val2) {
-       if (! ConversionTools.compFields(val1, val2)) {
+       if (!ConversionTools.compFields(val1, val2)) {
            return true;
        } else return false;
    }
    private boolean checkSitecode() {
-       if (! ConversionTools.compFields(this.txtSiteCode.getText(), wrap(this.site.getSiteCode()))) {
+       if (!ConversionTools.compFields(this.txtSiteCode.getText(), wrap(this.site.getSiteCode()))) {
            String code = fmtU(this.txtSiteCode.getText());
            if (code.length() != 9) {
                return false;
@@ -521,7 +521,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             if (!("").equals(respName) || !("").equals(respEmail)) {
                  resp.setRespName(respName);
                  resp.setRespEmail(respEmail);
-                 if ( !("").equals(respAddr)) {
+                 if (!("").equals(respAddr)) {
                   resp.setRespAddress(respAddr);
                  } else if (!("").equals(respAddrArea)) {
 
@@ -661,7 +661,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         sb.setSite(this.site);
         sb.setBiogeoPercent(percent);
         sb.setBiogeo(biogeo);
-        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
+        SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
         sb.setId(id);
         this.site.getSiteBiogeos().add(sb);
         this.saveAndReloadSession();
@@ -687,8 +687,7 @@ public class SDFEditorView extends javax.swing.JFrame {
             doc = new Doc();
             doc.getSites().add(this.site);
             this.site.setDoc(doc);
-        }
-        else {
+        } else {
         }
         DocLink link = new DocLink();
         link.setDocLinkUrl(url);
@@ -898,8 +897,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                     Object[] tuple = {rel.getSiteRelationCode(), rel.getSiteRelationSitename(), rel.getSiteRelationCover()};
                     modelNational.insertRow(i++, tuple);
                     this.modelNationalRelations.add(rel);
-                }
-                else {
+                } else {
                     /* EROROROROR */
                 }
             }
@@ -921,8 +919,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                     modelNegativeImpacts.add(impact);
                 } else if (impact.getImpactType().equals('P')) {
                     modelPositiveImpacts.add(impact);
-                }
-                else {
+                } else {
                     //shouldn't get here
                 }
             }
@@ -4040,7 +4037,7 @@ public class SDFEditorView extends javax.swing.JFrame {
 
     private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDocLinkActionPerformed
         int row = this.lstLinks.getSelectedIndex();
-        if (row == -1 ) {
+        if (row == -1) {
             javax.swing.JOptionPane.showMessageDialog(this, "No link class selected");
         } else {
            int answer = javax.swing.JOptionPane.showOptionDialog(
@@ -4048,11 +4045,11 @@ public class SDFEditorView extends javax.swing.JFrame {
                 "Are you sure you want to delete selected link?",
                 "Confirm delete link",
                 javax.swing.JOptionPane.YES_NO_OPTION,
-                 javax.swing.JOptionPane.WARNING_MESSAGE,
-                 null,
-                 null,
-                 null
-                 );
+                javax.swing.JOptionPane.WARNING_MESSAGE,
+                null,
+                null,
+                null
+                );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 log("Removing row: " + Integer.toString(row));
                 Doc doc = this.site.getDoc();

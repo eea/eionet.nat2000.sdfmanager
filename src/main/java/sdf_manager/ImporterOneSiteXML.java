@@ -147,15 +147,15 @@ public class ImporterOneSiteXML implements Importer {
             ImporterOneSiteXML.log.info("Init validate process");
             boolean sitesDB = validateSites(session);
             ImporterOneSiteXML.log.info("Validation has finished");
-            log("Validation has finished.",1);
+            log("Validation has finished.", 1);
             if (!sitesDB) {
                 ImporterOneSiteXML.log.info("Import process is starting");
-                log("Import process is starting.",1);
+                log("Import process is starting.", 1);
                 this.processDatabase(session, fileName);
             } else {
                 ImporterOneSiteXML.log.error("Error in validation");
-                log("Error in validation.",1);
-                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+                log("Error in validation.", 1);
+                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
             session.flush();
@@ -208,7 +208,7 @@ public class ImporterOneSiteXML implements Importer {
       * @param fileName
       * @return
       */
-     public boolean processDatabase(Session session,String fileName) {
+     public boolean processDatabase(Session session, String fileName) {
         this.fileName = fileName;
         boolean isOK = true;
         try {
@@ -220,19 +220,19 @@ public class ImporterOneSiteXML implements Importer {
             isOK = getNodeSite(session, fileName);
             if (isOK) {
                 ImporterOneSiteXML.log.info("Import process has finished succesfully");
-                log("Import process has finished succesfully" );
-                javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);;
+                log("Import process has finished succesfully");
+                javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);;
             } else {
-               log("It's been produced an error in the Import Process" );
+               log("It's been produced an error in the Import Process");
                 ImporterOneSiteXML.log.error("It's been produced an error in the Import Process.\nPlease check the log file for more details");
-                JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process.Please check the log file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process.Please check the log file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception ex) {
             //ex.printStackTrace();
-            log("It's been produced an error in the Import Process" );
+            log("It's been produced an error in the Import Process");
             ImporterOneSiteXML.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());
-            JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process", "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process", "Dialog", JOptionPane.ERROR_MESSAGE);
             isOK = false;
         } finally {
             session.clear();
@@ -362,7 +362,7 @@ public class ImporterOneSiteXML implements Importer {
         boolean nutsOK = false;
 
         ImporterOneSiteXML.log.info("Validating Region Code");
-        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
+        String hql = "select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
 
         try {
             Query q = session.createQuery(hql);
@@ -378,7 +378,7 @@ public class ImporterOneSiteXML implements Importer {
     }
 
 
-    private boolean getNodeSite(Session session,String fileName) {
+    private boolean getNodeSite(Session session, String fileName) {
 
         boolean importOK = false;
         try {
@@ -398,7 +398,7 @@ public class ImporterOneSiteXML implements Importer {
             XPath xpath = xFactory.newXPath();
 
             /******/
-            Site site= new Site();
+            Site site = new Site();
 
             // Compile the XPath expression
             log("Processing ...:" + this.siteCode);
@@ -745,7 +745,7 @@ public class ImporterOneSiteXML implements Importer {
                             //Site Location-Admin Regions-Region
                             log("         Processing Region:::" + regCode);
                             ImporterOneSiteXML.log.info("Processing Site Location-Admin Regions-Region:::" + regCode);
-                            boolean regionOK=isRegionLevel2(session, regCode);
+                            boolean regionOK = isRegionLevel2(session, regCode);
                             if (!regionOK) {
                                 log("         Region Code:::" + regCode + " doesn't belong to nut level 2:::");
                                 ImporterOneSiteXML.log.info("Region Code:::" + regCode + " doesn't belong to nut level 2:::");

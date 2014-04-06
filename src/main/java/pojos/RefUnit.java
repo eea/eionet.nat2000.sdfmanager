@@ -13,7 +13,7 @@ public class RefUnit {
     /**
      *
      */
-    public RefUnit(){
+    public RefUnit() {
 
     }
 
@@ -59,4 +59,4 @@ public class RefUnit {
         this.refUnitCode = refUnitCode;
     }
 
-  }
+}

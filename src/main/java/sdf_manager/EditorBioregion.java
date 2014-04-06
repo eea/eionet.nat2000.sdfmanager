@@ -29,7 +29,7 @@ public class EditorBioregion extends javax.swing.JFrame {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorBioregion.class .getName());
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
     private boolean editing = false; //no cascaded actionPerformed
     private int index = -1; //in case of edit of existing habitat
     private SDFEditor parent;
@@ -48,14 +48,14 @@ public class EditorBioregion extends javax.swing.JFrame {
     }
 
     /**
-     * Close the BioRegion Editor
+     * Close the BioRegion Editor.
      */
     private void exit() {
        this.dispose();
     }
 
     /**
-     * Load BioRegions to add a new bio region to the site
+     * Load BioRegions to add a new bio region to the site.
      */
     private void loadRegions() {
        EditorBioregion.log.info("Load BioRegions to add a new bio region to the site");
@@ -79,7 +79,7 @@ public class EditorBioregion extends javax.swing.JFrame {
        EditorBioregion.log.info("End Load BioRegions");
    }
     /**
-     * Load BioRegions to edit a new bio region to the site
+     * Load BioRegions to edit a new bio region to the site.
      */
     public void loadRegions(SiteBiogeo h, int index) {
         this.index = index;
@@ -269,6 +269,7 @@ public class EditorBioregion extends javax.swing.JFrame {
             this.editing = false;
         }
     } //GEN-LAST:event_cmbCodeItemStateChanged
+
     /**
      *
      * @param evt
@@ -280,19 +281,20 @@ public class EditorBioregion extends javax.swing.JFrame {
         }
         //txtArea.setText("100");
     } //GEN-LAST:event_cmbNameItemStateChanged
+
     /**
-     * Checks if the param is null
+     * Checks if the param is null.
      * @param s
      * @return
      */
     private Double isNum(String s) {
         try {
             return Double.parseDouble(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
+
     /**
      *
      * @param evt
@@ -303,7 +305,7 @@ public class EditorBioregion extends javax.swing.JFrame {
         EditorBioregion.log.info("Saving bio region ::" + code);
         Double percent;
         boolean saveOK = false;
-        String msgInfo="";
+        String msgInfo = "";
         if (code.equals("")) {
             EditorBioregion.log.error("There is not code for Biogeographical region .");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a code for Biogeographical region.");
@@ -319,11 +321,11 @@ public class EditorBioregion extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a valid percentage.");
         } else {
             Double dblPercentage = null;
-            if (txtArea.getText()!=null && !txtArea.getText().equals("")) {
+            if (txtArea.getText() != null && !txtArea.getText().equals("")) {
                 dblPercentage = new Double(txtArea.getText());
             }
-            if (this.previousPercentage!=null) {
-                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage - this.previousPercentage ) > 100) {
+            if (this.previousPercentage != null) {
+                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage - this.previousPercentage) > 100) {
                     EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
                     javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
                     return;
@@ -345,12 +347,12 @@ public class EditorBioregion extends javax.swing.JFrame {
             if (this.editing && this.index > -1) {
                 EditorBioregion.log.info("Bioregion saved");
                 /*we're editing an existing habitat*/
-                saveOK = this.parent.saveBiogeo(b, percent,this.index);
-                msgInfo="Bioregion saved";
+                saveOK = this.parent.saveBiogeo(b, percent, this.index);
+                msgInfo = "Bioregion saved";
            } else {
                 EditorBioregion.log.info("Bioregion added");
-                saveOK =this.parent.addBiogeo(b, percent);
-                msgInfo="Bioregion added";
+                saveOK = this.parent.addBiogeo(b, percent);
+                msgInfo = "Bioregion added";
 
            }
             if (saveOK) {

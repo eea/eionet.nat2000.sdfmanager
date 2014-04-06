@@ -52,7 +52,7 @@ public class ImporterSiteXML implements Importer {
         this.logger = logger;
         this.encoding = encoding;
         this.initLogFile(logFile);
-        this.siteCode=siteCode;
+        this.siteCode = siteCode;
     }
 
     /**
@@ -92,8 +92,7 @@ public class ImporterSiteXML implements Importer {
 
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterSiteXML.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
@@ -106,8 +105,7 @@ public class ImporterSiteXML implements Importer {
          try {
              out.close();
              outFile.close();
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterSiteXML.log.error("An error has occurred in closeLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
@@ -140,21 +138,21 @@ public class ImporterSiteXML implements Importer {
      * @return
      */
     public boolean validateAndProcessDB(String fileName) {
-        Session session =null;
+        Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             ImporterSiteXML.log.info("Init validate process");
             boolean sitesDB = validateSites(session);
             ImporterSiteXML.log.info("Validation has finished");
-            log("Validation has finished.",1);
+            log("Validation has finished.", 1);
             if (!sitesDB) {
                 ImporterSiteXML.log.info("Import process is starting");
-                log("Import process is starting.",1);
-                this.processDatabase(session,fileName);
+                log("Import process is starting.", 1);
+                this.processDatabase(session, fileName);
             } else {
                 ImporterSiteXML.log.error("Error in validation");
-                log("Error in validation.",1);
-                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+                log("Error in validation.", 1);
+                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
             session.flush();
@@ -177,10 +175,10 @@ public class ImporterSiteXML implements Importer {
       * @param conn
       */
      private boolean validateSites(Session session) {
-        boolean siteInDB=false;
+        boolean siteInDB = false;
         try {
-           if (SDF_Util.validateSite(session,this.siteCode)) {
-               siteInDB=true;
+           if (SDF_Util.validateSite(session, this.siteCode)) {
+               siteInDB = true;
            }
            session.flush();
            session.clear();
@@ -206,7 +204,7 @@ public class ImporterSiteXML implements Importer {
       * @param fileName
       * @return
       */
-     public boolean processDatabase(Session session,String fileName) {
+     public boolean processDatabase(Session session, String fileName) {
         this.fileName = fileName;
         boolean isOK = true;
 
@@ -214,24 +212,24 @@ public class ImporterSiteXML implements Importer {
             ImporterSiteXML.log.info("Import process from file:::" + fileName);
 
             log("Init Import process.");
-            isOK = getNodeSite(session,fileName);
+            isOK = getNodeSite(session, fileName);
 
             if (isOK) {
                 ImporterSiteXML.log.info("Import process has finished succesfully");
-                log("Import process has finished succesfully" );
-                javax.swing.JOptionPane.showMessageDialog(new Frame(),"Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);;
+                log("Import process has finished succesfully");
+                javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);;
             } else {
-               log("It's been produced an error in the Import Process" );
+               log("It's been produced an error in the Import Process");
                 ImporterSiteXML.log.error("It's been produced an error in the Import Process.\nPlease check the log file for more details");
-                JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process.Please check the log file for more details", "Dialog",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process.Please check the log file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception ex) {
             //ex.printStackTrace();
-            log("It's been produced an error in the Import Process" );
+            log("It's been produced an error in the Import Process");
             ImporterSiteXML.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());
-            JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process", "Dialog",JOptionPane.ERROR_MESSAGE);
-            isOK= false;
+            JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process", "Dialog", JOptionPane.ERROR_MESSAGE);
+            isOK = false;
         } finally {
             session.clear();
         }
@@ -323,7 +321,7 @@ public class ImporterSiteXML implements Importer {
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
-            ownerShipId = ((Integer)itr.next()).intValue();
+            ownerShipId = ((Integer) itr.next()).intValue();
         }
 
         return ownerShipId;
@@ -342,7 +340,7 @@ public class ImporterSiteXML implements Importer {
        Iterator itr = q.iterate();
 
        if (itr.hasNext()) {
-          biogeoId = ((Integer)itr.next()).intValue();
+          biogeoId = ((Integer) itr.next()).intValue();
        }
        return biogeoId;
 
@@ -377,10 +375,10 @@ public class ImporterSiteXML implements Importer {
     }
 
 
-    private boolean getNodeSite(Session session,String fileName) {
+    private boolean getNodeSite(Session session, String fileName) {
 
         boolean importOK = false;
-        try{
+        try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             DocumentBuilder builder;
@@ -397,7 +395,7 @@ public class ImporterSiteXML implements Importer {
             XPath xpath = xFactory.newXPath();
 
             /******/
-            Site site= new Site();
+            Site site = new Site();
 
             // Compile the XPath expression
             log("Processing ...:" + this.siteCode);
@@ -448,7 +446,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
                 nodes = (Node) result;
-                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                if (nodes.getNodeValue() != null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                    site.setSiteUpdateDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
@@ -461,7 +459,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
                 nodes = (Node) result;
-                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                if (nodes.getNodeValue() != null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSpaDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
@@ -473,7 +471,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
                 nodes = (Node) result;
-                if (nodes.getNodeValue()!= null) {
+                if (nodes.getNodeValue() != null) {
                     site.setSiteSpaLegalRef(nodes.getNodeValue());
                 }
             }
@@ -486,7 +484,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
                 nodes = (Node) result;
-                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                if (nodes.getNodeValue() != null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSciConfDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
@@ -499,7 +497,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
                 nodes = (Node) result;
-                if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+                if (nodes.getNodeValue() != null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                     site.setSiteSciPropDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
                 }
             }
@@ -513,7 +511,7 @@ public class ImporterSiteXML implements Importer {
             result = expr.evaluate(document, XPathConstants.NODE);
             if (result != null) {
               nodes = (Node) result;
-              if (nodes.getNodeValue()!= null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
+              if (nodes.getNodeValue() != null  && !((SDF_Constants.NULL_DATE).equals(nodes.getNodeValue()))) {
                    site.setSiteSacDate(ConversionTools.convertStringToDate(nodes.getNodeValue()));
               }
             }
@@ -731,20 +729,20 @@ public class ImporterSiteXML implements Importer {
                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/adminRegions/region");
                 result = expr.evaluate(document, XPathConstants.NODESET);
                 if (result != null) {
-                    NodeList nodeList = (NodeList)result;
-                    for (int i=1;i<=nodeList.getLength();i++) {
+                    NodeList nodeList = (NodeList) result;
+                    for (int i = 1; i <= nodeList.getLength(); i++) {
                         Region region = new Region();
-                        String regCode=null;
-                        String regName=null;
+                        String regCode = null;
+                        String regName = null;
                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/adminRegions/region[" + i + "]/code/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nDataReg = (Node)result;
+                            Node nDataReg = (Node) result;
                             regCode = nDataReg.getNodeValue();
                             //Site Location-Admin Regions-Region
                             log("         Processing Region:::" + regCode);
                             ImporterSiteXML.log.info("Processing Site Location-Admin Regions-Region:::" + regCode);
-                            boolean regionOK=isRegionLevel2(session,regCode);
+                            boolean regionOK = isRegionLevel2(session, regCode);
                             if (!regionOK) {
                                 log("         Region Code:::" + regCode + " doesn't belong to nut level 2:::");
                                 ImporterSiteXML.log.info("Region Code:::" + regCode + " doesn't belong to nut level 2:::");
@@ -756,7 +754,7 @@ public class ImporterSiteXML implements Importer {
                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/adminRegions/region[" + i + "]/name/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nDataReg = (Node)result;
+                            Node nDataReg = (Node) result;
                             regName = nDataReg.getNodeValue();
                         }
                         if (regCode != null) {
@@ -777,30 +775,30 @@ public class ImporterSiteXML implements Importer {
                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/biogeoRegions");
                 // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODESET);
-                Set bioRegion=null;
+                Set bioRegion = null;
                 if (result != null) {
-                    NodeList nodeBio = (NodeList)result;
+                    NodeList nodeBio = (NodeList) result;
                     bioRegion = new HashSet();
-                    for (int i=1;i<=nodeBio.getLength();i++) {
+                    for (int i = 1; i <= nodeBio.getLength(); i++) {
                         SiteBiogeo siteBio = null;
                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/biogeoRegions[" + i + "]/code/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nBioReg = (Node)result;
+                            Node nBioReg = (Node) result;
                             //siteBio.set
                             String biogeoCode = nBioReg.getNodeValue();
                             //Site Location-BioRegions-Biogeo
                             log("         Processing BioRegion:::" + biogeoCode);
                             ImporterSiteXML.log.info("Processing Site Location-BioRegions:::" + biogeoCode);
-                            int biogeoId = getBiogeoId(session,biogeoCode);
+                            int biogeoId = getBiogeoId(session, biogeoCode);
                             Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeoId);
                             SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
-                            siteBio = new SiteBiogeo(id,biogeo,site);
+                            siteBio = new SiteBiogeo(id, biogeo, site);
                         }
                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/biogeoRegions[" + i + "]/percentage/text()");
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nBioRegPer = (Node)result;
+                            Node nBioRegPer = (Node) result;
                             //siteBio.set
                             String biogeoPercent = nBioRegPer.getNodeValue();
                             if (siteBio != null) {
@@ -824,14 +822,14 @@ public class ImporterSiteXML implements Importer {
                         // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
-                        NodeList nodeHab = (NodeList)result;
-                        for (int i=1;i<=nodeHab.getLength();i++) {
+                        NodeList nodeHab = (NodeList) result;
+                        for (int i = 1; i <= nodeHab.getLength(); i++) {
                            Habitat habitat = new Habitat();
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/habitatTypes/habitatType[" + i + "]/code/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 habitat.setHabitatCode(nodeData.getNodeValue());
                             }
 
@@ -843,7 +841,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (Boolean.parseBoolean(nodeData.getNodeValue())) {
                                     habitat.setHabitatPriority(Short.parseShort("0"));
                                 } else {
@@ -855,7 +853,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (Boolean.parseBoolean(nodeData.getNodeValue())) {
                                     habitat.setHabitatNp(Short.parseShort("0"));
                                 } else {
@@ -867,7 +865,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 habitat.setHabitatCover(Double.parseDouble(nodeData.getNodeValue()));
                             }
 
@@ -875,7 +873,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 habitat.setHabitatCaves(Integer.parseInt(nodeData.getNodeValue()));
                             }
 
@@ -883,7 +881,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 habitat.setHabitatDataQuality(nodeData.getNodeValue());
                             }
 
@@ -891,7 +889,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatRepresentativity(nodeData.getNodeValue().charAt(0));
                                 }
@@ -901,7 +899,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatRelativeSurface(nodeData.getNodeValue().charAt(0));
                                 }
@@ -911,7 +909,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatConservation(nodeData.getNodeValue().charAt(0));
                                 }
@@ -921,7 +919,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                     habitat.setHabitatGlobal(nodeData.getNodeValue().charAt(0));
                                 }
@@ -946,7 +944,7 @@ public class ImporterSiteXML implements Importer {
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
                         NodeList nodeList = (NodeList) result;
-                        for (int i=1;i<=nodeList.getLength();i++) {
+                        for (int i = 1; i <= nodeList.getLength(); i++) {
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/species/speciesPopulation[" + i + "]/motivations/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
@@ -956,7 +954,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     species.setOtherSpeciesGroup(nodeData.getNodeValue());
                                 }
 
@@ -964,7 +962,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesCode(nodeData.getNodeValue());
                                     }
@@ -974,7 +972,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesName(nodeData.getNodeValue());
                                     }
@@ -988,7 +986,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (("true").equals(nodeData.getNodeValue())) {
                                         species.setOtherSpeciesSensitive(Short.parseShort("1"));
                                     } else {
@@ -1000,7 +998,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (("true").equals(nodeData.getNodeValue())) {
                                         species.setOtherSpeciesNp(Short.parseShort("1"));
                                     } else {
@@ -1012,7 +1010,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue()));
                                     }
@@ -1022,7 +1020,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue()));
                                     }
@@ -1032,7 +1030,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesUnit(nodeData.getNodeValue());
                                     }
@@ -1042,7 +1040,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setOtherSpeciesCategory(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1053,14 +1051,14 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODESET);
                                 if (result != null) {
-                                    NodeList nodeMot = (NodeList)result;
+                                    NodeList nodeMot = (NodeList) result;
                                     StringBuffer strMot = new StringBuffer();
-                                    for (int j=1;j<=nodeMot.getLength();j++) {
+                                    for (int j = 1; j <= nodeMot.getLength(); j++) {
                                         expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/ecologicalInformation/species/speciesPopulation[" + i + "]/motivations/motivation[" + j + "]/text()");
                                         // Run the query and get a nodeset
                                         result = expr.evaluate(document, XPathConstants.NODE);
-                                        if (result!=null) {
-                                            Node nodeMotv = (Node)result;
+                                        if (result != null) {
+                                            Node nodeMotv = (Node) result;
                                             if (nodeMotv.getNodeValue() != null) {
                                               strMot.append(nodeMotv.getNodeValue());
                                               strMot.append(",");
@@ -1068,7 +1066,7 @@ public class ImporterSiteXML implements Importer {
                                         }
                                     }
                                     String motiva = strMot.toString();
-                                    motiva = motiva.substring(0,motiva.length()-1);
+                                    motiva = motiva.substring(0, motiva.length() - 1);
                                     species.setOtherSpeciesMotivation(motiva);
                                 }
                                 species.setSite(site);
@@ -1079,7 +1077,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     species.setSpeciesGroup(nodeData.getNodeValue().charAt(0));
                                 }
 
@@ -1087,7 +1085,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesCode(nodeData.getNodeValue());
                                     }
@@ -1097,7 +1095,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesName(nodeData.getNodeValue());
                                     }
@@ -1111,7 +1109,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                         if (("true").equals(nodeData.getNodeValue())) {
                                             species.setSpeciesSensitive(Short.parseShort("1"));
@@ -1125,7 +1123,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                         if (("true").equals(nodeData.getNodeValue())) {
                                             species.setSpeciesNp(Short.parseShort("1"));
@@ -1139,7 +1137,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesType(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1149,7 +1147,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesSizeMin(Integer.parseInt(nodeData.getNodeValue()));
                                     }
@@ -1159,7 +1157,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesSizeMax(Integer.parseInt(nodeData.getNodeValue()));
                                     }
@@ -1169,7 +1167,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesUnit(nodeData.getNodeValue());
                                     }
@@ -1180,7 +1178,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesCategory(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1190,7 +1188,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesDataQuality(nodeData.getNodeValue());
                                     }
@@ -1200,7 +1198,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesPopulation(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1210,7 +1208,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesConservation(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1220,7 +1218,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesIsolation(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1230,7 +1228,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       species.setSpeciesGlobal(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1256,15 +1254,15 @@ public class ImporterSiteXML implements Importer {
                      // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODESET);
                     if (result != null) {
-                        NodeList nodeHabClass = (NodeList)result;
-                        for (int i=1;i<=nodeHabClass.getLength();i++) {
+                        NodeList nodeHabClass = (NodeList) result;
+                        for (int i = 1; i <= nodeHabClass.getLength(); i++) {
                             HabitatClass habClass = new HabitatClass();
 
                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/habitatClass[" + i + "]/code/text()");
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                   habClass.setHabitatClassCode(nodeData.getNodeValue());
                                 }
@@ -1278,7 +1276,7 @@ public class ImporterSiteXML implements Importer {
                             // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                   habClass.setHabitatClassCover(Double.parseDouble(nodeData.getNodeValue()));
                                 }
@@ -1292,7 +1290,7 @@ public class ImporterSiteXML implements Importer {
                      // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                           site.setSiteCharacteristics(nodeData.getNodeValue());
                         }
@@ -1302,7 +1300,7 @@ public class ImporterSiteXML implements Importer {
                      // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                           site.setSiteQuality(nodeData.getNodeValue());
                         }
@@ -1320,14 +1318,14 @@ public class ImporterSiteXML implements Importer {
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeImpacts = (NodeList)result;
-                            for (int i=1;i<=nodeImpacts.getLength();i++) {
+                            NodeList nodeImpacts = (NodeList) result;
+                            for (int i = 1; i <= nodeImpacts.getLength(); i++) {
                                 Impact impact = new Impact();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/impacts/impact[" + i + "]/code/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       impact.setImpactCode(nodeData.getNodeValue());
                                     }
@@ -1341,7 +1339,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       impact.setImpactRank(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1351,7 +1349,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       impact.setImpactPollutionCode(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1361,7 +1359,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       impact.setImpactOccurrence(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1371,7 +1369,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       impact.setImpactType(nodeData.getNodeValue().charAt(0));
                                     }
@@ -1393,14 +1391,14 @@ public class ImporterSiteXML implements Importer {
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeOwner = (NodeList)result;
-                            for (int i=1;i<=nodeOwner.getLength();i++) {
+                            NodeList nodeOwner = (NodeList) result;
+                            for (int i = 1; i <= nodeOwner.getLength(); i++) {
                                 SiteOwnership ownerShip = new SiteOwnership();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/ownership/ownershipPart[" + i + "]/ownershiptype/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                         Ownership owner = new Ownership();
                                         owner.setOwnershipType(nodeData.getNodeValue());
@@ -1408,17 +1406,17 @@ public class ImporterSiteXML implements Importer {
                                         //Site Description-OwnerShip
                                         log("         Processing OwnerShip:::" + owner.getOwnershipType());
                                         ImporterSiteXML.log.info("Processing OwnerShip:::" + owner.getOwnershipType());
-                                        int ownerShipId = getOwnerShipId(session,nodeData.getNodeValue());
+                                        int ownerShipId = getOwnerShipId(session, nodeData.getNodeValue());
                                         if (ownerShipId != -1) {
                                             owner.setOwnershipId(ownerShipId);
-                                            SiteOwnershipId id = new SiteOwnershipId(owner.getOwnershipId(),site.getSiteCode());
+                                            SiteOwnershipId id = new SiteOwnershipId(owner.getOwnershipId(), site.getSiteCode());
                                             //siteOwnerShip.setId(id);
                                             ownerShip = new SiteOwnership(id, owner, site);
                                             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/ownership/ownershipPart[" + i + "]/percent/text()");
                                             // Run the query and get a nodeset
                                             result = expr.evaluate(document, XPathConstants.NODE);
                                             if (result != null) {
-                                                Node nodeDataPercent = (Node)result;
+                                                Node nodeDataPercent = (Node) result;
                                                 if (nodeData.getNodeValue() != null) {
                                                     ownerShip.setOwnershipPercent(Double.parseDouble(nodeDataPercent.getNodeValue()));
                                                 }
@@ -1444,7 +1442,7 @@ public class ImporterSiteXML implements Importer {
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nodeData = (Node)result;
+                            Node nodeData = (Node) result;
                             if (nodeData.getNodeValue() != null) {
                                 doc.setDocDescription(nodeData.getNodeValue());
                             }
@@ -1457,13 +1455,13 @@ public class ImporterSiteXML implements Importer {
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeLinks = (NodeList)result;
-                            for (int i=1;i<=nodeLinks.getLength();i++) {
+                            NodeList nodeLinks = (NodeList) result;
+                            for (int i = 1; i <= nodeLinks.getLength(); i++) {
                                 DocLink link = new DocLink();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteDescription/documentation/links/link/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                     link.setDocLinkUrl(nodeData.getNodeValue());
                                 }
@@ -1482,7 +1480,7 @@ public class ImporterSiteXML implements Importer {
                  // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
                 if (result != null) {
-                    Node nodeData = (Node)result;
+                    Node nodeData = (Node) result;
                     if (nodeData.getNodeValue() != null) {
                       site.setSiteCharacteristics(nodeData.getNodeValue());
                     }
@@ -1495,7 +1493,7 @@ public class ImporterSiteXML implements Importer {
                  // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
                 if (result != null) {
-                    Node nodeData = (Node)result;
+                    Node nodeData = (Node) result;
                     if (nodeData.getNodeValue() != null) {
                       site.setSiteQuality(nodeData.getNodeValue());
                     }
@@ -1518,14 +1516,14 @@ public class ImporterSiteXML implements Importer {
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeNDesig = (NodeList)result;
-                            for (int i=1;i<=nodeNDesig.getLength();i++) {
+                            NodeList nodeNDesig = (NodeList) result;
+                            for (int i = 1; i <= nodeNDesig.getLength(); i++) {
                                 NationalDtype nationalDType = new NationalDtype();
                                 expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteProtection/nationalDesignations/nationalDesignation[" + i + "]/designationCode/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       nationalDType.setNationalDtypeCode(nodeData.getNodeValue());
                                     }
@@ -1538,7 +1536,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       nationalDType.setNationalDtypeCover(Double.parseDouble(nodeData.getNodeValue()));
                                     }
@@ -1567,8 +1565,8 @@ public class ImporterSiteXML implements Importer {
                              // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODESET);
                             if (result != null) {
-                                NodeList nodeNRel = (NodeList)result;
-                                for (int i=1;i<=nodeNRel.getLength();i++) {
+                                NodeList nodeNRel = (NodeList) result;
+                                for (int i = 1; i <= nodeNRel.getLength(); i++) {
                                     SiteRelation rel = new SiteRelation();
                                     rel.setSiteRelationScope('N');
 
@@ -1576,7 +1574,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationCode(nodeData.getNodeValue());
                                         }
@@ -1590,7 +1588,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationSitename(nodeData.getNodeValue());
                                         }
@@ -1600,7 +1598,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationType(nodeData.getNodeValue().charAt(0));
                                         }
@@ -1610,7 +1608,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue()));
                                         }
@@ -1633,8 +1631,8 @@ public class ImporterSiteXML implements Importer {
                                 //Site Protection-International Relations
                                 log("Processing Site Protection-International Relations");
                                 ImporterSiteXML.log.info("Processing Site Protection-International Relations");
-                                NodeList nodeNRel = (NodeList)result;
-                                for (int i=1;i<=nodeNRel.getLength();i++) {
+                                NodeList nodeNRel = (NodeList) result;
+                                for (int i = 1; i <= nodeNRel.getLength(); i++) {
                                     SiteRelation rel = new SiteRelation();
                                     rel.setSiteRelationScope('I');
 
@@ -1642,7 +1640,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationConvention(nodeData.getNodeValue());
                                         }
@@ -1656,7 +1654,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationSitename(nodeData.getNodeValue());
                                         }
@@ -1666,7 +1664,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationType(nodeData.getNodeValue().charAt(0));
                                         }
@@ -1676,7 +1674,7 @@ public class ImporterSiteXML implements Importer {
                                     // Run the query and get a nodeset
                                     result = expr.evaluate(document, XPathConstants.NODE);
                                     if (result != null) {
-                                        Node nodeData = (Node)result;
+                                        Node nodeData = (Node) result;
                                         if (nodeData.getNodeValue() != null) {
                                           rel.setSiteRelationCover(Double.parseDouble(nodeData.getNodeValue()));
                                         }
@@ -1693,7 +1691,7 @@ public class ImporterSiteXML implements Importer {
                              // Run the query and get a nodeset
                             result = expr.evaluate(document, XPathConstants.NODE);
                             if (result != null) {
-                                Node nodeData = (Node)result;
+                                Node nodeData = (Node) result;
                                 if (nodeData.getNodeValue() != null) {
                                   site.setSiteDesignation(nodeData.getNodeValue());
                                 }
@@ -1720,8 +1718,8 @@ public class ImporterSiteXML implements Importer {
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeMgmtBody = (NodeList)result;
-                            for (int i=1;i<=nodeMgmtBody.getLength();i++) {
+                            NodeList nodeMgmtBody = (NodeList) result;
+                            for (int i = 1; i <= nodeMgmtBody.getLength(); i++) {
                                 MgmtBody mgmtBody = new MgmtBody();
 
                                 //Site Management Body
@@ -1731,7 +1729,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyOrg(nodeData.getNodeValue());
                                     }
@@ -1741,7 +1739,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyAdminUnit(nodeData.getNodeValue());
                                     }
@@ -1752,7 +1750,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyLocatorDesignator(nodeData.getNodeValue());
                                     }
@@ -1762,7 +1760,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyLocatorName(nodeData.getNodeValue());
                                     }
@@ -1772,7 +1770,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyAddressArea(nodeData.getNodeValue());
                                     }
@@ -1782,7 +1780,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyPostName(nodeData.getNodeValue());
                                     }
@@ -1792,7 +1790,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyPostCode(nodeData.getNodeValue());
                                     }
@@ -1802,7 +1800,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyThroughFare(nodeData.getNodeValue());
                                     }
@@ -1812,7 +1810,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyAddress(nodeData.getNodeValue());
                                     }
@@ -1822,7 +1820,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtBody.setMgmtBodyEmail(nodeData.getNodeValue());
                                     }
@@ -1843,7 +1841,7 @@ public class ImporterSiteXML implements Importer {
                         // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODE);
                         if (result != null) {
-                            Node nodeData = (Node)result;
+                            Node nodeData = (Node) result;
                             if (nodeData.getNodeValue() != null) {
                                 mgmt.setMgmtStatus(nodeData.getNodeValue().charAt(0));
                             } else {
@@ -1857,8 +1855,8 @@ public class ImporterSiteXML implements Importer {
                          // Run the query and get a nodeset
                         result = expr.evaluate(document, XPathConstants.NODESET);
                         if (result != null) {
-                            NodeList nodeMgmtBody = (NodeList)result;
-                            for (int i=1;i<=nodeMgmtBody.getLength();i++) {
+                            NodeList nodeMgmtBody = (NodeList) result;
+                            for (int i = 1; i <= nodeMgmtBody.getLength(); i++) {
                                 MgmtPlan mgmtPlan = new MgmtPlan();
                                 //Site Management Plan
                                 log("         Processing Site Management Plan");
@@ -1867,7 +1865,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtPlan.setMgmtPlanName(nodeData.getNodeValue());
                                     }
@@ -1877,7 +1875,7 @@ public class ImporterSiteXML implements Importer {
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
                                 if (result != null) {
-                                    Node nodeData = (Node)result;
+                                    Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
                                       mgmtPlan.setMgmtPlanUrl(nodeData.getNodeValue());
                                     }
@@ -1893,7 +1891,7 @@ public class ImporterSiteXML implements Importer {
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                           mgmt.setMgmtConservMeasures(nodeData.getNodeValue());
                         }
@@ -1914,7 +1912,7 @@ public class ImporterSiteXML implements Importer {
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                           map.setMapInspire(nodeData.getNodeValue());
                         }
@@ -1924,7 +1922,7 @@ public class ImporterSiteXML implements Importer {
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                             if (("true").equals(nodeData.getNodeValue())) {
                                 map.setMapId(0);
@@ -1938,7 +1936,7 @@ public class ImporterSiteXML implements Importer {
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
                     if (result != null) {
-                        Node nodeData = (Node)result;
+                        Node nodeData = (Node) result;
                         if (nodeData.getNodeValue() != null) {
                           map.setMapReference(nodeData.getNodeValue());
                         }
@@ -1950,9 +1948,9 @@ public class ImporterSiteXML implements Importer {
             Calendar cal = Calendar.getInstance();
             site.setSiteDateCreation(cal.getTime());
             saveAndReloadSession(session, site);
-            importOK=true;
+            importOK = true;
         } catch (Exception e) {
-            importOK=false;
+            importOK = false;
             //e.printStackTrace();
             ImporterSiteXML.log.info("Impor process has failed, the error message :" + e.getMessage());
         }

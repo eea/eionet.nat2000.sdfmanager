@@ -159,11 +159,11 @@ public class SDFVerifier {
      * @param resp
      * @return
      */
-    public static int checkRespondent (Resp resp) {
+    public static int checkRespondent(Resp resp) {
         //check if Respondent object worth saving
-        boolean res = resp.getRespName() != null && resp.getRespAddress() != null &&
-                resp.getRespEmail() != null && !resp.getRespName().equals("") &&
-                ! resp.getRespAddress().equals("") && !resp.getRespEmail().equals("");
+        boolean res = resp.getRespName() != null && resp.getRespAddress() != null
+                && resp.getRespEmail() != null && !resp.getRespName().equals("")
+                && ! resp.getRespAddress().equals("") && !resp.getRespEmail().equals("");
         if (res) {
             return 0;
         } else {
@@ -176,9 +176,9 @@ public class SDFVerifier {
      * @param region
      * @return
      */
-    public static int checkRegion (Region region) {
-        boolean res = region.getRegionCode() != null && region.getRegionName() != null &&
-                !region.getRegionCode().equals("") && !region.getRegionName().equals("");
+    public static int checkRegion(Region region) {
+        boolean res = region.getRegionCode() != null && region.getRegionName() != null
+                && !region.getRegionCode().equals("") && !region.getRegionName().equals("");
         if (res) {
             return 0;
         } else {
@@ -191,7 +191,7 @@ public class SDFVerifier {
      * @param siteBiogeo
      * @return
      */
-    public static int checkBioRegion (SiteBiogeo siteBiogeo) {
+    public static int checkBioRegion(SiteBiogeo siteBiogeo) {
         if (siteBiogeo.getBiogeo() == null) {
             return 1;
         } else {
@@ -204,7 +204,7 @@ public class SDFVerifier {
      * @param habitat
      * @return
      */
-    public static int checkHabitat (Habitat habitat) {
+    public static int checkHabitat(Habitat habitat) {
         if (habitat.getHabitatCode() != null) {
             return 0;
         } else {
@@ -217,7 +217,7 @@ public class SDFVerifier {
      * @param species
      * @return
      */
-    public static int checkSpecies (Species species) {
+    public static int checkSpecies(Species species) {
         if (species.getSpeciesCode() != null) {
             return 0;
         } else {
@@ -230,7 +230,7 @@ public class SDFVerifier {
      * @param species
      * @return
      */
-    public static int checkOSpecies (OtherSpecies species) {
+    public static int checkOSpecies(OtherSpecies species) {
         if (species.getOtherSpeciesCode() != null) {
             return 0;
         } else {
@@ -243,7 +243,7 @@ public class SDFVerifier {
      * @param hClass
      * @return
      */
-    public static int checkhClass (HabitatClass hClass) {
+    public static int checkhClass(HabitatClass hClass) {
         if (hClass.getHabitatClassCode() != null) {
             return 0;
         } else {
@@ -256,7 +256,7 @@ public class SDFVerifier {
      * @param impact
      * @return
      */
-    public static int checkImpact (Impact impact) {
+    public static int checkImpact(Impact impact) {
         if (impact.getImpactCode() != null) {
             return 0;
         } else {
@@ -269,7 +269,7 @@ public class SDFVerifier {
      * @param o
      * @return
      */
-    public static int checkOwnership (Ownership o) {
+    public static int checkOwnership(Ownership o) {
         return 0;
     }
 }

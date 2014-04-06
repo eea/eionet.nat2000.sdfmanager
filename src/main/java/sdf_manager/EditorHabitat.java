@@ -58,10 +58,10 @@ public class EditorHabitat extends javax.swing.JFrame {
         this.index = index;
         this.cmbCode.setSelectedItem(h.getHabitatCode());
         this.cmbCode.setEnabled(false);
-        if (h.getHabitatPriority() != null && h.getHabitatPriority()>0) {
+        if (h.getHabitatPriority() != null && h.getHabitatPriority() > 0) {
             this.chkPriority.setSelected(true);
         }
-        if (h.getHabitatNp() !=  null && h.getHabitatNp()>0) {
+        if (h.getHabitatNp() !=  null && h.getHabitatNp() > 0) {
             this.chkNP.setSelected(true);
         }
 
@@ -72,7 +72,7 @@ public class EditorHabitat extends javax.swing.JFrame {
 
 
         String qualityName = getQualityNameByQualityCode(h.getHabitatDataQuality());
-        if (qualityName!=null && qualityName != "")
+        if (qualityName != null && qualityName != "")
             this.cmbQuality.setSelectedItem(qualityName);
         this.cmbCons.setSelectedItem(ConversionTools.charToString(h.getHabitatConservation()));
         this.cmbGlob.setSelectedItem(ConversionTools.charToString(h.getHabitatGlobal()));
@@ -92,10 +92,10 @@ public class EditorHabitat extends javax.swing.JFrame {
 
         this.index = index;
         this.cmbCode.setSelectedItem(h.getHabitatCode());
-        if (h.getHabitatPriority() != null && h.getHabitatPriority()>0) {
+        if (h.getHabitatPriority() != null && h.getHabitatPriority() > 0) {
             this.chkPriority.setSelected(true);
         }
-        if (h.getHabitatNp() !=  null && h.getHabitatNp()>0) {
+        if (h.getHabitatNp() !=  null && h.getHabitatNp() > 0) {
             this.chkNP.setSelected(true);
         }
         this.txtCoverPercent.setText(ConversionTools.doubleToString(h.getHabitatCover()));
@@ -118,9 +118,9 @@ public class EditorHabitat extends javax.swing.JFrame {
     */
    boolean saveHabitat() {
 
-       boolean saveOK= true;
+       boolean saveOK = true;
        Habitat h = new Habitat();
-       h.setHabitatCode((String)this.cmbCode.getSelectedItem());
+       h.setHabitatCode((String) this.cmbCode.getSelectedItem());
        EditorHabitat.log.info("Saving the habitat::" + h.getHabitatCode());
        h.setHabitatNp(ConversionTools.boolToSmall(this.chkNP.isSelected()));
        h.setHabitatPriority(ConversionTools.boolToSmall(this.chkPriority.isSelected()));
@@ -128,7 +128,7 @@ public class EditorHabitat extends javax.swing.JFrame {
            if (isNumber(this.txtCover.getText()) != null) {
              h.setHabitatCoverHa(ConversionTools.stringToDouble(this.txtCover.getText()));
            } else {
-             saveOK= false;
+             saveOK = false;
              javax.swing.JOptionPane.showMessageDialog(this, "Cover field should be a number.");
            }
        }
@@ -136,34 +136,34 @@ public class EditorHabitat extends javax.swing.JFrame {
            if (isNum(this.txtCaves.getText()) != null) {
              h.setHabitatCaves(ConversionTools.stringToInt(this.txtCaves.getText()));
            } else {
-             saveOK= false;
+             saveOK = false;
              javax.swing.JOptionPane.showMessageDialog(this, "Caves field should be an integer.");
            }
        }
 
        if (!this.cmbQuality.getSelectedItem().equals("-")) {
-           String quality = getQualityCodeByQualityName((String)this.cmbQuality.getSelectedItem());
+           String quality = getQualityCodeByQualityName((String) this.cmbQuality.getSelectedItem());
            h.setHabitatDataQuality(quality);
        }
         h.setHabitatCover(ConversionTools.stringToDouble(this.txtCoverPercent.getText()));
        if (!this.cmbRep.getSelectedItem().equals("-")) {
-           h.setHabitatRepresentativity(ConversionTools.stringToChar((String)this.cmbRep.getSelectedItem()));
+           h.setHabitatRepresentativity(ConversionTools.stringToChar((String) this.cmbRep.getSelectedItem()));
        }
        if (!this.cmbRelSur.getSelectedItem().equals("-")) {
-           h.setHabitatRelativeSurface(ConversionTools.stringToChar((String)this.cmbRelSur.getSelectedItem()));
+           h.setHabitatRelativeSurface(ConversionTools.stringToChar((String) this.cmbRelSur.getSelectedItem()));
        }
        if (!this.cmbCons.getSelectedItem().equals("-")) {
-           h.setHabitatConservation(ConversionTools.stringToChar((String)this.cmbCons.getSelectedItem()));
+           h.setHabitatConservation(ConversionTools.stringToChar((String) this.cmbCons.getSelectedItem()));
        }
        if (!this.cmbGlob.getSelectedItem().equals("-")) {
-           h.setHabitatGlobal(ConversionTools.stringToChar((String)this.cmbGlob.getSelectedItem()));
+           h.setHabitatGlobal(ConversionTools.stringToChar((String) this.cmbGlob.getSelectedItem()));
        }
 
        if (saveOK) {
 
           if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
-                this.parent.saveHabitat(h,this.index);
+                this.parent.saveHabitat(h, this.index);
            } else {
                this.parent.saveHabitat(h);
            }
@@ -227,7 +227,7 @@ public class EditorHabitat extends javax.swing.JFrame {
    private String getQualityCodeByQualityName(String qualityName) {
        EditorHabitat.log.info("Get quality code by quality name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityName='" + qualityName+"'";
+       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityName='" + qualityName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -241,7 +241,7 @@ public class EditorHabitat extends javax.swing.JFrame {
    private String getQualityNameByQualityCode(String qualityCode) {
        EditorHabitat.log.info("Get quality name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='" + qualityCode+"'";
+       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='" + qualityCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -256,8 +256,7 @@ public class EditorHabitat extends javax.swing.JFrame {
     private Integer isNum(String s) {
         try {
             return Integer.parseInt(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -270,8 +269,7 @@ public class EditorHabitat extends javax.swing.JFrame {
     private Double isNumber(String s) {
         try {
             return Double.parseDouble(s);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }

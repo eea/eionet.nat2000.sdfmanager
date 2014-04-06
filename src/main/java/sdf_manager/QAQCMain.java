@@ -54,7 +54,7 @@ class QAQCWorker extends SwingWorker<Boolean, Void> {
 public class QAQCMain extends javax.swing.JFrame {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(QAQCMain.class .getName());
-    /** Creates new form QAQCMain */
+    /** Creates new form QAQCMain. */
     public QAQCMain() {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,7 +62,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Close the window
+     * Close the window.
      */
     void exit() {
         this.dispose();
@@ -83,7 +83,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the site code
+     * Gets the site code.
      * @return
      */
     String getSelectedSiteCode() {
@@ -120,7 +120,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with sepecies with unknown name
+     * Gets the sites with sepecies with unknown name.
      * @param session
      */
     private void fetchUnknownSpeciesNames(Session session) {
@@ -147,7 +147,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with sepecies with unknown code
+     * Gets the sites with sepecies with unknown code.
      * @param session
      */
     private void fetchUnknownSpeciesCodes(Session session) {
@@ -173,7 +173,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with birds with unknown name
+     * Gets the sites with birds with unknown name.
      * @param session
      */
     private void fetchUnknownBirdsNames(Session session) {
@@ -198,7 +198,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with birds with unknown name
+     * Gets the sites with birds with unknown name.
      * @param session
      */
     private void fetchUnknownBirdsCodes(Session session) {
@@ -223,7 +223,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with other species with unknown name
+     * Gets the sites with other species with unknown name.
      * @param session
      */
     private void fetchUnknownOSpeciesNames(Session session) {
@@ -249,7 +249,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the other species with unknown code
+     * Gets the other species with unknown code.
      * @param session
      */
     private void fetchUnknownOSpeciesCodes(Session session) {
@@ -279,7 +279,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat type
+     * Gets sites with unknwon habitat type.
      * @param session
      */
     private void fetchUnknownHabitatTypes(Session session) {
@@ -303,7 +303,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat classes
+     * Gets sites with unknwon habitat classes.
      * @param session
      */
     private void fetchUnknownHabitatClasses(Session session) {
@@ -327,7 +327,7 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat classes
+     * Gets sites with unknwon habitat classes.
      * @param session
      */
     private void fetchUnknownNUTSRegions(Session session) {

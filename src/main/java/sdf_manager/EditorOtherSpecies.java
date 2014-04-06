@@ -19,7 +19,7 @@ import pojos.OtherSpecies;
  */
 public class EditorOtherSpecies extends javax.swing.JFrame {
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
     private SDFEditor parent;
     private boolean init = true;
     private boolean editing = false;
@@ -50,14 +50,14 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
     }
 
     /**
-     * Close the Other Species Editor
+     * Close the Other Species Editor.
      */
     private void exit() {
        this.dispose();
     }
 
     /**
-     * Loads species from reference table
+     * Loads species from reference table.
      */
     private void loadSpecieses(String speciesCode) {
        EditorOtherSpecies.log.info("Loading species from reference table to fill the drop down list.");
@@ -122,7 +122,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
     /**
-     * Loads the data of the other species to modify them
+     * Loads the data of the other species to modify them.
      * @param s
      * @param index
      */
@@ -222,7 +222,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
    /**
-    * Saves the other species
+    * Saves the other species.
     */
    private void saveSpecies() {
         EditorOtherSpecies.log.info("Saving the other species");
@@ -290,7 +290,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
    /**
-    * Print the data of the other species in console
+    * Print the data of the other species in console.
     * @param s
     */
    private void printSpecies(OtherSpecies s) {
@@ -320,7 +320,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
       requestFocus();
     }
  /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -336,7 +336,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -350,7 +350,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -364,7 +364,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
@@ -406,7 +406,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
    }
 
     /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateUnit() {
        EditorOtherSpecies.log.info("Populate unit data");
@@ -431,7 +431,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
    /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateCategory() {
        EditorOtherSpecies.log.info("Populate category data");
@@ -456,7 +456,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
 
     /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateSpeciesGroup() {
        EditorOtherSpecies.log.info("Populate species group");
@@ -658,7 +658,12 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
         jLabel15.setName("jLabel15"); // NOI18N
 
-        cmbUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "i", "p", "adults", "subadults", "cmales", "males", "shoots", "tufts", "fstems", "localities", "colonies", "logs", "trees", "stones", "length", "grids1x1", "grids5x5", "grids10x10" }));
+        cmbUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "i", "p",
+                "adults", "subadults", "cmales",
+                "males", "shoots", "tufts", "fstems",
+                "localities", "colonies", "logs",
+                "trees", "stones", "length",
+                "grids1x1", "grids5x5", "grids10x10" }));
         cmbUnit.setName("cmbUnit"); // NOI18N
 
         jLabel16.setIcon(resourceMap.getIcon("jLabel16.icon")); // NOI18N
@@ -952,7 +957,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
     } //GEN-LAST:event_cmbGroupItemStateChanged
 
     /**
-     * Checks if the param is a number
+     * Checks if the param is a number.
      * @param s
      * @return
      */

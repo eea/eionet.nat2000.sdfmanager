@@ -15,7 +15,7 @@ import pojos.Impact;
  */
 public class EditorImpact extends javax.swing.JFrame {
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
     private String type = "N";
     private SDFEditor parent;
     private boolean editing = false;
@@ -38,7 +38,7 @@ public class EditorImpact extends javax.swing.JFrame {
     }
 
     /**
-     * Loads impacts from the reference table to add a new impact to the site
+     * Loads impacts from the reference table to add a new impact to the site.
      */
     private void loadImpacts() {
        EditorImpact.log.info("Loading impacts from the reference table to add a new impact to the site");
@@ -50,7 +50,7 @@ public class EditorImpact extends javax.swing.JFrame {
        int i = 0;
        while (itr.hasNext()) {
            Object obj = itr.next();
-           if (("").equals((String)obj)) {
+           if (("").equals((String) obj)) {
                continue;
            }
            cmbCode.insertItemAt(obj, i);
@@ -63,11 +63,11 @@ public class EditorImpact extends javax.swing.JFrame {
    }
 
     /**
-     * Loads the data of the impact to modify them
+     * Loads the data of the impact to modify them.
      * @param impact
      * @param index
      */
-    public void loadImpact(Impact impact,int index) {
+    public void loadImpact(Impact impact, int index) {
         EditorImpact.log.info("Loading the data of the impact to modify them ::::" + impact.getImpactCode());
         this.impactId = impact.getImpactId();
 
@@ -113,23 +113,23 @@ public class EditorImpact extends javax.swing.JFrame {
 
     }
     /**
-     * Set the type of the impact (P --> Positive, N --> Negative)
+     * Set the type of the impact (P --> Positive, N --> Negative).
      * @param type
      */
    private void setType(String type) {
        EditorImpact.log.info("The type Of the impact ::::" + type);
-       /**
+       /*
         * P = Positive
         * N = Negative
         */
        if (type.equals("P")) {
           this.type = type;
-          Font font = new java.awt.Font("Tahoma",Font.BOLD,18);
+          Font font = new java.awt.Font("Tahoma", Font.BOLD, 18);
           this.labTitle.setFont(font);
           this.labTitle.setText("Positive Impact");
        } else if (type.equals("N")) {
           this.type = type;
-          Font font = new java.awt.Font("Tahoma",Font.BOLD,18);
+          Font font = new java.awt.Font("Tahoma", Font.BOLD, 18);
           this.labTitle.setFont(font);
           this.labTitle.setText("Negative Impact");
        } else {
@@ -137,7 +137,7 @@ public class EditorImpact extends javax.swing.JFrame {
        }
    }
    /**
-    * Save the impact
+    * Save the impact.
     * @param type
     * @param code
     * @param rank
@@ -167,7 +167,7 @@ public class EditorImpact extends javax.swing.JFrame {
         if (this.editing && this.index > -1) {
            /*we're editing an existing impact*/
             impact.setImpactId(this.impactId);
-            if (this.parent.saveImpact(impact,this.index)) {
+            if (this.parent.saveImpact(impact, this.index)) {
                EditorImpact.log.info("Impact has been updated.");
                javax.swing.JOptionPane.showMessageDialog(this, "Impact has been updated.");
                saveOK = true;
@@ -185,7 +185,7 @@ public class EditorImpact extends javax.swing.JFrame {
    }
 
    /**
-    * Print the data of th impact in console
+    * Print the data of th impact in console.
     * @param impact
     */
    private void printImpact(Impact impact) {
@@ -197,7 +197,7 @@ public class EditorImpact extends javax.swing.JFrame {
    }
 
    /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populateRank() {
        EditorImpact.log.info("Populate rank data");
@@ -221,7 +221,7 @@ public class EditorImpact extends javax.swing.JFrame {
    }
 
    /**
-    * Loads the habitats from reference table
+    * Loads the habitats from reference table.
     */
    private void populatePollution() {
        EditorImpact.log.info("Populate pollution data");
@@ -245,14 +245,14 @@ public class EditorImpact extends javax.swing.JFrame {
    }
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
    private String getRankNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the rank name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankName from RefImpactRank where refRankCode='" + rankCode+"'";
+       String hql = "select distinct refRankName from RefImpactRank where refRankCode='" + rankCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -261,14 +261,14 @@ public class EditorImpact extends javax.swing.JFrame {
 
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
    private String getRankCodeByName(String rankName) {
        EditorImpact.log.info("Getting the rank code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankCode from RefImpactRank where refRankName='" + rankName+"'";
+       String hql = "select distinct refRankCode from RefImpactRank where refRankName='" + rankName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -276,14 +276,14 @@ public class EditorImpact extends javax.swing.JFrame {
 
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
    private String getPollutionNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the Polution name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='" + rankCode+"'";
+       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='" + rankCode + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
@@ -292,21 +292,21 @@ public class EditorImpact extends javax.swing.JFrame {
 
 
    /**
-    * Gets the population type by selected index
+    * Gets the population type by selected index.
     * @param selectedItem
     * @return
     */
    private String getPollutionCodeByName(String rankName) {
        EditorImpact.log.info("Getting the Polution code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='" + rankName+"'";
+       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='" + rankName + "'";
        Query q = session.createQuery(hql);
        return (String) q.uniqueResult();
 
    }
 
    /**
-    * Close the Impact Editor
+    * Close the Impact Editor.
     */
    private void exit() {
        this.dispose();
@@ -385,7 +385,7 @@ public class EditorImpact extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane1.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-", "i", "o", "b" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "i", "o", "b" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel15.setIcon(resourceMap.getIcon("jLabel15.icon")); // NOI18N

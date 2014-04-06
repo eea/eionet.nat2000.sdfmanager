@@ -90,8 +90,8 @@ public class EditorNationalRelation extends javax.swing.JFrame {
      */
     private String getRelationDescription(String desigCode) {
          EditorNationalRelation.log.info("Get Description of the national relation:::" + desigCode);
-         String desigName ="";
-         try{
+         String desigName = "";
+         try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
@@ -118,7 +118,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
 
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
         String name = this.txtName.getText();
-        Character type = ((String)cmbType.getSelectedItem()).charAt(0);
+        Character type = ((String) cmbType.getSelectedItem()).charAt(0);
         Character scope = 'N';
         SiteRelation sr = new SiteRelation();
         sr.setSiteRelationCode(code);
@@ -227,7 +227,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         txtName.setName("txtName"); // NOI18N
         jScrollPane2.setViewportView(txtName);
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", "+", "-", "*", "/" }));
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"=", "+", "-", "*", "/" }));
         cmbType.setName("cmbType"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
@@ -405,7 +405,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         } else if (txtName.getText().equals("")) {
             EditorNationalRelation.log.error("Site Name is not provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a name for the site.");
-        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length()>256) {
+        } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length() > 256) {
             EditorNationalRelation.log.error("Site Name is not too long, more than 256 characters.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid site name (256 characters).");
         } else if (txtCover.getText().equals("")) {

@@ -7,7 +7,7 @@
 package pojos;
 
 
-public class Country  implements java.io.Serializable {
+public class Country implements java.io.Serializable {
 
 
      private int countryId;
@@ -69,6 +69,6 @@ public class Country  implements java.io.Serializable {
     public void setCountryName(String countryName) {
         this.countryName = countryName;
     }
-   }
+}
 
 

@@ -35,7 +35,7 @@ import sdf_manager.util.SDF_Util;
 
 public class ImporterXMLStax implements Importer {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterXMLStax.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterXMLStax.class.getName());
     private Logger logger;
     private String encoding;
     private String fileName;
@@ -91,8 +91,7 @@ public class ImporterXMLStax implements Importer {
          try {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterXMLStax.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
@@ -105,8 +104,7 @@ public class ImporterXMLStax implements Importer {
          try {
              out.close();
              outFile.close();
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              ImporterXMLStax.log.error("An error has occurred in closeLogFile. Error Message :::" + e.getMessage());
              //e.printStackTrace();
          }
@@ -139,17 +137,17 @@ public class ImporterXMLStax implements Importer {
      * @return
      */
     public boolean validateAndProcessDB(String fileName) {
-        Session session =null;
+        Session session = null;
 
         try {
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath()+File.separator+"database" + File.separator+"sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
-            annotationConfig.setProperty("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
-            annotationConfig.setProperty("hibernate.connection.driver_class","com.mysql.jdbc.Driver");
-            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host")+"/natura2000?autoReconnect=true" );
+            annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+            annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true");
             annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("user"));
             annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("password"));
             annotationConfig.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
@@ -161,20 +159,20 @@ public class ImporterXMLStax implements Importer {
 
             ArrayList siteList = this.loadSpecies(session);
             ImporterXMLStax.log.info("Init validate process");
-            HashMap sitesDB = validateSites(session,siteList);
+            HashMap sitesDB = validateSites(session, siteList);
             ImporterXMLStax.log.info("Validation has finished");
-            log("Validation has finished.",1);
+            log("Validation has finished.", 1);
 
             if (sitesDB != null && (sitesDB.isEmpty())) {
                 ImporterXMLStax.log.info("Import process is starting");
-                log("Import process is starting.",1);
+                log("Import process is starting.", 1);
 
-                this.processDatabase(session,fileName);
+                this.processDatabase(session, fileName);
             } else {
                 ImporterXMLStax.log.error("Error in validation");
-                log("Error in validation.",1);
-                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",JOptionPane.INFORMATION_MESSAGE);
-                File fileLog = SDF_Util.copyToLogImportFile(sitesDB,"XML");
+                log("Error in validation.", 1);
+                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
+                File fileLog = SDF_Util.copyToLogImportFile(sitesDB, "XML");
                 if (fileLog != null) {
                     Desktop desktop = null;
                     if (Desktop.isDesktopSupported()) {
@@ -234,35 +232,35 @@ public class ImporterXMLStax implements Importer {
         try {
             int j = 0;
 
-            for (int i=0;i<siteList.size();i++) {
+            for (int i = 0; i < siteList.size(); i++) {
                try {
-                   Site site = (Site)siteList.get(i);
+                   Site site = (Site) siteList.get(i);
                    String sitecode = site.getSiteCode();
                    Transaction tx = session.beginTransaction();
                    ImporterXMLStax.log.info("validating sites:::" + sitecode);
 
-                   log("validating site: " + sitecode,1);
-                   boolean siteInDB=false;
-                   if (SDF_Util.validateSite(session,sitecode)) {
-                       siteInDB=true;
+                   log("validating site: " + sitecode, 1);
+                   boolean siteInDB = false;
+                   if (SDF_Util.validateSite(session, sitecode)) {
+                       siteInDB = true;
                    }
                    Set regionSiteList = site.getRegions();
                    Iterator itr = regionSiteList.iterator();
                    ArrayList nutsNoOK = new ArrayList();
                    while (itr.hasNext()) {
-                       String nuts = (String)itr.next();
+                       String nuts = (String) itr.next();
                         if (!isRegionLevel2(session, nuts)) {
                             nutsNoOK.add(nuts);
                         }
                    }
                    if (siteInDB) {
-                       siteHasHDB.put(site.getSiteCode(),nutsNoOK );
+                       siteHasHDB.put(site.getSiteCode(), nutsNoOK);
                    }
                    tx.commit();
               } catch (Exception e) {
                 break;
               }
-              if ( ++j % 20 == 0 ) {
+              if (++j % 20 == 0) {
                  session.flush();
                  session.clear();
              }
@@ -291,7 +289,7 @@ public class ImporterXMLStax implements Importer {
       * @param fileName
       * @return
       */
-     public boolean processDatabase(Session session,String fileName) {
+     public boolean processDatabase(Session session, String fileName) {
 
         this.fileName = fileName;
         boolean isOK = true;
@@ -308,9 +306,9 @@ public class ImporterXMLStax implements Importer {
             factory.setProperty("javax.xml.stream.isCoalescing", true);
             XMLStreamReader parser = factory.createXMLStreamReader(is);
 
-            Site site =null;
-            Resp resp =null;
-            Region region =null;
+            Site site = null;
+            Resp resp = null;
+            Region region = null;
             Mgmt mgmt = null;
             MgmtBody mgmtBody = null;
             MgmtPlan mgmtPlan = null;
@@ -327,7 +325,7 @@ public class ImporterXMLStax implements Importer {
             SiteRelation natRelation = null;
             SiteRelation intRelation = null;
             Map map = null;
-            StringBuffer strMotivation=null;
+            StringBuffer strMotivation = null;
             String speciesGroup = null;
             boolean bioReg = false;
             ArrayList siteList = new ArrayList();
@@ -350,7 +348,7 @@ public class ImporterXMLStax implements Importer {
                            site.setSiteType(localData.charAt(0));
                         } else if (localName.equals("siteCode")) {
                            siteCode = localData;
-                           log("Processing site: " + localData,1);
+                           log("Processing site: " + localData, 1);
                            site.setSiteCode(localData);
                         } else if (localName.equals("siteName") && siteIdent != null) {
                            site.setSiteName(localData);
@@ -377,11 +375,11 @@ public class ImporterXMLStax implements Importer {
                                site.setSiteSciConfDate(ConversionTools.convertStringToDate(localData));
                            }
                         } else if (localName.equals("sacDesignationDate")) {
-                           ImporterXMLStax.log.info("************localData==>" + localData+"<==");
+                           ImporterXMLStax.log.info("************localData==>" + localData + "<==");
                            if (!(SDF_Constants.NULL_DATE).equals(localData)) {
                                site.setSiteSacDate(ConversionTools.convertStringToDate(localData));
                            }
-                           ImporterXMLStax.log.info("************site.getSiteSacDate()==>" + site.getSiteSacDate()+"<==");
+                           ImporterXMLStax.log.info("************site.getSiteSacDate()==>" + site.getSiteSacDate() + "<==");
                         } else if (localName.equals("sacLegalReference")) {
                            site.setSiteSacLegalRef(localData);
                         } else if (localName.equals("explanations")) {
@@ -417,7 +415,7 @@ public class ImporterXMLStax implements Importer {
                        }
 
                         //SITE LOCATION
-                       else if (localName.equals("longitude") ) {
+                       else if (localName.equals("longitude")) {
                            site.setSiteLongitude(Double.parseDouble(localData));
                        } else if (localName.equals("latitude")) {
                            site.setSiteLatitude(Double.parseDouble(localData));
@@ -447,16 +445,16 @@ public class ImporterXMLStax implements Importer {
                        else if (localName.equals("biogeoRegions")) {
                             bioRegion = new SiteBiogeo();
                        } else if (localName.equals("code") && bioRegion != null) {
-                            int biogeoId = getBiogeoId(session,localData);
+                            int biogeoId = getBiogeoId(session, localData);
                             Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeoId);
                             SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
-                            bioRegion = new SiteBiogeo(id,biogeo,site);
+                            bioRegion = new SiteBiogeo(id, biogeo, site);
                        } else if (localName.equals("percentage") && bioRegion != null) {
                            bioRegion.setBiogeoPercent(Double.parseDouble(localData));
                        } else if (localName.equals("biogeoRegions_end")) {
                            site.getSiteBiogeos().add(bioRegion);
                            bioRegion = null;
-                           bioReg=false;
+                           bioReg = false;
                        }
 
                         //BIOREGIONS
@@ -524,7 +522,7 @@ public class ImporterXMLStax implements Importer {
                            } else {
                                 species.setSpeciesNp(Short.parseShort("0"));
                            }
-                       } else if (localName.equals("populationType") && species !=null) {
+                       } else if (localName.equals("populationType") && species != null) {
                            species.setSpeciesType(localData.charAt(0));
                        } else if (localName.equals("lowerBound") && species != null) {
                            species.setSpeciesSizeMin(Integer.parseInt(localData));
@@ -569,7 +567,7 @@ public class ImporterXMLStax implements Importer {
                        } else if (localName.equals("motivations_end") && oSpecies != null) {
                            String motivation = strMotivation.toString();
                            if (motivation != null && !("").equals(motivation)) {
-                               motivation = motivation.substring(0,motivation.length()-1);
+                               motivation = motivation.substring(0, motivation.length()-1);
                                strMotivation = null;
                                oSpecies.setOtherSpeciesMotivation(motivation);
                            }
@@ -636,10 +634,10 @@ public class ImporterXMLStax implements Importer {
                            //impact.setImpactType(localData.charAt(0));
                            Ownership owner = new Ownership();
                            owner.setOwnershipType(localData);
-                           int ownerShipId = getOwnerShipId(session,localData);
+                           int ownerShipId = getOwnerShipId(session, localData);
                            if (ownerShipId != -1) {
                                 owner.setOwnershipId(ownerShipId);
-                                SiteOwnershipId id = new SiteOwnershipId(owner.getOwnershipId(),site.getSiteCode());
+                                SiteOwnershipId id = new SiteOwnershipId(owner.getOwnershipId(), site.getSiteCode());
                                 ownerShip = new SiteOwnership(id, owner, site);
                            }
                        } else if (localName.equals("percent") && ownerShip != null) {
@@ -829,13 +827,13 @@ public class ImporterXMLStax implements Importer {
             parser.close();
 
             ImporterXMLStax.log.info("Import process has finished succesfully");
-            log("Import process has finished succesfully" );
-            javax.swing.JOptionPane.showMessageDialog(new Frame(),"Import Processing has finished succesfully.", "Dialog",JOptionPane.INFORMATION_MESSAGE);;
+            log("Import process has finished succesfully");
+            javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);;
         } catch (Exception ex) {
             ex.printStackTrace();
-            log("It's been produced an error in the Import Process" );
+            log("It's been produced an error in the Import Process");
             ImporterXMLStax.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());
-            JOptionPane.showMessageDialog(new Frame(),"It's been produced an error in the Import Process", "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process", "Dialog", JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {
             session.clear();
@@ -857,7 +855,7 @@ public class ImporterXMLStax implements Importer {
                 localName = reader.getLocalName();
                 break;
             case 2 :
-                localName = reader.getLocalName()+"_end";
+                localName = reader.getLocalName() + "_end";
                 break;
         }
         return localName;
@@ -993,11 +991,11 @@ public class ImporterXMLStax implements Importer {
      */
     private int getOwnerShipId(Session session, String ownerShipType) {
         int ownerShipId = -1;
-        String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode like '" + ownerShipType+"'";
+        String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode like '" + ownerShipType + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
-            ownerShipId = ((Integer)itr.next()).intValue();
+            ownerShipId = ((Integer) itr.next()).intValue();
         }
         return ownerShipId;
     }
@@ -1007,14 +1005,14 @@ public class ImporterXMLStax implements Importer {
      * @param biogeoCode
      * @return
      */
-    private int getBiogeoId( Session session, String biogeoCode) {
+    private int getBiogeoId(Session session, String biogeoCode) {
        int biogeoId = 0;
-       String hql = "select distinct biogeo.biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + biogeoCode+"'";
+       String hql = "select distinct biogeo.biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + biogeoCode + "'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
 
        if (itr.hasNext()) {
-            biogeoId = ((Integer)itr.next()).intValue();
+            biogeoId = ((Integer) itr.next()).intValue();
        }
        return biogeoId;
 
@@ -1031,7 +1029,7 @@ public class ImporterXMLStax implements Importer {
         boolean nutsOK = false;
 
         ImporterXMLStax.log.info("Validating Region Code");
-        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode+"'";
+        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
 
         try {
             Query q = session.createQuery(hql);

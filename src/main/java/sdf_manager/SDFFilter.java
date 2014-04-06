@@ -173,11 +173,11 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @return
      */
     private String getNumberOfSites(Session session) {
-        String nSites ="";
+        String nSites = "";
         String hql = "select count(*) from Site";
         try {
             Query q = session.createQuery(hql);
-            nSites = ((Long)q.uniqueResult()).toString();
+            nSites = ((Long) q.uniqueResult()).toString();
         } catch (Exception e) {
             SDFFilter.log.error("An error has occurred, getting the number of the sites.\nError Message:::" + e.getMessage());
         }
@@ -193,9 +193,9 @@ public final class SDFFilter extends javax.swing.JFrame {
         try {
             if (!filterSitename.getText().equals("") && filterSitename.getText().equals(filterSitename.getText().toUpperCase())) {
                 SDFFilter.log.error("Site name shouldn't be in capital letters:::" + filterSitename.getText());
-                JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.criteria =prepareQuery(session);
+                this.criteria = prepareQuery(session);
                 displaySites(session, this.criteria);
                 this.txtNumberSites.setText((new Integer(numReg)).toString());
             }
@@ -215,29 +215,29 @@ public final class SDFFilter extends javax.swing.JFrame {
         /*analyse the filter*/
         Criteria criteria = null;
         session.clear();
-        criteria =session.createCriteria(Site.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).setCacheable(false);
+        criteria = session.createCriteria(Site.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).setCacheable(false);
 
         if (!filterDirective.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteType",filterDirective.getSelectedItem()));
+            criteria.add(Restrictions.eq("siteType", filterDirective.getSelectedItem()));
         }
         if (!filterSitecode.getText().equals("")) {
-            String siteCode = "%" + filterSitecode.getText()+"%";
-            criteria.add(Restrictions.ilike("siteCode",filterSitecode.getText(),MatchMode.ANYWHERE));
+            String siteCode = "%" + filterSitecode.getText() + "%";
+            criteria.add(Restrictions.ilike("siteCode", filterSitecode.getText(), MatchMode.ANYWHERE));
         }
         if (!filterSitename.getText().equals("")) {
-            criteria.add(Restrictions.ilike("siteName",filterSitename.getText(),MatchMode.ANYWHERE));
+            criteria.add(Restrictions.ilike("siteName", filterSitename.getText(), MatchMode.ANYWHERE));
         }
         if (!filterSPADate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSpaDate",ConversionTools.convertStringToDate((String)filterSPADate.getSelectedItem())));
+            criteria.add(Restrictions.eq("siteSpaDate", ConversionTools.convertStringToDate((String) filterSPADate.getSelectedItem())));
         }
         if (!filterSCIPropDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSciPropDate",ConversionTools.convertStringToDate((String)filterSCIPropDate.getSelectedItem())));
+            criteria.add(Restrictions.eq("siteSciPropDate", ConversionTools.convertStringToDate((String) filterSCIPropDate.getSelectedItem())));
         }
         if (!filterSCIDesigDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSciConfDate",ConversionTools.convertStringToDate((String)filterSCIDesigDate.getSelectedItem())));
+            criteria.add(Restrictions.eq("siteSciConfDate", ConversionTools.convertStringToDate((String) filterSCIDesigDate.getSelectedItem())));
         }
         if (!filterSACDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSacDate",ConversionTools.convertStringToDate((String)filterSACDate.getSelectedItem())));
+            criteria.add(Restrictions.eq("siteSacDate", ConversionTools.convertStringToDate((String) filterSACDate.getSelectedItem())));
         }
         if (!filterArea.getText().equals("")) {
             Double area = ConversionTools.stringToDoubleN(filterArea.getText());
@@ -264,44 +264,44 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         }
         if (!filterRegion.getSelectedItem().equals("-")) {
-            String code = ((String)filterRegion.getSelectedItem()).substring(0, 4);
+            String code = ((String) filterRegion.getSelectedItem()).substring(0, 4);
             criteria.createCriteria("regions").add(Restrictions.eq("regionCode", code));
         }
         if (!filterBiogeo.getSelectedItem().equals("-")) {
-            String code = ((String)filterBiogeo.getSelectedItem());
+            String code = ((String) filterBiogeo.getSelectedItem());
             criteria.createCriteria("siteBiogeos").createCriteria("biogeo").add(Restrictions.eq("biogeoCode", code));
         }
         if (!filterSpecies.getSelectedItem().equals("-")) {
-            String name = ((String)filterSpecies.getSelectedItem());
+            String name = ((String) filterSpecies.getSelectedItem());
             criteria.createCriteria("specieses").add(Restrictions.eq("speciesName", name));
         }
         if (!filterSpeciesGroup.getSelectedItem().equals("-")) {
-            String name = ((String)filterSpeciesGroup.getSelectedItem());
+            String name = ((String) filterSpeciesGroup.getSelectedItem());
             String groupCodeSelected = TranslationCodeName.getGroupSpeciesByName(name);
             criteria.createCriteria("specieses").add(Restrictions.eq("speciesGroup", groupCodeSelected));
         }
         if (!filterOSpecies.getSelectedItem().equals("-")) {
-            String name = ((String)filterOSpecies.getSelectedItem());
+            String name = ((String) filterOSpecies.getSelectedItem());
             criteria.createCriteria("otherSpecieses").add(Restrictions.eq("otherSpeciesName", name));
         }
         if (!filterOSpeciesGroup.getSelectedItem().equals("-")) {
-            String name = ((String)filterOSpeciesGroup.getSelectedItem());
+            String name = ((String) filterOSpeciesGroup.getSelectedItem());
             String groupCodeSelected = TranslationCodeName.getGroupOtherSpeciesByName(name);
             criteria.createCriteria("otherSpecieses").add(Restrictions.eq("otherSpeciesGroup", groupCodeSelected));
         }
         if (!filterHabitats.getSelectedItem().equals("-")) {
-            String name = ((String)filterHabitats.getSelectedItem());
+            String name = ((String) filterHabitats.getSelectedItem());
             criteria.createCriteria("habitats").add(Restrictions.eq("habitatCode", name));
         }
         if (!filterHabitatClass.getSelectedItem().equals("-")) {
-            String name = ((String)filterHabitatClass.getSelectedItem());
+            String name = ((String) filterHabitatClass.getSelectedItem());
             criteria.createCriteria("habitatClasses").add(Restrictions.eq("habitatClassCode", name));
         }
         if (filterSensitive.isSelected()) {
             criteria.createCriteria("specieses").add(Restrictions.eq("speciesSensitive", (new Integer(1)).shortValue()));
             criteria.createCriteria("otherSpecieses").add(Restrictions.eq("otherSpeciesSensitive", (new Integer(1)).shortValue()));
         }
-        criteria.addOrder(Order.asc("siteCode") );
+        criteria.addOrder(Order.asc("siteCode"));
         return criteria;
     }
 
@@ -395,22 +395,22 @@ public final class SDFFilter extends javax.swing.JFrame {
             itr = spaDate.iterator();
             filterSPADate.addItem("-");
             while (itr.hasNext()) {
-                filterSPADate.addItem(ConversionTools.convertDateToString((Date)itr.next()));
+                filterSPADate.addItem(ConversionTools.convertDateToString((Date) itr.next()));
             }
             itr = sciPropDate.iterator();
             filterSCIPropDate.addItem("-");
             while (itr.hasNext()) {
-                filterSCIPropDate.addItem(ConversionTools.convertDateToString((Date)itr.next()));
+                filterSCIPropDate.addItem(ConversionTools.convertDateToString((Date) itr.next()));
             }
             itr = sciDesigDate.iterator();
             filterSCIDesigDate.addItem("-");
             while (itr.hasNext()) {
-                filterSCIDesigDate.addItem(ConversionTools.convertDateToString((Date)itr.next()));
+                filterSCIDesigDate.addItem(ConversionTools.convertDateToString((Date) itr.next()));
             }
             itr = sacDate.iterator();
             filterSACDate.addItem("-");
             while (itr.hasNext()) {
-                filterSACDate.addItem(ConversionTools.convertDateToString((Date)itr.next()));
+                filterSACDate.addItem(ConversionTools.convertDateToString((Date) itr.next()));
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -464,7 +464,7 @@ public final class SDFFilter extends javax.swing.JFrame {
            filterSpecies.addItem("-"); //blank item first
 
            while (itr.hasNext()) {
-               String speciesName = (String)itr.next();
+               String speciesName = (String) itr.next();
                filterSpecies.addItem(speciesName);
            }
 
@@ -473,8 +473,8 @@ public final class SDFFilter extends javax.swing.JFrame {
            Iterator itrGroup = qGroup.iterate();
            filterSpeciesGroup.addItem("-");
            while (itrGroup.hasNext()) {
-              Character c = (Character)itrGroup.next();
-               if (c!=null) {
+              Character c = (Character) itrGroup.next();
+               if (c != null) {
                    String groupSName = TranslationCodeName.getGroupSpeciesByCode(c.toString());
                    filterSpeciesGroup.addItem(groupSName);
                }
@@ -497,7 +497,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             TreeSet hash = new TreeSet();
             filterOSpecies.addItem("-"); //blank item first
             while (itr.hasNext()) {
-                String otherSpeciesName = (String)itr.next();
+                String otherSpeciesName = (String) itr.next();
                 filterOSpecies.addItem(otherSpeciesName);
             }
 
@@ -506,8 +506,8 @@ public final class SDFFilter extends javax.swing.JFrame {
             Iterator itrGroup = qGroup.iterate();
             filterOSpeciesGroup.addItem("-");
             while (itrGroup.hasNext()) {
-                String c = (String)itrGroup.next();
-                if (c!=null) {
+                String c = (String) itrGroup.next();
+                if (c != null) {
                     String groupOSpecies = TranslationCodeName.getGroupOtherSpeciesByCode(c.toString());
                     filterOSpeciesGroup.addItem(groupOSpecies);
                 }
@@ -527,8 +527,8 @@ public final class SDFFilter extends javax.swing.JFrame {
             Iterator itr = q.iterate();
             filterHabitats.addItem("-"); //blank item first
             while (itr.hasNext()) {
-                Object[] obj = (Object[])itr.next();
-                String habCode = (String)obj[0];
+                Object[] obj = (Object[]) itr.next();
+                String habCode = (String) obj[0];
                 Short prior = (Short) obj[1];
                 if (prior != null && prior == 1) {
                     habCode = habCode + "*";
@@ -563,7 +563,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     void emptySites() {
         int crow = this.tabDisplaySites.getRowCount();
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-        for (int i = crow -1; i >= 0; i--) {
+        for (int i = crow - 1; i >= 0; i--) {
             model.removeRow(i);
         }
         tabDisplaySites.repaint();
@@ -597,17 +597,17 @@ public final class SDFFilter extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 Site site = (Site) itr.next();
                 boolean edited = false;
-                String dateModification="";
+                String dateModification = "";
                 if (site.getSiteDateUpdate() != null) {
                     Date updateDate = site.getSiteDateUpdate();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     dateModification = sdf.format(updateDate);
                     edited = true;
                 }
-                Object[] tuple = { new Boolean(edited),site.getSiteCode(), site.getSiteName(),dateModification};
+                Object[] tuple = {new Boolean(edited), site.getSiteCode(), site.getSiteName(), dateModification};
                 model.insertRow(i, tuple);
                 renderer = tabDisplaySites.getCellRenderer(i, 1);
-                comp = renderer.getTableCellRendererComponent(tabDisplaySites,tabDisplaySites.getValueAt(i, 1), false, false, 1, 1);
+                comp = renderer.getTableCellRendererComponent(tabDisplaySites, tabDisplaySites.getValueAt(i, 1), false, false, 1, 1);
                 width = Math.max(width, comp.getPreferredSize().width);
                 i++;
 
@@ -619,9 +619,9 @@ public final class SDFFilter extends javax.swing.JFrame {
             col = tabDisplaySites.getColumnModel().getColumn(1);
             col.setPreferredWidth(100);
             col = tabDisplaySites.getColumnModel().getColumn(2);
-            col.setPreferredWidth(300);//+ margin
+            col.setPreferredWidth(300); //+ margin
             col = tabDisplaySites.getColumnModel().getColumn(3);
-            col.setPreferredWidth(100);//+ margin
+            col.setPreferredWidth(100); //+ margin
         } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
@@ -639,9 +639,9 @@ public final class SDFFilter extends javax.swing.JFrame {
         @Override
         public void setValue(Object value) {
 
-            Boolean edited = (Boolean)value;
+            Boolean edited = (Boolean) value;
             if (edited.booleanValue()) {
-                ImageIcon imageIcon = new ImageIcon((new File("")).getAbsolutePath()+"\\images\\checkmark.gif");
+                ImageIcon imageIcon = new ImageIcon((new File("")).getAbsolutePath() + "\\images\\checkmark.gif");
                 setIcon(imageIcon);
             }
         }
@@ -987,7 +987,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         labCountry1.setText("Marine:");
 
-        filterAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<", ">" }));
+        filterAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">" }));
         filterAreaSign.setMaximumSize(new java.awt.Dimension(56, 20));
 
         labBioRegion1.setText("Area:");
@@ -998,7 +998,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         filterRegion.setMaximumSize(new java.awt.Dimension(56, 20));
 
-        filterMarineAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<", ">" }));
+        filterMarineAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">" }));
         filterMarineAreaSign.setMaximumSize(new java.awt.Dimension(56, 20));
 
         jLabel6.setText("Region:");
@@ -1339,8 +1339,8 @@ public final class SDFFilter extends javax.swing.JFrame {
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnNewActionPerformed
         EditorSitecode editorSitecode = new EditorSitecode(this, this, true);
         if (editorSitecode.ok) {
-            SDFEditor editor = new SDFEditor(this,"new");
-            editor.loadSite(newSitecode,"");
+            SDFEditor editor = new SDFEditor(this, "new");
+            editor.loadSite(newSitecode, "");
             editor.setVisible(true);
             SDFFilter.log.info("New site::::" + newSitecode);
         }
@@ -1357,8 +1357,8 @@ public final class SDFFilter extends javax.swing.JFrame {
         } else {
             EditorSitecode editorSitecode = new EditorSitecode(this, this, true);
             if (editorSitecode.ok) {
-                SDFEditor editor = new SDFEditor(this,"duplicate");
-                editor.loadSite(sitecode,newSitecode);
+                SDFEditor editor = new SDFEditor(this, "duplicate");
+                editor.loadSite(sitecode, newSitecode);
                 this.applyFilters(HibernateUtil.getSessionFactory().openSession());
                 editor.setVisible(true);
             }
@@ -1382,11 +1382,11 @@ public final class SDFFilter extends javax.swing.JFrame {
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
         } else {
-            SDFEditor editor = new SDFEditor(this,"edit");
+            SDFEditor editor = new SDFEditor(this, "edit");
             try {
-                editor.loadSite(sitecode,"");
+                editor.loadSite(sitecode, "");
             } catch (Exception e) {
-                editor.loadSite(sitecode,"");
+                editor.loadSite(sitecode, "");
             }
             editor.setVisible(true);
         }
@@ -1435,7 +1435,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         int crow = this.tabDisplaySites.getRowCount();
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         Calendar cal = Calendar.getInstance();
-        for (int i = crow -1; i >= 0; i--) {
+        for (int i = crow - 1; i >= 0; i--) {
             String sitecode = (String) model.getValueAt(i, 1);
             model.removeRow(i);
             Transaction tx = session.beginTransaction();
@@ -1480,7 +1480,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-                for (int i = 0; i < row.length;i++) {
+                for (int i = 0; i < row.length; i++) {
 
                     Transaction tx = session.beginTransaction();
 
@@ -1493,7 +1493,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                     tx.commit();
 
                 }
-                displaySites( session, this.criteria);
+                displaySites(session, this.criteria);
                 this.txtNumberSites.setText(getNumberOfSites(session));
                 if (session.isOpen()) {
                     session.close();
@@ -1535,7 +1535,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 );
            if (answer == javax.swing.JOptionPane.YES_OPTION) {
            */
-               for (int i = 0; i < row.length;i++) {
+               for (int i = 0; i < row.length; i++) {
 
                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
                    siteCodes.add(sitecode);
@@ -1577,7 +1577,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         );
        if (answer == javax.swing.JOptionPane.YES_OPTION) {
 
-              for (int i = 0; i < row;i++) {
+              for (int i = 0; i < row; i++) {
 
                   String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
                   siteCodes.add(sitecode);
@@ -1613,7 +1613,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
         } else {
             File dbFile = new File("");
-            ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode,dbFile.getAbsolutePath()+"\\logs\\SDF_HTMLSitelog.txt");
+            ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + "\\logs\\SDF_HTMLSitelog.txt");
             exportHTML.processDatabase("xsl/exportSite.html");
         }
 

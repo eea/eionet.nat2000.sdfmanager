@@ -128,19 +128,19 @@ public class TranslationCodeName {
     public static String getOtherSpeciesGroupByIndex(int indexSelected) {
         String groupCode = "-";
         switch (indexSelected) {
-            case 1:  groupCode = "A";       break;
-            case 2:   groupCode = "B";      break;
-            case 3:  groupCode = "F";         break;
-            case 4:   groupCode = "Fu";         break;
-            case 5:   groupCode = "I";           break;
-            case 6:   groupCode = "L";          break;
-            case 7:   groupCode = "M";         break;
-            case 8:   groupCode = "P";        break;
-            case 9:   groupCode = "R";     break;
+            case 1:  groupCode = "A";      break;
+            case 2:  groupCode = "B";      break;
+            case 3:  groupCode = "F";      break;
+            case 4:  groupCode = "Fu";     break;
+            case 5:  groupCode = "I";      break;
+            case 6:  groupCode = "L";      break;
+            case 7:  groupCode = "M";      break;
+            case 8:  groupCode = "P";      break;
+            case 9:  groupCode = "R";      break;
 
         }
         return groupCode;
-        }
+    }
 
 
     /**
@@ -148,7 +148,7 @@ public class TranslationCodeName {
      * @param indexSelected
      * @return
      */
-     public static String getSpeciesGroupByIndex(int indexSelected) {
+    public static String getSpeciesGroupByIndex(int indexSelected) {
 
         String groupCode = "-";
         switch (indexSelected) {
@@ -161,16 +161,15 @@ public class TranslationCodeName {
             case 7:  groupCode = "R";     break;
 
         }
-
         return groupCode;
-        }
+    }
 
      /**
       *
       * @param groupOSpeciesCode
       * @return
       */
-     public static int getSpeciesIndexByCodeGroup(String groupOSpeciesCode) {
+    public static int getSpeciesIndexByCodeGroup(String groupOSpeciesCode) {
         int indexSelected = 0;
         if (("A").equals(groupOSpeciesCode)) {
            indexSelected = 1;
@@ -192,16 +191,14 @@ public class TranslationCodeName {
             indexSelected = 9;
         }
         return indexSelected;
-
-
-        }
+    }
 
      /**
       *
       * @param groupOSpeciesCode
       * @return
       */
-     public static int getOtherSpeciesIndexByCodeGroup(String groupOSpeciesCode) {
+    public static int getOtherSpeciesIndexByCodeGroup(String groupOSpeciesCode) {
         int indexSelected = 0;
         if (("A").equals(groupOSpeciesCode)) {
            indexSelected = 1;
@@ -219,31 +216,27 @@ public class TranslationCodeName {
             indexSelected = 7;
         }
         return indexSelected;
-
-
-        }
+    }
 
      /***
       *
       * @param relationType
       * @return
       */
-     public static int getSelectedIndexByRelationType(String relationType) {
-         int selectedIndex = 0;
-         if (("=").equals(relationType)) {
-             selectedIndex = 0;
-         } else if (("+").equals(relationType)) {
-             selectedIndex = 1;
-         } else if (("-").equals(relationType)) {
-             selectedIndex = 2;
-         } else if (("*").equals(relationType)) {
-             selectedIndex = 3;
-         } else if (("/").equals(relationType)) {
-             selectedIndex = 4;
-         }
-         return selectedIndex;
-
-     }
-
+    public static int getSelectedIndexByRelationType(String relationType) {
+        int selectedIndex = 0;
+        if (("=").equals(relationType)) {
+            selectedIndex = 0;
+        } else if (("+").equals(relationType)) {
+            selectedIndex = 1;
+        } else if (("-").equals(relationType)) {
+            selectedIndex = 2;
+        } else if (("*").equals(relationType)) {
+            selectedIndex = 3;
+        } else if (("/").equals(relationType)) {
+            selectedIndex = 4;
+        }
+        return selectedIndex;
+    }
 
 }

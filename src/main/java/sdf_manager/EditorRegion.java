@@ -15,7 +15,7 @@ import pojos.Region;
  */
 public class EditorRegion extends javax.swing.JFrame {
 
-    /** Creates new form EditorRegions */
+    /** Creates new form EditorRegions. */
 
     private boolean editing = false; //no cascaded actionPerformed
     private SDFEditor parent;
@@ -37,14 +37,14 @@ public class EditorRegion extends javax.swing.JFrame {
     }
 
    /**
-    * Close the Region Editor
+    * Close the Region Editor.
     */
    private void exit() {
        this.dispose();
    }
 
    /**
-    * Loads the regions from the reference table
+    * Loads the regions from the reference table.
     */
    private void loadRegions() {
        EditorRegion.log.info("Loading the regions from the reference table");
@@ -80,15 +80,15 @@ public class EditorRegion extends javax.swing.JFrame {
     }
 
    /**
-    * Check if the region exists for this site
+    * Check if the region exists for this site.
     * @param codeNut
     * @return
     */
    private boolean isNutExisting(String codeNut) {
-        EditorRegion.log.info("Checking if the region::" + codeNut+" exists for this site::" + this.siteCode);
+        EditorRegion.log.info("Checking if the region::" + codeNut + " exists for this site::" + this.siteCode);
         boolean nutExist = false;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode+"'";
+        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
@@ -278,13 +278,13 @@ public class EditorRegion extends javax.swing.JFrame {
         if (code.equals("")) {
             EditorRegion.log.error("No code found for NUTS region.");
             javax.swing.JOptionPane.showMessageDialog(this, "No code found for NUTS region.");
-        } else if (!("").equals(code) && code.length() >4) {
+        } else if (!("").equals(code) && code.length() > 4) {
             EditorRegion.log.error("Code is too long.(Maximum 4 characters).");
             javax.swing.JOptionPane.showMessageDialog(this, "Code is too long. Please, insert a valid code (4 characters).");
         } else if (name.equals("")) {
             EditorRegion.log.error("No description found for NUTS region");
             javax.swing.JOptionPane.showMessageDialog(this, "No description found for NUTS region.");
-        } else if (!("").equals(name) && name.length() >128) {
+        } else if (!("").equals(name) && name.length() > 128) {
             EditorRegion.log.error("Name is too long (Maximum 128 characters).");
             javax.swing.JOptionPane.showMessageDialog(this, "Name is too long. Please, insert a valid name (128 characters).");
         } else if (isNutExisting(code)) {

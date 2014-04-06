@@ -66,10 +66,10 @@ public class ValidateSite {
                 }
             }
 
-           if (site.getSiteType() == null) {
-               errorList.add("Site Type\n");
-           }
-           if (("A").equals(site.getSiteType().toString())) {
+            if (site.getSiteType() == null) {
+                errorList.add("Site Type\n");
+            }
+            if (("A").equals(site.getSiteType().toString())) {
                 if (site.getSiteSpaDate() == null) {
                     errorList.add("Date site classificated as SPA in Identification section (Dates tab)\n");
                 }
@@ -186,7 +186,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
             Set siteOtherSpecies = site.getOtherSpecieses();
             if (!siteOtherSpecies.isEmpty()) {
                 Iterator itosr = siteOtherSpecies.iterator();
-                 while (itosr.hasNext()) {
+                while (itosr.hasNext()) {
                     OtherSpecies s = (OtherSpecies) itosr.next();
                     if (s.getOtherSpeciesGroup() == null || (("-").equals(s.getOtherSpeciesGroup()))) {
                         errorList.add("Group of the species (Other species). (Ecological Info - Other Species Type  section)\n");
@@ -200,13 +200,13 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
             }
 
             if (!habitatInfo && !speciesInfo) {
-                 errorList.add("Non habitat or  species. (Ecological Info)\n");
+                errorList.add("Non habitat or  species. (Ecological Info)\n");
             }
             if ((("A").equals(site.getSiteType().toString())) || (("C").equals(site.getSiteType().toString()))) {
-               if (!birdsSPA) {
-                errorList.add("No birds in SPA site. (Ecological Info)\n");
+                if (!birdsSPA) {
+                    errorList.add("No birds in SPA site. (Ecological Info)\n");
+                }
             }
-           }
 
 
             /**************DESCRIPTION***********************/
@@ -241,7 +241,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                     errorList.add("There has to be at least one positive and negative impact.\n");
                 }
             } else {
-                 errorList.add("Impacts. (Description - Pressures and Threads section)\n");
+                errorList.add("Impacts. (Description - Pressures and Threads section)\n");
             }
 
             /********PROTECTION**********/
@@ -254,7 +254,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                     SiteRelation rel = (SiteRelation) itre.next();
 
                     if (rel.getSiteRelationSitename() == null || (("").equals(rel.getSiteRelationSitename()))) {
-                      errorList.add("Site Name of the Relation National Site. (Protection Status - Relation with other sites section)\n ");
+                        errorList.add("Site Name of the Relation National Site. (Protection Status - Relation with other sites section)\n ");
                     }
 
                     if (rel.getSiteRelationType() == null) {
@@ -275,7 +275,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                     MgmtBody bodyObj = (MgmtBody) itrbody.next();
 
                     if (bodyObj.getMgmtBodyOrg() == null || (("").equals(bodyObj.getMgmtBodyOrg()))) {
-                       errorList.add("Organisation of the Management Bodies. (Management section)\n");
+                        errorList.add("Organisation of the Management Bodies. (Management section)\n");
                     }
 
                     if (bodyObj.getMgmtBodyAddress() == null || (("").equals(bodyObj.getMgmtBodyAddress()))) {
@@ -292,7 +292,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
                     }
                 }
             } else {
-                  errorList.add("Management. (Management section)\n");
+                errorList.add("Management. (Management section)\n");
             }
 
             Map map = site.getMap();
@@ -301,7 +301,7 @@ ValidateSite.log.info("Habitat==>" + h.getHabitatCode() + "<==h.getHabitatConser
             }
         } catch (Exception e) {
             e.printStackTrace();
-           ValidateSite.log.error("An error has occurred validating site. Error Message:::" + e.getMessage());
+            ValidateSite.log.error("An error has occurred validating site. Error Message:::" + e.getMessage());
         }
         return errorList;
     }

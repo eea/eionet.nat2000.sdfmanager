@@ -23,7 +23,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class SDF_ManagerApp extends SingleFrameApplication {
     private final static Logger log = Logger.getLogger(SDF_ManagerApp.class .getName());
     private static String pathLog = (new File("")).getAbsolutePath();
-    private final static String LOG_PROPERTIES_FILE = pathLog+ File.separator +"log4j.properties";
+    private final static String LOG_PROPERTIES_FILE = pathLog + File.separator + "log4j.properties";
 
     /**
      * At startup create and show the main frame of the application.
@@ -52,21 +52,20 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) throws IOException {
-         String errorMesg =null;
-        try{
+        String errorMesg = null;
+        try {
             initializeLogger();
-            errorMesg =SDF_MysqlDatabase.createNaturaDB();
+            errorMesg = SDF_MysqlDatabase.createNaturaDB();
             if (errorMesg != null) {
-               log.info("Error");
-
+                log.info("Error");
             } else {
-                 log.info("run importTool");
+                log.info("run importTool");
                 launch(SDF_ManagerApp.class, args);
             }
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred." + errorMesg, "Dialog",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred." + errorMesg, "Dialog", JOptionPane.ERROR_MESSAGE);
             log.error("Error::::" + e.getMessage());
             //e.printStackTrace();
         }
@@ -75,22 +74,18 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /**
      *
      */
- private static void initializeLogger()
-  {
-    Properties logProperties = new Properties();
+    private static void initializeLogger() {
+        Properties logProperties = new Properties();
 
-    try
-    {
-      // load our log4j properties / configuration file
-      logProperties.load(new FileInputStream(LOG_PROPERTIES_FILE));
-      PropertyConfigurator.configure(logProperties);
-      log.info("Logging initialized.");
+        try {
+            // load our log4j properties / configuration file
+            logProperties.load(new FileInputStream(LOG_PROPERTIES_FILE));
+            PropertyConfigurator.configure(logProperties);
+            log.info("Logging initialized.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "The process has been falied.::", "Dialog", JOptionPane.ERROR_MESSAGE);
+            log.error(e.getMessage());
+            throw new RuntimeException("Unable to load logging property " + LOG_PROPERTIES_FILE);
+        }
     }
-    catch (IOException e)
-    {
-      JOptionPane.showMessageDialog(new JFrame(), "The process has been falied.::", "Dialog",JOptionPane.ERROR_MESSAGE);
-      log.error(e.getMessage());
-      throw new RuntimeException("Unable to load logging property " + LOG_PROPERTIES_FILE);
-    }
-  }
 }

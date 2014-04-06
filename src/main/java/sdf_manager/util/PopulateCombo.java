@@ -22,17 +22,17 @@ public class PopulateCombo {
     public static void populateJComboTypeABCD(JComboBox comboBox) {
 
         try {
-           Properties prop =  SDF_Util.getSDFProperties();
-           String assesmentABCD = prop.getProperty("assessmentTypeABCD");
-           comboBox.insertItemAt("-", 0);
-           StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
-           int i = 1;
-           while (st.hasMoreElements()) {
-               String token = st.nextToken();
-               comboBox.insertItemAt(token, i);
-               i++;
-           }
-           comboBox.setSelectedIndex(0);
+            Properties prop =  SDF_Util.getSDFProperties();
+            String assesmentABCD = prop.getProperty("assessmentTypeABCD");
+            comboBox.insertItemAt("-", 0);
+            StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
+            int i = 1;
+            while (st.hasMoreElements()) {
+                String token = st.nextToken();
+                comboBox.insertItemAt(token, i);
+                i++;
+            }
+            comboBox.setSelectedIndex(0);
         } catch (Exception e) {
 
         }
@@ -45,17 +45,17 @@ public class PopulateCombo {
     public static void populateJComboTypeABC(JComboBox comboBox) {
 
         try {
-           Properties prop =  SDF_Util.getSDFProperties();
-           String assesmentABCD = prop.getProperty("assessmentTypeABC");
-           comboBox.insertItemAt("-", 0);
-           StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
-           int i = 1;
-           while (st.hasMoreElements()) {
-               String token = st.nextToken();
-               comboBox.insertItemAt(token, i);
-               i++;
-           }
-           comboBox.setSelectedIndex(0);
+            Properties prop =  SDF_Util.getSDFProperties();
+            String assesmentABCD = prop.getProperty("assessmentTypeABC");
+            comboBox.insertItemAt("-", 0);
+            StringTokenizer st = new StringTokenizer(assesmentABCD, ",");
+            int i = 1;
+            while (st.hasMoreElements()) {
+                String token = st.nextToken();
+                comboBox.insertItemAt(token, i);
+                i++;
+            }
+            comboBox.setSelectedIndex(0);
         } catch (Exception e) {
 
         }

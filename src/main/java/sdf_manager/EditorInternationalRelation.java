@@ -145,7 +145,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         String code = "";
         Double cover = ConversionTools.stringToDouble(this.txtCover.getText());
         String name =  this.txtName.getText();
-        Character type = ((String)cmbType.getSelectedItem()).charAt(0);
+        Character type = ((String) cmbType.getSelectedItem()).charAt(0);
         Character scope = 'I';
         SiteRelation sr = new SiteRelation();
         if (this.cmbCode.getSelectedIndex() == 0) {
@@ -180,7 +180,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
 
         if (this.editing && this.index > -1) {
            /*we're editing an existing habitat*/
-            this.parent.saveRelation(sr,this.index );
+            this.parent.saveRelation(sr,this.index);
             EditorInternationalRelation.log.info("Relation  saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "Relation  saved.");
 
@@ -422,7 +422,7 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
             EditorInternationalRelation.log.error("No name for the relation is provided.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a name for the site.");
         } else if (txtName.getText() != null && !(("").equals(txtName.getText())) && txtName.getText().length() > 256) {
-            EditorInternationalRelation.log.error("The site Name is too long, more than 256 characters.:::" + txtName.getText() );
+            EditorInternationalRelation.log.error("The site Name is too long, more than 256 characters.:::" + txtName.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid site name (256 characters).");
         } else if (txtCover.getText().equals("")) {
             EditorInternationalRelation.log.error("No cover for the relation is provided.");

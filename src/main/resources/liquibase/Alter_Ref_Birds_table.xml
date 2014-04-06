@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+     You can run this change log on your database as many times as you want, it will ignore the
+     changes that are already applied. It also means that you can't modify an existing revision.
+     Always add to the end.
+
+     Use the maven goals: liquibase:update, liquibase:status or liquibase:changelogSync
+      Potentially with -Dliquibase.dropFirst=true
+ -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+ALTER TABLE `natura2000`.`ref_birds`
+ADD COLUMN `REF_BIRDS_CODE_NEW` VARCHAR(1) NULL  AFTER `REF_BIRDS_ANNEXIIIPB` ,
+ADD COLUMN `REF_BIRDS_ALT_SCIENTIFIC_NAME` VARCHAR(1024) NULL  AFTER `REF_BIRDS_CODE_NEW` ;
+-->
+    <changeSet author="original" id="rev-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ref_birds" columnName="REF_BIRDS_CODE_NEW"/>
+            </not>
+        </preConditions>
+        <comment>New columns REF_BIRDS_CODE_NEW and REF_BIRDS_ALT_SCIENTIFIC_NAME</comment>
+        <addColumn tableName="ref_birds" columnName="REF_BIRDS_CODE_NEW" afterColumn="REF_BIRDS_ANNEXIIIPB" newDataType="VARCHAR(1)"/>
+        <addColumn tableName="ref_birds" columnName="REF_BIRDS_ALT_SCIENTIFIC_NAME" afterColumn="REF_BIRDS_CODE_NEW" newDataType="VARCHAR(1024)"/>
+    </changeSet>
+
+
+</databaseChangeLog>

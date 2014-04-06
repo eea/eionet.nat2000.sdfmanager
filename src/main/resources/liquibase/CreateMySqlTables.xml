@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+     You can run this change log on your database as many times as you want, it will ignore the
+     changes that are already applied. It also means that you can't modify an existing revision.
+     Always add to the end.
+
+     Use the maven goals: liquibase:update, liquibase:status or liquibase:changelogSync
+      Potentially with -Dliquibase.dropFirst=true
+ -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="original" id="rev-1">
+        <sql>CREATE TABLE IF NOT EXISTS ref_biogeo (
+            BIOGEO_ID int(11) NOT NULL,
+            BIOGEO_NAME varchar(64) ${utf8.charset} DEFAULT NULL,
+            BIOGEO_CODE varchar(64) ${utf8.charset} DEFAULT NULL,
+            PRIMARY KEY (BIOGEO_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-2">
+        <sql>CREATE TABLE IF NOT EXISTS ref_birds (
+            REF_BIRDS_ID int(11) NOT NULL,
+            REF_BIRDS_CODE varchar(16) DEFAULT NULL,
+            REF_BIRDS_NAME varchar(128) DEFAULT NULL,
+            REF_BIRDS_ANNEXI smallint(6) DEFAULT NULL,
+            REF_BIRDS_ANNEXIIPA smallint(6) DEFAULT NULL,
+            REF_BIRDS_ANNEXIIPB smallint(6) DEFAULT NULL,
+            REF_BIRDS_ANNEXIIIPA smallint(6) DEFAULT NULL,
+            REF_BIRDS_ANNEXIIIPB smallint(6) DEFAULT NULL,
+            REF_BIRDS_CODE_NEW VARCHAR(1) DEFAULT 0,
+            REF_BIRDS_ALT_SCIENTIFIC_NAME VARCHAR(1024) default NULL,
+            PRIMARY KEY (REF_BIRDS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-3">
+        <sql>CREATE TABLE IF NOT EXISTS ref_designations (
+            REF_DESIGNATIONS_ID int(11) NOT NULL,
+            REF_DESIGNATIONS_CODE varchar(16) DEFAULT NULL,
+            REF_DESIGNATIONS_DESCR varchar(512) DEFAULT NULL,
+            REF_DESIGNATIONS_CATEGORY char(1) DEFAULT NULL,
+            PRIMARY KEY (REF_DESIGNATIONS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-4">
+        <sql>CREATE TABLE IF NOT EXISTS ref_habitats (
+            REF_HABITATS_ID int(11) NOT NULL,
+            REF_HABITATS_CODE varchar(8) DEFAULT NULL,
+            REF_HABITATS_PRIORITY smallint(6) DEFAULT NULL,
+            REF_HABITATS_DESC_EN varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_FR varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_DE varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_ES varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_IT varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_NL varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_PT varchar(1024) DEFAULT NULL,
+            REF_HABITATS_DESC_DK varchar(1024) DEFAULT NULL,
+            PRIMARY KEY (REF_HABITATS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-5">
+        <sql>CREATE TABLE IF NOT EXISTS ref_impacts (
+            REF_IMPACTS_ID int(11) NOT NULL,
+            REF_IMPACTS_CODE varchar(32) DEFAULT NULL,
+            REF_IMPACTS_DESCR varchar(1024) DEFAULT NULL,
+            REF_IMPACTS_REMARKS varchar(1024) DEFAULT NULL,
+            REF_IMPACTS_OLDCODE_REFPORT varchar(32) DEFAULT NULL,
+            REF_IMPACTS_OLDCODE_CROSSLINK varchar(32) DEFAULT NULL,
+            PRIMARY KEY (REF_IMPACTS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-6">
+        <sql>CREATE TABLE IF NOT EXISTS ref_nuts (
+            REF_NUTS_ID int(11) NOT NULL,
+            REF_NUTS_CODE varchar(12) DEFAULT NULL,
+            REF_NUTS_DESCRIPTION varchar(256) DEFAULT NULL,
+            PRIMARY KEY (REF_NUTS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-7">
+        <sql>CREATE TABLE IF NOT EXISTS ref_species (
+            REF_SPECIES_ID int(11) NOT NULL AUTO_INCREMENT,
+            REF_SPECIES_CODE varchar(16) DEFAULT NULL,
+            REF_SPECIES_NAME varchar(128) DEFAULT NULL,
+            REF_SPECIES_GROUP char(1) DEFAULT NULL,
+            REF_SPECIES_ANNEX_II VARCHAR(1) default null ,
+            REF_SPECIES_ANNEX_IV VARCHAR(1) default null,
+            REF_SPECIES_ANNEX_V VARCHAR(1) default null ,
+            REF_SPECIES_ALT_SCIENTIFIC_NAME varchar(1024) DEFAULT NULL,
+            REF_SPECIES_HD_SCIENTIFIC_NAME varchar(1024) DEFAULT NULL ,
+            REF_SPECIES_CODE_NEW VARCHAR(1) default null ,
+            PRIMARY KEY (REF_SPECIES_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-8">
+        <sql>CREATE TABLE IF NOT EXISTS ref_conventions (
+            REF_CONVENTIONS_ID int(11) NOT NULL,
+            REF_CONVENTIONS_NAME varchar(64) DEFAULT NULL,
+            REF_CONVENTIONS_CODE varchar(64) DEFAULT NULL,
+            PRIMARY KEY (REF_CONVENTIONS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-9">
+        <sql>CREATE TABLE IF NOT EXISTS ref_hab_classes (
+            REF_HAB_CLASSES_ID INTEGER PRIMARY KEY,
+            REF_HAB_CLASSES_CODE VARCHAR(3),
+            REF_HAB_CLASSES_DESCR_EN VARCHAR(128),
+            REF_HAB_CLASSES_DESCR_FR VARCHAR(128))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-10">
+        <sql>CREATE TABLE IF NOT EXISTS doc (
+            DOC_ID int(11) NOT NULL,
+            DOC_DESCRIPTION longtext,
+            PRIMARY KEY (DOC_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-11">
+        <sql>CREATE TABLE IF NOT EXISTS doc_link (
+            DOC_LINK_ID int(11) NOT NULL,
+            DOC_LINK_URL varchar(256) DEFAULT NULL,
+            DOC_ID int(11) DEFAULT NULL,
+            PRIMARY KEY (DOC_LINK_ID),
+            KEY DOC_ID (DOC_ID),
+            CONSTRAINT doc_link_ibfk_1 FOREIGN KEY (DOC_ID) REFERENCES doc (DOC_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-12">
+        <sql>CREATE TABLE IF NOT EXISTS map (
+            MAP_ID int(11) NOT NULL,
+            MAP_INSPIRE varchar(128) DEFAULT NULL,
+            MAP_PDF smallint(6) DEFAULT NULL,
+            MAP_REFERENCE varchar(1024) DEFAULT NULL,
+            PRIMARY KEY (MAP_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-13">
+        <sql>CREATE TABLE IF NOT EXISTS mgmt (
+            MGMT_ID int(11) NOT NULL,
+            MGMT_STATUS char(1) DEFAULT NULL,
+            MGMT_CONSERV_MEASURES longtext,
+            PRIMARY KEY (MGMT_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-14">
+        <sql>CREATE TABLE IF NOT EXISTS mgmt_body (
+            MGMT_BODY_ID int(11) NOT NULL,
+            MGMT_BODY_ORG varchar(256) DEFAULT NULL,
+            MGMT_BODY_ADDRESS varchar(1024) DEFAULT NULL,
+            MGMT_BODY_EMAIL varchar(64) DEFAULT NULL,
+            MGMT_ADMINUNIT varchar(256) DEFAULT NULL,
+            MGMT_LOCATORDESIGNATOR varchar(256) DEFAULT NULL,
+            MGMT_LOCATORNAME varchar(256) DEFAULT NULL,
+            MGMT_ADDRESSAREA varchar(256) DEFAULT NULL,
+            MGMT_POSTNAME varchar(256) DEFAULT NULL,
+            MGMT_POSTCODE varchar(256) DEFAULT NULL,
+            MGMT_THOROUGHFARE varchar(256) DEFAULT NULL,
+            MGMT_ID int(11) DEFAULT NULL,
+            PRIMARY KEY (MGMT_BODY_ID),
+            KEY MGMT_ID (MGMT_ID),
+            CONSTRAINT mgmt_body_ibfk_1 FOREIGN KEY (MGMT_ID) REFERENCES mgmt (MGMT_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-15">
+        <sql>CREATE TABLE IF NOT EXISTS mgmt_plan (
+            MGMT_PLAN_ID int(11) NOT NULL,
+            MGMT_PLAN_NAME LONGTEXT DEFAULT NULL,
+            MGMT_PLAN_URL varchar(256) DEFAULT NULL,
+            MGMT_ID int(11) DEFAULT NULL,
+            PRIMARY KEY (MGMT_PLAN_ID),
+            KEY MGMT_ID (MGMT_ID),
+            CONSTRAINT mgmt_plan_ibfk_1 FOREIGN KEY (MGMT_ID) REFERENCES mgmt (MGMT_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-16">
+        <sql>CREATE TABLE IF NOT EXISTS resp (
+            RESP_ID int(11) NOT NULL,
+            RESP_NAME varchar(1024) DEFAULT NULL,
+            RESP_ADDRESS varchar(2048) DEFAULT NULL,
+            RESP_EMAIL varchar(256) DEFAULT NULL,
+            RESP_ADMINUNIT varchar(256) DEFAULT NULL,
+            RESP_LOCATORDESIGNATOR varchar(256) DEFAULT NULL,
+            RESP_LOCATORNAME varchar(256) DEFAULT NULL,
+            RESP_ADDRESSAREA varchar(256) DEFAULT NULL,
+            RESP_POSTNAME varchar(256) DEFAULT NULL,
+            RESP_POSTCODE varchar(256) DEFAULT NULL,
+            RESP_THOROUGHFARE varchar(256) DEFAULT NULL,
+            PRIMARY KEY (RESP_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-17">
+        <sql>CREATE TABLE IF NOT EXISTS site (
+            SITE_CODE varchar(9) NOT NULL,
+            SITE_TYPE char(1) DEFAULT NULL,
+            SITE_NAME varchar(256) DEFAULT NULL,
+            SITE_COMP_DATE date DEFAULT NULL,
+            SITE_UPDATE_DATE date DEFAULT NULL,
+            SITE_SPA_DATE date DEFAULT NULL,
+            SITE_SPA_LEGAL_REF varchar(512) DEFAULT NULL,
+            SITE_SCI_PROP_DATE date DEFAULT NULL,
+            SITE_SCI_CONF_DATE date DEFAULT NULL,
+            SITE_SAC_DATE date DEFAULT NULL,
+            SITE_SAC_LEGAL_REF varchar(512) DEFAULT NULL,
+            SITE_EXPLANATIONS varchar(512) DEFAULT NULL,
+            SITE_LONGITUDE double DEFAULT NULL,
+            SITE_LATITUDE double DEFAULT NULL,
+            SITE_AREA double DEFAULT NULL,
+            SITE_MARINE_AREA double DEFAULT NULL,
+            SITE_LENGTH double DEFAULT NULL,
+            SITE_CHARACTERISTICS longtext,
+            SITE_QUALITY longtext,
+            SITE_DESIGNATION longtext,
+            DOC_ID int(11) DEFAULT NULL,
+            RESP_ID int(11) DEFAULT NULL,
+            MGMT_ID int(11) DEFAULT NULL,
+            MAP_ID int(11) DEFAULT NULL,
+            DATE_CREATION DATE,
+            DATE_DELETION DATE,
+            DATE_UPDATE DATE,
+            PRIMARY KEY (SITE_CODE),
+            KEY RESP_ID (RESP_ID),
+            KEY DOC_ID (DOC_ID),
+            KEY MGMT_ID (MGMT_ID),
+            KEY MAP_ID (MAP_ID),
+            CONSTRAINT site_ibfk_1 FOREIGN KEY (RESP_ID) REFERENCES resp (RESP_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT site_ibfk_2 FOREIGN KEY (DOC_ID) REFERENCES doc (DOC_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT site_ibfk_3 FOREIGN KEY (MGMT_ID) REFERENCES mgmt (MGMT_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT site_ibfk_4 FOREIGN KEY (MAP_ID) REFERENCES map (MAP_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-18">
+        <sql>CREATE TABLE IF NOT EXISTS region (
+            REGION_ID int(11) NOT NULL,
+            REGION_CODE varchar(4) DEFAULT NULL,
+            REGION_NAME varchar(128) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (REGION_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT region_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-19">
+        <sql>CREATE TABLE IF NOT EXISTS site_biogeo (
+            SITE_CODE varchar(9) NOT NULL DEFAULT '',
+            BIOGEO_ID int(11) NOT NULL DEFAULT '0',
+            BIOGEO_PERCENT double DEFAULT NULL,
+            PRIMARY KEY (SITE_CODE,
+            BIOGEO_ID),
+            KEY BIOGEO_ID (BIOGEO_ID),
+            CONSTRAINT site_biogeo_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE,
+            CONSTRAINT site_biogeo_ibfk_2 FOREIGN KEY (BIOGEO_ID) REFERENCES ref_biogeo (BIOGEO_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-20">
+        <sql>CREATE TABLE IF NOT EXISTS habitat (
+            HABITAT_ID int(11) NOT NULL,
+            HABITAT_CODE varchar(4) DEFAULT NULL,
+            HABITAT_PRIORITY smallint(6) DEFAULT NULL,
+            HABITAT_NP smallint(6) DEFAULT NULL,
+            HABITAT_COVER double DEFAULT NULL,
+            HABITAT_CAVES int(11) DEFAULT NULL,
+            HABITAT_DATA_QUALITY char(1) DEFAULT NULL,
+            HABITAT_REPRESENTATIVITY char(1) DEFAULT NULL,
+            HABITAT_RELATIVE_SURFACE char(1) DEFAULT NULL,
+            HABITAT_CONSERVATION char(1) DEFAULT NULL,
+            HABITAT_GLOBAL char(1) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            HABITAT_COVER_HA double default null,
+            PRIMARY KEY (HABITAT_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT habitat_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-21">
+        <sql>CREATE TABLE IF NOT EXISTS habitat_class (
+            HABITAT_CLASS_ID int(11) NOT NULL,
+            HABITAT_CLASS_CODE varchar(4) DEFAULT NULL,
+            HABITAT_CLASS_DESCRIPTION varchar(256) DEFAULT NULL,
+            HABITAT_CLASS_COVER double DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (HABITAT_CLASS_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT habitat_class_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-22">
+        <sql>CREATE TABLE IF NOT EXISTS impact (
+            IMPACT_ID int(11) NOT NULL,
+            IMPACT_TYPE char(1) DEFAULT NULL,
+            IMPACT_RANK char(1) DEFAULT NULL,
+            IMPACT_CODE varchar(16) DEFAULT NULL,
+            IMPACT_POLLUTION_CODE char(1) DEFAULT NULL,
+            IMPACT_OCCURRENCE char(1) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (IMPACT_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT impact_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-23">
+        <sql>CREATE TABLE IF NOT EXISTS ownership (
+            OWNERSHIP_ID int(11) NOT NULL,
+            OWNERSHIP_TYPE varchar(32) DEFAULT NULL,
+            OWNERSHIP_CODE varchar(32) DEFAULT NULL,
+            PRIMARY KEY (OWNERSHIP_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-24">
+        <sql>CREATE TABLE IF NOT EXISTS site_ownership (
+            OWNERSHIP_ID int(11) NOT NULL DEFAULT '0',
+            SITE_CODE varchar(9) NOT NULL DEFAULT '',
+            OWNERSHIP_PERCENT double DEFAULT NULL,
+            PRIMARY KEY (OWNERSHIP_ID,
+            SITE_CODE),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT site_ownership_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE),
+            CONSTRAINT site_ownership_ibfk_2 FOREIGN KEY (OWNERSHIP_ID) REFERENCES ownership (OWNERSHIP_ID) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-25">
+        <sql>CREATE TABLE IF NOT EXISTS site_relation (
+            SITE_RELATION_ID int(11) NOT NULL,
+            SITE_RELATION_SCOPE char(1) DEFAULT NULL,
+            SITE_RELATION_CODE varchar(64) DEFAULT NULL,
+            SITE_RELATION_CONVENTION varchar(64) DEFAULT NULL,
+            SITE_RELATION_SITENAME varchar(256) DEFAULT NULL,
+            SITE_RELATION_COVER double DEFAULT NULL,
+            SITE_RELATION_TYPE char(1) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (SITE_RELATION_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT site_relation_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-26">
+        <sql>CREATE TABLE IF NOT EXISTS species (
+            SPECIES_ID int(11) NOT NULL,
+            SPECIES_GROUP char(1) DEFAULT NULL,
+            SPECIES_CODE char(4) DEFAULT NULL,
+            SPECIES_NAME varchar(128) DEFAULT NULL,
+            SPECIES_SENSITIVE smallint(6) DEFAULT NULL,
+            SPECIES_NP smallint(6) DEFAULT NULL,
+            SPECIES_TYPE char(1) DEFAULT NULL,
+            SPECIES_SIZE_MIN int(11) DEFAULT NULL,
+            SPECIES_SIZE_MAX int(11) DEFAULT NULL,
+            SPECIES_UNIT varchar(32) DEFAULT NULL,
+            SPECIES_CATEGORY char(1) DEFAULT NULL,
+            SPECIES_DATA_QUALITY VARCHAR(2) DEFAULT NULL,
+            SPECIES_POPULATION char(1) DEFAULT NULL,
+            SPECIES_CONSERVATION char(1) DEFAULT NULL,
+            SPECIES_ISOLATION char(1) DEFAULT NULL,
+            SPECIES_GLOBAL char(1) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (SPECIES_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT species_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-27">
+        <sql>CREATE TABLE IF NOT EXISTS national_dtype (
+            NATIONAL_DTYPE_ID int(11) NOT NULL,
+            NATIONAL_DTYPE_CODE varchar(4) DEFAULT NULL,
+            NATIONAL_DTYPE_COVER double DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (NATIONAL_DTYPE_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT national_dtype_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-28">
+        <sql>CREATE TABLE IF NOT EXISTS other_species (
+            OTHER_SPECIES_ID int(11) NOT NULL,
+            OTHER_SPECIES_GROUP VARCHAR(2) DEFAULT NULL,
+            OTHER_SPECIES_CODE char(4) DEFAULT NULL,
+            OTHER_SPECIES_NAME varchar(128) DEFAULT NULL,
+            OTHER_SPECIES_SENSITIVE smallint(6) DEFAULT NULL,
+            OTHER_SPECIES_NP smallint(6) DEFAULT NULL,
+            OTHER_SPECIES_SIZE_MIN int(11) DEFAULT NULL,
+            OTHER_SPECIES_SIZE_MAX int(11) DEFAULT NULL,
+            OTHER_SPECIES_UNIT varchar(32) DEFAULT NULL,
+            OTHER_SPECIES_CATEGORY char(1) DEFAULT NULL,
+            OTHER_SPECIES_MOTIVATION varchar(50) DEFAULT NULL,
+            SITE_CODE varchar(9) DEFAULT NULL,
+            PRIMARY KEY (OTHER_SPECIES_ID),
+            KEY SITE_CODE (SITE_CODE),
+            CONSTRAINT other_species_ibfk_1 FOREIGN KEY (SITE_CODE) REFERENCES site (SITE_CODE) ON DELETE CASCADE ON UPDATE CASCADE)</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-29">
+        <sql>CREATE TABLE IF NOT EXISTS country (
+            COUNTRY_ID int(11) NOT NULL,
+            COUNTRY_CODE varchar(2) ,
+            COUNTRY_NAME varchar(64) ${utf8.charset} DEFAULT NULL,
+            PRIMARY KEY (COUNTRY_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-30">
+        <sql>CREATE TABLE IF NOT EXISTS ref_population_type (
+            POPULATION_ID int(11) NOT NULL,
+            POPULATION_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            POPULATION_CODE varchar(1) DEFAULT NULL,
+            PRIMARY KEY (POPULATION_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-31">
+        <sql>CREATE TABLE IF NOT EXISTS ref_unit (
+            UNIT_ID int(11) NOT NULL,
+            UNIT_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            UNIT_CODE varchar(124) DEFAULT NULL,
+            PRIMARY KEY (UNIT_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-32">
+        <sql>CREATE TABLE IF NOT EXISTS ref_category (
+            CATEGORY_ID int(11) NOT NULL,
+            CATEGORY_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            CATEGORY_CODE varchar(1) DEFAULT NULL,
+            CATEGORY_SPECIES varchar(1) DEFAULT NULL,
+            PRIMARY KEY (CATEGORY_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-33">
+        <sql>CREATE TABLE IF NOT EXISTS ref_species_group (
+            GROUP_ID int(11) NOT NULL,
+            GROUP_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            GROUP_CODE varchar(2) DEFAULT NULL,
+            GROUP_SPECIES varchar(1) DEFAULT NULL,
+            PRIMARY KEY (GROUP_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-34">
+        <sql>CREATE TABLE IF NOT EXISTS ref_data_quality (
+            QUALITY_ID int(11) NOT NULL,
+            QUALITY_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            QUALITY_CODE varchar(2) DEFAULT NULL,
+            QUALITY_SPECIES varchar(1) DEFAULT NULL,
+            PRIMARY KEY (QUALITY_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-35">
+        <sql>CREATE TABLE IF NOT EXISTS ref_impact_rank (
+            RANK_ID int(11) NOT NULL,
+            RANK_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            RANK_CODE varchar(1) DEFAULT NULL,
+            PRIMARY KEY (RANK_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-36">
+        <sql>CREATE TABLE IF NOT EXISTS ref_impact_pollution (
+            POLLUTION_ID int(11) NOT NULL,
+            POLLUTION_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+            POLLUTION_CODE varchar(1) DEFAULT NULL,
+            PRIMARY KEY (POLLUTION_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+     You can run this change log on your database as many times as you want, it will ignore the
+     changes that are already applied. It also means that you can't modify an existing revision.
+     Always add to the end.
+
+     Use the maven goals: liquibase:update, liquibase:status or liquibase:changelogSync
+      Potentially with -Dliquibase.dropFirst=true
+ -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="original" id="rev-1">
+        <sql>CREATE TABLE IF NOT EXISTS ref_population_type (
+        POPULATION_ID int(11) NOT NULL,
+        POPULATION_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        POPULATION_CODE varchar(1) DEFAULT NULL,
+        PRIMARY KEY (POPULATION_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-2">
+        <sql>CREATE TABLE IF NOT EXISTS ref_unit (
+        UNIT_ID int(11) NOT NULL,
+        UNIT_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        UNIT_CODE varchar(124) DEFAULT NULL,
+        PRIMARY KEY (UNIT_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-3">
+        <sql>CREATE TABLE IF NOT EXISTS ref_category (
+        CATEGORY_ID int(11) NOT NULL,
+        CATEGORY_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        CATEGORY_CODE varchar(1) DEFAULT NULL,
+        CATEGORY_SPECIES varchar(1) DEFAULT NULL,
+        PRIMARY KEY (CATEGORY_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-4">
+        <sql>CREATE TABLE IF NOT EXISTS ref_species_group (
+        GROUP_ID int(11) NOT NULL,
+        GROUP_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        GROUP_CODE varchar(2) DEFAULT NULL,
+        GROUP_SPECIES varchar(1) DEFAULT NULL,
+        PRIMARY KEY (GROUP_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-5">
+        <sql>CREATE TABLE IF NOT EXISTS ref_data_quality (
+        QUALITY_ID int(11) NOT NULL,
+        QUALITY_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        QUALITY_CODE varchar(2) DEFAULT NULL,
+        QUALITY_SPECIES varchar(1) DEFAULT NULL,
+        PRIMARY KEY (QUALITY_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-6">
+        <sql>CREATE TABLE IF NOT EXISTS ref_impact_rank (
+        RANK_ID int(11) NOT NULL,
+        RANK_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        RANK_CODE varchar(1) DEFAULT NULL,
+        PRIMARY KEY (RANK_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="original" id="rev-7">
+        <sql>CREATE TABLE IF NOT EXISTS ref_impact_pollution (
+        POLLUTION_ID int(11) NOT NULL,
+        POLLUTION_NAME varchar(256) ${utf8.charset} DEFAULT NULL,
+        POLLUTION_CODE varchar(1) DEFAULT NULL,
+        PRIMARY KEY (POLLUTION_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+</databaseChangeLog>

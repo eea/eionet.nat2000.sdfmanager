@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+     You can run this change log on your database as many times as you want, it will ignore the
+     changes that are already applied. It also means that you can't modify an existing revision.
+     Always add to the end.
+
+     Use the maven goals: liquibase:update, liquibase:status or liquibase:changelogSync
+      Potentially with -Dliquibase.dropFirst=true
+ -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="original" id="rev-1">
+        <modifyDataType tableName="site" columnName="SITE_SPA_LEGAL_REF" newDataType="LONGTEXT"/>
+        <modifyDataType tableName="site" columnName="SITE_SAC_LEGAL_REF" newDataType="LONGTEXT"/>
+        <modifyDataType tableName="site" columnName="SITE_EXPLANATIONS" newDataType="LONGTEXT"/>
+    </changeSet>
+
+    <changeSet author="original" id="rev-2">
+        <comment>Change the code for United Kingdom</comment>
+        <sql>update country set COUNTRY_CODE ='UK' where COUNTRY_CODE = 'GB'</sql>
+    </changeSet>
+
+</databaseChangeLog>

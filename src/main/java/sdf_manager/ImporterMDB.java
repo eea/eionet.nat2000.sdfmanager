@@ -1034,7 +1034,7 @@ public class ImporterMDB implements Importer {
                         String bioRegCode = translateBioRegions(regions.get(i));
                         int biogeoId = getBioRegionId(session, bioRegCode);
                         Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeoId);
-                        SiteBiogeoId id= new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
+                        SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
                         SiteBiogeo siteBiogeo = new SiteBiogeo(id, biogeo, site);
                         site.getSiteBiogeos().add(siteBiogeo);
                     }
@@ -1226,7 +1226,7 @@ public class ImporterMDB implements Importer {
         if (val.matches("[ip]{0,1}[crvp]")) {
             //String unit = null;
             String popType = null;
-            if ( (val.length() > 1) && (val.startsWith("i") || val.startsWith("p"))) {
+            if ((val.length() > 1) && (val.startsWith("i") || val.startsWith("p"))) {
                 //unit = val.substring(0, 1);
                 popType = val.substring(1, 2);
             } else {
@@ -1900,7 +1900,7 @@ public class ImporterMDB implements Importer {
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
-            descHabClass =(String) itr.next();
+            descHabClass = (String) itr.next();
         } else {
             log.info("The description of the habitat class::" + habClassCode + " is missing.");
         }
@@ -2092,7 +2092,7 @@ public class ImporterMDB implements Importer {
      * @return
      * @throws SQLException
      */
-    private String getImpactCode (String impactCodeOld) throws SQLException {
+    private String getImpactCode(String impactCodeOld) throws SQLException {
         String impactCode = null;
 
         Session session = HibernateUtil.getSessionFactory().openSession();

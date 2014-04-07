@@ -247,7 +247,7 @@ public class ExporterSiteXML implements Exporter {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
-            String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode+"' order by site.siteCode";
+            String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode + "' order by site.siteCode";
             Iterator itrSites = session.createQuery(hql).iterate();
             log("iterating...");
             while (itrSites.hasNext()) {
@@ -456,7 +456,7 @@ public class ExporterSiteXML implements Exporter {
      * @param fieldName
      * @return
      */
-     public static String fmtToLowerCase (Character val, String fieldName) {
+     public static String fmtToLowerCase(Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toLowerCase(), fieldName);
         } else {
@@ -470,7 +470,7 @@ public class ExporterSiteXML implements Exporter {
      * @param fieldName
      * @return
      */
-     public static String fmtToUpperCase (Character val, String fieldName) {
+     public static String fmtToUpperCase(Character val, String fieldName) {
         if (val != null) {
             return fmt(val.toString().toUpperCase(), fieldName);
         } else {
@@ -505,8 +505,8 @@ public class ExporterSiteXML implements Exporter {
             xformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             xformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "string");
             xformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS,
-                    "siteName name otherSiteCharacteristics siteDesignation description" +
-                    " qualityAndImportance conservationMeasures ");
+                    "siteName name otherSiteCharacteristics siteDesignation description"
+                    + " qualityAndImportance conservationMeasures ");
             xformer.transform(source, result);
             if (++this.counter % 50 == 0) {
                 //this.writer.flush();
@@ -542,10 +542,10 @@ public class ExporterSiteXML implements Exporter {
             xformer.setOutputProperty(OutputKeys.INDENT, "yes");
             xformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             xformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS,
-                    "siteName name otherSiteCharacteristics siteDesignation description" +
-                    " qualityAndImportance conservationMeasures adminUnit locatorDesignator locatorName addressArea" + 
-                    " postName postCode thoroughfare addressUnstructured email spaLegalReference sacLegalReference" +
-                    " explanations siteDesignationAdditional organisation conservationMeasures InspireID mapReference");
+                    "siteName name otherSiteCharacteristics siteDesignation description"
+                    + " qualityAndImportance conservationMeasures adminUnit locatorDesignator locatorName addressArea"
+                    + " postName postCode thoroughfare addressUnstructured email spaLegalReference sacLegalReference"
+                    + " explanations siteDesignationAdditional organisation conservationMeasures InspireID mapReference");
 
             xformer.transform(source, result);
             return true;
@@ -608,7 +608,7 @@ public class ExporterSiteXML implements Exporter {
              }
          }
          catch (Exception e) {
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.",2);
+             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
              //e.printStackTrace();
               ExporterSiteXML.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.\n.Error::" + e.getMessage());
              JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
@@ -659,7 +659,7 @@ public class ExporterSiteXML implements Exporter {
             Element sdf = doc.createElement("sdf");
             Element siteIdentification = doc.createElement("siteIdentification");
 
-            Site site = (Site) session.get(Site.class,(String) itrSites.next()); // results.get(i);
+            Site site = (Site) session.get(Site.class, (String) itrSites.next()); // results.get(i);
 
 //            log("Processing site: " + site.getSiteCode());
             ExporterSiteXML.log.info("Processing site: " + site.getSiteCode());
@@ -688,14 +688,14 @@ public class ExporterSiteXML implements Exporter {
             }
 
 
-            if (site.getSiteUpdateDate() != null ) {
+            if (site.getSiteUpdateDate() != null) {
                 siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteUpdateDate()), "updateDate")));
             } else {
 //               siteIdentification.appendChild(doc.createElement("updateDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
             }
 
             if (site.getSiteCompDate() != null && site.getSiteUpdateDate() != null) {
-                if (site.getSiteCompDate().compareTo(site.getSiteUpdateDate())> 0) {
+                if (site.getSiteCompDate().compareTo(site.getSiteUpdateDate()) > 0) {
 //                    xmlValidFields.add("Compilation Date and Update Date, in  Identification section\n");
                 }
             }
@@ -750,7 +750,7 @@ public class ExporterSiteXML implements Exporter {
                 } else {
 //                    siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
-                if (site.getSiteSciConfDate() != null ) {
+                if (site.getSiteSciConfDate() != null) {
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
                 }
                 if (site.getSiteSacDate() != null) {
@@ -767,7 +767,7 @@ public class ExporterSiteXML implements Exporter {
                     siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(dateNull), "spaClassificationDate")));
                 }
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
-                if (site.getSiteSciPropDate() != null ) {
+                if (site.getSiteSciPropDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()), "sciProposalDate")));
                 } else {
 
@@ -796,7 +796,7 @@ public class ExporterSiteXML implements Exporter {
 
 //                    xmlValidFields.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
                 }
-                if (site.getSiteSciConfDate() != null ) {
+                if (site.getSiteSciConfDate() != null) {
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
                 }
                 if (site.getSiteSacDate() != null) {
@@ -865,10 +865,10 @@ public class ExporterSiteXML implements Exporter {
 
             Set siteHabs = site.getHabitats();
             Iterator itr = siteHabs.iterator();
-            boolean habitatInfo= false;
+            boolean habitatInfo = false;
             boolean speciesInfo = false;
             if (!siteHabs.isEmpty()) {
-                habitatInfo= true;
+                habitatInfo = true;
             }
             while (itr.hasNext()) {
                 Habitat h = (Habitat) itr.next();
@@ -959,7 +959,7 @@ public class ExporterSiteXML implements Exporter {
                     Species s = (Species) itsr.next();
                     Element sElem = doc.createElement("speciesPopulation");
 
-                    if (s.getSpeciesGroup() != null && s.getSpeciesGroup() !='-') {
+                    if (s.getSpeciesGroup() != null && s.getSpeciesGroup() != '-') {
                         if ((s.getSpeciesGroup().toString()).equals("B")) {
                             birdsSPA = true;
                           }
@@ -968,7 +968,7 @@ public class ExporterSiteXML implements Exporter {
 //                        xmlValidFields.add("Group of the species. (Ecological Info - Species Type  section)\n");
                     }
 
-                    String speciesCode ="";
+                    String speciesCode = "";
                     if (s.getSpeciesCode() != null) {
                         speciesCode = s.getSpeciesCode();
 
@@ -1060,7 +1060,7 @@ public class ExporterSiteXML implements Exporter {
 //                       xmlValidFields.add("Group of the species (no cataloged species). (Ecological Info - Other Species Type  section)\n");
                     }
 
-                    String speciesCode="";
+                    String speciesCode = "";
                     if (s.getOtherSpeciesCode() != null) {
                         speciesCode = s.getOtherSpeciesCode();
                      }
@@ -1140,8 +1140,8 @@ public class ExporterSiteXML implements Exporter {
             Element impacts = doc.createElement("impacts");
 
             Set siteImpacts = site.getImpacts();
-            boolean posImpact= false;
-            boolean negImpact= false;
+            boolean posImpact = false;
+            boolean negImpact = false;
             if (!siteImpacts.isEmpty()) {
                 Iterator itir = siteImpacts.iterator();
 

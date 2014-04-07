@@ -1730,7 +1730,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Checks if the habitat class exist for this site
+     * Checks if the habitat class exist for this site.
      * @param code
      * @return
      */
@@ -1746,7 +1746,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Checks if the designation type exist for this site
+     * Checks if the designation type exist for this site.
      * @param code
      * @return
      */
@@ -1762,7 +1762,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Manamgement bodies
+     * Loads Management bodies.
      */
     public void loadMgmtBodies() {
         SDFEditor.logger.info("Loading Manamgement bodies");
@@ -1788,7 +1788,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Manamgement Plan
+     * Loads Management Plan.
      */
     private void loadMgmtPlans() {
         SDFEditor.logger.info("Loading Manamgement plans");
@@ -1814,7 +1814,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Designation type
+     * Loads Designation type.
      */
     private void loadDesignationTypes() {
         SDFEditor.logger.info("Loading Designation type");
@@ -1837,7 +1837,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Designation type
+     * Loads Designation type.
      */
     private void loadDocLinks() {
         SDFEditor.logger.info("Loading Document Links");
@@ -1865,7 +1865,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Ownerships
+     * Loads Ownerships.
      */
     private void loadOwnerships() {
         SDFEditor.logger.info("Loading Ownerships");
@@ -1898,7 +1898,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Relations
+     * Loads Relations.
      */
     private void loadRelations() {
         SDFEditor.logger.info("Loading Relations");
@@ -1935,7 +1935,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loading Impacts
+     * Loading Impacts.
      */
     private void loadImpacts() {
         SDFEditor.logger.info("Loading impacts");
@@ -1990,7 +1990,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Gets impact Name
+     * Gets impact Name.
      * @param impactCode
      * @return
      */
@@ -2009,7 +2009,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /***
-     * Loads Habitat Class
+     * Loads Habitat Class.
      */
     private void loadHabitatClasses() {
         SDFEditor.logger.info("Loading habitat Class");
@@ -2032,7 +2032,7 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
-     * Loads Other Species
+     * Loads Other Species.
      */
     private void loadOtherSpecies() {
         SDFEditor.logger.info("Loading Other Species");

@@ -501,7 +501,7 @@ public class ImporterXMLStax implements Importer {
                            species = new Species();
                            speciesGroup = null;
                        } else if (localName.equals("speciesGroup") && species != null) {
-                           if (localData.length()>1) {
+                           if (localData.length() > 1) {
                              speciesGroup = localData;
                            } else {
                                species.setSpeciesGroup(localData.charAt(0));
@@ -567,7 +567,7 @@ public class ImporterXMLStax implements Importer {
                        } else if (localName.equals("motivations_end") && oSpecies != null) {
                            String motivation = strMotivation.toString();
                            if (motivation != null && !("").equals(motivation)) {
-                               motivation = motivation.substring(0, motivation.length()-1);
+                               motivation = motivation.substring(0, motivation.length() - 1);
                                strMotivation = null;
                                oSpecies.setOtherSpeciesMotivation(motivation);
                            }
@@ -768,7 +768,7 @@ public class ImporterXMLStax implements Importer {
                        }
 
                         //MANAGEMENT
-                       else if (localName.equals("exists")&& mgmt != null) {
+                       else if (localName.equals("exists") && mgmt != null) {
                            mgmt.setMgmtStatus(localData.charAt(0));
                        }
 
@@ -1029,12 +1029,12 @@ public class ImporterXMLStax implements Importer {
         boolean nutsOK = false;
 
         ImporterXMLStax.log.info("Validating Region Code");
-        String hql="select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
+        String hql = "select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
 
         try {
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
-               nutsOK = true;
+                nutsOK = true;
             }
         } catch (Exception e) {
             //e.printStackTrace();

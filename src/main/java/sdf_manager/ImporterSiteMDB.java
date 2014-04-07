@@ -209,11 +209,11 @@ public class ImporterSiteMDB implements Importer {
 
             if (conn != null) {
 
-                if (! checkTables(conn)) {
+                if (!checkTables(conn)) {
                     log("Failed to find all tables in the database. Please check the database schema and configuration files.", 1);
                     ImporterSiteMDB.log.error("Failed to find all tables in the database. Please check the database schema and configuration files");
                     msgValidError = "Failed to find all tables in the database. Please check the database schema and configuration files";
-                    saveOK= false;
+                    saveOK = false;
                     return false;
 
                 }
@@ -221,7 +221,7 @@ public class ImporterSiteMDB implements Importer {
                     log("The site code: " + this.siteCode + " is not in Data Base.", 1);
                     ImporterSiteMDB.log.error("The site code: " + this.siteCode + " is not in Data Base.");
                     msgValidError = "The site code: " + this.siteCode + " is not in Data Base.";
-                    saveOK= false;
+                    saveOK = false;
                     return false;
                 }
 
@@ -256,7 +256,7 @@ public class ImporterSiteMDB implements Importer {
                         }
                     }
                 } else {
-                    saveOK= false;
+                    saveOK = false;
                     ImporterSiteMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
                     log("Error in validation.", 1);
                     msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
@@ -277,7 +277,7 @@ public class ImporterSiteMDB implements Importer {
             }
         } catch (Exception e) {
             ImporterSiteMDB.log.error("ERROR in processDatabase::" + e.getMessage());
-            saveOK= false;
+            saveOK = false;
         } finally {
             session.clear();
             session.close();
@@ -366,7 +366,7 @@ public class ImporterSiteMDB implements Importer {
       *
       * @param conn
       */
-     void loadSpecies (Connection conn, Session session) {
+     void loadSpecies(Connection conn, Session session) {
         String hql = "from RefSpecies";
         try {
             Query q = session.createQuery(hql);
@@ -1166,7 +1166,7 @@ public class ImporterSiteMDB implements Importer {
         String resident2 = preparePopField(resident);
         String breeding2 = preparePopField(breeding);
         String wintering2 = preparePopField(wintering);
-        String staging2= preparePopField(staging);
+        String staging2 = preparePopField(staging);
         int min = 0; int max = 0;
         String popType = null; String literal = "";
         popType = getPopCategoryN(resident2);
@@ -1696,7 +1696,7 @@ public class ImporterSiteMDB implements Importer {
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
-            descHabClass =(String) itr.next();
+            descHabClass = (String) itr.next();
         } else {
             ImporterSiteMDB.log.info("The description of the habitat class::" + habClassCode + " is missing.");
         }
@@ -1882,7 +1882,7 @@ public class ImporterSiteMDB implements Importer {
      * @return
      * @throws SQLException
      */
-    private String getImpactCode (String impactCodeOld) throws SQLException {
+    private String getImpactCode(String impactCodeOld) throws SQLException {
 
         String impactCode = null;
 

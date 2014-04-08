@@ -21,5 +21,8 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liqui
     <include file="AlterColumnDatatype.xml" relativeToChangelogFile="true"/>
     <include file="Alter_Ref_Birds_table.xml" relativeToChangelogFile="true"/>
 
+<!-- from populateDB -->
+    <include file="insert_birds_new.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
 

@@ -6,25 +6,15 @@
 package sdf_manager.util;
 
 import com.mysql.jdbc.Connection;
+import org.apache.log4j.Logger;
+import sdf_manager.SDF_ManagerApp;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.swing.*;
+import java.io.*;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Properties;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import org.apache.log4j.Logger;
-import org.hibernate.Query;
 
 
 /**
@@ -38,13 +28,13 @@ public class SDF_MysqlDatabase {
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
-     *
+     * properties are taken from local.properties
      * @return the connection to the database
      */
     public static String createNaturaDB() throws SQLException, Exception {
         Connection con;
-        String dbPropertiesPath = new java.io.File("").getAbsolutePath()
-                        + File.separator + "database" + File.separator + "sdf_database.properties";
+        String dbPropertiesPath = new File(SDF_ManagerApp.CURRENT_PATH)
+                        + File.separator + "local.properties";
         Properties properties = new Properties();
         properties.load(new FileInputStream(dbPropertiesPath));
         Class.forName("com.mysql.jdbc.Driver");

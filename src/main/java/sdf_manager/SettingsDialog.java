@@ -20,11 +20,15 @@ import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Dialog for entering common settings.
@@ -37,13 +41,13 @@ public class SettingsDialog extends javax.swing.JDialog {
     private JTextField txtDatabasePort;
     private JTextField txtDatabaseUser;
     private JTextField txtDatabasePassword;
-    private final JButton btnNewButton = new JButton("New button");
 
-    private final JButton btnSave = new JButton("Save");
+    private final JButton btnSave = new JButton();
+    private final JButton btnCancel = new JButton();
 
     private final ButtonGroup buttonGroup = new ButtonGroup();
-    private final JRadioButton rdbtnEmerald = new JRadioButton("EMERALD");
-    private final JRadioButton rdbtnNatura = new JRadioButton("Natura 2000");
+    private final JRadioButton rdbtnEmerald = new JRadioButton();
+    private final JRadioButton rdbtnNatura = new JRadioButton();
 
     /** Creates new settings dialog.
      * @param parent parent frame
@@ -95,7 +99,11 @@ public class SettingsDialog extends javax.swing.JDialog {
         appVersionLabel.setText(resourceMap.getString("appVersionLabel.text")); // NOI18N
         appVersionLabel.setName("appVersionLabel"); // NOI18N
 
-        //TODO labels
+        //JButton btnSave = new JButton();
+        btnSave.setText(resourceMap.getString("btnSave.text"));
+
+        rdbtnEmerald.setText(resourceMap.getString("lblEmerald.text"));
+        rdbtnNatura.setText(resourceMap.getString("lblNatura2000.text"));
 
         buttonGroup.add(rdbtnNatura);
         rdbtnNatura.setSelected(true);
@@ -109,12 +117,22 @@ public class SettingsDialog extends javax.swing.JDialog {
         txtDatabaseHost.setText("127.0.0.1");
         txtDatabaseHost.setColumns(10);
 
-        JLabel lblDatabaseHost = new JLabel("Database Host");
+        JLabel lblDatabaseHost = new JLabel();
+        lblDatabaseHost.setText(resourceMap.getString("lblDatabaseHost.text"));
+        lblDatabaseHost.setLabelFor(txtDatabaseHost);
+
+        //JButton btnCancel = new JButton();
 
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                closeDialog(event);
+                String validationResult = validateForm();
+                if (StringUtils.isBlank(validationResult)) {
+                    closeDialog(event);
+                } else {
+                    //show error and not allow close the dialog with "save"
+                    JOptionPane.showMessageDialog(null, validationResult, "Validation Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -136,11 +154,12 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         JLabel lblMode = new JLabel();
         lblMode.setLabelFor(rdbtnNatura);
-        lblMode.setText("Mode:");
-        lblMode.setName("modeLabel");
-        lblMode.setFont(lblMode.getFont().deriveFont(lblMode.getFont().getStyle() | Font.BOLD));
+        lblMode.setText(resourceMap.getString("lblMode.text"));
+        lblMode.setName("lblMode");
+        lblMode.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
-        JButton btnCancel = new JButton("Cancel");
+        btnCancel.setText(resourceMap.getString("btnCancel.text"));
+
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -149,96 +168,106 @@ public class SettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        JLabel lblDatabasePort = new JLabel("Database Port");
+        JLabel lblDatabasePort = new JLabel();
+        lblDatabasePort.setText(resourceMap.getString("lblDatabasePort.text"));
         lblDatabasePort.setLabelFor(txtDatabasePort);
 
-        JLabel lblUsername = new JLabel("Username");
-        lblUsername.setToolTipText("username for database connection");
+        JLabel lblUsername = new JLabel();
+        lblUsername.setText(resourceMap.getString("lblUsername.text"));
+        lblUsername.setLabelFor(txtDatabaseUser);
+        lblUsername.setToolTipText("Username for database connection");
 
-        JLabel lblPassword = new JLabel("Password");
+        JLabel lblPassword = new JLabel();
+        lblPassword.setText(resourceMap.getString("lblPassword.text"));
+        lblPassword.setLabelFor(txtDatabasePassword);
+
+        JLabel lblN2kImage = new JLabel("");
+        lblN2kImage.setIcon(new ImageIcon(SettingsDialog.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));
+
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(SettingsDialog.class.getResource("/sdf_manager/images/emeraude_logo_smaller.png")));
+
+
         GroupLayout groupLayout = new GroupLayout(getContentPane());
         groupLayout.setHorizontalGroup(
             groupLayout.createParallelGroup(Alignment.LEADING)
                 .addGroup(groupLayout.createSequentialGroup()
+                    .addContainerGap()
                     .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(versionLabel)
                         .addGroup(groupLayout.createSequentialGroup()
-                            .addGap(86)
-                            .addComponent(btnSave)
-                            .addGap(18)
-                            .addComponent(btnCancel))
-                        .addGroup(groupLayout.createSequentialGroup()
-                            .addGap(67)
-                            .addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(groupLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(appTitleLabel)
-                            .addGap(18)
-                            .addComponent(versionLabel)
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                            .addComponent(appVersionLabel))
-                        .addGroup(groupLayout.createSequentialGroup()
-                            .addContainerGap()
                             .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
                                 .addComponent(lblDatabaseHost)
-                                .addComponent(lblMode, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblDatabasePort, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblUsername, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblMode, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
                             .addGap(18)
                             .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+                                    .addGroup(groupLayout.createSequentialGroup()
+                                        .addComponent(btnSave)
+                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnCancel))
+                                    .addComponent(txtDatabasePassword)
+                                    .addComponent(txtDatabaseUser)
+                                    .addComponent(txtDatabasePort)
+                                    .addComponent(txtDatabaseHost, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
                                 .addGroup(groupLayout.createSequentialGroup()
-                                    .addComponent(rdbtnNatura)
-                                    .addPreferredGap(ComponentPlacement.RELATED)
-                                    .addComponent(rdbtnEmerald))
-                                .addComponent(txtDatabaseHost, GroupLayout.PREFERRED_SIZE,
-                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDatabasePort, GroupLayout.PREFERRED_SIZE,
-                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDatabaseUser, GroupLayout.PREFERRED_SIZE,
-                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDatabasePassword, GroupLayout.PREFERRED_SIZE,
-                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap(93, Short.MAX_VALUE))
+                                    .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                        .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+                                            .addComponent(rdbtnNatura)
+                                            .addGroup(groupLayout.createSequentialGroup()
+                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                .addComponent(appVersionLabel)))
+                                        .addComponent(rdbtnEmerald))
+                                    .addGap(18)
+                                    .addComponent(lblN2kImage)
+                                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                                    .addComponent(lblNewLabel))))
+                        .addComponent(appTitleLabel))
+                    .addGap(84))
         );
         groupLayout.setVerticalGroup(
             groupLayout.createParallelGroup(Alignment.LEADING)
                 .addGroup(groupLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+                        .addGroup(groupLayout.createSequentialGroup()
+                            .addComponent(appTitleLabel)
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(versionLabel)
+                                .addComponent(appVersionLabel))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(rdbtnNatura)
+                                .addComponent(lblMode))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(rdbtnEmerald))
+                        .addComponent(lblN2kImage)
+                        .addComponent(lblNewLabel))
                     .addPreferredGap(ComponentPlacement.RELATED)
                     .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(appTitleLabel)
-                        .addComponent(versionLabel)
-                        .addComponent(appVersionLabel))
-                    .addGap(18)
-                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(rdbtnEmerald)
-                        .addComponent(rdbtnNatura)
-                        .addComponent(lblMode))
-                    .addGap(18)
-                    .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(txtDatabaseHost, GroupLayout.PREFERRED_SIZE,
-                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDatabaseHost, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDatabaseHost))
                     .addPreferredGap(ComponentPlacement.RELATED)
                     .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(txtDatabasePort, GroupLayout.PREFERRED_SIZE,
-                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDatabasePort, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDatabasePort))
                     .addGap(18)
                     .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(txtDatabaseUser, GroupLayout.PREFERRED_SIZE,
-                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDatabaseUser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblUsername))
                     .addPreferredGap(ComponentPlacement.RELATED)
                     .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(txtDatabasePassword, GroupLayout.PREFERRED_SIZE,
-                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDatabasePassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblPassword))
-                    .addGap(18)
+                    .addGap(7)
                     .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
                         .addComponent(btnSave)
-                        .addComponent(btnCancel)))
+                        .addComponent(btnCancel))
+                    .addContainerGap())
         );
         getContentPane().setLayout(groupLayout);
 
@@ -298,4 +327,45 @@ public class SettingsDialog extends javax.swing.JDialog {
         return rdbtnNatura;
     }
 
+    /**
+     * checks if field values are valid.
+     * @return validation error messages
+     */
+
+    private String validateForm() {
+       String feedback = "";
+       if (StringUtils.isEmpty(txtDatabaseHost.getText())) {
+           feedback = "Database host is not specified.";
+       }
+
+       if (StringUtils.isEmpty(txtDatabasePort.getText())) {
+           if (StringUtils.isNotBlank(feedback)) {
+               feedback += "\n";
+           }
+           feedback +=  "Database port is not specified.";
+       }
+       if (!StringUtils.isNumeric(txtDatabasePort.getText())) {
+           if (StringUtils.isNotBlank(feedback)) {
+               feedback += "\n";
+           }
+           feedback +=  "Database port has to be a number.";
+       }
+       if (StringUtils.isEmpty(txtDatabaseUser.getText())) {
+           if (StringUtils.isNotBlank(feedback)) {
+               feedback += "\n";
+           }
+           feedback +=  "Database user is not specified.";
+       }
+       if (StringUtils.isEmpty(txtDatabasePassword.getText())) {
+           if (StringUtils.isNotBlank(feedback)) {
+               feedback += "\n";
+           }
+           feedback +=  "Password is not specified.";
+       }
+
+       return feedback;
+
+
+
+    }
 }

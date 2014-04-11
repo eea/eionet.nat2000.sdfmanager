@@ -1,5 +1,7 @@
 package sdf_manager.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -55,4 +57,24 @@ public final class PropertyUtils {
         }
     }
 
+
+    /**
+     * raeds properties from the file.
+     * @param fileLocation file full path
+     * @return properties container
+     * @throws FileNotFoundException if file not found
+     * @throws IOException if reading fails
+     */
+    public static Properties readProperties(String fileLocation) throws FileNotFoundException, IOException {
+        FileInputStream input = null;
+        Properties props = new Properties();
+        try {
+            input = new FileInputStream(fileLocation);
+            props.load(input);
+
+        } finally {
+            IOUtils.closeQuietly(input);
+        }
+        return props;
+    }
 }

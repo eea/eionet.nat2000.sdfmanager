@@ -5,8 +5,9 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import org.jdesktop.application.Action;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +17,10 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+
+import org.jdesktop.application.Action;
+
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -92,6 +97,7 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.siteCode = siteCode;
         this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -110,7 +116,8 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
       *
       * @param logMsg
       */
-     public void log(String logMsg) {
+     @Override
+    public void log(String logMsg) {
         this.txtLogger.append(logMsg + "\n");
         this.txtLogger.setCaretPosition( this.txtLogger.getDocument().getLength());
     }
@@ -357,7 +364,8 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
         txtLogger.setName("txtLogger"); // NOI18N
         jScrollPane1.setViewportView(txtLogger);
 
-        jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 

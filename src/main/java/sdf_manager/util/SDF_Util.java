@@ -13,17 +13,21 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
-import org.apache.log4j.PropertyConfigurator;
 
-import org.hibernate.Session;
-import org.hibernate.Query;
+import javax.swing.Icon;
+
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.jdesktop.application.ResourceMap;
+
+import sdf_manager.SDF_ManagerApp;
 
 /*
  *
@@ -240,5 +244,25 @@ public class SDF_Util {
        return fileLog;
     }
 
+
+     /**
+      * returns correct icon for the control from the resourcemap depending on the mode.
+      * @param resourceMap resourcemap
+      * @param labelName labelname
+      * @param mode Natura 2000 or emerald
+      * @return icon resource
+      */
+     public static Icon getIconForLabel(ResourceMap resourceMap, String labelName, String mode) {
+         if (mode.equals(SDF_ManagerApp.EMERALD_MODE)) {
+             labelName += ".emerald";
+         }
+
+         SDF_Util.log.info("getting icon for " + labelName);
+         for (String s : resourceMap.keySet()) {
+             SDF_Util.log.info("key : " + s);
+         }
+         return resourceMap.getIcon(labelName);
+
+     }
 
 }

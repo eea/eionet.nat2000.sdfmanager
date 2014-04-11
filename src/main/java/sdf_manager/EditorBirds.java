@@ -3,11 +3,15 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.Species;
 import sdf_manager.util.PopulateCombo;
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -27,8 +31,8 @@ public class EditorBirds extends javax.swing.JFrame {
      * @param parent
      */
     public EditorBirds(SDFEditor parent) {
-        initComponents();
         this.parent = parent;
+        initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         centerScreen();
         this.init = false;
@@ -238,7 +242,7 @@ public class EditorBirds extends javax.swing.JFrame {
         s.setSpeciesSensitive(ConversionTools.boolToSmall(this.chkSensitive.isSelected()));
         s.setSpeciesNp(ConversionTools.boolToSmall(this.chkNP.isSelected()));
 
-        if (!(("-").equals((String) this.cmbType.getSelectedItem()))) {
+        if (!(("-").equals(this.cmbType.getSelectedItem()))) {
             String popTypeCode = getPopulationTypeCodebyName((String) this.cmbType.getSelectedItem());
             s.setSpeciesType(popTypeCode.charAt(0));
         }
@@ -605,6 +609,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -626,6 +631,7 @@ public class EditorBirds extends javax.swing.JFrame {
 
         cmbName.setName("cmbName"); // NOI18N
         cmbName.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbNameItemStateChanged(evt);
             }
@@ -895,6 +901,7 @@ public class EditorBirds extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -903,6 +910,7 @@ public class EditorBirds extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -954,7 +962,8 @@ public class EditorBirds extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        //jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        jLabel5.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel5.icon", SDF_ManagerApp.getMode()));
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 

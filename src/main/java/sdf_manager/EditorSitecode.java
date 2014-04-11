@@ -3,11 +3,14 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+
 import pojos.Site;
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -81,6 +84,7 @@ public class EditorSitecode extends javax.swing.JDialog {
 
         txtSitecode.setName("txtSitecode"); // NOI18N
         txtSitecode.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSitecodeActionPerformed(evt);
             }
@@ -109,6 +113,7 @@ public class EditorSitecode extends javax.swing.JDialog {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -117,6 +122,7 @@ public class EditorSitecode extends javax.swing.JDialog {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -142,7 +148,8 @@ public class EditorSitecode extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        //jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        jLabel1.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel1.icon", SDF_ManagerApp.getMode()));
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 

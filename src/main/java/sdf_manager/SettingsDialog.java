@@ -22,7 +22,6 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -115,10 +114,6 @@ public class SettingsDialog extends javax.swing.JDialog {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-
-                JOptionPane.showMessageDialog(null, event.getActionCommand());
-
-
                 closeDialog(event);
             }
         });

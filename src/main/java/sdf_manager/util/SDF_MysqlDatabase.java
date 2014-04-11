@@ -5,16 +5,26 @@
 
 package sdf_manager.util;
 
-import com.mysql.jdbc.Connection;
-import org.apache.log4j.Logger;
-import sdf_manager.SDF_ManagerApp;
-
-import javax.swing.*;
-import java.io.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Properties;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.apache.log4j.Logger;
+
+import com.mysql.jdbc.Connection;
 
 
 /**
@@ -28,15 +38,15 @@ public class SDF_MysqlDatabase {
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
-     * properties are taken from local.properties
+     *
+     *
      * @return the connection to the database
      */
-    public static String createNaturaDB() throws SQLException, Exception {
+    public static String createNaturaDB(Properties properties) throws SQLException, Exception {
         Connection con;
-        String dbPropertiesPath = new File(SDF_ManagerApp.CURRENT_PATH)
-                        + File.separator + "local.properties";
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(dbPropertiesPath));
+        //String dbPropertiesPath = SDF_ManagerApp.LOCAL_PROPERTIES_FILE;
+        //Properties properties = new Properties();
+        //properties.load(new FileInputStream(dbPropertiesPath));
         Class.forName("com.mysql.jdbc.Driver");
         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user")
                 + "<==password==>" + properties.getProperty("password") + "<==");
@@ -329,6 +339,7 @@ public class SDF_MysqlDatabase {
 
               // This filter only returns directories
             FileFilter fileFilter = new FileFilter() {
+                @Override
                 public boolean accept(File file) {
                     return !file.isDirectory();
                 }
@@ -338,6 +349,7 @@ public class SDF_MysqlDatabase {
                // Either dir does not exist or is not a directory
             } else {
                 Comparator<File> cmpFunc = new Comparator<File>() {
+                    @Override
                     public int compare(File f1, File f2) {
                         return f1.getPath().compareToIgnoreCase(f2.getPath());
                     }
@@ -689,6 +701,7 @@ public class SDF_MysqlDatabase {
 
             // This filter only returns directories
             FileFilter fileFilter = new FileFilter() {
+            @Override
             public boolean accept(File file) {
                   return !file.isDirectory();
                }

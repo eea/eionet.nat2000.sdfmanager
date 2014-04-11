@@ -2,6 +2,7 @@ package sdf_manager;
 
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,8 +19,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
-
 import java.util.StringTokenizer;
+
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -27,17 +28,36 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.hibernate.Transaction;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-import org.apache.log4j.Logger;
-
-import pojos.*;
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.DocLink;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Map;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.MgmtPlan;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.Ownership;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteOwnership;
+import pojos.SiteOwnershipId;
+import pojos.SiteRelation;
+import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.TranslationCodeName;
 import sdf_manager.util.ValidateSite;
-import java.awt.Font;
 
 public class SDFEditor extends javax.swing.JFrame {
 
@@ -84,6 +104,7 @@ public class SDFEditor extends javax.swing.JFrame {
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
 
+            @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -1882,7 +1903,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 Ownership ow = so.getOwnership();
                 double percent = 0;
                 if (so.getOwnershipPercent() != null) {
-                    percent = ((Double) so.getOwnershipPercent()).doubleValue();
+                    percent = so.getOwnershipPercent().doubleValue();
                 }
 
                 Object[] tuple = {ow.getOwnershipType(), percent, ow.getOwnershipCode()};
@@ -2194,6 +2215,7 @@ public class SDFEditor extends javax.swing.JFrame {
         ListSelectionModel rowSM = tabHabitats.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
 
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) {
                     return;
@@ -3371,6 +3393,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddRegion.setText(resourceMap.getString("btnAddRegion.text")); // NOI18N
         btnAddRegion.setName("btnAddRegion"); // NOI18N
         btnAddRegion.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddRegionActionPerformed(evt);
             }
@@ -3380,6 +3403,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelRegion.setText(resourceMap.getString("btnDelRegion.text")); // NOI18N
         btnDelRegion.setName("btnDelRegion"); // NOI18N
         btnDelRegion.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelRegionActionPerformed(evt);
             }
@@ -3433,6 +3457,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddBiogeo.setText(resourceMap.getString("btnAddBiogeo.text")); // NOI18N
         btnAddBiogeo.setName("btnAddBiogeo"); // NOI18N
         btnAddBiogeo.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddBiogeoActionPerformed(evt);
             }
@@ -3443,6 +3468,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelBiogeo.setActionCommand(resourceMap.getString("btnDelBiogeo.actionCommand")); // NOI18N
         btnDelBiogeo.setName("btnDelBiogeo"); // NOI18N
         btnDelBiogeo.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelBiogeoActionPerformed(evt);
             }
@@ -3466,6 +3492,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editBioRegionButton.setText(resourceMap.getString("editBioRegionButton.text")); // NOI18N
         editBioRegionButton.setName("editBioRegionButton"); // NOI18N
         editBioRegionButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editBioRegionButtonActionPerformed(evt);
             }
@@ -3561,10 +3588,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false, false, false, false, false, false, false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -3577,6 +3606,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddHabitat.setText(resourceMap.getString("btnAddHabitat.text")); // NOI18N
         btnAddHabitat.setName("btnAddHabitat"); // NOI18N
         btnAddHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddHabitatActionPerformed(evt);
             }
@@ -3586,6 +3616,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelHabitat.setText(resourceMap.getString("btnDelHabitat.text")); // NOI18N
         btnDelHabitat.setName("btnDelHabitat"); // NOI18N
         btnDelHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelHabitatActionPerformed(evt);
             }
@@ -3595,6 +3626,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnEditHabitat.setText(resourceMap.getString("btnEditHabitat.text")); // NOI18N
         btnEditHabitat.setName("btnEditHabitat"); // NOI18N
         btnEditHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditHabitatActionPerformed(evt);
             }
@@ -3692,10 +3724,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -3707,6 +3741,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddSpecies.setIcon(resourceMap.getIcon("btnAddSpecies.icon")); // NOI18N
         btnAddSpecies.setName("btnAddSpecies"); // NOI18N
         btnAddSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddSpeciesActionPerformed(evt);
             }
@@ -3715,6 +3750,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelSpecies.setIcon(resourceMap.getIcon("btnDelSpecies.icon")); // NOI18N
         btnDelSpecies.setName("btnDelSpecies"); // NOI18N
         btnDelSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelSpeciesActionPerformed(evt);
             }
@@ -3723,6 +3759,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnEditSpecies.setIcon(resourceMap.getIcon("btnEditSpecies.icon")); // NOI18N
         btnEditSpecies.setName("btnEditSpecies"); // NOI18N
         btnEditSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditSpeciesActionPerformed(evt);
             }
@@ -3797,10 +3834,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -3827,6 +3866,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddOtherSpecies.setIcon(resourceMap.getIcon("btnAddOtherSpecies.icon")); // NOI18N
         btnAddOtherSpecies.setName("btnAddOtherSpecies"); // NOI18N
         btnAddOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddOtherSpeciesActionPerformed(evt);
             }
@@ -3835,6 +3875,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelOtherSpecies.setIcon(resourceMap.getIcon("btnDelOtherSpecies.icon")); // NOI18N
         btnDelOtherSpecies.setName("btnDelOtherSpecies"); // NOI18N
         btnDelOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelOtherSpeciesActionPerformed(evt);
             }
@@ -3843,6 +3884,7 @@ public class SDFEditor extends javax.swing.JFrame {
         tbnEditOtherSpecies.setIcon(resourceMap.getIcon("tbnEditOtherSpecies.icon")); // NOI18N
         tbnEditOtherSpecies.setName("tbnEditOtherSpecies"); // NOI18N
         tbnEditOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbnEditOtherSpeciesActionPerformed(evt);
             }
@@ -3971,6 +4013,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddHabitatClass.setIcon(resourceMap.getIcon("btnAddHabitatClass.icon")); // NOI18N
         btnAddHabitatClass.setName("btnAddHabitatClass"); // NOI18N
         btnAddHabitatClass.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddHabitatClassActionPerformed(evt);
             }
@@ -3979,6 +4022,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelHabitatClass.setIcon(resourceMap.getIcon("btnDelHabitatClass.icon")); // NOI18N
         btnDelHabitatClass.setName("btnDelHabitatClass"); // NOI18N
         btnDelHabitatClass.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelHabitatClassActionPerformed(evt);
             }
@@ -4002,6 +4046,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editHabClassButton.setText(resourceMap.getString("editHabClassButton.text")); // NOI18N
         editHabClassButton.setName("editHabClassButton"); // NOI18N
         editHabClassButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editHabClassButtonActionPerformed(evt);
             }
@@ -4094,6 +4139,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddPosImpact.setIcon(resourceMap.getIcon("btnAddPosImpact.icon")); // NOI18N
         btnAddPosImpact.setName("btnAddPosImpact"); // NOI18N
         btnAddPosImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPosImpactActionPerformed(evt);
             }
@@ -4102,6 +4148,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelPosImpact.setIcon(resourceMap.getIcon("btnDelPosImpact.icon")); // NOI18N
         btnDelPosImpact.setName("btnDelPosImpact"); // NOI18N
         btnDelPosImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelPosImpactActionPerformed(evt);
             }
@@ -4128,6 +4175,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false, false, false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -4147,6 +4195,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jImpactNegEdit.setText(resourceMap.getString("jImpactNegEdit.text")); // NOI18N
         jImpactNegEdit.setName("jImpactNegEdit"); // NOI18N
         jImpactNegEdit.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jImpactNegEditActionPerformed(evt);
             }
@@ -4190,6 +4239,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddNegImpact.setIcon(resourceMap.getIcon("btnAddNegImpact.icon")); // NOI18N
         btnAddNegImpact.setName("btnAddNegImpact"); // NOI18N
         btnAddNegImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddNegImpactActionPerformed(evt);
             }
@@ -4198,6 +4248,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelNegImpact.setIcon(resourceMap.getIcon("btnDelNegImpact.icon")); // NOI18N
         btnDelNegImpact.setName("btnDelNegImpact"); // NOI18N
         btnDelNegImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelNegImpactActionPerformed(evt);
             }
@@ -4224,6 +4275,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false, false, false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -4241,6 +4293,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jEditImpacts.setText(resourceMap.getString("jEditImpacts.text")); // NOI18N
         jEditImpacts.setName("jEditImpacts"); // NOI18N
         jEditImpacts.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jEditImpactsActionPerformed(evt);
             }
@@ -4339,6 +4392,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddDocLink.setIcon(resourceMap.getIcon("btnAddDocLink.icon")); // NOI18N
         btnAddDocLink.setName("btnAddDocLink"); // NOI18N
         btnAddDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDocLinkActionPerformed(evt);
             }
@@ -4347,6 +4401,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelDocLink.setIcon(resourceMap.getIcon("btnDelDocLink.icon")); // NOI18N
         btnDelDocLink.setName("btnDelDocLink"); // NOI18N
         btnDelDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelDocLinkActionPerformed(evt);
             }
@@ -4359,6 +4414,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editOwnershipButton1.setIcon(resourceMap.getIcon("editOwnershipButton1.icon")); // NOI18N
         editOwnershipButton1.setName("editOwnershipButton1"); // NOI18N
         editOwnershipButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editLinksActionPerformed(evt);
             }
@@ -4428,6 +4484,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelOwner.setIcon(resourceMap.getIcon("btnDelOwner.icon")); // NOI18N
         btnDelOwner.setName("btnDelOwner"); // NOI18N
         btnDelOwner.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelOwnerActionPerformed(evt);
             }
@@ -4436,6 +4493,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddOwner.setIcon(resourceMap.getIcon("btnAddOwner.icon")); // NOI18N
         btnAddOwner.setName("btnAddOwner"); // NOI18N
         btnAddOwner.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddOwnerActionPerformed(evt);
             }
@@ -4452,6 +4510,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editOwnershipButton.setText(resourceMap.getString("editOwnershipButton.text")); // NOI18N
         editOwnershipButton.setName("editOwnershipButton"); // NOI18N
         editOwnershipButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editOwnershipButtonActionPerformed(evt);
             }
@@ -4571,6 +4630,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddDesigType.setIcon(resourceMap.getIcon("btnAddDesigType.icon")); // NOI18N
         btnAddDesigType.setName("btnAddDesigType"); // NOI18N
         btnAddDesigType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDesigTypeActionPerformed(evt);
             }
@@ -4579,6 +4639,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelDesigType.setIcon(resourceMap.getIcon("btnDelDesigType.icon")); // NOI18N
         btnDelDesigType.setName("btnDelDesigType"); // NOI18N
         btnDelDesigType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelDesigTypeActionPerformed(evt);
             }
@@ -4588,6 +4649,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editDTypesButton.setText(resourceMap.getString("editDTypesButton.text")); // NOI18N
         editDTypesButton.setName("editDTypesButton"); // NOI18N
         editDTypesButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editDTypesButtonActionPerformed(evt);
             }
@@ -4678,6 +4740,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddNatRel.setIcon(resourceMap.getIcon("btnAddNatRel.icon")); // NOI18N
         btnAddNatRel.setName("btnAddNatRel"); // NOI18N
         btnAddNatRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddNatRelActionPerformed(evt);
             }
@@ -4686,6 +4749,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelNatRel.setIcon(resourceMap.getIcon("btnDelNatRel.icon")); // NOI18N
         btnDelNatRel.setName("btnDelNatRel"); // NOI18N
         btnDelNatRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelNatRelActionPerformed(evt);
             }
@@ -4695,6 +4759,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editNationRelationsButton.setText(resourceMap.getString("editNationRelationsButton.text")); // NOI18N
         editNationRelationsButton.setName("editNationRelationsButton"); // NOI18N
         editNationRelationsButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editNationRelationsButtonActionPerformed(evt);
             }
@@ -4760,6 +4825,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddInterRel.setIcon(resourceMap.getIcon("btnAddInterRel.icon")); // NOI18N
         btnAddInterRel.setName("btnAddInterRel"); // NOI18N
         btnAddInterRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddInterRelActionPerformed(evt);
             }
@@ -4768,6 +4834,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelInterRel.setIcon(resourceMap.getIcon("btnDelInterRel.icon")); // NOI18N
         btnDelInterRel.setName("btnDelInterRel"); // NOI18N
         btnDelInterRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelInterRelActionPerformed(evt);
             }
@@ -4777,6 +4844,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editIntRelationsButton.setText(resourceMap.getString("editIntRelationsButton.text")); // NOI18N
         editIntRelationsButton.setName("editIntRelationsButton"); // NOI18N
         editIntRelationsButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editIntRelationsButtonActionPerformed(evt);
             }
@@ -4913,6 +4981,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddMgmtBody.setIcon(resourceMap.getIcon("btnAddMgmtBody.icon")); // NOI18N
         btnAddMgmtBody.setName("btnAddMgmtBody"); // NOI18N
         btnAddMgmtBody.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddMgmtBodyActionPerformed(evt);
             }
@@ -4921,6 +4990,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelMgmtBody.setIcon(resourceMap.getIcon("btnDelMgmtBody.icon")); // NOI18N
         btnDelMgmtBody.setName("btnDelMgmtBody"); // NOI18N
         btnDelMgmtBody.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelMgmtBodyActionPerformed(evt);
             }
@@ -4940,6 +5010,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -4954,6 +5025,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editMgmtBodyButton.setText(resourceMap.getString("editMgmtBodyButton.text")); // NOI18N
         editMgmtBodyButton.setName("editMgmtBodyButton"); // NOI18N
         editMgmtBodyButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editMgmtBodyButtonActionPerformed(evt);
             }
@@ -5013,6 +5085,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -5026,6 +5099,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnAddMgmtPlan.setIcon(resourceMap.getIcon("btnAddMgmtPlan.icon")); // NOI18N
         btnAddMgmtPlan.setName("btnAddMgmtPlan"); // NOI18N
         btnAddMgmtPlan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddMgmtPlanActionPerformed(evt);
             }
@@ -5034,6 +5108,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnDelMgmtPlan.setIcon(resourceMap.getIcon("btnDelMgmtPlan.icon")); // NOI18N
         btnDelMgmtPlan.setName("btnDelMgmtPlan"); // NOI18N
         btnDelMgmtPlan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelMgmtPlanActionPerformed(evt);
             }
@@ -5061,6 +5136,7 @@ public class SDFEditor extends javax.swing.JFrame {
         editMgmtBodyButton1.setIcon(resourceMap.getIcon("editMgmtBodyButton1.icon")); // NOI18N
         editMgmtBodyButton1.setName("editMgmtBodyButton1"); // NOI18N
         editMgmtBodyButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editMgmtBodyPlansButtonActionPerformed(evt);
             }
@@ -5210,6 +5286,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnPDFYes.setText(resourceMap.getString("btnPDFYes.text")); // NOI18N
         btnPDFYes.setName("btnPDFYes"); // NOI18N
         btnPDFYes.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPDFYesActionPerformed(evt);
             }
@@ -5327,7 +5404,8 @@ public class SDFEditor extends javax.swing.JFrame {
 
         tabbedPane.getAccessibleContext().setAccessibleName(resourceMap.getString("tabbedPane.AccessibleContext.accessibleName")); // NOI18N
 
-        jLabel24.setIcon(resourceMap.getIcon("jLabel24.icon")); // NOI18N
+        //jLabel24.setIcon(resourceMap.getIcon("jLabel24.icon")); // NOI18N
+        jLabel24.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel24.icon", SDF_ManagerApp.getMode()));
         jLabel24.setText(resourceMap.getString("jLabel24.text")); // NOI18N
         jLabel24.setName("jLabel24"); // NOI18N
 
@@ -5341,6 +5419,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -5350,6 +5429,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnClose.setText(resourceMap.getString("btnClose.text")); // NOI18N
         btnClose.setName("btnClose"); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
             }
@@ -5359,6 +5439,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnExport.setText(resourceMap.getString("btnExport.text")); // NOI18N
         btnExport.setName("btnExport"); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);
             }
@@ -5368,6 +5449,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jViewButton.setText(resourceMap.getString("jViewButton.text")); // NOI18N
         jViewButton.setName("jViewButton"); // NOI18N
         jViewButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jViewButtonActionPerformed(evt);
             }
@@ -5377,6 +5459,7 @@ public class SDFEditor extends javax.swing.JFrame {
         btnGeneratePDF.setText(resourceMap.getString("btnGeneratePDF.text")); // NOI18N
         btnGeneratePDF.setName("btnGeneratePDF"); // NOI18N
         btnGeneratePDF.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGeneratePDFActionPerformed(evt);
             }
@@ -5386,6 +5469,7 @@ public class SDFEditor extends javax.swing.JFrame {
         validateSiteButton.setText(resourceMap.getString("validateSiteButton.text")); // NOI18N
         validateSiteButton.setName("validateSiteButton"); // NOI18N
         validateSiteButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 validateSiteButtonActionPerformed(evt);
             }
@@ -6454,4 +6538,5 @@ public class SDFEditor extends javax.swing.JFrame {
     private javax.swing.JTextField txtUpdateDate;
     private javax.swing.JButton validateSiteButton;
     // End of variables declaration//GEN-END:variables
+
 }

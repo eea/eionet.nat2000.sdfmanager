@@ -3,9 +3,12 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.Ownership;
 import pojos.SiteOwnership;
 import sdf_manager.util.SDF_Util;
@@ -48,7 +51,7 @@ public class EditorOwnership extends javax.swing.JFrame {
        int i = 0;
 
        while (itr.hasNext()) {
-           Object obj = (Object) itr.next();
+           Object obj = itr.next();
            if (((String) obj).equals("")) continue;
            cmbCode.insertItemAt(obj, i);
            i++;
@@ -148,6 +151,7 @@ public class EditorOwnership extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbCodeActionPerformed(evt);
             }
@@ -196,6 +200,7 @@ public class EditorOwnership extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -204,6 +209,7 @@ public class EditorOwnership extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -227,7 +233,8 @@ public class EditorOwnership extends javax.swing.JFrame {
                 .addComponent(btnCancel))
         );
 
-        jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 

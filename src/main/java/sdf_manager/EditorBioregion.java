@@ -14,9 +14,12 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.Biogeo;
 import pojos.SiteBiogeo;
 import sdf_manager.util.SDF_Util;
@@ -146,6 +149,7 @@ public class EditorBioregion extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -154,6 +158,7 @@ public class EditorBioregion extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -161,6 +166,7 @@ public class EditorBioregion extends javax.swing.JFrame {
 
         cmbName.setName("cmbName"); // NOI18N
         cmbName.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbNameItemStateChanged(evt);
             }
@@ -168,6 +174,7 @@ public class EditorBioregion extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -224,7 +231,8 @@ public class EditorBioregion extends javax.swing.JFrame {
                     .addComponent(btnCancel)))
         );
 
-        jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        //jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        jLabel5.setIcon(SDF_Util.getIconForLabel(resourceMap, "jlabel5.icon", SDF_ManagerApp.getMode()));
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 

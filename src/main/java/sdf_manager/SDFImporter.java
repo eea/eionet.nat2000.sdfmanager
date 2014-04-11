@@ -13,13 +13,14 @@ package sdf_manager;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.io.File;
+
 import javax.swing.JDialog;
 import javax.swing.SwingWorker;
 
-import java.io.*;
-
-
 import org.jdesktop.application.Action;
+
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -66,6 +67,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -80,6 +82,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
      *
      * @return
      */
+    @Override
     public void log(String logMsg) {
         this.txtLogger.append(logMsg + "\n");
         this.txtLogger.setCaretPosition(this.txtLogger.getDocument().getLength());
@@ -199,6 +202,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         btHelp.setText(resourceMap.getString("btHelp.text")); // NOI18N
         btHelp.setName("btHelp"); // NOI18N
         btHelp.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btHelpActionPerformed(evt);
             }
@@ -296,6 +300,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         chbImportOneSite.setText(resourceMap.getString("chbImportOneSite.text")); // NOI18N
         chbImportOneSite.setName("chbImportOneSite"); // NOI18N
         chbImportOneSite.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chbImportOneSiteItemStateChanged(evt);
             }
@@ -330,7 +335,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 

@@ -3,11 +3,15 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.Species;
 import sdf_manager.util.PopulateCombo;
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -67,7 +71,7 @@ public class EditorSpecies extends javax.swing.JFrame {
        String hql;
        EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
        String groupSpecies = "-";
-       if (!(("-").equals((String) this.cmbGroup.getSelectedItem()))) {
+       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
            String groupSpeciesName = (String) this.cmbGroup.getSelectedItem();
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
        }
@@ -229,7 +233,7 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
        EditorSpecies.log.info("speciesCode: " + speciesCode);
        String groupSpecies = "-";
-       if (!(("-").equals((String) this.cmbGroup.getSelectedItem()))) {
+       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
            String groupSpName = (String) this.cmbGroup.getSelectedItem();
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpName);
        }
@@ -709,6 +713,7 @@ public class EditorSpecies extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -720,11 +725,13 @@ public class EditorSpecies extends javax.swing.JFrame {
 
         cmbGroup.setName("cmbGroup"); // NOI18N
         cmbGroup.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbGroupItemStateChanged(evt);
             }
         });
         cmbGroup.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbGroupActionPerformed(evt);
             }
@@ -746,11 +753,13 @@ public class EditorSpecies extends javax.swing.JFrame {
 
         cmbName.setName("cmbName"); // NOI18N
         cmbName.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbNameItemStateChanged(evt);
             }
         });
         cmbName.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbNameActionPerformed(evt);
             }
@@ -851,6 +860,7 @@ public class EditorSpecies extends javax.swing.JFrame {
 
         cmbType.setName("cmbType"); // NOI18N
         cmbType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbTypeActionPerformed(evt);
             }
@@ -1035,6 +1045,7 @@ public class EditorSpecies extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -1043,6 +1054,7 @@ public class EditorSpecies extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -1097,7 +1109,8 @@ public class EditorSpecies extends javax.swing.JFrame {
                 .addGap(36, 36, 36))
         );
 
-        jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        //jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        jLabel5.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel5.icon", SDF_ManagerApp.getMode()));
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 

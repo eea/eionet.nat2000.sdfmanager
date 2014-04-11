@@ -29,15 +29,45 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     private final static Logger log = Logger.getLogger(SDF_ManagerApp.class .getName());
     /** current path of the application. */
     public static final String CURRENT_PATH = (new File("")).getAbsolutePath();
-    private final static String LOG_PROPERTIES_FILE = CURRENT_PATH + File.separator + "log4j.properties";
+    private static final String LOG_PROPERTIES_FILE = CURRENT_PATH + File.separator + "log4j.properties";
 
     /** file name for local properties. */
-    private final static String LOCAL_PROPERTIES_FILE = CURRENT_PATH + File.separator + "local.properties";
+    public static final String LOCAL_PROPERTIES_FILE = CURRENT_PATH + File.separator + "local.properties";
+
+    /**
+     * constant for application Natura 2000 mode.
+     */
+    public static final String NATURA_2000_MODE = "Natura2000";
+
+    /**
+     * constant for application EMERALD mode.
+     */
+    public static final String EMERALD_MODE = "EMERALD";
+
+    /**
+     * local.properties
+     */
+    private static Properties properties;
+
+
+    /**
+     * N2k or EMERALD.
+     * specified in props file
+     * default N2k mode
+     */
+    private static String mode  = NATURA_2000_MODE;
 
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
+        try {
+            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+            mode = properties.getProperty("mode");
+            log.info("mode form props=" + mode);
+        } catch (Exception e) {
+            log.error("Error reading properties " + e);
+        }
         show(new SDF_ManagerView(this));
     }
 
@@ -78,7 +108,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 //settingsDialog.dispose();
 
             } else {
-                errorMesg = SDF_MysqlDatabase.createNaturaDB();
+                properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+
+                errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+
                 if (errorMesg != null) {
                     log.info("Error");
                 } else {
@@ -110,7 +143,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             String dbUser = dialog.getTxtDatabaseUser().getText();
             String dbPassword = dialog.getTxtDatabasePassword().getText();
 
-            String mode = dialog.getRdbtnNatura().isSelected() ? "Natura2000" : "EMERALD";
+            String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
 
             Map<String, String> props = new HashMap<String, String>(5);
 
@@ -118,12 +151,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             props.put("port", dbPort);
             props.put("user", dbUser);
             props.put("password", dbPassword);
-            props.put("mode", mode);
+            props.put("mode", appMode);
 
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored");
 
             log.info("running importTool");
+
             launch(SDF_ManagerApp.class, args);
 
 
@@ -163,5 +197,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     private static boolean propsFileExists() {
         File file = new File(LOCAL_PROPERTIES_FILE);
         return file.exists() && !file.isDirectory() && file.canRead();
+    }
+
+    public static String getMode() {
+        return mode;
     }
 }

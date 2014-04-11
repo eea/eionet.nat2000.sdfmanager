@@ -3,10 +3,12 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
-import java.util.Properties;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.Habitat;
 import sdf_manager.util.PopulateCombo;
 import sdf_manager.util.SDF_Util;
@@ -348,6 +350,7 @@ public class EditorHabitat extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -550,6 +553,7 @@ public class EditorHabitat extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -558,6 +562,7 @@ public class EditorHabitat extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -603,7 +608,9 @@ public class EditorHabitat extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+//        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", parent.getAppMode()));
+jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 

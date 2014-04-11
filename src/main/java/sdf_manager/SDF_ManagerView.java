@@ -6,19 +6,20 @@ package sdf_manager;
 
 import java.awt.Desktop;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
-import org.jdesktop.application.Action;
-import org.jdesktop.application.ResourceMap;
-import org.jdesktop.application.SingleFrameApplication;
-import org.jdesktop.application.FrameView;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
+
 import org.apache.log4j.Logger;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.FrameView;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.SingleFrameApplication;
 
 /**
  * The application's main frame.
@@ -50,13 +51,21 @@ public class SDF_ManagerView extends FrameView {
     private final static Logger log = Logger.getLogger(SDF_ManagerView.class .getName());
 
     /**
+     * parent application instance.
+     */
+    private SDF_ManagerApp parent;
+
+
+    /**
      *
      * @param app
      */
     public SDF_ManagerView(SingleFrameApplication app) {
         super(app);
+        this.parent = (SDF_ManagerApp)app;
 
         initComponents();
+
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -96,7 +105,7 @@ public class SDF_ManagerView extends FrameView {
     @Action
     public void createEditor() {
         log.info("Open Filter Editor");
-        new SDFFilter().setVisible(true);
+        new SDFFilter(parent.getMode()).setVisible(true);
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -152,8 +161,16 @@ public class SDF_ManagerView extends FrameView {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36));
         jLabel2.setForeground(new java.awt.Color(0, 102, 51));
-        jLabel2.setText(bundle.getString("SDF_ManagerView.jLabel2.text")); // NOI18N
+
+
+        if (parent.getMode().equals(parent.NATURA_2000_MODE)) {
+            jLabel2.setText(bundle.getString("SDF_ManagerView.jLabel2.text")); // NOI18N
+        } else {
+            jLabel2.setText(bundle.getString("SDF_ManagerView.jLabel2.text.emerald")); // NOI18N
+        }
         jLabel2.setName("jLabel2"); // NOI18N
+
+
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.setName("jPanel1"); // NOI18N
@@ -162,6 +179,7 @@ public class SDF_ManagerView extends FrameView {
         btnManage3.setText(bundle.getString("SDF_ManagerView.btnManage3.text")); // NOI18N
         btnManage3.setName("btnManage3"); // NOI18N
         btnManage3.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManage3ActionPerformed(evt);
             }
@@ -176,6 +194,7 @@ public class SDF_ManagerView extends FrameView {
         btnManage1.setText(bundle.getString("SDF_ManagerView.btnManage1.text")); // NOI18N
         btnManage1.setName("btnManage1"); // NOI18N
         btnManage1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManage1ActionPerformed(evt);
             }
@@ -189,6 +208,7 @@ public class SDF_ManagerView extends FrameView {
         btnManage4.setText(bundle.getString("SDF_ManagerView.btnManage4.text")); // NOI18N
         btnManage4.setName("btnManage4"); // NOI18N
         btnManage4.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManage4ActionPerformed(evt);
             }
@@ -197,7 +217,12 @@ public class SDF_ManagerView extends FrameView {
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setName("jPanel2"); // NOI18N
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/n2k_logo.jpg"))); // NOI18N
+
+        if (isEmeraldMode()) {
+            jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/emeraude_logo.png"))); // NOI18N
+        } else {
+            jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/n2k_logo.jpg"))); // NOI18N
+        }
         jLabel3.setText(bundle.getString("SDF_ManagerView.jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
@@ -214,6 +239,7 @@ public class SDF_ManagerView extends FrameView {
         jLabel6.setToolTipText(bundle.getString("SDF_ManagerView.jLabel6.toolTipText")); // NOI18N
         jLabel6.setName("jLabel6"); // NOI18N
         jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel6MouseClicked(evt);
             }
@@ -335,7 +361,7 @@ public class SDF_ManagerView extends FrameView {
     } //GEN-LAST:event_btnManage1ActionPerformed
 
     private void btnManage3ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage3ActionPerformed
-        new QAQCMain().setVisible(true);
+        new QAQCMain(parent.getMode()).setVisible(true);
     } //GEN-LAST:event_btnManage3ActionPerformed
 
     private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage4ActionPerformed
@@ -390,4 +416,12 @@ public class SDF_ManagerView extends FrameView {
 
 
     private JDialog aboutBox;
+
+    /**
+     * checks application mode.
+     * @return true if EMERALD
+     */
+    private static boolean isEmeraldMode() {
+        return SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE);
+    }
 }

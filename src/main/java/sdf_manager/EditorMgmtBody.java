@@ -2,9 +2,12 @@ package sdf_manager;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import pojos.MgmtBody;
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -390,6 +393,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -398,6 +402,7 @@ public class EditorMgmtBody extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -421,7 +426,8 @@ public class EditorMgmtBody extends javax.swing.JFrame {
                 .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jLabel12.setIcon(resourceMap.getIcon("jLabel12.icon")); // NOI18N
+        //jLabel12.setIcon(resourceMap.getIcon("jLabel12.icon")); // NOI18N
+        jLabel12.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel12.icon", SDF_ManagerApp.getMode()));
         jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
         jLabel12.setName("jLabel12"); // NOI18N
 

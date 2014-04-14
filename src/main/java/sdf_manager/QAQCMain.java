@@ -3,12 +3,16 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -54,8 +58,9 @@ class QAQCWorker extends SwingWorker<Boolean, Void> {
 public class QAQCMain extends javax.swing.JFrame {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(QAQCMain.class .getName());
+
     /** Creates new form QAQCMain. */
-    public QAQCMain() {
+    public QAQCMain(String appMode) {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         centerScreen();
@@ -412,6 +417,7 @@ public class QAQCMain extends javax.swing.JFrame {
         btnFetch.setText(resourceMap.getString("btnFetch.text")); // NOI18N
         btnFetch.setName("btnFetch"); // NOI18N
         btnFetch.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFetchActionPerformed(evt);
             }
@@ -435,6 +441,7 @@ public class QAQCMain extends javax.swing.JFrame {
         btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
         btnEdit.setName("btnEdit"); // NOI18N
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditActionPerformed(evt);
             }
@@ -482,7 +489,8 @@ public class QAQCMain extends javax.swing.JFrame {
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
-        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        //jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        jLabel1.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel1.icon", SDF_ManagerApp.getMode()));
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 

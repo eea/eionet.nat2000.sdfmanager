@@ -11,6 +11,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import pojos.OtherSpecies;
+import sdf_manager.util.SDF_Util;
 
 
 /**
@@ -68,7 +69,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
        EditorOtherSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
        String groupSpecies = "-";
-       if (!(("-").equals((String) this.cmbGroup.getSelectedItem()))) {
+       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
            String groupSpeciesName = (String) this.cmbGroup.getSelectedItem();
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
        }
@@ -544,6 +545,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -555,11 +557,13 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         cmbGroup.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Amphibians", "Birds", "Fish", "Fungi", "Invertebrates", "Lichens", "Mamals", "Plants", "Reptiles" }));
         cmbGroup.setName("cmbGroup"); // NOI18N
         cmbGroup.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbGroupItemStateChanged(evt);
             }
         });
         cmbGroup.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbGroupActionPerformed(evt);
             }
@@ -585,6 +589,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
         cmbName.setName("cmbName"); // NOI18N
         cmbName.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbNameItemStateChanged(evt);
             }
@@ -733,6 +738,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -741,6 +747,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -749,11 +756,13 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         chkFT.setText(resourceMap.getString("chkFT.text")); // NOI18N
         chkFT.setName("chkFT"); // NOI18N
         chkFT.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chkFTItemStateChanged(evt);
             }
         });
         chkFT.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkFTActionPerformed(evt);
             }
@@ -785,6 +794,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         chkMotivationAnnexIV.setText(resourceMap.getString("chkMotivationAnnexIV.text")); // NOI18N
         chkMotivationAnnexIV.setName("chkMotivationAnnexIV"); // NOI18N
         chkMotivationAnnexIV.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkMotivationAnnexIVActionPerformed(evt);
             }
@@ -878,7 +888,8 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
 
         jPanel6.getAccessibleContext().setAccessibleName(resourceMap.getString("jPanel6.AccessibleContext.accessibleName")); // NOI18N
 
-        jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        //jLabel5.setIcon(resourceMap.getIcon("jLabel5.icon")); // NOI18N
+        jLabel5.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel5.icon", SDF_ManagerApp.getMode()));
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 

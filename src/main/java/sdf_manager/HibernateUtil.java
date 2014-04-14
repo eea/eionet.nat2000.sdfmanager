@@ -1,12 +1,13 @@
 package sdf_manager;
 
 
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import java.util.Properties;
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.Properties;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 
 /**
  * Hibernate Utility class with a convenient method to get Session Factory object.
@@ -28,7 +29,8 @@ public class HibernateUtil {
         try {
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
+            //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "local.properties"));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");

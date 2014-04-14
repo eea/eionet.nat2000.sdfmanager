@@ -2,45 +2,40 @@ package sdf_manager;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.ArrayList;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import org.apache.log4j.Logger;
-
-import org.hibernate.criterion.Order;
 import pojos.Site;
 import sdf_manager.util.TranslationCodeName;
-import javax.swing.JButton;
-import java.awt.Insets;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.Font;
 
 /**
  *
@@ -117,13 +112,15 @@ public final class SDFFilter extends javax.swing.JFrame {
     int numReg = 0;
 
     /**
-     *
+     * application mode.
+     * @param mode N2k or EMERALD
      */
-    public SDFFilter() {
+    public SDFFilter(String appMode) {
         initComponents();
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -446,7 +443,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             Iterator itr = q.iterate();
             filterBiogeo.addItem("-"); //blank item first
             while (itr.hasNext()) {
-                filterBiogeo.addItem((String) itr.next());
+                filterBiogeo.addItem(itr.next());
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -753,6 +750,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         pnlDisplaySites = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabDisplaySites = new javax.swing.JTable() {
+            @Override
             public TableCellRenderer getCellRenderer(int row, int column) {
                 if (column == 0) {
                     return new ThumbRenderer();
@@ -1088,6 +1086,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnView.setMargin(new java.awt.Insets(2, -10, 2, 14));
         btnView.setName("View"); // NOI18N
         btnView.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewActionPerformed(evt);
             }
@@ -1097,6 +1096,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnNew.setText("New");
         btnNew.setMargin(new java.awt.Insets(2, -10, 2, 14));
         btnNew.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewActionPerformed(evt);
             }
@@ -1106,6 +1106,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnEdit.setText("Edit");
         btnEdit.setMargin(new java.awt.Insets(2, -10, 2, 14));
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditActionPerformed(evt);
             }
@@ -1115,6 +1116,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnDelete.setText("Delete");
         btnDelete.setMargin(new java.awt.Insets(2, 2, 2, 14));
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
             }
@@ -1123,6 +1125,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnDeleteAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/delete_site.gif"))); // NOI18N
         btnDeleteAll.setText("Delete all");
         btnDeleteAll.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteAllActionPerformed(evt);
             }
@@ -1131,6 +1134,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnDuplicate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/duplicate_site.png"))); // NOI18N
         btnDuplicate.setText("Duplicate");
         btnDuplicate.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDuplicateActionPerformed(evt);
             }
@@ -1140,6 +1144,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnGeneratePdfs.setText("Pdf");
         btnGeneratePdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGeneratePdfs.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGeneratePDFsActionPerformed(evt);
             }
@@ -1148,6 +1153,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnGenerateAllPdfs.setText("Pdf All");
         btnGenerateAllPdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGenerateAllPdfs.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateAllPDFsActionPerformed(evt);
             }
@@ -1222,8 +1228,11 @@ public final class SDFFilter extends javax.swing.JFrame {
             pnlDisplaySitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
         );
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/n2k_logo_smaller.jpg"))); // NOI18N
+        if (SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE)) {
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/emeraude_logo_smaller.png"))); // NOI18N
+        } else {
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/n2k_logo_smaller.jpg"))); // NOI18N
+        }
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 15));
         jLabel4.setText("SDF Filter ");
@@ -1236,6 +1245,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnApplyFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/apply filter.png"))); // NOI18N
         btnApplyFilter.setText("Apply Filter");
         btnApplyFilter.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnApplyFilterActionPerformed(evt);
             }
@@ -1244,6 +1254,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnResetFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/clear_filter.png"))); // NOI18N
         btnResetFilter.setText("Reset Filter");
         btnResetFilter.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetFilterActionPerformed(evt);
             }

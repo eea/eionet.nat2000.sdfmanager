@@ -14,6 +14,8 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import sdf_manager.util.SDF_Util;
+
 /**
  *
  * @author charbda
@@ -72,7 +74,8 @@ public class ProgressDialog extends javax.swing.JDialog {
         txtLabel.setText(resourceMap.getString("txtLabel.text")); // NOI18N
         txtLabel.setName("txtLabel"); // NOI18N
 
-        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        //jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        jLabel1.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel1.icon", SDF_ManagerApp.getMode()));
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 

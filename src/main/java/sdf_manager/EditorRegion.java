@@ -3,11 +3,15 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
+
 import javax.swing.JFrame;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import pojos.RefNuts;
 import pojos.Region;
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -28,10 +32,10 @@ public class EditorRegion extends javax.swing.JFrame {
      * @param siteCode
      */
     public EditorRegion(SDFEditor parent, String siteCode) {
+        this.parent = parent;
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         centerScreen();
-        this.parent = parent;
         this.siteCode = siteCode;
         loadRegions();
     }
@@ -139,6 +143,7 @@ public class EditorRegion extends javax.swing.JFrame {
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -147,6 +152,7 @@ public class EditorRegion extends javax.swing.JFrame {
         btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
             }
@@ -154,6 +160,7 @@ public class EditorRegion extends javax.swing.JFrame {
 
         cmbName.setName("cmbName"); // NOI18N
         cmbName.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbNameItemStateChanged(evt);
             }
@@ -161,6 +168,7 @@ public class EditorRegion extends javax.swing.JFrame {
 
         cmbCode.setName("cmbCode"); // NOI18N
         cmbCode.addItemListener(new java.awt.event.ItemListener() {
+            @Override
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbCodeItemStateChanged(evt);
             }
@@ -210,7 +218,8 @@ public class EditorRegion extends javax.swing.JFrame {
                 .addGap(93, 93, 93))
         );
 
-        jLabel4.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
+        //jLabel4.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
+        jLabel4.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel4.icon", SDF_ManagerApp.getMode()));
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 

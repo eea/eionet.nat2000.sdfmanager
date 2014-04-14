@@ -5,8 +5,6 @@
 
 package sdf_manager.util;
 
-import com.mysql.jdbc.Connection;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -19,12 +17,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Properties;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
+
+import com.mysql.jdbc.Connection;
 
 
 /**
@@ -39,14 +39,11 @@ public class SDF_MysqlDatabase {
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
      *
+     *
      * @return the connection to the database
      */
-    public static String createNaturaDB() throws SQLException, Exception {
+    public static String createNaturaDB(Properties properties) throws SQLException, Exception {
         Connection con;
-        String dbPropertiesPath = new java.io.File("").getAbsolutePath()
-                        + File.separator + "database" + File.separator + "sdf_database.properties";
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(dbPropertiesPath));
         Class.forName("com.mysql.jdbc.Driver");
         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user")
                 + "<==password==>" + properties.getProperty("password") + "<==");
@@ -339,6 +336,7 @@ public class SDF_MysqlDatabase {
 
               // This filter only returns directories
             FileFilter fileFilter = new FileFilter() {
+                @Override
                 public boolean accept(File file) {
                     return !file.isDirectory();
                 }
@@ -348,6 +346,7 @@ public class SDF_MysqlDatabase {
                // Either dir does not exist or is not a directory
             } else {
                 Comparator<File> cmpFunc = new Comparator<File>() {
+                    @Override
                     public int compare(File f1, File f2) {
                         return f1.getPath().compareToIgnoreCase(f2.getPath());
                     }
@@ -699,6 +698,7 @@ public class SDF_MysqlDatabase {
 
             // This filter only returns directories
             FileFilter fileFilter = new FileFilter() {
+            @Override
             public boolean accept(File file) {
                   return !file.isDirectory();
                }
@@ -1020,6 +1020,28 @@ public class SDF_MysqlDatabase {
             + File.separator + "database"
             + File.separator + "mysqlDB"
             + File.separator + scriptName;
+    }
+
+
+    /**
+     * testing if user entered props in the system settings screen are correct.
+     * @param host database host
+     * @param port port
+     * @param user DB user name
+     * @param pwd password
+     * @returns error message
+     */
+    public static String testConnection(String host, String port, String user, String pwd) {
+        log.info("Testing MySQL: ");
+        try {
+            DriverManager.getConnection("jdbc:mysql://"
+                    + host + ":" + port
+                    + "/", user, pwd);
+        } catch (SQLException sqle) {
+               return sqle.getMessage();
+        }
+
+        return "";
     }
 
 

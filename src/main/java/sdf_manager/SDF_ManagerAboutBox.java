@@ -80,7 +80,7 @@ public class SDF_ManagerAboutBox extends javax.swing.JDialog {
 
         appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
         appDescLabel.setName("appDescLabel"); // NOI18N
-
+//FIXME-icon
         imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
         imageLabel.setName("imageLabel"); // NOI18N
 

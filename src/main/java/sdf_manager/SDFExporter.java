@@ -4,15 +4,23 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import javax.swing.event.ChangeEvent;
-import org.jdesktop.application.Action;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.swing.JDialog;
 import javax.swing.SwingWorker;
+import javax.swing.event.ChangeEvent;
+
+import org.jdesktop.application.Action;
+
+import sdf_manager.util.SDF_Util;
 
 /**
  *
@@ -120,6 +128,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -138,6 +147,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
      *
      * @param logMsg
      */
+    @Override
     public void log(String logMsg) {
         this.txtLogger.append(logMsg + "\n");
         this.txtLogger.setCaretPosition( this.txtLogger.getDocument().getLength());
@@ -317,6 +327,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         rdioXML.setText(resourceMap.getString("rdioXML.text")); // NOI18N
         rdioXML.setName("rdioXML"); // NOI18N
         rdioXML.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rdioXMLStateChanged(evt);
             }
@@ -326,6 +337,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         rdioAccess.setText(resourceMap.getString("rdioAccess.text")); // NOI18N
         rdioAccess.setName("rdioAccess"); // NOI18N
         rdioAccess.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 updateFileName(evt);
             }
@@ -415,7 +427,8 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
         txtLogger.setName("txtLogger"); // NOI18N
         jScrollPane1.setViewportView(txtLogger);
 
-        jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 

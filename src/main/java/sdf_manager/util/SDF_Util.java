@@ -257,10 +257,7 @@ public class SDF_Util {
              labelName += ".emerald";
          }
 
-         SDF_Util.log.info("getting icon for " + labelName);
-         for (String s : resourceMap.keySet()) {
-             SDF_Util.log.info("key : " + s);
-         }
+         //SDF_Util.log.info("getting icon for " + labelName);
          return resourceMap.getIcon(labelName);
 
      }

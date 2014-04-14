@@ -153,14 +153,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             props.put("password", dbPassword);
             props.put("mode", appMode);
 
-            //test if DB exists:
-            //SDF_MysqlDatabase.testConnection(props);
-
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
-            log.info("properties stored");
+            log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 
             log.info("running importTool");
-
             launch(SDF_ManagerApp.class, args);
 
 
@@ -172,7 +168,6 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             e.printStackTrace();
         } finally {
             dialog.dispose();
-            log.info("dialog disposed");
         }
     }
     /**

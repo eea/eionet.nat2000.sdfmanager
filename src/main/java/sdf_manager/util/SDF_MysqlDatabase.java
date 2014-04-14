@@ -34,7 +34,7 @@ import com.mysql.jdbc.Connection;
  */
 public class SDF_MysqlDatabase {
 
-    private final static Logger log = Logger.getLogger(SDF_MysqlDatabase.class .getName());
+    private static final Logger log = Logger.getLogger(SDF_MysqlDatabase.class .getName());
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
@@ -241,7 +241,8 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * Method to validate if the datatype of comlumns:
+     * Method to validate the datatype of columns.
+     * Validates if
      * SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF
      * of the table: site
      * in DB are longtext instead of varchar(512)
@@ -1029,20 +1030,18 @@ public class SDF_MysqlDatabase {
      * @param port port
      * @param user DB user name
      * @param pwd password
-     * @returns error message
+     * @return error message
      */
     public static String testConnection(String host, String port, String user, String pwd) {
         log.info("Testing MySQL: ");
         try {
-            DriverManager.getConnection("jdbc:mysql://"
-                    + host + ":" + port
-                    + "/", user, pwd);
+            DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", user, pwd);
         } catch (SQLException sqle) {
-               return sqle.getMessage();
+            sqle.printStackTrace();
+            return sqle.getMessage();
         }
 
         return "";
     }
-
 
 }

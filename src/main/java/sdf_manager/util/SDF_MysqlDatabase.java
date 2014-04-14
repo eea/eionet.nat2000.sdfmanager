@@ -44,9 +44,6 @@ public class SDF_MysqlDatabase {
      */
     public static String createNaturaDB(Properties properties) throws SQLException, Exception {
         Connection con;
-        //String dbPropertiesPath = SDF_ManagerApp.LOCAL_PROPERTIES_FILE;
-        //Properties properties = new Properties();
-        //properties.load(new FileInputStream(dbPropertiesPath));
         Class.forName("com.mysql.jdbc.Driver");
         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user")
                 + "<==password==>" + properties.getProperty("password") + "<==");

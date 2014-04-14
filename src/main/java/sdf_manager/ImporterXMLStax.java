@@ -12,23 +12,45 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.hibernate.Query;
-import java.util.Properties;
-import org.hibernate.cfg.AnnotationConfiguration;
-import pojos.*;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
+
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.DocLink;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Map;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.MgmtPlan;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.Ownership;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteOwnership;
+import pojos.SiteOwnershipId;
+import pojos.SiteRelation;
+import pojos.Species;
 import sdf_manager.util.SDF_Constants;
 import sdf_manager.util.SDF_Util;
 
@@ -87,6 +109,7 @@ public class ImporterXMLStax implements Importer {
      *
      * @param fileName
      */
+    @Override
     public void initLogFile(String fileName) {
          try {
             outFile = new FileWriter(fileName);
@@ -142,7 +165,8 @@ public class ImporterXMLStax implements Importer {
         try {
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
+            //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "local.properties"));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
@@ -279,7 +303,8 @@ public class ImporterXMLStax implements Importer {
       * @param fileName
       * @return
       */
-     public boolean processDatabase(String fileName) {
+     @Override
+    public boolean processDatabase(String fileName) {
         return  validateAndProcessDB(fileName);
      }
 

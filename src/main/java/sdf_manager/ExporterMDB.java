@@ -5,39 +5,44 @@
 
 package sdf_manager;
 
-import java.sql.*;
-import java.io.File;
-import java.util.ArrayList;
-import org.hibernate.cfg.Configuration;
-
-import com.healthmarketscience.jackcess.*;
 import java.awt.Desktop;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.util.HashMap;
-
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
+import org.hibernate.cfg.Configuration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import pojos.Site;
 import sdf_manager.util.ValidateSite;
+
+import com.healthmarketscience.jackcess.Database;
 
 /**
  *
@@ -131,6 +136,7 @@ public class ExporterMDB implements Exporter {
      * @param fileName
      * @return
      */
+    @Override
     public boolean processDatabase(String fileName) {
 
         File fileLog = this.validateSites();
@@ -202,13 +208,14 @@ public class ExporterMDB implements Exporter {
             cfg.configure();
             Properties props = cfg.getProperties();
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf_database.properties"));
+            //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf_database.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "local.properties"));
             Class.forName("com.mysql.jdbc.Driver");
 
             log("Conecting to MySQL");
             log.info("Connecting to MySQL");
 
-            Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true", properties.getProperty("user"), properties.getProperty("password"));
+            Connection conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true", properties.getProperty("user"), properties.getProperty("password"));
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet rs = dbm.getTables(null, "natura2000", "%" , null);
             com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
@@ -343,6 +350,7 @@ public class ExporterMDB implements Exporter {
       * @param filename
       * @return
       */
+    @Override
     public ArrayList createXMLFromDataBase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

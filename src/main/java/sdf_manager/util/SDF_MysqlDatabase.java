@@ -1023,4 +1023,26 @@ public class SDF_MysqlDatabase {
     }
 
 
+    /**
+     * testing if user entered props in the system settings screen are correct.
+     * @param host database host
+     * @param port port
+     * @param user DB user name
+     * @param pwd password
+     * @returns error message
+     */
+    public static String testConnection(String host, String port, String user, String pwd) {
+        log.info("Testing MySQL: ");
+        try {
+            DriverManager.getConnection("jdbc:mysql://"
+                    + host + ":" + port
+                    + "/", user, pwd);
+        } catch (SQLException sqle) {
+               return sqle.getMessage();
+        }
+
+        return "";
+    }
+
+
 }

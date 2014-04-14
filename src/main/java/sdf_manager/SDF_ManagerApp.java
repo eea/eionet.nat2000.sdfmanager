@@ -153,6 +153,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             props.put("password", dbPassword);
             props.put("mode", appMode);
 
+            //test if DB exists:
+            //SDF_MysqlDatabase.testConnection(props);
+
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored");
 
@@ -162,7 +165,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred." + e.getMessage(), "Dialog",
+            JOptionPane.showMessageDialog(new JFrame(), "An error has occurred in saving settings." + e.getMessage(), "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             log.error("Error::::" + e.getMessage());
 

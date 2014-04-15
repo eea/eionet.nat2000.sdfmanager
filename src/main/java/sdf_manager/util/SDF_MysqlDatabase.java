@@ -488,13 +488,13 @@ public class SDF_MysqlDatabase {
     private static boolean isRefBirdsUpdated(Connection con, Statement st) {
         boolean refBirdsUpdated = false;
         try {
-              String sql = "select REF_BIRDS_CODE_NEW from natura2000.ref_BIRDS";
+              String sql = "select ref_birds_code_new from natura2000.ref_birds";
               st = con.createStatement();
               st.executeQuery(sql);
               refBirdsUpdated = true;
         } catch (Exception e) {
             refBirdsUpdated = false;
-            SDF_MysqlDatabase.log.error("Ref Birds is already updated");
+            SDF_MysqlDatabase.log.error("Ref Birds is NOT updated");
         } finally {
 
             return refBirdsUpdated;
@@ -558,7 +558,7 @@ public class SDF_MysqlDatabase {
         try {
             SDF_MysqlDatabase.log.info("populateRefBirds....");
 
-            FileInputStream fstreamInsert = openScriptFile("insert_birds_new.sql");
+            FileInputStream fstreamInsert = openScriptFile( "populateDB" + File.separator + "insert_birds_new.sql");
             //FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "populateDB" + File.separator + "insert_birds_new.sql");
 
             InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
@@ -756,7 +756,7 @@ public class SDF_MysqlDatabase {
         boolean tableExists = false;
 
         try {
-            String sql = "select * from natura2000.ReleaseDBUpdates";
+            String sql = "select * from natura2000.releasedbupdates";
             st = con.createStatement();
             st.executeQuery(sql);
             tableExists = true;
@@ -954,7 +954,7 @@ public class SDF_MysqlDatabase {
 
         try {
 
-            String hql = "select REF_SPECIES_CODE from natura2000.ref_species where REF_SPECIES_CODE = '6337'";
+            String hql = "select ref_species_code from natura2000.ref_species where REF_SPECIES_CODE = '6337'";
             stDBSpec = con.createStatement();
 
             rsDBEXist = stDBSpec.executeQuery(hql);

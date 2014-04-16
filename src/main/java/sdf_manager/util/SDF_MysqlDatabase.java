@@ -48,8 +48,8 @@ public class SDF_MysqlDatabase {
         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user")
                 + "<==password==>" + properties.getProperty("password") + "<==");
         con = (Connection) DriverManager.getConnection("jdbc:mysql://"
-                + properties.getProperty("host") + ":" + properties.getProperty("port")
-                + "/", properties.getProperty("user"), properties.getProperty("password"));
+                + properties.getProperty("db.host") + ":" + properties.getProperty("db.port")
+                + "/", properties.getProperty("db.user"), properties.getProperty("db.password"));
         return createNaturaDB(con);
     }
 

@@ -166,14 +166,15 @@ public class ImporterXMLStax implements Importer {
 
             Properties properties = new Properties();
             //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "local.properties"));
+            properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
 
             AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true");
-            annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("user"));
-            annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("password"));
+            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("db.host")
+                    + "/natura2000?autoReconnect=true");
+            annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("db.user"));
+            annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("db.password"));
             annotationConfig.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
             annotationConfig.setProperty("hibernate.jdbc.batch_size", "50");
             annotationConfig.setProperty("hibernate.cache.use_second_level_cache", "false");

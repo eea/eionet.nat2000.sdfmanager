@@ -191,7 +191,7 @@ public class SDFEditor extends javax.swing.JFrame {
         try {
             if (value != null) {
                 Properties properties = new Properties();
-                properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf.properties"));
+                properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "sdf.properties"));
 
                 Locale locale = new Locale(properties.getProperty("locale"));
                 DecimalFormat nf = (DecimalFormat) NumberFormat.getInstance(locale);

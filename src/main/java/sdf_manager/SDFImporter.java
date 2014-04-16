@@ -190,6 +190,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         radioNewMDB.setActionCommand(resourceMap.getString("radioNewMDB.actionCommand")); // NOI18N
         radioNewMDB.setName("radioNewMDB"); // NOI18N
 
+        radioNewMDB.setVisible(!SDF_ManagerApp.isEmeraldMode());
+
         btnGroupFormat.add(radioBold2007);
         radioBold2007.setText(resourceMap.getString("radioBold2007.text")); // NOI18N
         radioBold2007.setName("radioBold2007"); // NOI18N
@@ -197,6 +199,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         btnGroupFormat.add(radioNew2007);
         radioNew2007.setText(resourceMap.getString("radioNew2007.text")); // NOI18N
         radioNew2007.setName("radioNew2007"); // NOI18N
+
+        radioNew2007.setVisible(!SDF_ManagerApp.isEmeraldMode());
 
         btHelp.setIcon(resourceMap.getIcon("btHelp.icon")); // NOI18N
         btHelp.setText(resourceMap.getString("btHelp.text")); // NOI18N

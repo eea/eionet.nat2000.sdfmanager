@@ -61,13 +61,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        try {
-            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-            mode = properties.getProperty("mode");
-            log.info("mode form props=" + mode);
-        } catch (Exception e) {
-            log.error("Error reading properties " + e);
-        }
+//        try {
+//            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+//            mode = properties.getProperty("mode");
+//            log.info("mode form props=" + mode);
+//        } catch (Exception e) {
+//            log.error("Error reading properties " + e);
+//        }
         show(new SDF_ManagerView(this));
     }
 
@@ -109,6 +109,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             } else {
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+                mode = properties.getProperty("mode");
 
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
@@ -156,6 +157,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 
+            mode = appMode;
             log.info("running importTool");
             launch(SDF_ManagerApp.class, args);
 
@@ -199,5 +201,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
     public static String getMode() {
         return mode;
+    }
+
+    /**
+     * True if application is running in EMERALD mode.
+     * @return mode indication
+     */
+    public static boolean isEmeraldMode() {
+        return mode.equals(EMERALD_MODE);
     }
 }

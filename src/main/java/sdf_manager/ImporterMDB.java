@@ -8,68 +8,112 @@ package sdf_manager;
 
 import java.awt.Desktop;
 import java.io.File;
-import pojos.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Properties;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.Query;
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.RefBirds;
+import pojos.RefImpacts;
+import pojos.RefNuts;
+import pojos.RefSpecies;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteRelation;
+import pojos.Species;
 import sdf_manager.util.SDF_Util;
-
-import java.util.regex.*;
 
 
 /**
- *
+ * Importer for old MS Access file and EMERALD files.
  * @author charbda
  */
 public class ImporterMDB implements Importer {
 
      private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterMDB.class .getName());
 
-     private String table_file = "config" + System.getProperty("file.separator") + "table_names.xml";
+     /**
+      * table file for N2K.
+      */
+     private static final String TABLE_FILE_NAME_N2K = "table_names.xml";
 
-     private String field_file = "config" + System.getProperty("file.separator") + "field_maps.xml";
+     /**
+      * table file for EMERALD.
+      */
+     private static final String TABLE_FILE_NAME_EMERALD = "table_names_emerald.xml";
+
+     /**
+      * field mappings file for EMERALD.
+      */
+     private static final String FIELD_FILE_NAME_EMERALD = "field_maps_emerald.xml";
+
+     /**
+      * field mappings file for N2K.
+      */
+     private static final String FIELD_FILE_NAME_N2K = "field_maps.xml";
+
+
+
+     /**
+      * full path of table file. Default: n2k.
+      */
+     private String tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_N2K;
+
+     /**
+      * full path of field file. Default: n2k.
+      */
+     private String fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_N2K;
+
      private String table_element = "table";
      private String field_element = "field";
      private HashMap<String, String> tables;
@@ -98,6 +142,13 @@ public class ImporterMDB implements Importer {
          this.logger = logger;
          this.encoding = encoding;
          this.accessVersion = accessVersion;
+
+         //for EMERALD use different mapping files:
+         if (SDF_ManagerApp.isEmeraldMode()) {
+             tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_EMERALD;
+             fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_EMERALD;
+         }
+
          this.initLogFile(logFile);
          this.init();
      }
@@ -108,8 +159,8 @@ public class ImporterMDB implements Importer {
      void init() {
          this.tables = new HashMap<String, String>();
          this.fields = new HashMap<String, String>();
-         this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
-         this.parse(this.field_file, this.fields, this.field_element, this.fieldKeys);
+         this.parse(this.tableFile, this.tables, this.table_element, this.tableKeys);
+         this.parse(this.fieldFile, this.fields, this.field_element, this.fieldKeys);
      }
 
      /**
@@ -139,7 +190,8 @@ public class ImporterMDB implements Importer {
       *
       * @param fileName
       */
-     public void initLogFile(String fileName) {
+     @Override
+    public void initLogFile(String fileName) {
          try {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
@@ -196,7 +248,8 @@ public class ImporterMDB implements Importer {
       * @param fileName
       * @return
       */
-     public boolean processDatabase(String fileName) {
+     @Override
+    public boolean processDatabase(String fileName) {
         Connection conn;
         boolean saveOK = false;
         String msgValidError = "";
@@ -217,49 +270,6 @@ public class ImporterMDB implements Importer {
 
                 saveOK = validateAndProcessSites(conn);
 
-                /*
-                ImporterMDB.log.info("Validation has finished");
-                log("Validation has finished.", 1);
-
-                if (this.sitesDB != null && (this.sitesDB.isEmpty())) {
-                    ImporterMDB.log.info("Import process is starting");
-                    log("Import process is starting.", 1);
-
-                    saveOK =  processSites(conn);
-
-                    if (this.nutsKO != null && !(this.nutsKO.isEmpty())) {
-                        saveOK = false;
-                        ImporterMDB.log.error("Error in validation:. Error Message: The code of some regions are wrong. Please check the log file for details");
-                        log("Error in validation.", 1);
-                        msgValidError = "The code of some regions are wrong. Please check the log file for details";
-
-                        File fileLog = SDF_Util.copyToLogImportFile(this.nutsKO, "OldDB");
-                        if (fileLog != null) {
-                            Desktop desktop = null;
-                            if (Desktop.isDesktopSupported()) {
-                                desktop = Desktop.getDesktop();
-                                Desktop.getDesktop().open(fileLog);
-                            }
-
-                        }
-                    }
-                } else {
-                    saveOK = false;
-                    ImporterMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-                    log("Error in validation.", 1);
-                    msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
-
-                    File fileLog = SDF_Util.copyToLogImportFileList(this.sitesDB, "OldDB");
-                    if (fileLog != null) {
-                        Desktop desktop = null;
-                        if (Desktop.isDesktopSupported()) {
-                            desktop = Desktop.getDesktop();
-                            Desktop.getDesktop().open(fileLog);
-                        }
-
-                    }
-                   // return false;
-                }*/
             } else {
                 saveOK = false;
                 msgValidError = "A DB error occurs. Please check the SDF_log file for more details";
@@ -331,7 +341,7 @@ public class ImporterMDB implements Importer {
 
             Iterator itr = this.tables.keySet().iterator();
              while (itr.hasNext()) {
-                String tmpStr = this.tables.get((String) itr.next());
+                String tmpStr = this.tables.get(itr.next());
                 ResultSet rs = dbm.getTables(null, null, tmpStr , null);
                 if (!rs.next()) {
                    ImporterMDB.log.error("Could not find table: " + tmpStr);
@@ -542,113 +552,6 @@ public class ImporterMDB implements Importer {
           return processOK;
       }
 
-
-     /**
-      * DON'T USE
-      * @param conn
-      */
-     /*boolean processSites(Connection conn) throws SQLException {
-
-        boolean processOK = false;
-        String sql = "select sitecode from " + this.tables.get("biotop") + " order by sitecode";
-        Session session = null;
-        Statement stmt = null;
-
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            loadSpecies(conn, session);
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            int i = 0;
-            while (rs.next()) {
-               Site site = new Site();
-               String sitecode = rs.getString(this.fields.get("sitecode"));
-               try {
-                   Transaction tx = session.beginTransaction();
-
-                   log("Processing: " + sitecode, 1);
-                   ImporterMDB.log.info("Processing: " + sitecode);
-
-                   site.setSiteCode(sitecode);
-
-                   processBiotop(conn, session, site);
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-
-                   processHabitats(conn, session, site);
-
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-                   processHabitatClasses(conn, session, site);
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-
-                   processRegions(conn, session, site);
-
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-                   processRelations(conn, session, site);
-
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-                   processDTypes(conn, session, site);
-                   tx.commit();
-                   session.flush();
-
-                   tx = session.beginTransaction();
-
-                   processImpacts(conn, session, site);
-
-                   tx.commit();
-                   session.flush();
-
-                   processSpecies(conn, session, site);
-
-                   processOK = true;
-                   session.flush();
-                   session.evict(site);
-
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                   processOK = false;
-                   ImporterMDB.log.error("Failed processing site: " + sitecode + " .The error: " + e.getMessage());
-                   log("failed processing site: " + sitecode, 1);
-                   break;
-
-                }
-               if (++i % 50 == 0) {
-                    session.flush();
-                    session.clear();
-               }
-
-
-            }
-            ImporterMDB.log.info("Finishing import process.Closing connection to Data Base");
-            log("Finishing import process.Closing connection to Data Base");
-        } catch (Exception e) {
-           ImporterMDB.log.error("The error: " + e.getMessage());
-           //e.printStackTrace();
-           processOK = false;
-           return false;
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            session.clear();
-            session.close();
-        }
-        return processOK;
-     }*/
 
      /**
       *
@@ -903,13 +806,19 @@ public class ImporterMDB implements Importer {
                 if (tmpDate != null) {
                     site.setSiteSciConfDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
-                if (tmpDate != null) {
-                    site.setSiteSpaDate(tmpDate);
+
+                //EMERALD does not have SAC and SPA dates
+                if (this.fields.containsKey("spa_date")) {
+                    tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
+                    if (tmpDate != null) {
+                        site.setSiteSpaDate(tmpDate);
+                    }
                 }
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
-                if (tmpDate != null) {
-                    site.setSiteSacDate(tmpDate);
+                if (this.fields.containsKey("sac_date")) {
+                    tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
+                    if (tmpDate != null) {
+                        site.setSiteSacDate(tmpDate);
+                    }
                 }
                  tmpStr = getString(rs, this.fields.get("respondent"));
                  if (tmpStr != null) {
@@ -919,8 +828,11 @@ public class ImporterMDB implements Importer {
                     session.save(resp);
                     site.setResp(resp);
                  }
-                 tmpDouble = getDouble(rs, this.fields.get("area"));
-                 if (tmpDouble != null) {
+                 tmpStr = getString(rs, this.fields.get("area"));
+                 tmpStr = StringUtils.replace(tmpStr, ",", ".");
+                 if (StringUtils.isNotBlank(tmpStr)) {
+                     tmpDouble = Double.valueOf(tmpStr);
+                     //getDouble(rs, this.fields.get("area"));
                      site.setSiteArea(tmpDouble);
                  }
 
@@ -1502,9 +1414,12 @@ public class ImporterMDB implements Importer {
 
                         System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
-                        tmpStr = getString(rs, this.fields.get("species_code"));
-                        if (tmpStr != null) {
-                            oSpecies.setOtherSpeciesCode(tmpStr);
+                        //EMERALD DB does not have species code in SPEC:
+                        if (!SDF_ManagerApp.isEmeraldMode()) {
+                            tmpStr = getString(rs, this.fields.get("species_code"));
+                            if (tmpStr != null) {
+                                oSpecies.setOtherSpeciesCode(tmpStr);
+                            }
                         }
                         tmpStr = getString(rs, this.fields.get("species_name"));
                         if (tmpStr != null) {

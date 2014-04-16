@@ -22,7 +22,10 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+
+import sdf_manager.SDF_ManagerApp;
 
 import com.mysql.jdbc.Connection;
 
@@ -162,6 +165,7 @@ public class SDF_MysqlDatabase {
                         //Sept 2013
 
 
+
                     } else {
                         msgError = createMySQLDB(con, schemaFileName);
                         String msgErrorPopulate = populateRefTables(con);
@@ -176,6 +180,18 @@ public class SDF_MysqlDatabase {
                         }
 
                     }
+
+
+                    //emerald
+                    if (SDF_ManagerApp.isEmeraldMode() && !isEmeraldUpdatesdone(con, stDBExist)) {
+                        SDF_MysqlDatabase.log.info("Emerald updates:");
+                        String msgErrorEmerald = doEmeraldUpdates(con);
+                        if (msgErrorEmerald != null) {
+                            msgError = msgError + "\n" + msgErrorEmerald;
+                        }
+                    }
+
+
 
                 } else {
                     msgError = createMySQLDB(con, schemaFileName);
@@ -294,6 +310,7 @@ public class SDF_MysqlDatabase {
         Statement st2 = null;
         Statement stAlter = null;
         Statement stInsert = null;
+        FileInputStream fstream = null;
         try {
             SDF_MysqlDatabase.log.info("Creating Schema Data Base");
 
@@ -313,7 +330,7 @@ public class SDF_MysqlDatabase {
             // Open the file that is the first
             // Create tables in Data Base
             SDF_MysqlDatabase.log.info("Creating tables in Data Base");
-            FileInputStream fstream = openScriptFile("CreateMySqlTables.sql");
+            fstream = openScriptFile("CreateMySqlTables.sql");
             //FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB" + File.separator + "CreateMySqlTables.sql");
 
             InputStreamReader in = new InputStreamReader(fstream, "UTF-8");
@@ -326,6 +343,23 @@ public class SDF_MysqlDatabase {
             }
             //Close the input stream
             in.close();
+
+            //EMERALD updates:
+            if (SDF_ManagerApp.isEmeraldMode()) {
+                SDF_MysqlDatabase.log.info("EMERALD strucutre changes");
+                fstream = openScriptFile("EmeraldChanges.sql");
+
+                in = new InputStreamReader(fstream, "UTF-8");
+                br = new BufferedReader(in);
+
+                st2 = con.createStatement();
+                //Read File Line By Line
+                while ((strLine = br.readLine()) != null) {
+                    st2.executeUpdate(strLine);
+                }
+                //Close the input stream
+                in.close();
+            }
 
             //Populate data base
             SDF_MysqlDatabase.log.info("Populating tables");
@@ -391,6 +425,8 @@ public class SDF_MysqlDatabase {
             if (stInsert != null) {
                stInsert.close();
             }
+
+            IOUtils.closeQuietly(fstream);
             return msgErrorCreate;
         }
 
@@ -972,6 +1008,34 @@ public class SDF_MysqlDatabase {
         }
     }
 
+    private static boolean isEmeraldUpdatesdone(Connection con, Statement st) {
+        boolean updateDone = false;
+        Statement stDBSpec = null;
+        ResultSet rsDBEXist = null;
+
+        try {
+
+            String hql = "select 1 from information_schema.columns where table_schema = 'natura2000' and table_name = 'habitat' "
+                    + "and column_name = 'habitat_code' and column_type='varchar(9)'";
+            stDBSpec = con.createStatement();
+
+            rsDBEXist = stDBSpec.executeQuery(hql);
+            if (rsDBEXist.next()) {
+                updateDone = true;
+            } else {
+                updateDone = false;
+            }
+
+        } catch (Exception e) {
+            updateDone = false;
+            SDF_MysqlDatabase.log.error("Error checking Emrald updates " + e);
+        }
+        return updateDone;
+    }
+
+
+
+
     private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
@@ -1042,6 +1106,43 @@ public class SDF_MysqlDatabase {
         }
 
         return "";
+    }
+
+
+    private static String doEmeraldUpdates(Connection con) throws SQLException {
+        String msgErrorCreate = null;
+        Statement st = null;
+
+        try {
+            SDF_MysqlDatabase.log.info("Doing necessary DB struct updates for EMERALD data structure ...");
+
+            FileInputStream fstreamInsert = openScriptFile("EmeraldChanges.sql");
+
+            InputStreamReader inInsert = new InputStreamReader(fstreamInsert, "UTF-8");
+            BufferedReader brInsert = new BufferedReader(inInsert);
+            String strLineInsert;
+            st = con.createStatement();
+            //Read File Line By Line
+            while ((strLineInsert = brInsert.readLine()) != null) {
+                st.executeUpdate(strLineInsert);
+            }
+          //Close the input stream
+            inInsert.close();
+
+        } catch (SQLException e) {
+            msgErrorCreate = "EmeraldUpdates:An error has been produced in database";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } catch (Exception e) {
+            msgErrorCreate = "EmeraldUpdates:A general error has been produced";
+            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+        } finally {
+
+            if (st != null) {
+                st.close();
+            }
+            return msgErrorCreate;
+        }
+
     }
 
 }

@@ -9,7 +9,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -28,6 +31,7 @@ import org.apache.log4j.Logger;
 import sdf_manager.SDF_ManagerApp;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 
 
 /**
@@ -51,8 +55,8 @@ public class SDF_MysqlDatabase {
         SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("user")
                 + "<==password==>" + properties.getProperty("password") + "<==");
         con = (Connection) DriverManager.getConnection("jdbc:mysql://"
-                + properties.getProperty("host") + ":" + properties.getProperty("port")
-                + "/", properties.getProperty("user"), properties.getProperty("password"));
+                + properties.getProperty("db.host") + ":" + properties.getProperty("db.port")
+                + "/", properties.getProperty("db.user"), properties.getProperty("db.password"));
         return createNaturaDB(con);
     }
 
@@ -1097,9 +1101,35 @@ public class SDF_MysqlDatabase {
      * @return error message
      */
     public static String testConnection(String host, String port, String user, String pwd) {
-        log.info("Testing MySQL: ");
+        Socket socket = new Socket();
         try {
-            DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/", user, pwd);
+
+            log.info("Test if host is solved: ");
+            InetSocketAddress endPoint = new InetSocketAddress(host, Integer.parseInt(port));
+            if (endPoint.isUnresolved()) {
+                return "Host cannot be resolved.";
+            }
+            log.info("Test if port is open: ");
+            socket.connect(endPoint, 1000);
+
+        } catch (IOException ie) {
+              return "Mysql is not running or no access to " + host + ":" + port;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            IOUtils.closeQuietly(socket);
+        }
+        log.info("Testing MySQL existence: ");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://" + host + ":" + port + "/natura2000?socketTimeout=2000&user=" + user
+                    + "&password=" + pwd;
+            DriverManager.getConnection(url);
+        } catch (ClassNotFoundException cnfe) {
+            return "Mysql database driver is not available.";
+        } catch (CommunicationsException ce) {
+            return "Mysql database is not available at " + host + ":" + port;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return sqle.getMessage();

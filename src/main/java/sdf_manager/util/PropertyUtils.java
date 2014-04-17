@@ -1,11 +1,15 @@
 package sdf_manager.util;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -17,6 +21,7 @@ import org.apache.log4j.Logger;
  */
 public final class PropertyUtils {
 
+    /** class logger. */
     private static final Logger LOGGER = Logger.getLogger(PropertyUtils.class);
 
     /**
@@ -36,14 +41,24 @@ public final class PropertyUtils {
      *  @throws IOException if writing fails
      */
     public static void writePropsToFile(String fileName, Map<String, String> props) throws IOException {
-        Properties prop = new Properties();
+        //Properties prop = new Properties();
+
+        Properties prop = new Properties() {
+            @Override
+            public synchronized Enumeration<Object> keys() {
+                return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+            }
+        };
+
         FileOutputStream output = null;
 
         try {
-
+            List<String> keys = new ArrayList<String>();
+            keys.addAll(props.keySet());
+            Collections.sort(keys);
             output = new FileOutputStream(fileName);
 
-            for (String propName : props.keySet()) {
+            for (String propName : keys) {
                 LOGGER.info("name " + propName);
                 String v = props.get(propName);
                 LOGGER.info("valye " + v);
@@ -62,10 +77,9 @@ public final class PropertyUtils {
      * raeds properties from the file.
      * @param fileLocation file full path
      * @return properties container
-     * @throws FileNotFoundException if file not found
      * @throws IOException if reading fails
      */
-    public static Properties readProperties(String fileLocation) throws FileNotFoundException, IOException {
+    public static Properties readProperties(String fileLocation) throws IOException {
         FileInputStream input = null;
         Properties props = new Properties();
         try {

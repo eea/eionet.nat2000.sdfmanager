@@ -32,7 +32,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     private static final String LOG_PROPERTIES_FILE = CURRENT_PATH + File.separator + "log4j.properties";
 
     /** file name for local properties. */
-    public static final String LOCAL_PROPERTIES_FILE = CURRENT_PATH + File.separator + "local.properties";
+    public static final String LOCAL_PROPERTIES_FILE = CURRENT_PATH + File.separator + "sdf.properties";
+
+    /** seed file name for SDF properties. */
+    public static final String SEED_PROPERTIES_FILE = CURRENT_PATH + File.separator + "config"
+            + File.separator + "seed_sdf.properties";
+
 
     /**
      * constant for application Natura 2000 mode.
@@ -98,7 +103,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             //if props file not exist open the first dialog to enter the values
             if (!propsFileExists()) {
-                log.info("No local.properties file.");
+                log.info("No sdf.properties file in the application folder.");
                 //StartupSettings startup = new StartupSettings(this);
                 //startup.set
                 settingsDialog = new SettingsDialog(null, true);
@@ -138,6 +143,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static void settingsEntered(SettingsDialog dialog, String[] args) {
 
         try {
+            //init seed properties
+            Map<String, String> props = new HashMap<String, String>(15);
+
+            Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
+            for (Object key : seedProps.keySet()) {
+                props.put((String)key, seedProps.getProperty((String)key));
+            }
             String dbHost = dialog.getTxtDatabaseHost().getText();
             String dbPort = dialog.getTxtDatabasePort().getText();
 
@@ -146,13 +158,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
 
-            Map<String, String> props = new HashMap<String, String>(5);
 
-            props.put("host", dbHost);
-            props.put("port", dbPort);
-            props.put("user", dbUser);
-            props.put("password", dbPassword);
-            props.put("mode", appMode);
+            props.put("db.host", dbHost);
+            props.put("db.port", dbPort);
+            props.put("db.user", dbUser);
+            props.put("db.password", dbPassword);
+            props.put("application.mode", appMode);
+
 
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
@@ -191,7 +203,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     }
 
     /**
-     * Checks if local.properties file is created and can be used.
+     * Checks if sdf.properties file is created and can be used.
      * @return true if file exists
      */
     private static boolean propsFileExists() {

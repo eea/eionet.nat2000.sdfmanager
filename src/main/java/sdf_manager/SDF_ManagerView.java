@@ -5,6 +5,7 @@
 package sdf_manager;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -370,7 +371,7 @@ public class SDF_ManagerView extends FrameView {
 
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "sdf.properties"));
             String urlPdf = properties.getProperty("sdf.path.pdf");
             Desktop.getDesktop().browse(java.net.URI.create(urlPdf));
         } catch (IOException ioe) {

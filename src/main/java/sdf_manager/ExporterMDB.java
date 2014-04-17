@@ -209,13 +209,15 @@ public class ExporterMDB implements Exporter {
             Properties props = cfg.getProperties();
             Properties properties = new Properties();
             //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf_database.properties"));
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "local.properties"));
+            properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
             Class.forName("com.mysql.jdbc.Driver");
 
             log("Conecting to MySQL");
             log.info("Connecting to MySQL");
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("host") + "/natura2000?autoReconnect=true", properties.getProperty("user"), properties.getProperty("password"));
+            Connection conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
+                    + properties.getProperty("db.port")
+                    + "/natura2000?autoReconnect=true", properties.getProperty("db.user"), properties.getProperty("db.password"));
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet rs = dbm.getTables(null, "natura2000", "%" , null);
             com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));

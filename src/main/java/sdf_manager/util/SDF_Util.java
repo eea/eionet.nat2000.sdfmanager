@@ -63,7 +63,7 @@ public class SDF_Util {
         Properties properties = null;
         try {
             properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf.properties"));
+            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "sdf.properties"));
         } catch (FileNotFoundException e) {
             SDF_Util.log.error("sdf.properties file is missing. Error message:::" + e.getMessage());
         } catch (IOException e) {

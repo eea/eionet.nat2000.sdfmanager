@@ -187,7 +187,10 @@ public class SettingsDialog extends javax.swing.JDialog {
                 JTextPane txtpnThisIs = new JTextPane();
                 txtpnThisIs.setBackground(UIManager.getColor("CheckBox.background"));
                 txtpnThisIs.setFont(new Font("Tahoma", Font.PLAIN, 12));
-                txtpnThisIs.setText("Database settings and application running mode have not been specified. \r\nThe data is asked only once. After entering it is stored in the settings file.");
+                txtpnThisIs.setText("The database settings and application running mode have not yet been specified.\r\n"
+                        + "Please specify them in the below inputs and click Save.\r\n\r\n"
+                        + "This information is asked only once and stored into the this editable properties file:\r\n"
+                        + SDF_ManagerApp.LOCAL_PROPERTIES_FILE + "\r\n");
 
                                                 JLabel lblN2kImage = new JLabel("");
                                                 lblN2kImage.setIcon(new ImageIcon(SettingsDialog.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));

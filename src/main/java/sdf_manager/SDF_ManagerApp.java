@@ -66,13 +66,6 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        try {
-            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-            mode = properties.getProperty("application.mode");
-            log.info("mode form props=" + mode);
-        } catch (Exception e) {
-            log.error("Error reading properties " + e);
-        }
         show(new SDF_ManagerView(this));
     }
 
@@ -104,17 +97,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             //if props file not exist open the first dialog to enter the values
             if (!propsFileExists()) {
                 log.info("No sdf.properties file in the application folder.");
-                //StartupSettings startup = new StartupSettings(this);
-                //startup.set
                 settingsDialog = new SettingsDialog(null, true);
                 settingsDialog.setModal(true);
                 settingsDialog.setVisible(true);
 
-                //settingsDialog.dispose();
-
             } else {
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-
+                mode = properties.getProperty("application.mode");
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
                 if (errorMesg != null) {
@@ -167,6 +156,8 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
+
+            mode = appMode;
 
             log.info("running importTool");
             launch(SDF_ManagerApp.class, args);

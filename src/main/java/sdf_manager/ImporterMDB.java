@@ -40,7 +40,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -71,6 +70,7 @@ import pojos.SiteBiogeo;
 import pojos.SiteBiogeoId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.util.ImporterUtils;
 import sdf_manager.util.SDF_Util;
 
 
@@ -145,8 +145,8 @@ public class ImporterMDB implements Importer {
 
          //for EMERALD use different mapping files:
          if (SDF_ManagerApp.isEmeraldMode()) {
-             tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_EMERALD;
-             fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_EMERALD;
+             //tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_EMERALD;
+             //fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_EMERALD;
          }
 
          this.initLogFile(logFile);
@@ -808,13 +808,12 @@ public class ImporterMDB implements Importer {
                 }
 
                 //EMERALD does not have SAC and SPA dates
-                if (this.fields.containsKey("spa_date")) {
+                if (!SDF_ManagerApp.isEmeraldMode()) {
                     tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
                     if (tmpDate != null) {
                         site.setSiteSpaDate(tmpDate);
                     }
-                }
-                if (this.fields.containsKey("sac_date")) {
+
                     tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
                     if (tmpDate != null) {
                         site.setSiteSacDate(tmpDate);
@@ -828,18 +827,23 @@ public class ImporterMDB implements Importer {
                     session.save(resp);
                     site.setResp(resp);
                  }
-                 tmpStr = getString(rs, this.fields.get("area"));
-                 tmpStr = StringUtils.replace(tmpStr, ",", ".");
-                 if (StringUtils.isNotBlank(tmpStr)) {
-                     tmpDouble = Double.valueOf(tmpStr);
-                     //getDouble(rs, this.fields.get("area"));
-                     site.setSiteArea(tmpDouble);
-                 }
 
-                 tmpDouble = getDouble(rs, this.fields.get("site_length"));
-                 if (tmpDouble != null) {
+                 //area and site_length are textual in emerald:
+                 if (SDF_ManagerApp.isEmeraldMode()) {
+                     tmpStr = getString(rs, this.fields.get("area"));
+                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+                     site.setSiteArea(tmpDouble);
+
+                     tmpStr = getString(rs, this.fields.get("site_length"));
+                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+                     site.setSiteLength(tmpDouble);
+                 } else {
+                     tmpDouble = getDouble(rs, this.fields.get("area"));
+                     site.setSiteArea(tmpDouble);
+                     tmpDouble = getDouble(rs, this.fields.get("site_length"));
                      site.setSiteLength(tmpDouble);
                  }
+
                  String sign = getString(rs, this.fields.get("lon_ew"));
                  Double deg = getDouble(rs, this.fields.get("lon_deg"));
                  Double min = getDouble(rs, this.fields.get("lon_min"));

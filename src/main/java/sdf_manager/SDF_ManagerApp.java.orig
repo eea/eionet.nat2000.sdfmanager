@@ -66,6 +66,16 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
+<<<<<<< HEAD
+//        try {
+//            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+//            mode = properties.getProperty("mode");
+//            log.info("mode form props=" + mode);
+//        } catch (Exception e) {
+//            log.error("Error reading properties " + e);
+//        }
+=======
+>>>>>>> master
         show(new SDF_ManagerView(this));
     }
 
@@ -103,7 +113,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             } else {
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+<<<<<<< HEAD
+                mode = properties.getProperty("mode");
+
+=======
                 mode = properties.getProperty("application.mode");
+>>>>>>> master
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
                 if (errorMesg != null) {
@@ -158,7 +173,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 
             mode = appMode;
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
             log.info("running importTool");
             launch(SDF_ManagerApp.class, args);
 

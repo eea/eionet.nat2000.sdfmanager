@@ -1,7 +1,6 @@
 package sdf_manager.util;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,10 +77,9 @@ public final class PropertyUtils {
      * raeds properties from the file.
      * @param fileLocation file full path
      * @return properties container
-     * @throws FileNotFoundException if file not found
      * @throws IOException if reading fails
      */
-    public static Properties readProperties(String fileLocation) throws FileNotFoundException, IOException {
+    public static Properties readProperties(String fileLocation) throws IOException {
         FileInputStream input = null;
         Properties props = new Properties();
         try {

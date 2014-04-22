@@ -182,7 +182,11 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
 
         btnGroupFormat.add(radioOldMDB);
         radioOldMDB.setSelected(true);
-        radioOldMDB.setText(resourceMap.getString("radioOldMDB.text")); // NOI18N
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            radioOldMDB.setText(resourceMap.getString("radioOldMDB.text.emerald")); // NOI18N
+        } else {
+            radioOldMDB.setText(resourceMap.getString("radioOldMDB.text")); // NOI18N
+        }
         radioOldMDB.setName("radioOldMDB"); // NOI18N
 
         btnGroupFormat.add(radioNewMDB);
@@ -193,7 +197,12 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         radioNewMDB.setVisible(!SDF_ManagerApp.isEmeraldMode());
 
         btnGroupFormat.add(radioBold2007);
-        radioBold2007.setText(resourceMap.getString("radioBold2007.text")); // NOI18N
+
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            radioBold2007.setText(resourceMap.getString("radioBold2007.text.emerald")); // NOI18N
+        } else {
+            radioBold2007.setText(resourceMap.getString("radioBold2007.text")); // NOI18N
+        }
         radioBold2007.setName("radioBold2007"); // NOI18N
 
         btnGroupFormat.add(radioNew2007);

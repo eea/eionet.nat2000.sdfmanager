@@ -323,7 +323,7 @@ public class ImporterSiteMDB implements Importer {
 
                  /*open read-only*/
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                     String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
 
                 Connection conn = DriverManager.getConnection(db, "", "");
 

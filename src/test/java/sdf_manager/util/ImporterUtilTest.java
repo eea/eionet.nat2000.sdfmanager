@@ -1,9 +1,13 @@
 package sdf_manager.util;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
+
 public class ImporterUtilTest {
+
+    private static final Logger LOGGER = Logger.getLogger(ImporterUtilTest.class);
 
     @Test
     public void testFixAndGetDouble() throws Exception {
@@ -17,6 +21,12 @@ public class ImporterUtilTest {
 
 
 
+    }
+
+
+    @Test
+    public void testCyrillic() throws Exception {
+        byte bb[] = {40, 63, 63, 63, 63, 63, -27, -28, 63, 63, 63, 63, 32, 63, 32, 63, 63, -10, 63, 63, 63, 63, 63};
     }
 
 }

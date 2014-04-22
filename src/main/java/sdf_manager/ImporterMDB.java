@@ -40,6 +40,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -142,12 +143,6 @@ public class ImporterMDB implements Importer {
          this.logger = logger;
          this.encoding = encoding;
          this.accessVersion = accessVersion;
-
-         //for EMERALD use different mapping files:
-         if (SDF_ManagerApp.isEmeraldMode()) {
-             //tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_EMERALD;
-             //fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_EMERALD;
-         }
 
          this.initLogFile(logFile);
          this.init();
@@ -830,11 +825,11 @@ public class ImporterMDB implements Importer {
 
                  //area and site_length are textual in emerald:
                  if (SDF_ManagerApp.isEmeraldMode()) {
-                     tmpStr = getString(rs, this.fields.get("area"));
+                     tmpStr = rs.getString(this.fields.get("area"));
                      tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
                      site.setSiteArea(tmpDouble);
 
-                     tmpStr = getString(rs, this.fields.get("site_length"));
+                     tmpStr = rs.getString(this.fields.get("site_length"));
                      tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
                      site.setSiteLength(tmpDouble);
                  } else {
@@ -944,6 +939,7 @@ public class ImporterMDB implements Importer {
                 regions.add("BLACKSEA");
 
                 for (int i = 0; i < regions.size(); i++) {
+
                     Boolean region = getBoolean(rs, regions.get(i));
                     region = region == null ? false : region;
                     if (region) {
@@ -1849,7 +1845,13 @@ public class ImporterMDB implements Importer {
                 if (tmpStr != null) {
                     /*just get NUT2 level*/
                     if (tmpStr.length() > 4) {
-                        tmpStr = tmpStr.substring(0, 4);
+
+                        //in some EMERALD DB code starts with unnecessary apostrophe
+                        if (SDF_ManagerApp.isEmeraldMode() && StringUtils.startsWith(tmpStr, "'")) {
+                            tmpStr = tmpStr.substring(1, 4);
+                        } else {
+                            tmpStr = tmpStr.substring(0, 4);
+                        }
                     }
                     if (tmpStr.equals("0") || tmpStr.equals("00")) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";

@@ -7,51 +7,67 @@ package sdf_manager;
 
 import java.awt.Desktop;
 import java.io.File;
-import pojos.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.FileWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.Query;
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.RefBirds;
+import pojos.RefImpacts;
+import pojos.RefNuts;
+import pojos.RefSpecies;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteRelation;
+import pojos.Species;
+import sdf_manager.util.ImporterUtils;
 import sdf_manager.util.SDF_Util;
 
 
@@ -139,7 +155,8 @@ public class ImporterSiteMDB implements Importer {
       *
       * @param fileName
       */
-     public void initLogFile(String fileName) {
+     @Override
+    public void initLogFile(String fileName) {
          try {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
@@ -197,7 +214,8 @@ public class ImporterSiteMDB implements Importer {
       * @param fileName
       * @return
       */
-      public boolean processDatabase(String fileName) {
+      @Override
+    public boolean processDatabase(String fileName) {
 
         Connection conn;
         boolean saveOK = false;
@@ -206,6 +224,8 @@ public class ImporterSiteMDB implements Importer {
         try {
 
             conn = getConnection(fileName);
+            //TODO study if jacksess helps to solve unicode issues?
+            //Database db = Database.create(new File(fileName));
 
             if (conn != null) {
 
@@ -300,10 +320,13 @@ public class ImporterSiteMDB implements Importer {
      private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
          try {
              if (accessVersion.equals("2003")) {
+
                  /*open read-only*/
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+                     String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+
                 Connection conn = DriverManager.getConnection(db, "", "");
+
                 return conn;
              } else {
                 /*open read-only*/
@@ -319,6 +342,8 @@ public class ImporterSiteMDB implements Importer {
          } catch (SQLException e) {
              ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
+
+         //} catch (IllA)
          } catch (Exception e) {
              ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
@@ -336,7 +361,7 @@ public class ImporterSiteMDB implements Importer {
             Iterator itr = this.tables.keySet().iterator();
              while (itr.hasNext()) {
 
-                String tmpStr = this.tables.get((String) itr.next());
+                String tmpStr = this.tables.get(itr.next());
                 ResultSet rs = dbm.getTables(null, null, tmpStr , null);
                 if (!rs.next()) {
                    ImporterSiteMDB.log.error("Could not find table: " + tmpStr);
@@ -472,6 +497,7 @@ public class ImporterSiteMDB implements Importer {
      String getString(ResultSet rs, String fieldName) {
          try {
              if (!("UTF-8").equals(this.encoding)) {
+
                 byte[] result = rs.getBytes(fieldName);
                  if (result != null && result.length == 0) {
                      return null;
@@ -620,6 +646,7 @@ public class ImporterSiteMDB implements Importer {
              String sql = "select * from " + this.tables.get("biotop") + " where sitecode ='" + site.getSiteCode() + "'";
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql);
+
              String tmpStr;
              Double tmpDouble;
              Date tmpDate;
@@ -664,24 +691,27 @@ public class ImporterSiteMDB implements Importer {
                      site.setSiteSciConfDate(tmpDate);
                  }
 
-                 log("Processing SPA Classified Date");
-                 ImporterSiteMDB.log.info("Processing SPA Classified Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
-                 if (tmpDate != null) {
-                     site.setSiteSpaDate(tmpDate);
-                 }
+                 if (!SDF_ManagerApp.isEmeraldMode()) {
+                     log("Processing SPA Classified Date");
+                     ImporterSiteMDB.log.info("Processing SPA Classified Date");
+                     tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
+                     if (tmpDate != null) {
+                         site.setSiteSpaDate(tmpDate);
+                     }
 
-                 log("Processing SAC Date");
-                 ImporterSiteMDB.log.info("Processing SAC Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
-                 if (tmpDate != null) {
-                     site.setSiteSacDate(tmpDate);
+                     log("Processing SAC Date");
+                     ImporterSiteMDB.log.info("Processing SAC Date");
+                     tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
+                     if (tmpDate != null) {
+                         site.setSiteSacDate(tmpDate);
+                     }
                  }
 
                  log("Processing Respondent");
                  ImporterSiteMDB.log.info("Processing Respondent");
                  tmpStr = getString(rs, this.fields.get("respondent"));
                  if (tmpStr != null) {
+
                     Resp resp = new Resp();
                     resp.setRespAddress(tmpStr);
                     resp.getSites().add(site);
@@ -691,21 +721,35 @@ public class ImporterSiteMDB implements Importer {
 
                  log("Processing Site Location-Area");
                  ImporterSiteMDB.log.info("Processing Site Location-Area");
-                 tmpDouble = getDouble(rs, this.fields.get("area"));
+
+                 if (SDF_ManagerApp.isEmeraldMode()) {
+                     tmpStr = rs.getString(this.fields.get("area"));
+                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+
+                 } else {
+                     tmpDouble = getDouble(rs, this.fields.get("area"));
+                 }
                  if (tmpDouble != null) {
                      site.setSiteArea(tmpDouble);
                  }
 
-                 log("Processing Site Location-Marine Area");
-                 ImporterSiteMDB.log.info("Processing Site Location-Marine Area");
-                 tmpDouble = getMarineArea(conn, site.getSiteCode());
-                 if (tmpDouble != null) {
-                     site.setSiteMarineArea(tmpDouble);
-                 }
+
+                 //marine area not existing in old ver of MSACCESS
+//                 log("Processing Site Location-Marine Area");
+//                 ImporterSiteMDB.log.info("Processing Site Location-Marine Area");
+//                 tmpDouble = getMarineArea(conn, site.getSiteCode());
+//                 if (tmpDouble != null) {
+//                     site.setSiteMarineArea(tmpDouble);
+//                 }
 
                  log("Processing Site Location-Length");
                  ImporterSiteMDB.log.info("Processing Site Location-Length");
-                 tmpDouble = getDouble(rs, this.fields.get("site_length"));
+                 if (SDF_ManagerApp.isEmeraldMode()) {
+                     tmpStr = rs.getString(this.fields.get("site_length"));
+                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+                 } else {
+                     tmpDouble = getDouble(rs, this.fields.get("site_length"));
+                 }
                  if (tmpDouble != null) {
                      site.setSiteLength(tmpDouble);
                  }
@@ -922,7 +966,7 @@ public class ImporterSiteMDB implements Importer {
              ResultSet rs = stmt.executeQuery(sql);
 
              while (rs.next()) {
-                marineArea = (Double) rs.getDouble("MarineArea");
+                marineArea = rs.getDouble("MarineArea");
              }
 
          } catch (SQLException e) {
@@ -1231,6 +1275,7 @@ public class ImporterSiteMDB implements Importer {
                 while (rs.next()) {
                     if (!tables[i].equals("spec")) {
                         Species species = new Species();
+
                         tmpStr = getString(rs, this.fields.get("species_code"));
                         if (tmpStr != null) {
                             species.setSpeciesCode(tmpStr);
@@ -1317,9 +1362,11 @@ public class ImporterSiteMDB implements Importer {
                         System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
                         OtherSpecies oSpecies = new OtherSpecies();
-                        tmpStr = getString(rs, this.fields.get("species_code"));
-                        if (tmpStr != null) {
-                            oSpecies.setOtherSpeciesCode(tmpStr);
+                        if (!SDF_ManagerApp.isEmeraldMode()) {
+                            tmpStr = getString(rs, this.fields.get("species_code"));
+                            if (tmpStr != null) {
+                                oSpecies.setOtherSpeciesCode(tmpStr);
+                            }
                         }
                         tmpStr = getString(rs, this.fields.get("species_name"));
                         if (tmpStr != null) {
@@ -2070,4 +2117,7 @@ public class ImporterSiteMDB implements Importer {
             return textVal;
       }
 
+     public Connection c(String fileName) throws Exception {
+         return getConnection(fileName);
+     }
 }

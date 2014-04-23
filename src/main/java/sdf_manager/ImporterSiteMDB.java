@@ -68,6 +68,7 @@ import pojos.SiteBiogeoId;
 import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.ImporterUtils;
+import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
 
@@ -217,7 +218,7 @@ public class ImporterSiteMDB implements Importer {
       @Override
     public boolean processDatabase(String fileName) {
 
-        Connection conn;
+        Connection conn = null;
         boolean saveOK = false;
         String msgValidError = "";
         Session session = null;
@@ -301,14 +302,18 @@ public class ImporterSiteMDB implements Importer {
         } finally {
             session.clear();
             session.close();
-          if (saveOK) {
-                JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);
-          } else {
-              JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError, "Dialog", JOptionPane.INFORMATION_MESSAGE);
-          }
+            SDF_MysqlDatabase.closeQuietly(conn);
+
+            if (saveOK) {
+                JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError,
+                        "Dialog", JOptionPane.INFORMATION_MESSAGE);
+            }
 
         }
-        return saveOK;
+     return saveOK;
      }
      /**
       *

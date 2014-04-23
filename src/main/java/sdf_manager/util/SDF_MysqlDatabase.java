@@ -1175,4 +1175,19 @@ public class SDF_MysqlDatabase {
 
     }
 
+    /**
+     * closes DB connection.
+     * if sql exception it is logged
+     * @param conn database connection
+     */
+    public static void closeQuietly(java.sql.Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException sqle) {
+                log.error("Error closing database connection " + sqle);
+            }
+        }
+    }
+
 }

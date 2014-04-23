@@ -112,6 +112,7 @@ public class GenerateSitePDF implements Exporter {
      * @param fileName
      * @return
      */
+    @Override
     public boolean processDatabase(String fileName) {
         GenerateSitePDF.log.error("Starting processDatabase. The file name is:::" + fileName);
         boolean isOK = false;
@@ -684,7 +685,14 @@ public class GenerateSitePDF implements Exporter {
             Result result = new StreamResult(file.toURI().getPath());
 
             TransformerFactory tFactory = TransformerFactory.newInstance();
-            Source xsl = new StreamSource(new File("").getAbsolutePath() + "\\xsl\\SiteXSL.xsl");
+            Source xsl;
+            //FIXME - use correct method
+            if (SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE)) {
+                xsl = new StreamSource(new File("").getAbsolutePath() + "\\xsl\\EmeraldSiteXSL.xsl");
+            } else {
+                xsl = new StreamSource(new File("").getAbsolutePath() + "\\xsl\\SiteXSL.xsl");
+            }
+
             Templates template = tFactory.newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -891,6 +899,7 @@ public class GenerateSitePDF implements Exporter {
      * @param filename
      * @return
      */
+    @Override
     public ArrayList createXMLFromDataBase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

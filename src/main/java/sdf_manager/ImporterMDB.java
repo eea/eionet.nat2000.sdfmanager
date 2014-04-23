@@ -72,6 +72,7 @@ import pojos.SiteBiogeoId;
 import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.ImporterUtils;
+import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
 
@@ -245,7 +246,7 @@ public class ImporterMDB implements Importer {
       */
      @Override
     public boolean processDatabase(String fileName) {
-        Connection conn;
+        Connection conn = null;
         boolean saveOK = false;
         String msgValidError = "";
         try {
@@ -274,6 +275,7 @@ public class ImporterMDB implements Importer {
             //e.printStackTrace();
             saveOK = false;
         } finally {
+            SDF_MysqlDatabase.closeQuietly(conn);
           if (saveOK) {
                 JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);
           } else {

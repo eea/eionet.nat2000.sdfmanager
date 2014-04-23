@@ -44,6 +44,7 @@
     <mapping resource="pojos/HabitatClass.hbm.xml"/>
     <mapping resource="pojos/Doc.hbm.xml"/>
     <mapping resource="pojos/RefNuts.hbm.xml"/>
+    <mapping resource="pojos/RefNutsEmerald.hbm.xml"/>
     <mapping resource="pojos/RefHabitats.hbm.xml"/>
     <mapping resource="pojos/RefHabClasses.hbm.xml"/>
     <mapping resource="pojos/Biogeo.hbm.xml"/>

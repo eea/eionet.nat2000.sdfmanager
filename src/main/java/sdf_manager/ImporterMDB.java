@@ -63,6 +63,7 @@ import pojos.OtherSpecies;
 import pojos.RefBirds;
 import pojos.RefImpacts;
 import pojos.RefNuts;
+import pojos.RefNutsEmerald;
 import pojos.RefSpecies;
 import pojos.Region;
 import pojos.Resp;
@@ -1850,22 +1851,29 @@ public class ImporterMDB implements Importer {
 
                         //in some EMERALD DB code starts with unnecessary apostrophe
                         if (SDF_ManagerApp.isEmeraldMode() && StringUtils.startsWith(tmpStr, "'")) {
-                            tmpStr = tmpStr.substring(1, 4);
+                            tmpStr = tmpStr.substring(1, 5);
                         } else {
                             tmpStr = tmpStr.substring(0, 4);
                         }
                     }
-                    if (tmpStr.equals("0") || tmpStr.equals("00")) {
+                    //concatenating with 'ZZ' for unknown works only for N2k
+                    if (!SDF_ManagerApp.isEmeraldMode() && (tmpStr.equals("0") || tmpStr.equals("00"))) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
                         region.setRegionName("Marine");
                         log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
                     } else {
                         try {
-                            Iterator itr =  session.createQuery(" from RefNuts as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
+                            String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
+                            Iterator itr =  session.createQuery(" from " + tableName + " as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
 
                             if (itr.hasNext()) {
-                                RefNuts rn = (RefNuts) itr.next();
-                                region.setRegionName(rn.getRefNutsDescription());
+                                if (SDF_ManagerApp.isEmeraldMode()) {
+                                    RefNutsEmerald rne = (RefNutsEmerald) itr.next();
+                                    region.setRegionName(rne.getRefNutsDescription());
+                                } else {
+                                    RefNuts rn = (RefNuts) itr.next();
+                                    region.setRegionName(rn.getRefNutsDescription());
+                                }
                             } else {
                                 nutsList.add(tmpStr);
                                 log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);

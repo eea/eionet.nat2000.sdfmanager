@@ -10,6 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import pojos.RefNuts;
+import pojos.RefNutsEmerald;
 import pojos.Region;
 import sdf_manager.util.SDF_Util;
 
@@ -50,26 +51,34 @@ public class EditorRegion extends javax.swing.JFrame {
    /**
     * Loads the regions from the reference table.
     */
-   private void loadRegions() {
-       EditorRegion.log.info("Loading the regions from the reference table");
-       Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "from RefNuts refN order by refN.refNutsCode";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       this.editing = true;
-       while (itr.hasNext()) {
-            RefNuts refN = (RefNuts) itr.next();
-            cmbCode.insertItemAt(refN.getRefNutsCode(), i);
-            cmbName.insertItemAt(refN.getRefNutsCode() + " - " + refN.getRefNutsDescription(), i);
+    private void loadRegions() {
+        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
+        EditorRegion.log.info("Loading the regions from the reference table " + tableName);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        String hql = "from " + tableName + " refN order by refN.refNutsCode";
+        Query q = session.createQuery(hql);
+        Iterator itr = q.iterate();
+        int i = 0;
+        this.editing = true;
+        while (itr.hasNext()) {
+            if (SDF_ManagerApp.isEmeraldMode()) {
+                RefNutsEmerald refNE = (RefNutsEmerald) itr.next();
+                cmbCode.insertItemAt(refNE.getRefNutsCode(), i);
+                cmbName.insertItemAt(refNE.getRefNutsCode() + " - " + refNE.getRefNutsDescription(), i);
+            } else {
+                RefNuts refN = (RefNuts) itr.next();
+                cmbCode.insertItemAt(refN.getRefNutsCode(), i);
+                cmbName.insertItemAt(refN.getRefNutsCode() + " - " + refN.getRefNutsDescription(), i);
+            }
             i++;
-       }
-       this.editing = false;
-       if (i > 0) {
+        }
+        this.editing = false;
+        if (i > 0) {
             cmbCode.setSelectedIndex(0);
             cmbCode.repaint();
-       }
-   }
+        }
+    }
+
 
    /**
     *

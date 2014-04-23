@@ -338,8 +338,9 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownNUTSRegions(Session session) {
         QAQCMain.log.info("Getting sites with unknwon regions");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+        String refnutsTable = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
         String hql = "select region.regionCode, region.site.siteCode from Region as region "
-                + "where not exists (from RefNuts as ref where ref.refNutsCode like region.regionCode) "
+                + "where not exists (from " + refnutsTable + " as ref where ref.refNutsCode like region.regionCode) "
                 + "order by region.regionCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();

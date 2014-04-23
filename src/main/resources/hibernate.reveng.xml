@@ -6,6 +6,7 @@
   <table-filter match-name="NATIONAL_DTYPE"/>
   <table-filter match-name="REF_BIRDS"/>
   <table-filter match-name="REF_NUTS"/>
+  <table-filter match-name="REF_NUTS_EMERALD"/>
   <table-filter match-name="DOC_LINK"/>
   <table-filter match-name="SITE"/>
   <table-filter match-name="SITE_OWNERSHIP"/>

@@ -96,7 +96,8 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
          try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct desig.refDesignationsCode from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
+            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+            String hql = "select distinct desig.refDesignationsCode from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();

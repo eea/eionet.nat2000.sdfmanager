@@ -46,7 +46,8 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql;
 
-        hql = "select distinct desig.refDesignationsCode from RefDesignations desig order by desig.refDesignationsCode";
+        String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+        hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
 
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -97,7 +98,8 @@ public class EditorNationalRelation extends javax.swing.JFrame {
          try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
+            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
@@ -397,7 +399,8 @@ public class EditorNationalRelation extends javax.swing.JFrame {
             String code = (String) cmbCode.getSelectedItem();
             EditorNationalRelation.log.info("Get the description for the national relation.:::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + code + "'";
+            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String descNatRelation = (String) q.uniqueResult();
             EditorNationalRelation.log.info("The description for the national relation.:::" + descNatRelation);

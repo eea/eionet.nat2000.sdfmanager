@@ -50,6 +50,7 @@
     <mapping resource="pojos/Biogeo.hbm.xml"/>
     <mapping resource="pojos/Species.hbm.xml"/>
     <mapping resource="pojos/RefDesignations.hbm.xml"/>
+    <mapping resource="pojos/RefDesignationsEmerald.hbm.xml"/>
     <mapping resource="pojos/Mgmt.hbm.xml"/>
     <mapping resource="pojos/SiteBiogeo.hbm.xml"/>
     <mapping resource="pojos/SiteRelation.hbm.xml"/>

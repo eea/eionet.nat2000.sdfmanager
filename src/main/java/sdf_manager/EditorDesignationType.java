@@ -45,7 +45,8 @@ public class EditorDesignationType extends javax.swing.JFrame {
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
-       hql = "select distinct desig.refDesignationsCode from RefDesignations desig order by desig.refDesignationsCode";
+       String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+       hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
@@ -92,7 +93,8 @@ public class EditorDesignationType extends javax.swing.JFrame {
          try {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + desigCode + "'";
+            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
@@ -367,7 +369,8 @@ public class EditorDesignationType extends javax.swing.JFrame {
             String code = (String) cmbCode.getSelectedItem();
             EditorDesignationType.log.info("Get the descrition of the designation type.Designation Code ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct desig.refDesignationsDescr from RefDesignations desig where desig.refDesignationsCode like '" + code + "'";
+            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String desigTypeName = (String) q.uniqueResult();
             EditorDesignationType.log.info("The description of the designation type ::" + desigTypeName);

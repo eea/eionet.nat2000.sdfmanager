@@ -572,5 +572,17 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liqui
              <append value="${create.suffix}"/>
         </modifySql>
     </changeSet>
+    <changeSet author="original" id="rev-9">
+        <sql>CREATE TABLE IF NOT EXISTS ref_designations_emerald (
+            REF_DESIGNATIONS_ID int(11) NOT NULL,
+            REF_DESIGNATIONS_CODE varchar(16) DEFAULT NULL,
+            REF_DESIGNATIONS_DESCR varchar(512) DEFAULT NULL,
+            REF_DESIGNATIONS_CATEGORY char(1) DEFAULT NULL,
+            PRIMARY KEY (REF_DESIGNATIONS_ID))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
+
 
 </databaseChangeLog>

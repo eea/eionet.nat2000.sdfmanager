@@ -1814,7 +1814,8 @@ public class ImporterMDB implements Importer {
      */
     private String getDescHabitatClass(Session session, String habClassCode) {
         String descHabClass = "";
-        String hql = "select refHabClassesDescrEn from RefHabClasses where refHabClassesCode like '" + habClassCode + "'";
+        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+        String hql = "select refHabClassesDescrEn from " + tableName + " where refHabClassesCode like '" + habClassCode + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {

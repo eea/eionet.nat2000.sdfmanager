@@ -583,6 +583,14 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liqui
              <append value="${create.suffix}"/>
         </modifySql>
     </changeSet>
-
-
+    <changeSet author="original" id="rev-10">
+        <sql>CREATE TABLE IF NOT EXISTS ref_hab_classes_emerald (
+            REF_HAB_CLASSES_ID INTEGER PRIMARY KEY,
+            REF_HAB_CLASSES_CODE VARCHAR(3),
+            REF_HAB_CLASSES_DESCR_EN VARCHAR(128),
+            REF_HAB_CLASSES_DESCR_FR VARCHAR(128))</sql>
+        <modifySql dbms="mysql">
+             <append value="${create.suffix}"/>
+        </modifySql>
+    </changeSet>
 </databaseChangeLog>

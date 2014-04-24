@@ -159,6 +159,15 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
             mode = appMode;
 
+            log.info("create database");
+            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+            String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+            if (errorMesg != null) {
+                JOptionPane.showMessageDialog(new JFrame(), "An error has occurred when creating DB:" + errorMesg, "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                log.error("Error creating database: " + errorMesg);
+            }
+
             log.info("running importTool");
             launch(SDF_ManagerApp.class, args);
 

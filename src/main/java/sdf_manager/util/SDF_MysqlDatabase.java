@@ -1191,7 +1191,7 @@ public class SDF_MysqlDatabase {
         log.info("Testing MySQL existence: ");
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://" + host + ":" + port + "/natura2000?socketTimeout=2000&user=" + user
+            String url = "jdbc:mysql://" + host + ":" + port + "/?socketTimeout=2000&user=" + user
                     + "&password=" + pwd;
             DriverManager.getConnection(url);
         } catch (ClassNotFoundException cnfe) {

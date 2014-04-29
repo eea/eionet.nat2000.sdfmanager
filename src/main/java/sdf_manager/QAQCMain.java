@@ -316,7 +316,7 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownHabitatClasses(Session session) {
         QAQCMain.log.info("Getting sites with unknwon habitat classes");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+        String tableName = "RefHabClasses";
         String hql = "select habitat.habitatClassCode, habitat.site.siteCode from HabitatClass as habitat "
                 + "where not exists (from " + tableName + " as ref where ref.refHabClassesCode like habitat.habitatClassCode) "
                 + "order by habitat.habitatClassCode ASC";

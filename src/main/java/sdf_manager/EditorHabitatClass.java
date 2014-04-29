@@ -45,7 +45,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
-       String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+       String tableName = "RefHabClasses";
        hql = "select distinct hC.refHabClassesCode from " + tableName + " hC";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
@@ -97,7 +97,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
        Session session = HibernateUtil.getSessionFactory().openSession();
        String habClassDesc = "";
        String hql;
-       String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+       String tableName = "RefHabClasses";
        hql = "select distinct hC.refHabClassesDescrEn from " + tableName + " hC where hC.refHabClassesCode ='" + habClassCode + "'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
@@ -336,7 +336,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
             String code = (String) cmbCode.getSelectedItem();
             EditorHabitatClass.log.info("Get the description of the habitat Class to fill the text field in the editor. ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+            String tableName = "RefHabClasses";
             String hql = "select distinct refHab.refHabClassesDescrEn from " + tableName
                     + " refHab where refHab.refHabClassesCode like '" + code + "'";
             Query q = session.createQuery(hql);

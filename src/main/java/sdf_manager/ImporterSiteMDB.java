@@ -1746,7 +1746,7 @@ public class ImporterSiteMDB implements Importer {
      */
     private String getDescHabitatClass(Session session, String habClassCode) {
         String descHabClass = "";
-        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabClassesEmerald" : "RefHabClasses";
+        String tableName = "RefHabClasses";
         String hql = "select refHabClassesDescrEn from " + tableName + " where refHabClassesCode like '" + habClassCode + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();

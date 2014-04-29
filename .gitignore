@@ -2,4 +2,12 @@
 /*.zip
 /*.jar
 /target
+/logs/*
 /lib/*.jar
+sdf.properties
+/.project
+/.idea
+/.checkstyle
+/.settings
+/*.iml
+/.classpath

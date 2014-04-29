@@ -290,8 +290,10 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownHabitatTypes(Session session) {
         QAQCMain.log.info("Getting sites with unknwon habitat type");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+
+        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
         String hql = "select habitat.habitatCode, habitat.site.siteCode from Habitat as habitat "
-                + "where not exists (from RefHabitats as ref where ref.refHabitatsCode like habitat.habitatCode) "
+                + "where not exists (from " + tableName + " as ref where ref.refHabitatsCode like habitat.habitatCode) "
                 + "order by habitat.habitatCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();

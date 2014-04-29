@@ -26,11 +26,32 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.hibernate.Transaction;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-import pojos.*;
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.DocLink;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Map;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.MgmtPlan;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.Ownership;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteOwnership;
+import pojos.SiteOwnershipId;
+import pojos.SiteRelation;
+import pojos.Species;
 
 /**
  *
@@ -69,6 +90,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
@@ -1062,13 +1084,15 @@ public class SDFEditorView extends javax.swing.JFrame {
         this.tabHabitats.repaint();
         ListSelectionModel rowSM = tabHabitats.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (e.getValueIsAdjusting()) return;
                 DefaultListSelectionModel dlsm = (DefaultListSelectionModel) e.getSource();
+                String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
                 int selectedIndex = dlsm.getMinSelectionIndex();
                 String code = (String) tabHabitats.getModel().getValueAt(selectedIndex,0);
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                String hql = "select distinct refHab.refHabitatsDescEn from RefHabitats refHab where refHab.refHabitatsCode = '" + code + "'";
+                String hql = "select distinct refHab.refHabitatsDescEn from " + tableName + " refHab where refHab.refHabitatsCode = '" + code + "'";
                 Query q = session.createQuery(hql);
                 txtHabitatDescription.setText((String) q.uniqueResult());
             }
@@ -1383,6 +1407,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnSave.setEnabled(false);
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveActionPerformed(evt);
             }
@@ -1392,6 +1417,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnClose.setText(resourceMap.getString("btnClose.text")); // NOI18N
         btnClose.setName("btnClose"); // NOI18N
         btnClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCloseActionPerformed(evt);
             }
@@ -1401,6 +1427,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnExport.setText(resourceMap.getString("btnExport.text")); // NOI18N
         btnExport.setName("btnExport"); // NOI18N
         btnExport.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExportActionPerformed(evt);
             }
@@ -1411,6 +1438,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         jViewButton.setActionCommand(resourceMap.getString("jViewButton.actionCommand")); // NOI18N
         jViewButton.setName("jViewButton"); // NOI18N
         jViewButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jViewButtonActionPerformed(evt);
             }
@@ -1595,6 +1623,7 @@ public class SDFEditorView extends javax.swing.JFrame {
 
         txtRespEmail.setName("txtRespEmail"); // NOI18N
         txtRespEmail.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtRespEmailActionPerformed(evt);
             }
@@ -2081,6 +2110,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddRegion.setEnabled(false);
         btnAddRegion.setName("btnAddRegion"); // NOI18N
         btnAddRegion.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddRegionActionPerformed(evt);
             }
@@ -2091,6 +2121,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelRegion.setEnabled(false);
         btnDelRegion.setName("btnDelRegion"); // NOI18N
         btnDelRegion.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelRegionActionPerformed(evt);
             }
@@ -2130,6 +2161,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddBiogeo.setEnabled(false);
         btnAddBiogeo.setName("btnAddBiogeo"); // NOI18N
         btnAddBiogeo.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddBiogeoActionPerformed(evt);
             }
@@ -2141,6 +2173,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelBiogeo.setEnabled(false);
         btnDelBiogeo.setName("btnDelBiogeo"); // NOI18N
         btnDelBiogeo.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelBiogeoActionPerformed(evt);
             }
@@ -2237,6 +2270,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.Float.class
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
@@ -2250,6 +2284,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddHabitat.setEnabled(false);
         btnAddHabitat.setName("btnAddHabitat"); // NOI18N
         btnAddHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddHabitatActionPerformed(evt);
             }
@@ -2260,6 +2295,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelHabitat.setEnabled(false);
         btnDelHabitat.setName("btnDelHabitat"); // NOI18N
         btnDelHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelHabitatActionPerformed(evt);
             }
@@ -2270,6 +2306,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnEditHabitat.setEnabled(false);
         btnEditHabitat.setName("btnEditHabitat"); // NOI18N
         btnEditHabitat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditHabitatActionPerformed(evt);
             }
@@ -2358,6 +2395,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
@@ -2370,6 +2408,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddSpecies.setEnabled(false);
         btnAddSpecies.setName("btnAddSpecies"); // NOI18N
         btnAddSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddSpeciesActionPerformed(evt);
             }
@@ -2379,6 +2418,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelSpecies.setEnabled(false);
         btnDelSpecies.setName("btnDelSpecies"); // NOI18N
         btnDelSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelSpeciesActionPerformed(evt);
             }
@@ -2388,6 +2428,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnEditSpecies.setEnabled(false);
         btnEditSpecies.setName("btnEditSpecies"); // NOI18N
         btnEditSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditSpeciesActionPerformed(evt);
             }
@@ -2462,6 +2503,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
@@ -2473,6 +2515,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddOtherSpecies.setEnabled(false);
         btnAddOtherSpecies.setName("btnAddOtherSpecies"); // NOI18N
         btnAddOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddOtherSpeciesActionPerformed(evt);
             }
@@ -2482,6 +2525,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelOtherSpecies.setEnabled(false);
         btnDelOtherSpecies.setName("btnDelOtherSpecies"); // NOI18N
         btnDelOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelOtherSpeciesActionPerformed(evt);
             }
@@ -2491,6 +2535,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         tbnEditOtherSpecies.setEnabled(false);
         tbnEditOtherSpecies.setName("tbnEditOtherSpecies"); // NOI18N
         tbnEditOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbnEditOtherSpeciesActionPerformed(evt);
             }
@@ -2611,6 +2656,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddHabitatClass.setEnabled(false);
         btnAddHabitatClass.setName("btnAddHabitatClass"); // NOI18N
         btnAddHabitatClass.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddHabitatClassActionPerformed(evt);
             }
@@ -2620,6 +2666,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelHabitatClass.setEnabled(false);
         btnDelHabitatClass.setName("btnDelHabitatClass"); // NOI18N
         btnDelHabitatClass.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelHabitatClassActionPerformed(evt);
             }
@@ -2709,6 +2756,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddPosImpact.setEnabled(false);
         btnAddPosImpact.setName("btnAddPosImpact"); // NOI18N
         btnAddPosImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPosImpactActionPerformed(evt);
             }
@@ -2718,6 +2766,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelPosImpact.setEnabled(false);
         btnDelPosImpact.setName("btnDelPosImpact"); // NOI18N
         btnDelPosImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelPosImpactActionPerformed(evt);
             }
@@ -2776,6 +2825,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddNegImpact.setEnabled(false);
         btnAddNegImpact.setName("btnAddNegImpact"); // NOI18N
         btnAddNegImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddNegImpactActionPerformed(evt);
             }
@@ -2785,6 +2835,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelNegImpact.setEnabled(false);
         btnDelNegImpact.setName("btnDelNegImpact"); // NOI18N
         btnDelNegImpact.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelNegImpactActionPerformed(evt);
             }
@@ -2811,6 +2862,7 @@ public class SDFEditorView extends javax.swing.JFrame {
                 false, false, false, false
             };
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -2906,6 +2958,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddDocLink.setEnabled(false);
         btnAddDocLink.setName("btnAddDocLink"); // NOI18N
         btnAddDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDocLinkActionPerformed(evt);
             }
@@ -2915,6 +2968,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelDocLink.setEnabled(false);
         btnDelDocLink.setName("btnDelDocLink"); // NOI18N
         btnDelDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelDocLinkActionPerformed(evt);
             }
@@ -2980,6 +3034,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelOwner.setEnabled(false);
         btnDelOwner.setName("btnDelOwner"); // NOI18N
         btnDelOwner.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelOwnerActionPerformed(evt);
             }
@@ -2989,6 +3044,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddOwner.setEnabled(false);
         btnAddOwner.setName("btnAddOwner"); // NOI18N
         btnAddOwner.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddOwnerActionPerformed(evt);
             }
@@ -3108,6 +3164,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddDesigType.setEnabled(false);
         btnAddDesigType.setName("btnAddDesigType"); // NOI18N
         btnAddDesigType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDesigTypeActionPerformed(evt);
             }
@@ -3117,6 +3174,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelDesigType.setEnabled(false);
         btnDelDesigType.setName("btnDelDesigType"); // NOI18N
         btnDelDesigType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelDesigTypeActionPerformed(evt);
             }
@@ -3192,6 +3250,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddNatRel.setEnabled(false);
         btnAddNatRel.setName("btnAddNatRel"); // NOI18N
         btnAddNatRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddNatRelActionPerformed(evt);
             }
@@ -3201,6 +3260,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelNatRel.setEnabled(false);
         btnDelNatRel.setName("btnDelNatRel"); // NOI18N
         btnDelNatRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelNatRelActionPerformed(evt);
             }
@@ -3253,6 +3313,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddInterRel.setEnabled(false);
         btnAddInterRel.setName("btnAddInterRel"); // NOI18N
         btnAddInterRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddInterRelActionPerformed(evt);
             }
@@ -3262,6 +3323,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelInterRel.setEnabled(false);
         btnDelInterRel.setName("btnDelInterRel"); // NOI18N
         btnDelInterRel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelInterRelActionPerformed(evt);
             }
@@ -3379,6 +3441,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddMgmtBody.setEnabled(false);
         btnAddMgmtBody.setName("btnAddMgmtBody"); // NOI18N
         btnAddMgmtBody.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddMgmtBodyActionPerformed(evt);
             }
@@ -3388,6 +3451,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelMgmtBody.setEnabled(false);
         btnDelMgmtBody.setName("btnDelMgmtBody"); // NOI18N
         btnDelMgmtBody.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelMgmtBodyActionPerformed(evt);
             }
@@ -3456,6 +3520,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnAddMgmtPlan.setEnabled(false);
         btnAddMgmtPlan.setName("btnAddMgmtPlan"); // NOI18N
         btnAddMgmtPlan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddMgmtPlanActionPerformed(evt);
             }
@@ -3465,6 +3530,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnDelMgmtPlan.setEnabled(false);
         btnDelMgmtPlan.setName("btnDelMgmtPlan"); // NOI18N
         btnDelMgmtPlan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelMgmtPlanActionPerformed(evt);
             }
@@ -3475,6 +3541,7 @@ public class SDFEditorView extends javax.swing.JFrame {
         btnMgmtExists.setContentAreaFilled(false);
         btnMgmtExists.setName("btnMgmtExists"); // NOI18N
         btnMgmtExists.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMgmtExistsActionPerformed(evt);
             }

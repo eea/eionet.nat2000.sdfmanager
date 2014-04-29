@@ -11,6 +11,7 @@
   <table-filter match-name="SITE"/>
   <table-filter match-name="SITE_OWNERSHIP"/>
   <table-filter match-name="REF_HABITATS"/>
+  <table-filter match-name="REF_HABITATS_EMERALD"/>
   <table-filter match-name="REF_HAB_CLASSES"/>
   <table-filter match-name="REF_HAB_CLASSES_EMERALD"/>
   <table-filter match-name="SPECIES"/>

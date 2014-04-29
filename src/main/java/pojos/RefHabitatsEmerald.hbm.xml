@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.RefHabitatsEmerald" table="ref_habitats_emerald">
+    <id name="refHabitatsId" type="int">
+      <column name="REF_HABITATS_ID"/>
+      <generator class="increment"/>
+    </id>
+    <property name="refHabitatsCode" type="string">
+      <column length="8" name="REF_HABITATS_CODE"/>
+    </property>
+    <property name="refHabitatsPriority" type="java.lang.Short">
+      <column name="REF_HABITATS_PRIORITY"/>
+    </property>
+    <property name="refHabitatsDescEn" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_EN"/>
+    </property>
+    <property name="refHabitatsDescFr" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_FR"/>
+    </property>
+    <property name="refHabitatsDescDe" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_DE"/>
+    </property>
+    <property name="refHabitatsDescEs" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_ES"/>
+    </property>
+    <property name="refHabitatsDescIt" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_IT"/>
+    </property>
+    <property name="refHabitatsDescNl" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_NL"/>
+    </property>
+    <property name="refHabitatsDescPt" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_PT"/>
+    </property>
+    <property name="refHabitatsDescDk" type="string">
+      <column length="1024" name="REF_HABITATS_DESC_DK"/>
+    </property>
+  </class>
+</hibernate-mapping>

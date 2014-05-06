@@ -1177,7 +1177,7 @@ public class SDF_MysqlDatabase {
             if (endPoint.isUnresolved()) {
                 return "Host cannot be resolved.";
             }
-            log.info("Test if port is open: ");
+            log.info("Test if port is open: host='" + "'; port='" + port + "'");
             socket.connect(endPoint, 1000);
 
         } catch (IOException ie) {

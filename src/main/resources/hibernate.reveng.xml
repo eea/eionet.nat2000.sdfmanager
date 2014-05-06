@@ -6,10 +6,12 @@
   <table-filter match-name="NATIONAL_DTYPE"/>
   <table-filter match-name="REF_BIRDS"/>
   <table-filter match-name="REF_NUTS"/>
+  <table-filter match-name="REF_NUTS_EMERALD"/>
   <table-filter match-name="DOC_LINK"/>
   <table-filter match-name="SITE"/>
   <table-filter match-name="SITE_OWNERSHIP"/>
   <table-filter match-name="REF_HABITATS"/>
+  <table-filter match-name="REF_HABITATS_EMERALD"/>
   <table-filter match-name="REF_HAB_CLASSES"/>
   <table-filter match-name="SPECIES"/>
   <table-filter match-name="MGMT_BODY"/>
@@ -25,6 +27,7 @@
   <table-filter match-name="DOC"/>
   <table-filter match-name="HABITAT_CLASS"/>
   <table-filter match-name="REF_DESIGNATIONS"/>
+  <table-filter match-name="REF_DESIGNATIONS_EMERALD"/>
   <table-filter match-name="HABITAT"/>
   <table-filter match-name="IMPACT"/>
   <table-filter match-name="REF_IMPACTS"/>

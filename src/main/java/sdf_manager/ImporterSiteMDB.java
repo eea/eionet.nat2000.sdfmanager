@@ -38,6 +38,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -59,6 +60,7 @@ import pojos.OtherSpecies;
 import pojos.RefBirds;
 import pojos.RefImpacts;
 import pojos.RefNuts;
+import pojos.RefNutsEmerald;
 import pojos.RefSpecies;
 import pojos.Region;
 import pojos.Resp;
@@ -1744,7 +1746,8 @@ public class ImporterSiteMDB implements Importer {
      */
     private String getDescHabitatClass(Session session, String habClassCode) {
         String descHabClass = "";
-        String hql = "select refHabClassesDescrEn from RefHabClasses where refHabClassesCode like '" + habClassCode + "'";
+        String tableName = "RefHabClasses";
+        String hql = "select refHabClassesDescrEn from " + tableName + " where refHabClassesCode like '" + habClassCode + "'";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
         if (itr.hasNext()) {
@@ -1782,7 +1785,13 @@ public class ImporterSiteMDB implements Importer {
                 if (tmpStr != null) {
                     /*just get NUT2 level*/
                     if (tmpStr.length() > 4) {
-                        tmpStr = tmpStr.substring(0, 4);
+
+                        if (SDF_ManagerApp.isEmeraldMode() && StringUtils.startsWith(tmpStr, "'")) {
+                            tmpStr = tmpStr.substring(1, 5);
+                        } else {
+                            tmpStr = tmpStr.substring(0, 4);
+                        }
+
                     }
                     if (tmpStr.equals("0") || tmpStr.equals("00")) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
@@ -1790,10 +1799,17 @@ public class ImporterSiteMDB implements Importer {
                         log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
                     } else {
                         try {
-                            Iterator itr =  session.createQuery(" from RefNuts as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
+                            String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
+                            Iterator itr =  session.createQuery(" from " + tableName + " as rn where rn.refNutsCode like '"
+                                    + tmpStr + "'").iterate();
                             if (itr.hasNext()) {
-                                RefNuts rn = (RefNuts) itr.next();
-                                region.setRegionName(rn.getRefNutsDescription());
+                                if (SDF_ManagerApp.isEmeraldMode()) {
+                                    RefNutsEmerald rne = (RefNutsEmerald) itr.next();
+                                    region.setRegionName(rne.getRefNutsDescription());
+                                } else {
+                                    RefNuts rn = (RefNuts) itr.next();
+                                    region.setRegionName(rn.getRefNutsDescription());
+                                }
                             } else {
                                 nutsList.add(tmpStr);
                                 log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);

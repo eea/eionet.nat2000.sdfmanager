@@ -290,8 +290,10 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownHabitatTypes(Session session) {
         QAQCMain.log.info("Getting sites with unknwon habitat type");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+
+        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
         String hql = "select habitat.habitatCode, habitat.site.siteCode from Habitat as habitat "
-                + "where not exists (from RefHabitats as ref where ref.refHabitatsCode like habitat.habitatCode) "
+                + "where not exists (from " + tableName + " as ref where ref.refHabitatsCode like habitat.habitatCode) "
                 + "order by habitat.habitatCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -314,8 +316,9 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownHabitatClasses(Session session) {
         QAQCMain.log.info("Getting sites with unknwon habitat classes");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+        String tableName = "RefHabClasses";
         String hql = "select habitat.habitatClassCode, habitat.site.siteCode from HabitatClass as habitat "
-                + "where not exists (from RefHabClasses as ref where ref.refHabClassesCode like habitat.habitatClassCode) "
+                + "where not exists (from " + tableName + " as ref where ref.refHabClassesCode like habitat.habitatClassCode) "
                 + "order by habitat.habitatClassCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();
@@ -338,8 +341,9 @@ public class QAQCMain extends javax.swing.JFrame {
     private void fetchUnknownNUTSRegions(Session session) {
         QAQCMain.log.info("Getting sites with unknwon regions");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+        String refnutsTable = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
         String hql = "select region.regionCode, region.site.siteCode from Region as region "
-                + "where not exists (from RefNuts as ref where ref.refNutsCode like region.regionCode) "
+                + "where not exists (from " + refnutsTable + " as ref where ref.refNutsCode like region.regionCode) "
                 + "order by region.regionCode ASC";
         Query q = session.createQuery(hql);
         Iterator itr = q.iterate();

@@ -179,9 +179,10 @@ public class EditorHabitat extends javax.swing.JFrame {
     */
    private void loadHabitats() {
        EditorHabitat.log.info("Loads the habitats from reference table to fill the drop down list");
+       String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refHab.refHabitatsCode from RefHabitats refHab";
+       String hql = "select distinct refHab.refHabitatsCode from " + tableName + " refHab";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
@@ -663,8 +664,9 @@ jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_Manage
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
             EditorHabitat.log.info("Fill the description field, of the habitat ::" + code);
+            String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct refHab.refHabitatsDescEn from RefHabitats refHab where refHab.refHabitatsCode like '" + code + "'";
+            String hql = "select distinct refHab.refHabitatsDescEn from " + tableName + " refHab where refHab.refHabitatsCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String habDesc = (String) q.uniqueResult();
             EditorHabitat.log.info("The description of the habitat ::" + habDesc);

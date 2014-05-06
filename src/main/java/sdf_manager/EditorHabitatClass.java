@@ -45,7 +45,8 @@ public class EditorHabitatClass extends javax.swing.JFrame {
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql;
-       hql = "select distinct hC.refHabClassesCode from RefHabClasses hC";
+       String tableName = "RefHabClasses";
+       hql = "select distinct hC.refHabClassesCode from " + tableName + " hC";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
@@ -96,7 +97,8 @@ public class EditorHabitatClass extends javax.swing.JFrame {
        Session session = HibernateUtil.getSessionFactory().openSession();
        String habClassDesc = "";
        String hql;
-       hql = "select distinct hC.refHabClassesDescrEn from RefHabClasses hC where hC.refHabClassesCode ='" + habClassCode + "'";
+       String tableName = "RefHabClasses";
+       hql = "select distinct hC.refHabClassesDescrEn from " + tableName + " hC where hC.refHabClassesCode ='" + habClassCode + "'";
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        if (itr.hasNext()) {
@@ -334,7 +336,9 @@ public class EditorHabitatClass extends javax.swing.JFrame {
             String code = (String) cmbCode.getSelectedItem();
             EditorHabitatClass.log.info("Get the description of the habitat Class to fill the text field in the editor. ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct refHab.refHabClassesDescrEn from RefHabClasses refHab where refHab.refHabClassesCode like '" + code + "'";
+            String tableName = "RefHabClasses";
+            String hql = "select distinct refHab.refHabClassesDescrEn from " + tableName
+                    + " refHab where refHab.refHabClassesCode like '" + code + "'";
             Query q = session.createQuery(hql);
             String descHabClass =(String) q.uniqueResult();
             EditorHabitatClass.log.info("The description of the habitat Class. ::" + descHabClass);

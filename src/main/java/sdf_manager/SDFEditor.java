@@ -2220,11 +2220,12 @@ public class SDFEditor extends javax.swing.JFrame {
                 if (e.getValueIsAdjusting()) {
                     return;
                 }
+                String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
                 DefaultListSelectionModel dlsm = (DefaultListSelectionModel) e.getSource();
                 int selectedIndex = dlsm.getMinSelectionIndex();
                 String code = (String) tabHabitats.getModel().getValueAt(selectedIndex, 0);
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                String hql = "select distinct(refHabitatsDescEn) from RefHabitats refHab where refHab.refHabitatsCode = '" + code + "'";
+                String hql = "select distinct(refHabitatsDescEn) from " + tableName + " refHab where refHab.refHabitatsCode = '" + code + "'";
                 Query q = session.createQuery(hql);
                 txtHabitatDescription.setText((String) q.uniqueResult());
             }

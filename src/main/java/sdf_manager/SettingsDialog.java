@@ -16,6 +16,8 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -31,8 +33,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang.StringUtils;
-
-import sdf_manager.util.SDF_MysqlDatabase;
 
 /**
  * Dialog for entering common settings.
@@ -62,6 +62,8 @@ public class SettingsDialog extends javax.swing.JDialog {
     /** app mode n2k radio button. */
     private final JRadioButton rdbtnNatura = new JRadioButton();
 
+    private boolean btnSaveClicked = false;
+
     /**
      * Creates new settings dialog.
      *
@@ -73,8 +75,52 @@ public class SettingsDialog extends javax.swing.JDialog {
     public SettingsDialog(java.awt.Frame parent, boolean modal) {
         setResizable(false);
         initComponents();
-        setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         centerScreen();
+        setModal(true);
+
+        addWindowListener(new WindowListener() {
+
+            @Override
+            public void windowOpened(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent arg0) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent arg0) {
+                //TODO - find if there is a better way to do it without System.exit
+                if (!btnSaveClicked) {
+                    System.exit(0);
+                }
+            }
+
+            @Override
+            public void windowActivated(WindowEvent arg0) {
+
+            }
+        });
+
     }
 
     /**
@@ -94,7 +140,8 @@ public class SettingsDialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+            private
+            void initComponents() {
 
         // setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -125,17 +172,16 @@ public class SettingsDialog extends javax.swing.JDialog {
         lblDatabaseHost.setText(resourceMap.getString("lblDatabaseHost.text"));
         lblDatabaseHost.setLabelFor(txtDatabaseHost);
 
-        // JButton btnCancel = new JButton();
-
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                btnSaveClicked = true;
                 String validationResult = validateForm();
                 if (StringUtils.isBlank(validationResult)) {
 
-                    validationResult =
-                            SDF_MysqlDatabase.testConnection(getTxtDatabaseHost().getText(), getTxtDatabasePort().getText(),
-                                    getTxtDatabaseUser().getText(), getTxtDatabasePassword().getText());
+                    // validationResult =
+                    // SDF_MysqlDatabase.testConnection(getTxtDatabaseHost().getText(), getTxtDatabasePort().getText(),
+                    // getTxtDatabaseUser().getText(), getTxtDatabasePassword().getText());
                     if (StringUtils.isBlank(validationResult)) {
                         closeDialog(event);
                     } else {
@@ -212,7 +258,9 @@ public class SettingsDialog extends javax.swing.JDialog {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                btnSaveClicked = false;
                 closeDialog(event);
+                // System.exit(0);
 
             }
         });
@@ -352,12 +400,9 @@ public class SettingsDialog extends javax.swing.JDialog {
      *            action event
      */
     private void closeDialog(java.awt.event.ActionEvent evt) {
-        try {
-            if (evt.getSource().equals(btnSave)) {
-                // JOptionPane.showMessageDialog(null, "SAVE");
-                launchMain(evt);
-            }
-        } finally {
+        if (evt.getSource().equals(btnSave)) {
+            launchMain(evt);
+        } else {
             this.dispose();
         }
     }

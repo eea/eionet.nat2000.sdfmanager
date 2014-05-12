@@ -38,11 +38,16 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static final String SEED_PROPERTIES_FILE = CURRENT_PATH + File.separator + "config"
             + File.separator + "seed_sdf.properties";
 
+    /** possibly existing old DB properties. */
+    public static final String OLD_DB_PROPERTIES_FILE = CURRENT_PATH + File.separator + "lib"
+            + File.separator + "sdf_database.properties";
 
     /**
      * constant for application Natura 2000 mode.
      */
     public static final String NATURA_2000_MODE = "Natura2000";
+
+    private static SettingsDialog settingsDialog;
 
     /**
      * constant for application EMERALD mode.
@@ -89,39 +94,78 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) throws IOException {
+        log.info("start");
         String errorMesg = null;
-        SettingsDialog settingsDialog = null;
+        getApplication().getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        settingsDialog = null;
         try {
             initializeLogger();
 
-            //if props file not exist open the first dialog to enter the values
-            if (!propsFileExists()) {
-                log.info("No sdf.properties file in the application folder.");
-                settingsDialog = new SettingsDialog(null, true);
-                settingsDialog.setModal(true);
-                settingsDialog.setVisible(true);
+            // either there is one or the other we foudn the props:
+            if (propsFileExists() || oldDbPropsExists()) {
 
-            } else {
+                // take Dbprops from old db props
+                if (!propsFileExists()) {
+                    log.info("No sdf.properties file, take Db props from the old props file.");
+                    Map<String, String> props = new HashMap<String, String>(15);
+
+                    // old DB props:
+                    Properties oldDbProps = PropertyUtils.readProperties(OLD_DB_PROPERTIES_FILE);
+                    props.put("db.host", oldDbProps.getProperty("host"));
+                    props.put("db.port", oldDbProps.getProperty("port"));
+                    props.put("db.user", oldDbProps.getProperty("user"));
+                    props.put("db.password", oldDbProps.getProperty("password"));
+
+                    // default Natura 2000?
+                    props.put("application.mode", NATURA_2000_MODE);
+
+                    log.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
+                    Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
+                    for (Object key : seedProps.keySet()) {
+                        props.put((String) key, seedProps.getProperty((String) key));
+                    }
+
+                    PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
+                    log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
+
+                }
+
+                log.info("Launching...");
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
                 mode = properties.getProperty("application.mode");
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
                 if (errorMesg != null) {
-                    log.info("Error");
+                    log.error("db Error: " + errorMesg);
+                    JOptionPane.showMessageDialog(null, "A DB error has occured:" + errorMesg + "\n please check and change the database settings in the appearing dialog", "DB Error",
+                            JOptionPane.ERROR_MESSAGE);
+
+
+                    settingsDialog = new SettingsDialog(null, true);
+                    settingsDialog.setModal(true);
+                    settingsDialog.setVisible(true);
+
                 } else {
                     log.info("run importTool");
                     launch(SDF_ManagerApp.class, args);
                 }
+
+            } else {
+                log.info("No sdf.properties file in the application root folder and no lib/sdf_database.properties.");
+                settingsDialog = new SettingsDialog(null, true);
+                settingsDialog.setModal(true);
+                settingsDialog.setVisible(true);
             }
 
         } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(new JFrame(), "A general error has occurred." + errorMesg, "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "A general error has occurred." + errorMesg, "Dialog",
+                    JOptionPane.ERROR_MESSAGE);
             log.error("Error::::" + e.getMessage());
-
             e.printStackTrace();
+            System.exit(0);
         }
-       }
+
+    }
 
     /**
      * settings entered for the first time.
@@ -163,22 +207,22 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
             String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
             if (errorMesg != null) {
-                JOptionPane.showMessageDialog(new JFrame(), "An error has occurred when creating DB:" + errorMesg, "Error",
+                JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
+                        + "\n Please check and change the settings in the appearing dialog.", "DB Error",
                         JOptionPane.ERROR_MESSAGE);
                 log.error("Error creating database: " + errorMesg);
+            } else {
+                dialog.dispose();
+                log.info("running importTool");
+                launch(SDF_ManagerApp.class, args);
             }
-
-            log.info("running importTool");
-            launch(SDF_ManagerApp.class, args);
 
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(new JFrame(), "An error has occurred in saving settings." + e.getMessage(), "Dialog",
+            JOptionPane.showMessageDialog(null, "An error has occurred in saving settings." + e.getMessage(), "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             log.error("Error::::" + e.getMessage());
-
             e.printStackTrace();
-        } finally {
             dialog.dispose();
         }
     }
@@ -194,18 +238,28 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             PropertyConfigurator.configure(logProperties);
             log.info("Logging initialized.");
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(new JFrame(), "The process has been falied.::", "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The process has been falied.::", "Dialog", JOptionPane.ERROR_MESSAGE);
             log.error(e.getMessage());
             throw new RuntimeException("Unable to load logging property " + LOG_PROPERTIES_FILE);
         }
     }
 
-    /**
+   /**
      * Checks if sdf.properties file is created and can be used.
      * @return true if file exists
      */
     private static boolean propsFileExists() {
         File file = new File(LOCAL_PROPERTIES_FILE);
+        return file.exists() && !file.isDirectory() && file.canRead();
+    }
+
+    /**
+     * Checks if sdf_database.properties file exists from the previous installation.
+     * @return true if file exists
+     */
+
+    private static boolean oldDbPropsExists() {
+        File file = new File(OLD_DB_PROPERTIES_FILE);
         return file.exists() && !file.isDirectory() && file.canRead();
     }
 
@@ -220,4 +274,5 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static boolean isEmeraldMode() {
         return mode.equals(EMERALD_MODE);
     }
+
 }

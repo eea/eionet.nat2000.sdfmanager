@@ -72,7 +72,7 @@ public class SDF_ManagerView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
         initSessionFactory();
 
-
+        this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getFrame().setResizable(false);
         this.getFrame().pack();
         this.getFrame().setLocationRelativeTo(null);

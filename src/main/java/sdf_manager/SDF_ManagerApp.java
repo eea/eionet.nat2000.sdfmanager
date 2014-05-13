@@ -94,17 +94,17 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) throws IOException {
-        log.info("start");
+
         String errorMesg = null;
         getApplication().getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         settingsDialog = null;
         try {
             initializeLogger();
-
-            // either there is one or the other we foudn the props:
+            log.info("Logger installed, java version: " + System.getProperty("java.version"));
+            // either there is one or the other we found the props:
             if (propsFileExists() || oldDbPropsExists()) {
 
-                // take Dbprops from old db props
+                // take Dbprops from old db props in lib folder
                 if (!propsFileExists()) {
                     log.info("No sdf.properties file, take Db props from the old props file.");
                     Map<String, String> props = new HashMap<String, String>(15);

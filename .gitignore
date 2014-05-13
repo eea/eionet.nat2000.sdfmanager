@@ -11,3 +11,5 @@ sdf.properties
 /.settings
 /*.iml
 /.classpath
+/jre/*
+/*.exe

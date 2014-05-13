@@ -1,0 +1,5 @@
+* download and install launch4j from http://sourceforge.net/projects/launch4j/files/launch4j-3/3.4/
+* download and install InnoSetup from http://www.jrsoftware.org/isdl.php#stable
+* copy a JRE to the project folder. NB! The JRE must be 32-bit!
+* open Launch4j.xml with launch4j and click on  the"Build wrapper" icon. SDFManager.exe is created in the project root folder
+* open SDFManager.iss with InnoSetup Compiler and click on the "Run" icon. SDFManagerSetup.exe is created in the project root folder

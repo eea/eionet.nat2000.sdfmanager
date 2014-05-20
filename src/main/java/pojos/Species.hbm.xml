@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-  <class catalog="natura2000" name="pojos.Species" table="species">
+  <class name="pojos.Species" table="species">
     <id name="speciesId" type="int">
       <column name="SPECIES_ID"/>
       <generator class="increment"/>
@@ -54,6 +54,6 @@
     </property>
     <property name="speciesGlobal" type="java.lang.Character">
       <column length="1" name="SPECIES_GLOBAL"/>
-    </property>    
+    </property>
   </class>
 </hibernate-mapping>

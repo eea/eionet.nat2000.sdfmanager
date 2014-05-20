@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Created by charbda 20/04/2011 -->
 <hibernate-mapping>
-  <class catalog="natura2000" name="pojos.RefImpactRank" table="ref_impact_rank">
+  <class name="pojos.RefImpactRank" table="ref_impact_rank">
     <id name="refRankId" type="int">
       <column name="RANK_ID"/>
       <generator class="increment"/>

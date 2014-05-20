@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-  <class catalog="natura2000" name="pojos.RefHabitats" table="ref_habitats">
+  <class name="pojos.RefHabitats" table="ref_habitats">
     <id name="refHabitatsId" type="int">
       <column name="REF_HABITATS_ID"/>
       <generator class="increment"/>

@@ -50,6 +50,7 @@ public class SDF_MysqlDatabase {
      */
     public static String createNaturaDB(Properties properties) throws SQLException, Exception {
         Connection con = null;
+        String msgError = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
             SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
@@ -60,12 +61,43 @@ public class SDF_MysqlDatabase {
                             properties.getProperty("db.password"));
             boolean schemaExists = createDatabaseSchema(con);
 
-            // create new connection to the specific schema to avoid aliases in all SQLs
-            String dbSchemaName = isEmeraldMode() ? "emerald" : "natura2000";
-            con =
-                    (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
-                            + properties.getProperty("db.port") + "/" + dbSchemaName, properties.getProperty("db.user"),
-                            properties.getProperty("db.password"));
+
+            boolean refTalesNeedUpdating = false;
+            String schemaName = isEmeraldMode() ? "emerald" : "natura2000";
+
+            if (schemaExists) {
+                if (isRefSpeciesUpdated(con)) {
+                    SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
+                } else {
+                    SDF_MysqlDatabase.log.info("Drop Schema " + schemaName);
+                    String sql = "drop schema " + schemaName;
+                    Statement st = con.createStatement();
+                    st.executeUpdate(sql);
+                    st.close();
+
+                    String schemaFileName = isEmeraldMode() ? "CreateEmeraldSchema.sql" : "CreateSDFSchema.sql";
+                    SDF_MysqlDatabase.log.info("Recreate Schema " + schemaName);
+                    msgError = createMySQLDBSchema(con, schemaFileName);
+
+                    refTalesNeedUpdating = true;
+
+                }
+
+                // create new connection to the specific schema to avoid aliases in all SQLs
+                con =
+                        (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
+                                + properties.getProperty("db.port") + "/" + schemaName, properties.getProperty("db.user"),
+                                properties.getProperty("db.password"));
+
+                if (refTalesNeedUpdating) {
+                    msgError = populateRefTables(con);
+
+                    if (StringUtils.isNotBlank(msgError)) {
+                        //TODO change the design of returning error messages as method results
+                        throw new SQLException(msgError);
+                    }
+                }
+            }
 
             return createOrUpdateDatabaseTables(con, schemaExists);
         } catch (SQLException sqle) {
@@ -89,19 +121,19 @@ public class SDF_MysqlDatabase {
 
         Statement stDBExist = null;
         ResultSet rsDBEXist = null;
-        Statement stDBUser = null;
+        //Statement stDBUser = null;
         boolean schemaExists = false;
 
         // dataBase exists
         String schemaFileName = isEmeraldMode() ? "CreateEmeraldSchema.sql" : "CreateSDFSchema.sql";
-        String sqlDBUser = "select * from mysql.user where user='sa'";
-        stDBUser = con.createStatement();
-
-        rsDBEXist = stDBUser.executeQuery(sqlDBUser);
-        if (rsDBEXist.next()) {
-            SDF_MysqlDatabase.log.info("User 'sa' already exist");
-            schemaFileName = isEmeraldMode() ? "CreateEMERALDOnlySchema.sql" : "CreateSDFOnlySchema.sql";
-        }
+//        String sqlDBUser = "select * from mysql.user where user='sa'";
+//        stDBUser = con.createStatement();
+//
+//        rsDBEXist = stDBUser.executeQuery(sqlDBUser);
+//        if (rsDBEXist.next()) {
+//            SDF_MysqlDatabase.log.info("User 'sa' already exist");
+//            schemaFileName = isEmeraldMode() ? "CreateEMERALDOnlySchema.sql" : "CreateSDFOnlySchema.sql";
+//        }
 
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         String sqlDBExist = "SELECT SCHEMA_NAME as name FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + schemaName + "'";
@@ -111,33 +143,23 @@ public class SDF_MysqlDatabase {
         if (rsDBEXist.next()) {
             schemaExists = true;
 
-            //String name = rsDBEXist.getString("name");
+            if (isRefSpeciesUpdated(con)) {
+                SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
+            } else {
+                SDF_MysqlDatabase.log.info("Drop Schema " + schemaName);
+                String sql = "drop schema " + schemaName;
+                Statement st = con.createStatement();
+                st.executeUpdate(sql);
+                SDF_MysqlDatabase.log.info("Recreate Schema " + schemaName);
+                msgError = createMySQLDBSchema(con, schemaFileName);
 
-            //if (name != null && !(("").equals(name))) {
-
-
-
-
-
-                if (isRefSpeciesUpdated(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
-                } else {
-                    SDF_MysqlDatabase.log.info("Drop Schema " + schemaName);
-                    String sql = "drop schema " + schemaName;
-                    Statement st = con.createStatement();
-                    st.executeUpdate(sql);
-                    SDF_MysqlDatabase.log.info("Recreate Schema " + schemaName);
-                    msgError = createMySQLDBSchema(con, schemaFileName);
-                    //should be Natura2000 if reaching here
-                    //TODO add populate Emerald depending on mode>
-                    String msgErrorPopulate = populateRefTables(con);
-                    if (msgErrorPopulate != null) {
-                        msgError = msgError + "\n" + msgErrorPopulate;
-                    }
-
+                // should be Natura2000 if reaching here
+                String msgErrorPopulate = populateRefTables(con);
+                if (msgErrorPopulate != null) {
+                    msgError = msgError + "\n" + msgErrorPopulate;
                 }
 
-
+            }
 
 
             //}
@@ -178,27 +200,7 @@ public class SDF_MysqlDatabase {
             String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
             if (schemaExists) {
-
-                // Create Data Base
-                // String name = rsDBEXist.getString("name");
-                // if (name != null && !(("").equals(name))) {
-                // if (isRefSpeciesUpdated(con, stDBExist)) {
-                // SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
-                // } else {
-                // SDF_MysqlDatabase.log.info("Drop Schema");
-                // String sql = "drop schema " + schemaName;
-                // Statement st = con.createStatement();
-                // st.executeUpdate(sql);
-                // SDF_MysqlDatabase.log.info("Recreate Schema");
-                // msgError = createMySQLDB(con, schemaFileName);
-                // String msgErrorPopulate = populateRefTables(con);
-                // if (msgErrorPopulate != null) {
-                // msgError = msgError + "\n" + msgErrorPopulate;
-                // }
-                // }
-
-                // db and user created:
-
+                //check if DB updates needed (reference tables already updated in the parent method)
                 if (isRefBirdsUpdated(con, stDBExist)) {
                     SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref birds table is OK");
                 } else {
@@ -254,8 +256,6 @@ public class SDF_MysqlDatabase {
                     }
                 }
 
-                // Sept 2013
-
                 // EMERALD
                 if (SDF_ManagerApp.isEmeraldMode()) {
                     if (isEmeraldRefTablesExist(con, stDBExist)) {
@@ -269,17 +269,6 @@ public class SDF_MysqlDatabase {
                         }
                     }
                 }
-
-                // CREATE database:
-
-                // cannot reach this block:
-                // } else {
-                // msgError = createMySQLDB(con, schemaFileName);
-                // String msgErrorPopulate = populateRefTables(con);
-                // if (msgErrorPopulate != null) {
-                // msgError = msgError + "\n" + msgErrorPopulate;
-                // }
-                // }
 
                 if (!isDateTypeColumnsLongText(con, stDBUser)) {
                     String msgErrorPopulate = alterDateColumnsType(con);
@@ -298,7 +287,7 @@ public class SDF_MysqlDatabase {
                     }
                 }
 
-                // create DB
+            // create DB from scratch
             } else {
                 msgError = createMySQLDBTables(con, schemaFileName);
                 String msgErrorPopulate = populateRefTables(con);
@@ -648,9 +637,11 @@ public class SDF_MysqlDatabase {
      * @param st
      * @return
      */
-    private static boolean isRefSpeciesUpdated(Connection con, Statement st) {
+    private static boolean isRefSpeciesUpdated(Connection con) {
         boolean refSpeciesUpdated = false;
+
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
+        Statement st = null;
         try {
             String sql = "select REF_SPECIES_CODE_NEW from " + schemaName + ".ref_species";
             st = con.createStatement();
@@ -659,6 +650,7 @@ public class SDF_MysqlDatabase {
         } catch (Exception e) {
             SDF_MysqlDatabase.log.error("Ref Species is already updated");
         } finally {
+            closeStatement(st);
             return refSpeciesUpdated;
         }
     }

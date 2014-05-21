@@ -290,7 +290,7 @@ public class SDF_MysqlDatabase {
                 }
 
                 // emerald
-                if (SDF_ManagerApp.isEmeraldMode() && !isEmeraldUpdatesdone(con, stDBExist)) {
+                if (SDF_ManagerApp.isEmeraldMode() && !isEmeraldUpdatesdone(con)) {
                     SDF_MysqlDatabase.log.info("Emerald updates:");
                     String msgErrorEmerald = doEmeraldUpdates(con);
                     if (msgErrorEmerald != null) {
@@ -1226,7 +1226,13 @@ public class SDF_MysqlDatabase {
         }
     }
 
-    private static boolean isEmeraldUpdatesdone(Connection con, Statement st) {
+
+    /**
+     * checks if db strucure updates for emerald mode are done.
+     * @param con db connection
+     * @return true if updates already exist
+     */
+    private static boolean isEmeraldUpdatesdone(Connection con) {
         boolean updateDone = false;
         Statement stDBSpec = null;
         ResultSet rsDBEXist = null;
@@ -1291,6 +1297,12 @@ public class SDF_MysqlDatabase {
 
     }
 
+    /**
+     * opens a text file.
+     * @param scriptName file name
+     * @return stream of the file
+     * @throws Exception if i/o error
+     */
     private static FileInputStream openScriptFile(String scriptName) throws Exception {
         return new FileInputStream(getScriptPath(scriptName));
     }
@@ -1390,7 +1402,7 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * closes DB connection. if sql exception it is logged
+     * Closes the DB connection. if sql exception occurs it is logged to log file
      *
      * @param conn
      *            database connection
@@ -1405,6 +1417,10 @@ public class SDF_MysqlDatabase {
         }
     }
 
+    /**
+     * Closes Statement.
+     * @param rs statement
+     */
     static void closeStatement(Statement rs) {
         try {
             if (rs != null) {
@@ -1416,7 +1432,7 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * local method to keep the code cleaner.
+     * Local method to reflect mode from main app.
      *
      * @return true is application is running in mode
      */

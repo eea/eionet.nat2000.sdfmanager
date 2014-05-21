@@ -41,19 +41,19 @@ import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
  */
 public class SDF_MysqlDatabase {
 
-    private static final Logger log = Logger.getLogger(SDF_MysqlDatabase.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SDF_MysqlDatabase.class.getName());
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
      *
      * @return error message or empty string if database was created
      */
-    public static String createNaturaDB(Properties properties) throws SQLException, Exception {
+    public static String createNaturaDB(Properties properties) throws Exception {
         Connection con = null;
         String msgError = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            SDF_MysqlDatabase.log.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
+            SDF_MysqlDatabase.LOGGER.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
                     + properties.getProperty("db.password") + "<==");
             con =
                     (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
@@ -61,22 +61,21 @@ public class SDF_MysqlDatabase {
                             properties.getProperty("db.password"));
             boolean schemaExists = createDatabaseSchema(con);
 
-
             boolean refTalesNeedUpdating = false;
             String schemaName = isEmeraldMode() ? "emerald" : "natura2000";
 
             if (schemaExists) {
                 if (isRefSpeciesUpdated(con)) {
-                    SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
+                    SDF_MysqlDatabase.LOGGER.info(schemaName + " Schema DB already exists and ref species table is OK");
                 } else {
-                    SDF_MysqlDatabase.log.info("Drop Schema " + schemaName);
+                    SDF_MysqlDatabase.LOGGER.info("Drop Schema " + schemaName);
                     String sql = "drop schema " + schemaName;
                     Statement st = con.createStatement();
                     st.executeUpdate(sql);
                     st.close();
 
                     String schemaFileName = isEmeraldMode() ? "CreateEmeraldSchema.sql" : "CreateSDFSchema.sql";
-                    SDF_MysqlDatabase.log.info("Recreate Schema " + schemaName);
+                    SDF_MysqlDatabase.LOGGER.info("Recreate Schema " + schemaName);
                     msgError = createMySQLDBSchema(con, schemaFileName);
 
                     refTalesNeedUpdating = true;
@@ -84,18 +83,19 @@ public class SDF_MysqlDatabase {
                 }
 
                 // create new connection to the specific schema to avoid aliases in all SQLs
-                con =
-                        (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
-                                + properties.getProperty("db.port") + "/" + schemaName, properties.getProperty("db.user"),
-                                properties.getProperty("db.password"));
+            }
 
-                if (refTalesNeedUpdating) {
-                    msgError = populateRefTables(con);
+            con =
+                    (Connection) DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
+                            + properties.getProperty("db.port") + "/" + schemaName, properties.getProperty("db.user"),
+                            properties.getProperty("db.password"));
 
-                    if (StringUtils.isNotBlank(msgError)) {
-                        //TODO change the design of returning error messages as method results
-                        throw new SQLException(msgError);
-                    }
+            if (refTalesNeedUpdating) {
+                msgError = populateRefTables(con);
+
+                if (StringUtils.isNotBlank(msgError)) {
+                    // TODO change the design of returning error messages as method results
+                    throw new SQLException(msgError);
                 }
             }
 
@@ -108,32 +108,22 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * checks and creates DB schema instance and user 'sa' for the application mode. no tables created
-     * also creates and oppulates reference tables
-     * @param con
-     *            db connection (without schema specified)
+     * checks and creates DB schema instance and user 'sa' for the application mode. no tables created also creates and populates
+     * reference tables
+     *
+     * @param con db connection (without schema specified)
      * @return error message or empty string if everything fine
-     * @throws SQLException
-     *             if creation fails
+     * @throws Exception if creation fails
      */
     public static boolean createDatabaseSchema(Connection con) throws Exception {
         String msgError = null;
 
         Statement stDBExist = null;
         ResultSet rsDBEXist = null;
-        //Statement stDBUser = null;
+        // Statement stDBUser = null;
         boolean schemaExists = false;
 
-        // dataBase exists
         String schemaFileName = isEmeraldMode() ? "CreateEmeraldSchema.sql" : "CreateSDFSchema.sql";
-//        String sqlDBUser = "select * from mysql.user where user='sa'";
-//        stDBUser = con.createStatement();
-//
-//        rsDBEXist = stDBUser.executeQuery(sqlDBUser);
-//        if (rsDBEXist.next()) {
-//            SDF_MysqlDatabase.log.info("User 'sa' already exist");
-//            schemaFileName = isEmeraldMode() ? "CreateEMERALDOnlySchema.sql" : "CreateSDFOnlySchema.sql";
-//        }
 
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         String sqlDBExist = "SELECT SCHEMA_NAME as name FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + schemaName + "'";
@@ -144,13 +134,13 @@ public class SDF_MysqlDatabase {
             schemaExists = true;
 
             if (isRefSpeciesUpdated(con)) {
-                SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref species table is OK");
+                SDF_MysqlDatabase.LOGGER.info(schemaName + " Schema DB already exists and ref species table is OK");
             } else {
-                SDF_MysqlDatabase.log.info("Drop Schema " + schemaName);
+                SDF_MysqlDatabase.LOGGER.info("Drop Schema " + schemaName);
                 String sql = "drop schema " + schemaName;
                 Statement st = con.createStatement();
                 st.executeUpdate(sql);
-                SDF_MysqlDatabase.log.info("Recreate Schema " + schemaName);
+                SDF_MysqlDatabase.LOGGER.info("Recreate Schema " + schemaName);
                 msgError = createMySQLDBSchema(con, schemaFileName);
 
                 // should be Natura2000 if reaching here
@@ -161,13 +151,12 @@ public class SDF_MysqlDatabase {
 
             }
 
-
-            //}
+            // }
         } else {
             msgError = createMySQLDBSchema(con, schemaFileName);
         }
 
-        //throw exception du to the old design
+        // throw exception du to the old design
         if (StringUtils.isNotBlank(msgError)) {
             throw new Exception("Schema creation fails " + msgError);
         }
@@ -179,15 +168,14 @@ public class SDF_MysqlDatabase {
     /**
      * Create the Natura2000 database or make upgrades in the tables.
      *
-     * @param con
+     * @param con database connection
      *            database connection
      * @param schemaExists
      *            if schema is existing previously or was created during this session
      * @return error message. if no errors empty string
-     * @throws SQLException if sql error
-     * @throws Exception
+     * @throws Exception if error happens in sql
      */
-    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists) throws SQLException, Exception {
+    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists) throws Exception {
 
         String msgError = null;
 
@@ -200,25 +188,25 @@ public class SDF_MysqlDatabase {
             String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
             if (schemaExists) {
-                //check if DB updates needed (reference tables already updated in the parent method)
+                // check if DB updates needed (reference tables already updated in the parent method)
                 if (isRefBirdsUpdated(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info(schemaName + " Schema DB already exists and ref birds table is OK");
+                    SDF_MysqlDatabase.LOGGER.info(schemaName + " Schema DB already exists and ref birds table is OK");
                 } else {
-                    SDF_MysqlDatabase.log.info("Recreate Ref Birds table");
+                    SDF_MysqlDatabase.LOGGER.info("Recreate Ref Birds table");
                     msgError = alterRefBirds(con);
                     msgError = populateRefBirds(con);
                 }
 
                 if (isHabitatUpdated(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("Habitat table is already updated");
+                    SDF_MysqlDatabase.LOGGER.info("Habitat table is already updated");
                 } else {
-                    SDF_MysqlDatabase.log.info("Add a new column to habitat table");
+                    SDF_MysqlDatabase.LOGGER.info("Add a new column to habitat table");
                     msgError = alterHabitat(con);
                 }
                 if (isRefTablesExist(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("Ref Tables are already updated");
+                    SDF_MysqlDatabase.LOGGER.info("Ref Tables are already updated");
                 } else {
-                    SDF_MysqlDatabase.log.info("Create Ref tables");
+                    SDF_MysqlDatabase.LOGGER.info("Create Ref tables");
                     msgError = createRefTables(con);
                     String msgErrorPopulate = populateRefTables(con);
                     if (msgErrorPopulate != null) {
@@ -229,16 +217,16 @@ public class SDF_MysqlDatabase {
                 // Sept 2013. Version 3. Create ReleaseDBUpdates.
 
                 if (isReleaseDBUpdatesExist(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("ReleaseDBUpdates exists");
+                    SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
-                    SDF_MysqlDatabase.log.info("Create ReleaseDBUpdates");
+                    SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
                     msgError = createReleaseDBUpdates(con);
-                    String msgErrorPopulate = PopulateReleaseDBUpdates(con);
+                    String msgErrorPopulate = populateReleaseDBUpdates(con);
                     String msgErrorAlterHabitat = alterHabitatQual(con);
-                    String msgErrorAlterDataQual = InsertRefDataQual(con);
-                    String msgErrorUpdateRefHabitats = UpdateRefHabitats(con);
+                    String msgErrorAlterDataQual = insertRefDataQual(con);
+                    String msgErrorUpdateRefHabitats = updateRefHabitats(con);
                     // tabla ref species
-                    String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
+                    String msgErrorUpdateVersion3Done = updateVersion3Done(con);
                     if (msgErrorPopulate != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null
                             || msgErrorUpdateRefHabitats != null || msgErrorUpdateVersion3Done != null) {
                         msgError =
@@ -247,10 +235,10 @@ public class SDF_MysqlDatabase {
                     }
                 }
                 if (isSpecCroatiaExist(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
+                    SDF_MysqlDatabase.LOGGER.info("Ref Table species Croatia are already inserted");
                 } else {
-                    SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");
-                    String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
+                    SDF_MysqlDatabase.LOGGER.info("Inserting Ref species Croatia");
+                    String msgErrorPopulateSpec = updateRefSpeciesCroatia(con);
                     if (msgErrorPopulateSpec != null) {
                         msgError = msgError + "\n" + msgErrorPopulateSpec;
                     }
@@ -259,9 +247,9 @@ public class SDF_MysqlDatabase {
                 // EMERALD
                 if (SDF_ManagerApp.isEmeraldMode()) {
                     if (isEmeraldRefTablesExist(con, stDBExist)) {
-                        SDF_MysqlDatabase.log.info("EMERALD Ref Tables are already updated");
+                        SDF_MysqlDatabase.LOGGER.info("EMERALD Ref Tables are already updated");
                     } else {
-                        SDF_MysqlDatabase.log.info("Create EMERALD Ref tables");
+                        SDF_MysqlDatabase.LOGGER.info("Create EMERALD Ref tables");
                         msgError = createEMERALDRefTables(con);
                         String msgErrorPopulate = populateEMERALDRefTables(con);
                         if (msgErrorPopulate != null) {
@@ -280,14 +268,14 @@ public class SDF_MysqlDatabase {
 
                 // emerald
                 if (SDF_ManagerApp.isEmeraldMode() && !isEmeraldUpdatesdone(con)) {
-                    SDF_MysqlDatabase.log.info("Emerald updates:");
+                    SDF_MysqlDatabase.LOGGER.info("Emerald updates:");
                     String msgErrorEmerald = doEmeraldUpdates(con);
                     if (msgErrorEmerald != null) {
                         msgError = msgError + "\n" + msgErrorEmerald;
                     }
                 }
 
-            // create DB from scratch
+                // create DB from scratch
             } else {
                 msgError = createMySQLDBTables(con, schemaFileName);
                 String msgErrorPopulate = populateRefTables(con);
@@ -309,15 +297,15 @@ public class SDF_MysqlDatabase {
 
                 // Sept 2013. Version 3. Create ReleaseDBUpdates.
                 if (isReleaseDBUpdatesExist(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("ReleaseDBUpdates exists");
+                    SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
-                    SDF_MysqlDatabase.log.info("Create ReleaseDBUpdates");
+                    SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
                     msgError = createReleaseDBUpdates(con);
-                    String msgErrorPopulateRel = PopulateReleaseDBUpdates(con);
+                    String msgErrorPopulateRel = populateReleaseDBUpdates(con);
                     String msgErrorAlterHabitat = alterHabitatQual(con);
-                    String msgErrorAlterDataQual = InsertRefDataQual(con);
-                    String msgErrorUpdateRefHabitats = UpdateRefHabitats(con);
-                    String msgErrorUpdateVersion3Done = UpdateVersion3Done(con);
+                    String msgErrorAlterDataQual = insertRefDataQual(con);
+                    String msgErrorUpdateRefHabitats = updateRefHabitats(con);
+                    String msgErrorUpdateVersion3Done = updateVersion3Done(con);
                     if (msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null
                             || msgErrorUpdateRefHabitats != null || msgErrorUpdateVersion3Done != null) {
                         msgError =
@@ -326,21 +314,19 @@ public class SDF_MysqlDatabase {
                     }
                 }
                 if (isSpecCroatiaExist(con, stDBExist)) {
-                    SDF_MysqlDatabase.log.info("Ref Table species Croatia are already inserted");
+                    SDF_MysqlDatabase.LOGGER.info("Ref Table species Croatia are already inserted");
                 } else {
-                    SDF_MysqlDatabase.log.info("Inserting Ref species Croatia");
-                    String msgErrorPopulateSpec = UpdateRefSpeciesCroatia(con);
+                    SDF_MysqlDatabase.LOGGER.info("Inserting Ref species Croatia");
+                    String msgErrorPopulateSpec = updateRefSpeciesCroatia(con);
                     if (msgErrorPopulateSpec != null) {
                         msgError = msgError + "\n" + msgErrorPopulateSpec;
                     }
                 }
-                // Sept 2013
-
             }
 
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
-            SDF_MysqlDatabase.log.error("Error in Data Base:::" + s.getMessage());
+            SDF_MysqlDatabase.LOGGER.error("Error in Data Base:::" + s.getMessage());
             throw s;
 
         } catch (Exception e) {
@@ -348,7 +334,7 @@ public class SDF_MysqlDatabase {
                     "The connection to MySQL Data Base has failed.\n"
                             + " Please, Make sure that the parameters (user and password) in the properties file are right";
             JOptionPane.showMessageDialog(new JFrame(), msgError, "Dialog", JOptionPane.ERROR_MESSAGE);
-            SDF_MysqlDatabase.log.error("The connection to MySQL Data Base has failed.\n"
+            SDF_MysqlDatabase.LOGGER.error("The connection to MySQL Data Base has failed.\n"
                     + " Please, Make sure that the parameters (user and password) in the properties file are right.::"
                     + e.getMessage());
             throw e;
@@ -369,7 +355,8 @@ public class SDF_MysqlDatabase {
      * Method to validate the datatype of columns. Validates if SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF of the
      * table: site in DB are longtext instead of varchar(512).
      *
-     * @param con connection
+     * @param con database connection
+     *            connection
      * @param st
      * @return
      * @throws SQLException
@@ -388,17 +375,17 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             ResultSetMetaData rsmd = rs.getMetaData();
-            int NumOfCol = rsmd.getColumnCount();
-            for (int i = 1; i <= NumOfCol; i++) {
+            int numOfCol = rsmd.getColumnCount();
+            for (int i = 1; i <= numOfCol; i++) {
                 if ((columnTypeVarchar).equals(rsmd.getColumnTypeName(i)) && rsmd.getColumnDisplaySize(i) <= columnSizeVarchar) {
                     refSpeciesUpdated = false;
                 }
 
             }
         } catch (SQLException e) {
-            SDF_MysqlDatabase.log.error("Ref Species is already updated");
+            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated");
         } catch (Exception e) {
-            SDF_MysqlDatabase.log.error("Ref Species is already updated");
+            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated");
         } finally {
             return refSpeciesUpdated;
         }
@@ -407,7 +394,7 @@ public class SDF_MysqlDatabase {
     /**
      * Creates schema for natura2000 or emerald.
      *
-     * @param con
+     * @param con database connection
      *            connection
      * @param schemaFileName
      *            file of sql script
@@ -423,7 +410,7 @@ public class SDF_MysqlDatabase {
         FileInputStream fstreamSchema = null;
 
         try {
-            SDF_MysqlDatabase.log.info("Creating Schema Data Base");
+            SDF_MysqlDatabase.LOGGER.info("Creating Schema Data Base");
 
             fstreamSchema = openScriptFile(schemaFileName);
             InputStreamReader inSchema = new InputStreamReader(fstreamSchema);
@@ -438,10 +425,10 @@ public class SDF_MysqlDatabase {
             inSchema.close();
         } catch (SQLException e) {
             msgErrorCreate = "An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "A general error has been produced: " + e.getMessage();
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             closeStatement(st);
             IOUtils.closeQuietly(fstreamSchema);
@@ -452,7 +439,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @param schemaFileName
      * @return
      * @throws SQLException
@@ -466,28 +453,20 @@ public class SDF_MysqlDatabase {
         Statement stInsert = null;
         FileInputStream fstream = null;
         try {
-            SDF_MysqlDatabase.log.info("Creating Schema Data Base");
+            SDF_MysqlDatabase.LOGGER.info("Creating Schema Data Base");
 
-           /*
-            * FileInputStream fstreamSchema = openScriptFile(schemaFileName);
-            // FileInputStream fstreamSchema = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
-            // "database" + File.separator + "mysqlDB" + File.separator + schemaFileName);
-            InputStreamReader inSchema = new InputStreamReader(fstreamSchema);
-            BufferedReader brSchema = new BufferedReader(inSchema);
-            String strLineSchema;
-            st = con.createStatement();
-            // Read File Line By Line
-            while ((strLineSchema = brSchema.readLine()) != null) {
-                st.executeUpdate(strLineSchema);
-            }
-            // Close the input stream
-            inSchema.close();
-
-            */
+            /*
+             * FileInputStream fstreamSchema = openScriptFile(schemaFileName); // FileInputStream fstreamSchema = new
+             * FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + // "database" + File.separator + "mysqlDB"
+             * + File.separator + schemaFileName); InputStreamReader inSchema = new InputStreamReader(fstreamSchema); BufferedReader
+             * brSchema = new BufferedReader(inSchema); String strLineSchema; st = con.createStatement(); // Read File Line By Line
+             * while ((strLineSchema = brSchema.readLine()) != null) { st.executeUpdate(strLineSchema); } // Close the input stream
+             * inSchema.close();
+             */
 
             // Open the file that is the first
             // Create tables in Data Base
-            SDF_MysqlDatabase.log.info("Creating tables in Data Base");
+            SDF_MysqlDatabase.LOGGER.info("Creating tables in Data Base");
             fstream = openScriptFile("CreateMySqlTables.sql");
             // FileInputStream fstream = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" +
             // File.separator + "mysqlDB" + File.separator + "CreateMySqlTables.sql");
@@ -505,7 +484,7 @@ public class SDF_MysqlDatabase {
 
             // EMERALD updates:
             if (SDF_ManagerApp.isEmeraldMode()) {
-                SDF_MysqlDatabase.log.info("EMERALD structure changes");
+                SDF_MysqlDatabase.LOGGER.info("EMERALD structure changes");
                 fstream = openScriptFile("EmeraldChanges.sql");
 
                 in = new InputStreamReader(fstream, "UTF-8");
@@ -521,7 +500,7 @@ public class SDF_MysqlDatabase {
             }
 
             // Populate data base
-            SDF_MysqlDatabase.log.info("Populating tables");
+            SDF_MysqlDatabase.LOGGER.info("Populating tables");
             File dir = new File(getScriptPath("populateDB"));
             // File dir = new File(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "mysqlDB"
             // + File.separator + "populateDB");
@@ -551,7 +530,7 @@ public class SDF_MysqlDatabase {
 
                     // Get filename of file or directory
                     File filename = files[i];
-                    SDF_MysqlDatabase.log.debug("Loading: " + filename);
+                    SDF_MysqlDatabase.LOGGER.debug("Loading: " + filename);
                     FileInputStream fsInsert = new FileInputStream(filename);
 
                     InputStreamReader inInsert = new InputStreamReader(fsInsert, "UTF-8");
@@ -571,10 +550,10 @@ public class SDF_MysqlDatabase {
             mySQLDB = true;
         } catch (SQLException e) {
             msgErrorCreate = "An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -594,7 +573,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @return
      * @throws SQLException
      */
@@ -618,10 +597,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "alteColumnDatatype.sql:::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "alteColumnDatatype.sql:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -633,7 +612,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @param st
      * @return
      */
@@ -648,7 +627,7 @@ public class SDF_MysqlDatabase {
             st.executeQuery(sql);
             refSpeciesUpdated = true;
         } catch (Exception e) {
-            SDF_MysqlDatabase.log.error("Ref Species is already updated");
+            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated");
         } finally {
             closeStatement(st);
             return refSpeciesUpdated;
@@ -657,7 +636,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @param st
      * @return
      */
@@ -670,7 +649,7 @@ public class SDF_MysqlDatabase {
             st.executeQuery(sql);
             habitatUpdated = true;
         } catch (Exception e) {
-            SDF_MysqlDatabase.log.error("Habitats already updated");
+            SDF_MysqlDatabase.LOGGER.error("Habitats already updated");
         } finally {
 
             return habitatUpdated;
@@ -679,7 +658,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @param st
      * @return
      */
@@ -693,7 +672,7 @@ public class SDF_MysqlDatabase {
             refBirdsUpdated = true;
         } catch (Exception e) {
             refBirdsUpdated = false;
-            SDF_MysqlDatabase.log.error("Ref Birds is NOT updated");
+            SDF_MysqlDatabase.LOGGER.error("Ref Birds is NOT updated");
         } finally {
 
             return refBirdsUpdated;
@@ -702,7 +681,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @return
      * @throws SQLException
      */
@@ -712,32 +691,32 @@ public class SDF_MysqlDatabase {
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
         try {
-            SDF_MysqlDatabase.log.info("alterRefBirds....");
-            //FileInputStream fstreamAlter = openScriptFile("Alter_Ref_Birds_table.sql");
+            SDF_MysqlDatabase.LOGGER.info("alterRefBirds....");
+            // FileInputStream fstreamAlter = openScriptFile("Alter_Ref_Birds_table.sql");
             // FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
             // "database" + File.separator + "mysqlDB" + File.separator + "Alter_Ref_Birds_table.sql");
 
-/*            InputStreamReader inAlter = new InputStreamReader(fstreamAlter);
-            BufferedReader brAlter = new BufferedReader(inAlter);
-            String strLineAlter;
-*/          st = con.createStatement();
+            /*
+             * InputStreamReader inAlter = new InputStreamReader(fstreamAlter); BufferedReader brAlter = new
+             * BufferedReader(inAlter); String strLineAlter;
+             */st = con.createStatement();
             // Read File Line By Line
             String sqlAlter =
                     "ALTER TABLE " + schemaName + ".`ref_birds` ADD COLUMN `REF_BIRDS_CODE_NEW` VARCHAR(1) NULL  "
-                    + "AFTER `REF_BIRDS_ANNEXIIIPB` , ADD COLUMN `REF_BIRDS_ALT_SCIENTIFIC_NAME` VARCHAR(1024) NULL  "
+                            + "AFTER `REF_BIRDS_ANNEXIIIPB` , ADD COLUMN `REF_BIRDS_ALT_SCIENTIFIC_NAME` VARCHAR(1024) NULL  "
                             + "AFTER `REF_BIRDS_CODE_NEW` ;";
 
-//            while ((strLineAlter = brAlter.readLine()) != null) {
-                st.executeUpdate(sqlAlter);
-//            }
-//            inAlter.close();
+            // while ((strLineAlter = brAlter.readLine()) != null) {
+            st.executeUpdate(sqlAlter);
+            // }
+            // inAlter.close();
 
         } catch (SQLException e) {
             msgErrorCreate = "Alter_Ref_Birds_table.sql:::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "Alter_Ref_Birds_table.sql::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -748,7 +727,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @return
      * @throws SQLException
      */
@@ -757,7 +736,7 @@ public class SDF_MysqlDatabase {
         Statement st = null;
 
         try {
-            SDF_MysqlDatabase.log.info("populateRefBirds....");
+            SDF_MysqlDatabase.LOGGER.info("populateRefBirds....");
 
             FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "insert_birds_new.sql");
             // FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
@@ -777,10 +756,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "insert_birds_new.sql:::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "insert_birds_new.sql::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -792,7 +771,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @return
      * @throws SQLException
      */
@@ -807,10 +786,10 @@ public class SDF_MysqlDatabase {
             st.executeUpdate(sqlAlter);
         } catch (SQLException e) {
             msgErrorCreate = "alterHabitat:::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "alterHabitat::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -822,7 +801,7 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
+     * @param con database connection
      * @param st
      * @return
      */
@@ -836,7 +815,7 @@ public class SDF_MysqlDatabase {
             refTablesExist = true;
         } catch (Exception e) {
             refTablesExist = false;
-            SDF_MysqlDatabase.log.error("Ref tables not exist");
+            SDF_MysqlDatabase.LOGGER.error("Ref tables not exist");
         } finally {
             return refTablesExist;
         }
@@ -845,7 +824,7 @@ public class SDF_MysqlDatabase {
     /**
      * checks if emerald ref tables data is entered.
      *
-     * @param con
+     * @param con database connection
      *            connection
      * @param st
      *            statement
@@ -861,7 +840,7 @@ public class SDF_MysqlDatabase {
             refTablesExist = true;
         } catch (Exception e) {
             refTablesExist = false;
-            SDF_MysqlDatabase.log.error("Ref tables not exist");
+            SDF_MysqlDatabase.LOGGER.error("Ref tables not exist");
         }
         return refTablesExist;
     }
@@ -877,7 +856,7 @@ public class SDF_MysqlDatabase {
     /**
      * executes all SQLs in the script.
      *
-     * @param con
+     * @param con database connection
      *            connection
      * @param script
      *            file
@@ -902,10 +881,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = scriptFileName + "::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = scriptFileName + "::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -925,8 +904,9 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con
-     * @return
+     * @param con database connection
+     * @param folderName folder where reference tables sqls reside
+     * @return error message
      * @throws SQLException
      */
     private static String populateRefTablesInFolder(Connection con, String folderName) throws SQLException {
@@ -935,7 +915,7 @@ public class SDF_MysqlDatabase {
         try {
 
             // Populate data base
-            SDF_MysqlDatabase.log.info("Populating Ref tables");
+            SDF_MysqlDatabase.LOGGER.info("Populating Ref tables");
             File dir = new File(getScriptPath("populateDB" + File.separator + folderName));
 
             // The list of files can also be retrieved as File objects
@@ -949,9 +929,7 @@ public class SDF_MysqlDatabase {
                 }
             };
             files = dir.listFiles(fileFilter);
-            if (files == null) {
-                // Either dir does not exist or is not a directory
-            } else {
+            if (files != null) {
                 Arrays.sort(files);
                 for (int i = 0; i < files.length; i++) {
 
@@ -976,12 +954,12 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = folderName + "::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = folderName + "::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
-            SDF_MysqlDatabase.log.info("st==" + st);
+            SDF_MysqlDatabase.LOGGER.info("st==" + st);
             if (st != null) {
                 st.close();
             }
@@ -1004,7 +982,7 @@ public class SDF_MysqlDatabase {
             tableExists = true;
         } catch (Exception e) {
             tableExists = false;
-            SDF_MysqlDatabase.log.error("ReleaseDBUpdates does not exist");
+            SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
         } finally {
             return tableExists;
         }
@@ -1015,7 +993,7 @@ public class SDF_MysqlDatabase {
         Statement st = null;
         try {
 
-            SDF_MysqlDatabase.log.info("createReleaseDBUpdates....");
+            SDF_MysqlDatabase.LOGGER.info("createReleaseDBUpdates....");
 
             FileInputStream fstreamAlter = openScriptFile("createReleaseDBUpdates_version3.sql");
             // FileInputStream fstreamAlter = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
@@ -1033,10 +1011,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "ReleaseDBUpdates.sql:::An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "ReleaseDBUpdates.sql::A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1046,20 +1024,20 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String PopulateReleaseDBUpdates(Connection con) throws SQLException {
+    private static String populateReleaseDBUpdates(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         try {
-            SDF_MysqlDatabase.log.info("populate ReleaseDBUpdates....");
+            SDF_MysqlDatabase.LOGGER.info("populate ReleaseDBUpdates....");
             st = con.createStatement();
             st.executeUpdate("insert ignore into " + schemaName + ".ReleaseDBUpdates values(1,'3','Version3','N')");
         } catch (SQLException e) {
             msgErrorCreate = "insert_ReleaseDBUpdates_version3:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "insert_ReleaseDBUpdates_version3:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1079,10 +1057,10 @@ public class SDF_MysqlDatabase {
             st.executeUpdate(sqlAlter);
         } catch (SQLException e) {
             msgErrorCreate = "alterHabitatDataQuality:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "alterHabitatDataQuality:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1091,12 +1069,12 @@ public class SDF_MysqlDatabase {
         }
     }
 
-    private static String InsertRefDataQual(Connection con) throws SQLException {
+    private static String insertRefDataQual(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
         try {
-            SDF_MysqlDatabase.log.info("Inserting DD for Habitats in RefDataQuality...");
+            SDF_MysqlDatabase.LOGGER.info("Inserting DD for Habitats in RefDataQuality...");
 
             FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "insert_RefDataQual_version3.sql");
             // FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
@@ -1117,10 +1095,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "insert_RefDataQual_version3.sql:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "insert_RefDataQual_version3:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1130,12 +1108,12 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String UpdateRefHabitats(Connection con) throws SQLException {
+    private static String updateRefHabitats(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
         try {
-            SDF_MysqlDatabase.log.info("Updating RefHabitats ...");
+            SDF_MysqlDatabase.LOGGER.info("Updating RefHabitats ...");
 
             FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "Update_RefHabitats_version3.sql");
             // FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
@@ -1156,10 +1134,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "UpdateRefHabitats.sql:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "UpdateRefHabitats:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1169,21 +1147,21 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String UpdateVersion3Done(Connection con) throws SQLException {
+    private static String updateVersion3Done(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
         try {
-            SDF_MysqlDatabase.log.info("Updating UpdateVersion3Done ...");
+            SDF_MysqlDatabase.LOGGER.info("Updating UpdateVersion3Done ...");
             st = con.createStatement();
             st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = 3");
         } catch (SQLException e) {
             msgErrorCreate = "UpdateVersion3Done: An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "UpdateVersion3Done general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1212,16 +1190,17 @@ public class SDF_MysqlDatabase {
 
         } catch (Exception e) {
             tableExists = false;
-            SDF_MysqlDatabase.log.error("New species Croatia does not exist");
+            SDF_MysqlDatabase.LOGGER.error("New species Croatia does not exist");
         } finally {
             return tableExists;
         }
     }
 
-
     /**
      * checks if db strucure updates for emerald mode are done.
-     * @param con db connection
+     *
+     * @param con database connection
+     *            db connection
      * @return true if updates already exist
      */
     private static boolean isEmeraldUpdatesdone(Connection con) {
@@ -1245,17 +1224,17 @@ public class SDF_MysqlDatabase {
 
         } catch (Exception e) {
             updateDone = false;
-            SDF_MysqlDatabase.log.error("Error checking Emrald updates " + e);
+            SDF_MysqlDatabase.LOGGER.error("Error checking Emrald updates " + e);
         }
         return updateDone;
     }
 
-    private static String UpdateRefSpeciesCroatia(Connection con) throws SQLException {
+    private static String updateRefSpeciesCroatia(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
         try {
-            SDF_MysqlDatabase.log.info("Updating RefSpecies Croatia ...");
+            SDF_MysqlDatabase.LOGGER.info("Updating RefSpecies Croatia ...");
 
             FileInputStream fstreamInsert = openScriptFile("populateDB" + File.separator + "Update_RefSpecies_version3.sql");
             // FileInputStream fstreamInsert = new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator +
@@ -1276,10 +1255,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "UpdateRefHabitats.sql:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "UpdateRefHabitats:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
                 st.close();
@@ -1291,9 +1270,12 @@ public class SDF_MysqlDatabase {
 
     /**
      * opens a text file.
-     * @param scriptName file name
+     *
+     * @param scriptName
+     *            file name
      * @return stream of the file
-     * @throws Exception if i/o error
+     * @throws Exception
+     *             if i/o error
      */
     private static FileInputStream openScriptFile(String scriptName) throws Exception {
         return new FileInputStream(getScriptPath(scriptName));
@@ -1324,12 +1306,12 @@ public class SDF_MysqlDatabase {
         Socket socket = new Socket();
         try {
 
-            log.info("Test if host is solved: ");
+            LOGGER.info("Test if host is solved: ");
             InetSocketAddress endPoint = new InetSocketAddress(host, Integer.parseInt(port));
             if (endPoint.isUnresolved()) {
                 return "Host cannot be resolved.";
             }
-            log.info("Test if port is open: host='" + "'; port='" + port + "'");
+            LOGGER.info("Test if port is open: host='" + "'; port='" + port + "'");
             socket.connect(endPoint, 1000);
 
         } catch (IOException ie) {
@@ -1340,7 +1322,7 @@ public class SDF_MysqlDatabase {
         } finally {
             IOUtils.closeQuietly(socket);
         }
-        log.info("Testing MySQL existence: ");
+        LOGGER.info("Testing MySQL existence: ");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             String url = "jdbc:mysql://" + host + ":" + port + "/?socketTimeout=2000&user=" + user + "&password=" + pwd;
@@ -1357,12 +1339,18 @@ public class SDF_MysqlDatabase {
         return "";
     }
 
+    /**
+     * updates for emerald schema.
+     * @param con db connection
+     * @return error string or null if no errors
+     * @throws SQLException if sQL fails
+     */
     private static String doEmeraldUpdates(Connection con) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
 
         try {
-            SDF_MysqlDatabase.log.info("Doing necessary DB struct updates for EMERALD data structure ...");
+            SDF_MysqlDatabase.LOGGER.info("Doing necessary DB struct updates for EMERALD data structure ...");
 
             FileInputStream fstreamInsert = openScriptFile("EmeraldChanges.sql");
 
@@ -1379,10 +1367,10 @@ public class SDF_MysqlDatabase {
 
         } catch (SQLException e) {
             msgErrorCreate = "EmeraldUpdates:An error has been produced in database";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
             msgErrorCreate = "EmeraldUpdates:A general error has been produced";
-            SDF_MysqlDatabase.log.error(msgErrorCreate + ".::::" + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
 
             if (st != null) {
@@ -1404,14 +1392,16 @@ public class SDF_MysqlDatabase {
             try {
                 conn.close();
             } catch (SQLException sqle) {
-                log.error("Error closing database connection " + sqle);
+                LOGGER.error("Error closing database connection " + sqle);
             }
         }
     }
 
     /**
      * Closes Statement.
-     * @param rs statement
+     *
+     * @param rs
+     *            statement
      */
     static void closeStatement(Statement rs) {
         try {
@@ -1419,7 +1409,7 @@ public class SDF_MysqlDatabase {
                 rs.close();
             }
         } catch (Exception e) {
-            log.error("Error closing statement " + e);
+            LOGGER.error("Error closing statement " + e);
         }
     }
 

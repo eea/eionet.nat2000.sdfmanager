@@ -1216,7 +1216,7 @@ public class SDF_MysqlDatabase {
         try {
 
             String hql =
-                    "select 1 from information_schema.columns where table_schema = 'natura2000' and table_name = 'habitat' "
+                    "select 1 from information_schema.columns where table_schema = 'emerald' and table_name = 'habitat' "
                             + "and column_name = 'habitat_code' and column_type='varchar(9)'";
             stDBSpec = con.createStatement();
 

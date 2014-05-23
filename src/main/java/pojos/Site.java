@@ -1,10 +1,9 @@
 package pojos;
-// Generated 01-fvr.-2011 13:10:18 by Hibernate Tools 3.2.1.GA
 
+// Generated 01-fvr.-2011 13:10:18 by Hibernate Tools 3.2.1.GA
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -12,330 +11,676 @@ import java.util.Set;
  */
 public class Site implements java.io.Serializable {
 
+    /** The site code. */
+    private String siteCode;
 
-     private String siteCode;
-     private Map map;
-     private Doc doc;
-     private Mgmt mgmt;
-     private Resp resp;
-     private Character siteType;
-     private String siteName;
-     private Date siteCompDate;
-     private Date siteUpdateDate;
-     private Date siteSpaDate;
-     private String siteSpaLegalRef;
-     private Date siteSciPropDate;
-     private Date siteSciConfDate;
-     private Date siteSacDate;
-     private String siteSacLegalRef;
-     private String siteExplanations;
-     private Double siteLongitude;
-     private Double siteLatitude;
-     private Double siteArea;
-     private Double siteMarineArea;
-     private Double siteLength;
-     private String siteCharacteristics;
-     private String siteQuality;
-     private String siteDesignation;
-     private Set habitatClasses = new HashSet(0);
-     private Set specieses = new HashSet(0);
-     private Set habitats = new HashSet(0);
-     private Set siteRelations = new HashSet(0);
-     private Set siteOwnerships = new HashSet(0);
-     private Set nationalDtypes = new HashSet(0);
-     private Set regions = new HashSet(0);
-     private Set otherSpecieses = new HashSet(0);
-     private Set siteBiogeos = new HashSet(0);
-     private Set impacts = new HashSet(0);
-     private Date siteDateCreation;
-     private Date siteDateDeletion;
-     private Date siteDateUpdate;
+    /** The map. */
+    private Map map;
 
+    /** The doc. */
+    private Doc doc;
+
+    /** The mgmt. */
+    private Mgmt mgmt;
+
+    /** The resp. */
+    private Resp resp;
+
+    /** The site type. */
+    private Character siteType;
+
+    /** The site name. */
+    private String siteName;
+
+    /** The site comp date. */
+    private Date siteCompDate;
+
+    /** The site update date. */
+    private Date siteUpdateDate;
+
+    /** The site spa date. */
+    private Date siteSpaDate;
+
+    /** The site spa legal ref. */
+    private String siteSpaLegalRef;
+
+    /** The site sci prop date. */
+    private Date siteSciPropDate;
+
+    /** The site sci conf date. */
+    private Date siteSciConfDate;
+
+    /** The site sac date. */
+    private Date siteSacDate;
+
+    /** The site sac legal ref. */
+    private String siteSacLegalRef;
+
+    /** The site explanations. */
+    private String siteExplanations;
+
+    /** The site longitude. */
+    private Double siteLongitude;
+
+    /** The site latitude. */
+    private Double siteLatitude;
+
+    /** The site area. */
+    private Double siteArea;
+
+    /** The site marine area. */
+    private Double siteMarineArea;
+
+    /** The site length. */
+    private Double siteLength;
+
+    /** The site characteristics. */
+    private String siteCharacteristics;
+
+    /** The site quality. */
+    private String siteQuality;
+
+    /** The site designation. */
+    private String siteDesignation;
+
+    /** The habitat classes. */
+    private Set habitatClasses = new HashSet(0);
+
+    /** The specieses. */
+    private Set specieses = new HashSet(0);
+
+    /** The habitats. */
+    private Set habitats = new HashSet(0);
+
+    /** The site relations. */
+    private Set siteRelations = new HashSet(0);
+
+    /** The site ownerships. */
+    private Set siteOwnerships = new HashSet(0);
+
+    /** The national dtypes. */
+    private Set nationalDtypes = new HashSet(0);
+
+    /** The regions. */
+    private Set regions = new HashSet(0);
+
+    /** The other specieses. */
+    private Set otherSpecieses = new HashSet(0);
+
+    /** The site biogeos. */
+    private Set siteBiogeos = new HashSet(0);
+
+    /** The impacts. */
+    private Set impacts = new HashSet(0);
+
+    /** The site date creation. */
+    private Date siteDateCreation;
+
+    /** The site date deletion. */
+    private Date siteDateDeletion;
+
+    /** The site date update. */
+    private Date siteDateUpdate;
+
+    /** Date site proposed as ASCI. */
+    private Date siteProposedAsciDate;
+
+    /** Date site confirmed as ASCI candidate . */
+    private Date siteConfirmedCandidateAsciDate;
+
+    /** Date site confirmed as ASCI. */
+    private Date siteConfirmedAsciDate;
+
+    /** Date site designated as ASCI. */
+    private Date siteDesignatedAsciDate;
+
+    /** National legal reference of ASCI designation. */
+    private String siteAsciLegalRef;
+
+    /**
+     * Default constructor.
+     */
     public Site() {
+        // Empty.
     }
 
-
+    /**
+     * Constructor for the given site code.
+     *
+     * @param siteCode
+     */
     public Site(String siteCode) {
         this.siteCode = siteCode;
     }
-    public Site(String siteCode, Map map, Doc doc, Mgmt mgmt, Resp resp, Character siteType, String siteName, Date siteCompDate, Date siteUpdateDate, Date siteSpaDate, String siteSpaLegalRef, Date siteSciPropDate, Date siteSciConfDate, Date siteSacDate, String siteSacLegalRef, String siteExplanations, Double siteLongitude, Double siteLatitude, Double siteArea, Double siteMarineArea, Double siteLength, String siteCharacteristics, String siteQuality, String siteDesignation, Set habitatClasses, Set specieses, Set habitats, Set siteRelations, Set siteOwnerships, Set nationalDtypes, Set regions, Set otherSpecieses, Set siteBiogeos, Set impacts) {
-       this.siteCode = siteCode;
-       this.map = map;
-       this.doc = doc;
-       this.mgmt = mgmt;
-       this.resp = resp;
-       this.siteType = siteType;
-       this.siteName = siteName;
-       this.siteCompDate = siteCompDate;
-       this.siteUpdateDate = siteUpdateDate;
-       this.siteSpaDate = siteSpaDate;
-       this.siteSpaLegalRef = siteSpaLegalRef;
-       this.siteSciPropDate = siteSciPropDate;
-       this.siteSciConfDate = siteSciConfDate;
-       this.siteSacDate = siteSacDate;
-       this.siteSacLegalRef = siteSacLegalRef;
-       this.siteExplanations = siteExplanations;
-       this.siteLongitude = siteLongitude;
-       this.siteLatitude = siteLatitude;
-       this.siteArea = siteArea;
-       this.siteMarineArea = siteMarineArea;
-       this.siteLength = siteLength;
-       this.siteCharacteristics = siteCharacteristics;
-       this.siteQuality = siteQuality;
-       this.siteDesignation = siteDesignation;
-       this.habitatClasses = habitatClasses;
-       this.specieses = specieses;
-       this.habitats = habitats;
-       this.siteRelations = siteRelations;
-       this.siteOwnerships = siteOwnerships;
-       this.nationalDtypes = nationalDtypes;
-       this.regions = regions;
-       this.otherSpecieses = otherSpecieses;
-       this.siteBiogeos = siteBiogeos;
-       this.impacts = impacts;
+
+    /**
+     * Constructor by all given fields..
+     *
+     * @param siteCode
+     */
+    public Site(String siteCode, Map map, Doc doc, Mgmt mgmt, Resp resp, Character siteType, String siteName, Date siteCompDate,
+            Date siteUpdateDate, Date siteSpaDate, String siteSpaLegalRef, Date siteSciPropDate, Date siteSciConfDate,
+            Date siteSacDate, String siteSacLegalRef, String siteExplanations, Double siteLongitude, Double siteLatitude,
+            Double siteArea, Double siteMarineArea, Double siteLength, String siteCharacteristics, String siteQuality,
+            String siteDesignation, Set habitatClasses, Set specieses, Set habitats, Set siteRelations, Set siteOwnerships,
+            Set nationalDtypes, Set regions, Set otherSpecieses, Set siteBiogeos, Set impacts) {
+        this.siteCode = siteCode;
+        this.map = map;
+        this.doc = doc;
+        this.mgmt = mgmt;
+        this.resp = resp;
+        this.siteType = siteType;
+        this.siteName = siteName;
+        this.siteCompDate = siteCompDate;
+        this.siteUpdateDate = siteUpdateDate;
+        this.siteSpaDate = siteSpaDate;
+        this.siteSpaLegalRef = siteSpaLegalRef;
+        this.siteSciPropDate = siteSciPropDate;
+        this.siteSciConfDate = siteSciConfDate;
+        this.siteSacDate = siteSacDate;
+        this.siteSacLegalRef = siteSacLegalRef;
+        this.siteExplanations = siteExplanations;
+        this.siteLongitude = siteLongitude;
+        this.siteLatitude = siteLatitude;
+        this.siteArea = siteArea;
+        this.siteMarineArea = siteMarineArea;
+        this.siteLength = siteLength;
+        this.siteCharacteristics = siteCharacteristics;
+        this.siteQuality = siteQuality;
+        this.siteDesignation = siteDesignation;
+        this.habitatClasses = habitatClasses;
+        this.specieses = specieses;
+        this.habitats = habitats;
+        this.siteRelations = siteRelations;
+        this.siteOwnerships = siteOwnerships;
+        this.nationalDtypes = nationalDtypes;
+        this.regions = regions;
+        this.otherSpecieses = otherSpecieses;
+        this.siteBiogeos = siteBiogeos;
+        this.impacts = impacts;
     }
 
+    /**
+     * @return
+     */
     public String getSiteCode() {
         return this.siteCode;
     }
 
+    /**
+     * @param siteCode
+     */
     public void setSiteCode(String siteCode) {
         this.siteCode = siteCode;
     }
+
+    /**
+     * @return
+     */
     public Map getMap() {
         return this.map;
     }
 
+    /**
+     * @param map
+     */
     public void setMap(Map map) {
         this.map = map;
     }
+
+    /**
+     * @return
+     */
     public Doc getDoc() {
         return this.doc;
     }
 
+    /**
+     * @param doc
+     */
     public void setDoc(Doc doc) {
         this.doc = doc;
     }
+
+    /**
+     * @return
+     */
     public Mgmt getMgmt() {
         return this.mgmt;
     }
 
+    /**
+     * @param mgmt
+     */
     public void setMgmt(Mgmt mgmt) {
         this.mgmt = mgmt;
     }
+
+    /**
+     * @return
+     */
     public Resp getResp() {
         return this.resp;
     }
 
+    /**
+     * @param resp
+     */
     public void setResp(Resp resp) {
         this.resp = resp;
     }
+
+    /**
+     * @return
+     */
     public Character getSiteType() {
         return this.siteType;
     }
 
+    /**
+     * @param siteType
+     */
     public void setSiteType(Character siteType) {
         this.siteType = siteType;
     }
+
+    /**
+     * @return
+     */
     public String getSiteName() {
         return this.siteName;
     }
 
+    /**
+     * @param siteName
+     */
     public void setSiteName(String siteName) {
         this.siteName = siteName;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteCompDate() {
         return this.siteCompDate;
     }
 
+    /**
+     * @param siteCompDate
+     */
     public void setSiteCompDate(Date siteCompDate) {
         this.siteCompDate = siteCompDate;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteUpdateDate() {
         return this.siteUpdateDate;
     }
 
+    /**
+     * @param siteUpdateDate
+     */
     public void setSiteUpdateDate(Date siteUpdateDate) {
         this.siteUpdateDate = siteUpdateDate;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteSpaDate() {
         return this.siteSpaDate;
     }
 
+    /**
+     * @param siteSpaDate
+     */
     public void setSiteSpaDate(Date siteSpaDate) {
         this.siteSpaDate = siteSpaDate;
     }
+
+    /**
+     * @return
+     */
     public String getSiteSpaLegalRef() {
         return this.siteSpaLegalRef;
     }
 
+    /**
+     * @param siteSpaLegalRef
+     */
     public void setSiteSpaLegalRef(String siteSpaLegalRef) {
         this.siteSpaLegalRef = siteSpaLegalRef;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteSciPropDate() {
         return this.siteSciPropDate;
     }
 
+    /**
+     * @param siteSciPropDate
+     */
     public void setSiteSciPropDate(Date siteSciPropDate) {
         this.siteSciPropDate = siteSciPropDate;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteSciConfDate() {
         return this.siteSciConfDate;
     }
 
+    /**
+     * @param siteSciConfDate
+     */
     public void setSiteSciConfDate(Date siteSciConfDate) {
         this.siteSciConfDate = siteSciConfDate;
     }
+
+    /**
+     * @return
+     */
     public Date getSiteSacDate() {
         return this.siteSacDate;
     }
 
+    /**
+     * @param siteSacDate
+     */
     public void setSiteSacDate(Date siteSacDate) {
         this.siteSacDate = siteSacDate;
     }
+
+    /**
+     * @return
+     */
     public String getSiteSacLegalRef() {
         return this.siteSacLegalRef;
     }
 
+    /**
+     * @param siteSacLegalRef
+     */
     public void setSiteSacLegalRef(String siteSacLegalRef) {
         this.siteSacLegalRef = siteSacLegalRef;
     }
+
+    /**
+     * @return
+     */
     public String getSiteExplanations() {
         return this.siteExplanations;
     }
 
+    /**
+     * @param siteExplanations
+     */
     public void setSiteExplanations(String siteExplanations) {
         this.siteExplanations = siteExplanations;
     }
+
+    /**
+     * @return
+     */
     public Double getSiteLongitude() {
         return this.siteLongitude;
     }
 
+    /**
+     * @param siteLongitude
+     */
     public void setSiteLongitude(Double siteLongitude) {
         this.siteLongitude = siteLongitude;
     }
+
+    /**
+     * @return
+     */
     public Double getSiteLatitude() {
         return this.siteLatitude;
     }
 
+    /**
+     * @param siteLatitude
+     */
     public void setSiteLatitude(Double siteLatitude) {
         this.siteLatitude = siteLatitude;
     }
+
+    /**
+     * @return
+     */
     public Double getSiteArea() {
         return this.siteArea;
     }
 
+    /**
+     * @param siteArea
+     */
     public void setSiteArea(Double siteArea) {
         this.siteArea = siteArea;
     }
+
+    /**
+     * @return
+     */
     public Double getSiteMarineArea() {
         return this.siteMarineArea;
     }
 
+    /**
+     * @param siteMarineArea
+     */
     public void setSiteMarineArea(Double siteMarineArea) {
         this.siteMarineArea = siteMarineArea;
     }
+
+    /**
+     * @return
+     */
     public Double getSiteLength() {
         return this.siteLength;
     }
 
+    /**
+     * @param siteLength
+     */
     public void setSiteLength(Double siteLength) {
         this.siteLength = siteLength;
     }
+
+    /**
+     * @return
+     */
     public String getSiteCharacteristics() {
         return this.siteCharacteristics;
     }
 
+    /**
+     * @param siteCharacteristics
+     */
     public void setSiteCharacteristics(String siteCharacteristics) {
         this.siteCharacteristics = siteCharacteristics;
     }
+
+    /**
+     * @return
+     */
     public String getSiteQuality() {
         return this.siteQuality;
     }
 
+    /**
+     * @param siteQuality
+     */
     public void setSiteQuality(String siteQuality) {
         this.siteQuality = siteQuality;
     }
+
+    /**
+     * @return
+     */
     public String getSiteDesignation() {
         return this.siteDesignation;
     }
 
+    /**
+     * @param siteDesignation
+     */
     public void setSiteDesignation(String siteDesignation) {
         this.siteDesignation = siteDesignation;
     }
+
+    /**
+     * @return
+     */
     public Set getHabitatClasses() {
         return this.habitatClasses;
     }
 
+    /**
+     * @param habitatClasses
+     */
     public void setHabitatClasses(Set habitatClasses) {
         this.habitatClasses = habitatClasses;
     }
+
+    /**
+     * @return
+     */
     public Set getSpecieses() {
         return this.specieses;
     }
 
+    /**
+     * @param specieses
+     */
     public void setSpecieses(Set specieses) {
         this.specieses = specieses;
     }
+
+    /**
+     * @return
+     */
     public Set getHabitats() {
         return this.habitats;
     }
 
+    /**
+     * @param habitats
+     */
     public void setHabitats(Set habitats) {
         this.habitats = habitats;
     }
+
+    /**
+     * @return
+     */
     public Set getSiteRelations() {
         return this.siteRelations;
     }
 
+    /**
+     * @param siteRelations
+     */
     public void setSiteRelations(Set siteRelations) {
         this.siteRelations = siteRelations;
     }
+
+    /**
+     * @return
+     */
     public Set getSiteOwnerships() {
         return this.siteOwnerships;
     }
 
+    /**
+     * @param siteOwnerships
+     */
     public void setSiteOwnerships(Set siteOwnerships) {
         this.siteOwnerships = siteOwnerships;
     }
+
+    /**
+     * @return
+     */
     public Set getNationalDtypes() {
         return this.nationalDtypes;
     }
 
+    /**
+     * @param nationalDtypes
+     */
     public void setNationalDtypes(Set nationalDtypes) {
         this.nationalDtypes = nationalDtypes;
     }
+
+    /**
+     * @return
+     */
     public Set getRegions() {
         return this.regions;
     }
 
+    /**
+     * @param regions
+     */
     public void setRegions(Set regions) {
         this.regions = regions;
     }
+
+    /**
+     * @return
+     */
     public Set getOtherSpecieses() {
         return this.otherSpecieses;
     }
 
+    /**
+     * @param otherSpecieses
+     */
     public void setOtherSpecieses(Set otherSpecieses) {
         this.otherSpecieses = otherSpecieses;
     }
+
+    /**
+     * @return
+     */
     public Set getSiteBiogeos() {
         return this.siteBiogeos;
     }
 
+    /**
+     * @param siteBiogeos
+     */
     public void setSiteBiogeos(Set siteBiogeos) {
         this.siteBiogeos = siteBiogeos;
     }
+
+    /**
+     * @return
+     */
     public Set getImpacts() {
         return this.impacts;
     }
 
+    /**
+     * @param impacts
+     */
     public void setImpacts(Set impacts) {
         this.impacts = impacts;
     }
 
     /**
      * @return the siteDateCreation
+     */
+    /**
+     * @return
      */
     public Date getSiteDateCreation() {
         return siteDateCreation;
@@ -344,12 +689,18 @@ public class Site implements java.io.Serializable {
     /**
      * @param siteDateCreation the siteDateCreation to set
      */
+    /**
+     * @param siteDateCreation
+     */
     public void setSiteDateCreation(Date siteDateCreation) {
         this.siteDateCreation = siteDateCreation;
     }
 
     /**
      * @return the siteDateDeletion
+     */
+    /**
+     * @return
      */
     public Date getSiteDateDeletion() {
         return siteDateDeletion;
@@ -358,12 +709,18 @@ public class Site implements java.io.Serializable {
     /**
      * @param siteDateDeletion the siteDateDeletion to set
      */
+    /**
+     * @param siteDateDeletion
+     */
     public void setSiteDateDeletion(Date siteDateDeletion) {
         this.siteDateDeletion = siteDateDeletion;
     }
 
     /**
      * @return the sitedateUpdate
+     */
+    /**
+     * @return
      */
     public Date getSiteDateUpdate() {
         return siteDateUpdate;
@@ -372,17 +729,86 @@ public class Site implements java.io.Serializable {
     /**
      * @param sitedateUpdate the sitedateUpdate to set
      */
+    /**
+     * @param siteDateUpdate
+     */
     public void setSiteDateUpdate(Date siteDateUpdate) {
         this.siteDateUpdate = siteDateUpdate;
     }
 
+    /**
+     * @return the siteProposedAsciDate
+     */
+    public Date getSiteProposedAsciDate() {
+        return siteProposedAsciDate;
+    }
 
-//    public Site duplicate(Site site) {
-//
-//
-//    }
+    /**
+     * @param siteProposedAsciDate the siteProposedAsciDate to set
+     */
+    public void setSiteProposedAsciDate(Date siteProposedAsciDate) {
+        this.siteProposedAsciDate = siteProposedAsciDate;
+    }
 
+    /**
+     * @return the siteConfirmedCandidateAsciDate
+     */
+    public Date getSiteConfirmedCandidateAsciDate() {
+        return siteConfirmedCandidateAsciDate;
+    }
+
+    /**
+     * @param siteConfirmedCandidateAsciDate the siteConfirmedCandidateAsciDate to set
+     */
+    public void setSiteConfirmedCandidateAsciDate(Date siteConfirmedCandidateAsciDate) {
+        this.siteConfirmedCandidateAsciDate = siteConfirmedCandidateAsciDate;
+    }
+
+    /**
+     * @return the siteConfirmedAsciDate
+     */
+    public Date getSiteConfirmedAsciDate() {
+        return siteConfirmedAsciDate;
+    }
+
+    /**
+     * @param siteConfirmedAsciDate the siteConfirmedAsciDate to set
+     */
+    public void setSiteConfirmedAsciDate(Date siteConfirmedAsciDate) {
+        this.siteConfirmedAsciDate = siteConfirmedAsciDate;
+    }
+
+    /**
+     * @return the siteDesignatedAsciDate
+     */
+    public Date getSiteDesignatedAsciDate() {
+        return siteDesignatedAsciDate;
+    }
+
+    /**
+     * @param siteDesignatedAsciDate the siteDesignatedAsciDate to set
+     */
+    public void setSiteDesignatedAsciDate(Date siteDesignatedAsciDate) {
+        this.siteDesignatedAsciDate = siteDesignatedAsciDate;
+    }
+
+    /**
+     * @return the siteAsciLegalRef
+     */
+    public String getSiteAsciLegalRef() {
+        return siteAsciLegalRef;
+    }
+
+    /**
+     * @param siteAsciLegalRef the siteAsciLegalRef to set
+     */
+    public void setSiteAsciLegalRef(String siteAsciLegalRef) {
+        this.siteAsciLegalRef = siteAsciLegalRef;
+    }
+
+    // public Site duplicate(Site site) {
+    //
+    //
+    // }
 
 }
-
-

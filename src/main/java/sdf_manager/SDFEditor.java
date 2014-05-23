@@ -24,7 +24,13 @@ import java.util.StringTokenizer;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
@@ -87,9 +93,8 @@ public class SDFEditor extends javax.swing.JFrame {
     private Session session;
     private Transaction trans;
     private String sitecode;
-    private String mode; /*new, edit , duplicateSite*/
-    private final static Logger logger = Logger.getLogger(SDFEditor.class .getName());
-
+    private String mode; /* new, edit , duplicateSite */
+    private final static Logger logger = Logger.getLogger(SDFEditor.class.getName());
 
     private javax.swing.JFrame parent;
     private SDFFilter filterWindow;
@@ -122,6 +127,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /*
      * (non-Javadoc)
+     *
      * @see java.awt.Container#getPreferredSize()
      */
     @Override
@@ -141,20 +147,14 @@ public class SDFEditor extends javax.swing.JFrame {
      * Close the SDF Editor.
      */
     void exit() {
-        int answer = javax.swing.JOptionPane.showOptionDialog(
-                this,
-                "Are you sure you want to leave the editor?",
-                "Confirm close editor",
-                javax.swing.JOptionPane.YES_NO_OPTION,
-                javax.swing.JOptionPane.WARNING_MESSAGE,
-                null,
-                null,
-                null);
+        int answer =
+                javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to leave the editor?",
+                        "Confirm close editor", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE,
+                        null, null, null);
         if (answer == javax.swing.JOptionPane.YES_OPTION) {
             this.dispose();
         }
     }
-
 
     /**
      *
@@ -244,6 +244,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /**
      * Loads site.
+     *
      * @param sitecode
      * @param dupSitecode
      */
@@ -290,13 +291,13 @@ public class SDFEditor extends javax.swing.JFrame {
         if (type != null) {
             if (("A").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(0);
-            } //SPA
+            } // SPA
             else if (("B").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(1);
-            } //SCI
+            } // SCI
             else if (("C").equals(type.toString())) {
                 this.cmbSiteType.setSelectedIndex(2);
-            } //Both
+            } // Both
         }
         this.txtCompDate.setText(wrap(site.getSiteCompDate()));
 
@@ -347,13 +348,13 @@ public class SDFEditor extends javax.swing.JFrame {
             Character status = mgmt.getMgmtStatus();
             if (status != null) {
                 if (("Y").equals(status.toString())) {
-                   this.btnMgmtExists.setSelected(true);
+                    this.btnMgmtExists.setSelected(true);
                 } else if (("P").equals(status.toString())) {
-                   this.btnMgmtPrep.setSelected(true);
+                    this.btnMgmtPrep.setSelected(true);
                 } else if (("N").equals(status.toString())) {
-                   this.btnMgmtNo.setSelected(true);
+                    this.btnMgmtNo.setSelected(true);
                 } else {
-                this.btnMgmtNo.setSelected(true);
+                    this.btnMgmtNo.setSelected(true);
                 }
 
             }
@@ -497,7 +498,7 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      */
     private void saveAndReloadSession() {
-        /*saving main site obj*/
+        /* saving main site obj */
         Transaction tr = this.session.beginTransaction();
         this.session.saveOrUpdate(this.site);
         tr.commit();
@@ -542,7 +543,7 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     private void save() {
         String msgError = "";
-        //printSiteFields();
+        // printSiteFields();
         SDFEditor.logger.info("Saving the Site");
         if (differentFields(this.site.getSiteName(), this.txtSiteName.getText())) {
             if (this.txtSiteName.getText().length() > 256) {
@@ -580,34 +581,36 @@ public class SDFEditor extends javax.swing.JFrame {
         if (differentFields(this.site.getSiteCharacteristics(), this.txtSiteCharacter.getText())) {
             this.site.setSiteCharacteristics(fmt(this.txtSiteCharacter.getText()));
         } else {
-           this.site.setSiteCharacteristics(this.txtSiteCharacter.getText());
+            this.site.setSiteCharacteristics(this.txtSiteCharacter.getText());
         }
         if (differentFields(this.site.getSiteQuality(), this.txtQuality.getText())) {
             this.site.setSiteQuality(fmt(this.txtQuality.getText()));
         } else {
-           this.site.setSiteQuality(this.txtQuality.getText());
+            this.site.setSiteQuality(this.txtQuality.getText());
         }
         this.saveDoc();
         if (differentFields(this.site.getSiteDesignation(), this.txtDesignation.getText())) {
             this.site.setSiteDesignation(fmt(this.txtDesignation.getText()));
         } else {
-           this.site.setSiteDesignation(this.txtDesignation.getText());
+            this.site.setSiteDesignation(this.txtDesignation.getText());
         }
         saveMgmt();
         saveMap();
 
         if (msgError != null && !("").equals(msgError)) {
-            JOptionPane.showMessageDialog(this, "There are some errors in the data:\n" + msgError, "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "There are some errors in the data:\n" + msgError, "Dialog",
+                    JOptionPane.ERROR_MESSAGE);
         } else {
             Calendar cal = Calendar.getInstance();
             if (this.site.getSiteDateCreation() != null) {
-               site.setSiteDateUpdate(cal.getTime());
+                site.setSiteDateUpdate(cal.getTime());
             } else {
-                 site.setSiteDateCreation(cal.getTime());
+                site.setSiteDateCreation(cal.getTime());
             }
             this.saveAndReloadSession();
             SDFEditor.logger.info("Site saved.");
-            javax.swing.JOptionPane.showMessageDialog(this, "The site has been succesfully saved. ", "Dialog", JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "The site has been succesfully saved. ", "Dialog",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -672,7 +675,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param index
      */
     public void saveMgmtBody(MgmtBody h, int index) {
-        /*saving existing at index 0*/
+        /* saving existing at index 0 */
         SDFEditor.logger.info("Saving existing Mgmt Body: " + h.getMgmtBodyId());
         MgmtBody hTo = (MgmtBody) this.modelMgmtBodies.get(index);
         copyMgmtBody(h, hTo);
@@ -706,8 +709,9 @@ public class SDFEditor extends javax.swing.JFrame {
         Double longitude = ConversionTools.stringToDoubleN(this.txtLongitude.getText());
         Double latitude = ConversionTools.stringToDoubleN(this.txtLatitude.getText());
         Double area = ConversionTools.stringToDoubleN(this.txtArea.getText());
-        if (this.txtMarineArea.getText() != null && !(("").equals(this.txtMarineArea.getText())) && !(SDF_Util.validatePercent(this.txtMarineArea.getText()))) {
-             msgErrorSpatial = " Please, Provided a valid percentage for Marine Area (Location tab).\n";
+        if (this.txtMarineArea.getText() != null && !(("").equals(this.txtMarineArea.getText()))
+                && !(SDF_Util.validatePercent(this.txtMarineArea.getText()))) {
+            msgErrorSpatial = " Please, Provided a valid percentage for Marine Area (Location tab).\n";
         }
         Double marineArea = ConversionTools.stringToDoubleN(this.txtMarineArea.getText());
         Double length = ConversionTools.stringToDoubleN(this.txtLength.getText());
@@ -738,7 +742,6 @@ public class SDFEditor extends javax.swing.JFrame {
         String errorDates = "";
         SDFEditor.logger.info("Saving dates.");
         String spaDate = this.txtDateSpa.getText();
-
 
         if (!spaDate.equals("")) {
             Date spaDateFormat = ConversionTools.convertToDate(spaDate);
@@ -788,21 +791,25 @@ public class SDFEditor extends javax.swing.JFrame {
         String msgErrorDates = "";
         String sacLegalRef = this.txtSacRef.getText();
         if (!("").equals(sacLegalRef)) {
-            /*if (this.txtSacRef.getText().length() > 512) {
-                msgErrorDates += ".-Sac Reference\n";
-                saveOK = false;
-            } else {*/
-                this.site.setSiteSacLegalRef(this.txtSacRef.getText());
-            //}
+            /*
+             * if (this.txtSacRef.getText().length() > 512) {
+             * msgErrorDates += ".-Sac Reference\n";
+             * saveOK = false;
+             * } else {
+             */
+            this.site.setSiteSacLegalRef(this.txtSacRef.getText());
+            // }
         }
         String explanations = this.txtSacExpl.getText();
         if (!explanations.equals("")) {
-           /* if (this.txtSacExpl.getText().length() > 512) {
-                msgErrorDates += ".-Explanations\n";
-                saveOK = false;
-            } else {*/
-                this.site.setSiteExplanations(this.txtSacExpl.getText());
-            //}
+            /*
+             * if (this.txtSacExpl.getText().length() > 512) {
+             * msgErrorDates += ".-Explanations\n";
+             * saveOK = false;
+             * } else {
+             */
+            this.site.setSiteExplanations(this.txtSacExpl.getText());
+            // }
         }
         if (!saveOK) {
             String msgError = "The following fields arere too long: \n";
@@ -826,7 +833,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
         String respAdminUnit = txtRespAdminUnit.getText();
         String respThoroughFare = txtRespThoroughFare.getText();
-        //String respThoroughFare = txtRespLocatorName.getText();
+        // String respThoroughFare = txtRespLocatorName.getText();
         String respLocatorDesig = txtRespLocatorDesignator.getText();
         String respPostCode = txtRespPostCode.getText();
         String respPostName = txtRespPostName.getText();
@@ -838,7 +845,7 @@ public class SDFEditor extends javax.swing.JFrame {
             resp = new Resp();
         }
 
-         String msgErrorResp = "";
+        String msgErrorResp = "";
         if (respName.length() > 1024) {
             msgErrorResp += ".- Name\n";
         } else {
@@ -862,7 +869,8 @@ public class SDFEditor extends javax.swing.JFrame {
             addresUnStructured = true;
         }
         if (!(respAddrArea.equals("")) || !(respAdminUnit.equals("")) || !(respLocatorDesig.equals(""))
-                || !(respLocatorName.equals("")) || !(respPostCode.equals("")) || !(respPostName.equals("") || !(respThoroughFare.equals("")))) {
+                || !(respLocatorName.equals("")) || !(respPostCode.equals(""))
+                || !(respPostName.equals("") || !(respThoroughFare.equals("")))) {
             addresStructured = true;
         }
 
@@ -965,10 +973,10 @@ public class SDFEditor extends javax.swing.JFrame {
             } else {
                 errorResp += "The following fields are too long:\n ";
                 if (!("").equals(msgErrorResp) || !("").equals(msgErrorEmail)) {
-                   errorResp += msgErrorResp + "\n" + msgErrorEmail;
+                    errorResp += msgErrorResp + "\n" + msgErrorEmail;
                 }
             }
-         }
+        }
         return errorResp;
     }
 
@@ -978,7 +986,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param index
      */
     public void saveHabitat(Habitat h, int index) {
-        /*saving existing at index 0*/
+        /* saving existing at index 0 */
         SDFEditor.logger.info("Saving existing Habitat: " + h.getHabitatCode());
         Habitat hTo = (Habitat) this.modelHabitats.get(index);
         copyHabitat(h, hTo);
@@ -991,7 +999,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param h
      */
     public void saveHabitat(Habitat h) {
-        /*saving new*/
+        /* saving new */
         SDFEditor.logger.info("Saving new Habitat: " + h.getHabitatCode());
         Habitat hTo = new Habitat();
         copyHabitat(h, hTo);
@@ -1032,7 +1040,6 @@ public class SDFEditor extends javax.swing.JFrame {
         spTo.setSite(this.site);
         this.saveAndReloadSession();
         this.loadSpecies();
-
 
     }
 
@@ -1084,7 +1091,6 @@ public class SDFEditor extends javax.swing.JFrame {
     private void copyDesignationType(NationalDtype spFrom, NationalDtype spTo) {
         spTo.setNationalDtypeCode(spFrom.getNationalDtypeCode());
         spTo.setNationalDtypeCover(spFrom.getNationalDtypeCover());
-
 
     }
 
@@ -1225,12 +1231,12 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param region
      */
     public void addRegion(Region region) {
-        //this.modelRegions.add(region);
+        // this.modelRegions.add(region);
         region.setSite(this.site);
         this.site.getRegions().add(region);
         this.saveAndReloadSession();
         this.loadRegions();
-        //this.loadSite(this.sitecode);
+        // this.loadSite(this.sitecode);
         SDFEditor.logger.info("saving new Region: " + region.getRegionCode());
         SDFEditor.logger.info("Reloading regions in editor....");
     }
@@ -1252,7 +1258,8 @@ public class SDFEditor extends javax.swing.JFrame {
                 return false;
             } else if ((checkSumPercentBioReg() + percent) > 100) {
                 SDFEditor.logger.error("The sum of the percent of the Biographical regions is bigger than 100.");
-                javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
                 return false;
             }
 
@@ -1283,7 +1290,8 @@ public class SDFEditor extends javax.swing.JFrame {
         SDFEditor.logger.info("saving Biogeo region: " + biogeo.getBiogeoCode() + " (" + biogeo.getBiogeoName() + ")");
         if (checkSumPercentBioReg(percent, biogeo) > 100) {
             SDFEditor.logger.error("The sum of the percent of the Biographical regions is bigger than 100.");
-            javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
         } else {
             SiteBiogeo sb = new SiteBiogeo();
             sb.setSite(this.site);
@@ -1429,8 +1437,11 @@ public class SDFEditor extends javax.swing.JFrame {
         boolean hClassAdded = false;
         if (checkHCPercent100(hC)) {
             hClassAdded = false;
-            SDFEditor.logger.error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
-            JOptionPane.showMessageDialog(this, "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.", "Dialog", JOptionPane.ERROR_MESSAGE);
+            SDFEditor.logger
+                    .error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
+            JOptionPane.showMessageDialog(this,
+                    "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
 
         } else {
             hClassAdded = true;
@@ -1450,15 +1461,18 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param index
      * @return
      */
-   public boolean saveHabitatClass(HabitatClass h, int index) {
-       boolean hClassAdded = false;
-       SDFEditor.logger.info("Saving existing habitat class Type: " + h.getHabitatClassCode());
-       if (checkHCPercentUpdate100(h, index)) {
+    public boolean saveHabitatClass(HabitatClass h, int index) {
+        boolean hClassAdded = false;
+        SDFEditor.logger.info("Saving existing habitat class Type: " + h.getHabitatClassCode());
+        if (checkHCPercentUpdate100(h, index)) {
             hClassAdded = false;
-            SDFEditor.logger.error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
-            JOptionPane.showMessageDialog(this, "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.", "Dialog", JOptionPane.ERROR_MESSAGE);
+            SDFEditor.logger
+                    .error("The total cover of habitat classes should be 100% and correspond to the total surface area of the site.");
+            JOptionPane.showMessageDialog(this,
+                    "The total cover of habitat classes should be 100% and correspond to the total surface area of the site.",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
 
-       } else {
+        } else {
             hClassAdded = true;
             HabitatClass hTo = (HabitatClass) this.modelHabitatClasses.get(index);
             copyHabitatClass(h, hTo);
@@ -1466,27 +1480,27 @@ public class SDFEditor extends javax.swing.JFrame {
             this.loadHabitatClasses();
             SDFEditor.logger.info("Habitat class saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "Habitat class saved.");
-       }
-       return hClassAdded;
+        }
+        return hClassAdded;
 
     }
 
-   /**
-    *
-    * @param dtype
-    */
-   public void addDesignation(NationalDtype dtype) {
+    /**
+     *
+     * @param dtype
+     */
+    public void addDesignation(NationalDtype dtype) {
         dtype.setSite(this.site);
         this.site.getNationalDtypes().add(dtype);
         this.saveAndReloadSession();
         this.loadDesignationTypes();
     }
 
-   /**
-    *
-    * @param dtype
-    * @param indexSelected
-    */
+    /**
+     *
+     * @param dtype
+     * @param indexSelected
+     */
     public void saveDesignation(NationalDtype dtype, int indexSelected) {
         SDFEditor.logger.info("Saving existing national Designation Type: " + dtype.getNationalDtypeCode());
         NationalDtype hTo = (NationalDtype) this.modelDesignationTypes.get(indexSelected);
@@ -1611,7 +1625,8 @@ public class SDFEditor extends javax.swing.JFrame {
             if (getNumHighPImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive High impacts is 5 ");
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-            } else if (getNumLowAndMediumImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+            } else if (getNumLowAndMediumImpacts() == 20
+                    && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 ");
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
             } else {
@@ -1621,7 +1636,8 @@ public class SDFEditor extends javax.swing.JFrame {
             if (getNumHighNImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative High impacts is 5 ");
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-            } else if (getNumLowAndMediumNImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+            } else if (getNumLowAndMediumNImpacts() == 20
+                    && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                 SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 ");
                 javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with low or medium rank is 20");
             } else {
@@ -1629,11 +1645,11 @@ public class SDFEditor extends javax.swing.JFrame {
             }
         }
         if (saveOK) {
-           impact.setSite(this.site);
-           this.site.getImpacts().add(impact);
-           saveOK = true;
-           this.saveAndReloadSession();
-           this.loadImpacts();
+            impact.setSite(this.site);
+            this.site.getImpacts().add(impact);
+            saveOK = true;
+            this.saveAndReloadSession();
+            this.loadImpacts();
         }
         return saveOK;
     }
@@ -1717,7 +1733,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @return
      */
     public boolean saveImpact(Impact impact, int index) {
-         /*saving existing at index 0*/
+        /* saving existing at index 0 */
         SDFEditor.logger.info("Saving existing Impact: " + impact.getImpactCode());
         boolean saveOK = false;
         Impact impactTo = null;
@@ -1733,7 +1749,8 @@ public class SDFEditor extends javax.swing.JFrame {
                 if (getNumHighPImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive High impacts is 5 ");
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive High impacts is 5");
-                } else if (getNumLowAndMediumImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+                } else if (getNumLowAndMediumImpacts() == 20
+                        && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Positive Low or Medium impacts is 20 ");
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Positive Low or Medium impacts is 20");
                 } else {
@@ -1741,14 +1758,15 @@ public class SDFEditor extends javax.swing.JFrame {
                 }
             }
         } else {
-           impactTo = (Impact) this.modelNegativeImpacts.get(index);
-           if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
+            impactTo = (Impact) this.modelNegativeImpacts.get(index);
+            if (impactTo.getImpactRank() != null && impactTo.getImpactRank().compareTo(impact.getImpactRank()) == 0) {
                 saveOK = true;
             } else {
                 if (getNumHighNImpacts() == 5 && (("H").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative High impacts is 5 ");
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative impacts with high rank is 5");
-                } else if (getNumLowAndMediumNImpacts() == 20 && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
+                } else if (getNumLowAndMediumNImpacts() == 20
+                        && (("L").equals(impact.getImpactRank().toString()) || ("M").equals(impact.getImpactRank().toString()))) {
                     SDFEditor.logger.error("The maximum of Negative Low or Medium impacts is 20 ");
                     javax.swing.JOptionPane.showMessageDialog(this, "The maximum of Negative Low or Medium impacts is 20");
                 } else {
@@ -1767,6 +1785,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /**
      * Checks if the habitat class exist for this site.
+     *
      * @param code
      * @return
      */
@@ -1783,6 +1802,7 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /**
      * Checks if the designation type exist for this site.
+     *
      * @param code
      * @return
      */
@@ -1813,7 +1833,11 @@ public class SDFEditor extends javax.swing.JFrame {
                 int i = 0;
                 while (itr.hasNext()) {
                     MgmtBody mgmtB = (MgmtBody) itr.next();
-                    Object[] tuple = {mgmtB.getMgmtBodyOrg(), mgmtB.getMgmtBodyEmail(), new Integer(mgmtB.getMgmtBodyId()), mgmtB.getMgmtBodyAddress(), mgmtB.getMgmtBodyAddressArea(), mgmtB.getMgmtBodyAdminUnit(), mgmtB.getMgmtBodyLocatorDesignator(), mgmtB.getMgmtBodyLocatorName(), mgmtB.getMgmtBodyPostCode(), mgmtB.getMgmtBodyPostName(), mgmtB.getMgmtBodyThroughFare()};
+                    Object[] tuple =
+                            {mgmtB.getMgmtBodyOrg(), mgmtB.getMgmtBodyEmail(), new Integer(mgmtB.getMgmtBodyId()),
+                                    mgmtB.getMgmtBodyAddress(), mgmtB.getMgmtBodyAddressArea(), mgmtB.getMgmtBodyAdminUnit(),
+                                    mgmtB.getMgmtBodyLocatorDesignator(), mgmtB.getMgmtBodyLocatorName(),
+                                    mgmtB.getMgmtBodyPostCode(), mgmtB.getMgmtBodyPostName(), mgmtB.getMgmtBodyThroughFare()};
                     this.modelMgmtBodies.add(mgmtB);
                     modelBodies.insertRow(i++, tuple);
                 }
@@ -1954,11 +1978,15 @@ public class SDFEditor extends javax.swing.JFrame {
                 SiteRelation rel = (SiteRelation) itr.next();
 
                 if (("I").equals((rel.getSiteRelationScope().toString()).toUpperCase().trim())) {
-                    Object[] tuple = {rel.getSiteRelationConvention(), rel.getSiteRelationSitename(), rel.getSiteRelationType(), rel.getSiteRelationCover()};
+                    Object[] tuple =
+                            {rel.getSiteRelationConvention(), rel.getSiteRelationSitename(), rel.getSiteRelationType(),
+                                    rel.getSiteRelationCover()};
                     modelInternational.insertRow(j++, tuple);
                     this.modelInternationalRelations.add(rel);
                 } else if (("N").equals((rel.getSiteRelationScope().toString()).toUpperCase().trim())) {
-                    Object[] tuple = {rel.getSiteRelationCode(), rel.getSiteRelationSitename(), rel.getSiteRelationType(), rel.getSiteRelationCover()};
+                    Object[] tuple =
+                            {rel.getSiteRelationCode(), rel.getSiteRelationSitename(), rel.getSiteRelationType(),
+                                    rel.getSiteRelationCover()};
                     modelNational.insertRow(i++, tuple);
                     this.modelNationalRelations.add(rel);
                 } else {
@@ -1992,10 +2020,9 @@ public class SDFEditor extends javax.swing.JFrame {
                 } else if (impactType.equals("P")) {
                     this.modelPositiveImpacts.add(impact);
                 } else {
-                    //shouldn't get here
+                    // shouldn't get here
                 }
             }
-
 
             Collections.sort(this.modelPositiveImpacts);
             Collections.sort(this.modelNegativeImpacts);
@@ -2007,7 +2034,9 @@ public class SDFEditor extends javax.swing.JFrame {
             while (itrNeg.hasNext()) {
                 Impact impact = (Impact) itrNeg.next();
                 String impactName = getImpactName(impact.getImpactCode());
-                Object[] tuple = {impact.getImpactRank(), impact.getImpactCode(), impactName, impact.getImpactPollutionCode(), impact.getImpactOccurrence()};
+                Object[] tuple =
+                        {impact.getImpactRank(), impact.getImpactCode(), impactName, impact.getImpactPollutionCode(),
+                                impact.getImpactOccurrence()};
                 model.insertRow(i++, tuple);
             }
             Iterator itrPos = modelPositiveImpacts.iterator();
@@ -2017,7 +2046,9 @@ public class SDFEditor extends javax.swing.JFrame {
             while (itrPos.hasNext()) {
                 Impact impact = (Impact) itrPos.next();
                 String impactName = getImpactName(impact.getImpactCode());
-                Object[] tuple = {impact.getImpactRank(), impact.getImpactCode(), impactName, impact.getImpactPollutionCode(), impact.getImpactOccurrence()};
+                Object[] tuple =
+                        {impact.getImpactRank(), impact.getImpactCode(), impactName, impact.getImpactPollutionCode(),
+                                impact.getImpactOccurrence()};
                 model.insertRow(j++, tuple);
             }
         }
@@ -2029,13 +2060,15 @@ public class SDFEditor extends javax.swing.JFrame {
 
     /**
      * Gets impact Name.
+     *
      * @param impactCode
      * @return
      */
     private String getImpactName(String impactCode) {
         SDFEditor.logger.info("Getting impact Name");
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";
+        String hql =
+                "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";
         Query q = session.createQuery(hql);
 
         String impactName = "";
@@ -2127,7 +2160,7 @@ public class SDFEditor extends javax.swing.JFrame {
                         } else if (("V").equals(token)) {
                             motV = "X";
                         } else if (("A").equals(token)) {
-                             motA = "X";
+                            motA = "X";
                         } else if (("B").equals(token)) {
                             motB = "X";
                         } else if (("C").equals(token)) {
@@ -2140,7 +2173,9 @@ public class SDFEditor extends javax.swing.JFrame {
                     }
                 }
 
-                Object[] tuple = {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize, maxSize, sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motIV, motV, motA, motB, motC, motD};
+                Object[] tuple =
+                        {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize, maxSize,
+                                sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motIV, motV, motA, motB, motC, motD};
                 model.insertRow(i++, tuple);
                 modelOtherSpecies.add(sp);
             }
@@ -2167,13 +2202,13 @@ public class SDFEditor extends javax.swing.JFrame {
                 String speciesGroup = "";
 
                 String sensitive = "";
-                if (sp.getSpeciesSensitive() != null &&  sp.getSpeciesSensitive() == 1) {
-                   sensitive = "X";
+                if (sp.getSpeciesSensitive() != null && sp.getSpeciesSensitive() == 1) {
+                    sensitive = "X";
                 }
 
                 String np = "";
-                if (sp.getSpeciesNp() != null &&  sp.getSpeciesNp() == 1) {
-                   np = "X";
+                if (sp.getSpeciesNp() != null && sp.getSpeciesNp() == 1) {
+                    np = "X";
                 }
                 String maxSize = "";
                 if (sp.getSpeciesSizeMax() != null) {
@@ -2186,11 +2221,17 @@ public class SDFEditor extends javax.swing.JFrame {
                 }
 
                 if (sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))) {
-                     speciesGroup = TranslationCodeName.getGroupSpeciesByCode(sp.getSpeciesGroup().toString());
-                     //Object[] tuple = {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(), minSize, maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(), sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(), sp.getSpeciesGlobal()};
-                     Object[] tuple = {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(), minSize, maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(), sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(), sp.getSpeciesGlobal()};
-                     model.insertRow(i++, tuple);
-                     modelSpecies.add(sp);
+                    speciesGroup = TranslationCodeName.getGroupSpeciesByCode(sp.getSpeciesGroup().toString());
+                    // Object[] tuple = {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(),
+                    // minSize, maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(),
+                    // sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(), sp.getSpeciesGlobal()};
+                    Object[] tuple =
+                            {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(), minSize,
+                                    maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(),
+                                    sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(),
+                                    sp.getSpeciesGlobal()};
+                    model.insertRow(i++, tuple);
+                    modelSpecies.add(sp);
                 }
             }
         }
@@ -2209,23 +2250,27 @@ public class SDFEditor extends javax.swing.JFrame {
             Iterator itr = habitats.iterator();
             DefaultTableModel model = (DefaultTableModel) tabHabitats.getModel();
             model.getDataVector().removeAllElements();
-            tabHabitats.setSelectionModel(new DefaultListSelectionModel()); //gotta do to quiet the listener already set
+            tabHabitats.setSelectionModel(new DefaultListSelectionModel()); // gotta do to quiet the listener already set
             int i = 0;
             while (itr.hasNext()) {
                 Habitat h = ((Habitat) itr.next());
                 String priority = "";
-                if (h.getHabitatPriority() != null &&  h.getHabitatPriority() == 1) {
+                if (h.getHabitatPriority() != null && h.getHabitatPriority() == 1) {
                     priority = "X";
                 }
                 String nonPresence = "";
                 if (h.getHabitatNp() != null && h.getHabitatNp() == 1) {
                     nonPresence = "X";
                 }
-                Object[] tuple = {h.getHabitatCode(), priority, nonPresence, ConversionTools.doubleToString(h.getHabitatCoverHa()), ConversionTools.intToString(h.getHabitatCaves()), h.getHabitatDataQuality(), h.getHabitatRepresentativity(), h.getHabitatRelativeSurface(), h.getHabitatConservation(), h.getHabitatGlobal()};
+                Object[] tuple =
+                        {h.getHabitatCode(), priority, nonPresence, ConversionTools.doubleToString(h.getHabitatCoverHa()),
+                                ConversionTools.intToString(h.getHabitatCaves()), h.getHabitatDataQuality(),
+                                h.getHabitatRepresentativity(), h.getHabitatRelativeSurface(), h.getHabitatConservation(),
+                                h.getHabitatGlobal()};
                 model.insertRow(i++, tuple);
                 modelHabitats.add(h);
             }
-            //Collections.sort(modelHabitats);
+            // Collections.sort(modelHabitats);
         }
         this.tabHabitats.getSelectionModel().clearSelection();
         this.tabHabitats.repaint();
@@ -2242,13 +2287,14 @@ public class SDFEditor extends javax.swing.JFrame {
                 int selectedIndex = dlsm.getMinSelectionIndex();
                 String code = (String) tabHabitats.getModel().getValueAt(selectedIndex, 0);
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                String hql = "select distinct(refHabitatsDescEn) from " + tableName + " refHab where refHab.refHabitatsCode = '" + code + "'";
+                String hql =
+                        "select distinct(refHabitatsDescEn) from " + tableName + " refHab where refHab.refHabitatsCode = '" + code
+                                + "'";
                 Query q = session.createQuery(hql);
                 txtHabitatDescription.setText((String) q.uniqueResult());
             }
         });
     }
-
 
     /***
      * Loads Biogeographical Regions.
@@ -2305,14 +2351,14 @@ public class SDFEditor extends javax.swing.JFrame {
     private void centerScreen() {
         Dimension dim = getToolkit().getScreenSize();
         Rectangle abounds = getBounds();
-        setLocation((dim.width - abounds.width) / 2,
-                (dim.height - abounds.height) / 2);
+        setLocation((dim.width - abounds.width) / 2, (dim.height - abounds.height) / 2);
         super.setVisible(true);
         requestFocus();
     }
 
     /**
      * Checks the sum of the percent of the Habitat Classes.
+     *
      * @param h
      * @param index
      * @return
@@ -2326,7 +2372,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 if (i == index) {
                     coverPercent += h.getHabitatClassCover();
                 } else {
-                   coverPercent += ((HabitatClass) modelHabitatClasses.get(i)).getHabitatClassCover();
+                    coverPercent += ((HabitatClass) modelHabitatClasses.get(i)).getHabitatClassCover();
                 }
             }
         }
@@ -2336,13 +2382,14 @@ public class SDFEditor extends javax.swing.JFrame {
         } else if (coverPercent == 100) {
             percent100 = false;
         } else {
-           percent100 = false;
+            percent100 = false;
         }
         return percent100;
     }
 
     /**
      * Checks the sum of the percent of the Habitat Classes (Edit).
+     *
      * @param habClass
      * @return
      */
@@ -2356,7 +2403,7 @@ public class SDFEditor extends javax.swing.JFrame {
             }
         }
         if (habClass != null) {
-             coverPercent += habClass.getHabitatClassCover();
+            coverPercent += habClass.getHabitatClassCover();
         }
         if (coverPercent > 100) {
             percent100 = true;
@@ -2365,63 +2412,66 @@ public class SDFEditor extends javax.swing.JFrame {
         } else if (coverPercent == 100 && habClass == null) {
             percent100 = true;
         } else {
-           percent100 = false;
+            percent100 = false;
         }
         return percent100;
     }
 
-   /**
-    *
-    * @return
-    */
-   public double checkSumPercentBioReg() {
-       double sumPercentBioReg = 0;
-       try {
-           for (int i = 0; i < this.modelBioregions.size(); i++) {
+    /**
+     *
+     * @return
+     */
+    public double checkSumPercentBioReg() {
+        double sumPercentBioReg = 0;
+        try {
+            for (int i = 0; i < this.modelBioregions.size(); i++) {
                 if (modelBioregions.get(i) != null) {
                     sumPercentBioReg += ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent();
                 }
             }
-       } catch (Exception e) {
-           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::" + e.getMessage());
-       }
-       return sumPercentBioReg;
-   }
+        } catch (Exception e) {
+            SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::"
+                    + e.getMessage());
+        }
+        return sumPercentBioReg;
+    }
 
-
-   /**
-    *
-    * @return
-    */
-   private double checkSumPercentBioReg(Double percent, Biogeo biogeo) {
-       double sumPercentBioReg = 0;
-       try {
-           for (int i = 0; i < this.modelBioregions.size(); i++) {
+    /**
+     *
+     * @return
+     */
+    private double checkSumPercentBioReg(Double percent, Biogeo biogeo) {
+        double sumPercentBioReg = 0;
+        try {
+            for (int i = 0; i < this.modelBioregions.size(); i++) {
                 if (modelBioregions.get(i) != null) {
                     if (!(biogeo.getBiogeoCode()).equals(modelBioregions.get(0))) {
                         sumPercentBioReg += ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent();
                     } else {
-                         sumPercentBioReg += percent;
+                        sumPercentBioReg += percent;
                     }
 
                 }
+            }
+
+        } catch (Exception e) {
+            SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::"
+                    + e.getMessage());
         }
+        return sumPercentBioReg;
 
-       } catch (Exception e) {
-           SDFEditor.logger.error("An error has occurred checking the sum of percent of bioregions. Error Message:::" + e.getMessage());
-       }
-       return sumPercentBioReg;
+    }
 
-   }
-
-    /** This method is called from within the constructor to
+    /**
+     * This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+            private
+            void initComponents() {
 
         jScrollPane15 = new javax.swing.JScrollPane();
         jTable6 = new javax.swing.JTable();
@@ -2493,8 +2543,8 @@ public class SDFEditor extends javax.swing.JFrame {
         jScrollPane37 = new javax.swing.JScrollPane();
         txtRespEmail = new javax.swing.JTextArea();
         jLabel61 = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
-        jPanel45 = new javax.swing.JPanel();
+        natura2000DatesPanel = new javax.swing.JPanel();
+        natura2000DatesPanel_1 = new javax.swing.JPanel();
         jLabel49 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
         jLabel51 = new javax.swing.JLabel();
@@ -2700,22 +2750,16 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane15.setName("jScrollPane15"); // NOI18N
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        jTable6.setModel(new javax.swing.table.DefaultTableModel(new Object[][] { {null, null, null, null},
+                {null, null, null, null}, {null, null, null, null}, {null, null, null, null}}, new String[] {"Title 1", "Title 2",
+                "Title 3", "Title 4"}));
         jTable6.setName("jTable6"); // NOI18N
         jScrollPane15.setViewportView(jTable6);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext().getResourceMap(SDFEditor.class);
+        org.jdesktop.application.ResourceMap resourceMap =
+                org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext()
+                        .getResourceMap(SDFEditor.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form");
 
@@ -2740,7 +2784,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel42.setText(resourceMap.getString("jLabel42.text")); // NOI18N
         jLabel42.setName("jLabel42"); // NOI18N
 
-        cmbSiteType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SPA", "SCI", "Both" }));
+        cmbSiteType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"SPA", "SCI", "Both"}));
         cmbSiteType.setName("cmbSiteType"); // NOI18N
 
         txtSiteCode.setEditable(false);
@@ -2778,86 +2822,166 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel43Layout = new javax.swing.GroupLayout(jPanel43);
         jPanel43.setLayout(jPanel43Layout);
-        jPanel43Layout.setHorizontalGroup(
-            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel43Layout.createSequentialGroup()
-                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel43Layout.createSequentialGroup()
-                        .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel41, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
+        jPanel43Layout
+                .setHorizontalGroup(jPanel43Layout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                jPanel43Layout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                jPanel43Layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(
+                                                                jPanel43Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                jPanel43Layout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                false)
+                                                                                        .addComponent(
+                                                                                                jLabel43,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(
+                                                                                                jLabel41,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                65, Short.MAX_VALUE))
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addGroup(
+                                                                                jPanel43Layout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                jPanel43Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(
+                                                                                                                txtSiteCode,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                92,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addGap(40, 40, 40)
+                                                                                                        .addComponent(jLabel42)
+                                                                                                        .addGap(18, 18, 18)
+                                                                                                        .addComponent(
+                                                                                                                cmbSiteType,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                        .addComponent(
+                                                                                                jScrollPane25,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                888,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addGroup(
+                                                                jPanel43Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                jPanel43Layout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                                        .addGroup(
+                                                                                                jPanel43Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(
+                                                                                                                jLabel44,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                111,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                                                                        .addGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                jPanel43Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(
+                                                                                                                jLabel45,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                98,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addGap(17, 17, 17)))
+                                                                        .addGroup(
+                                                                                jPanel43Layout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(
+                                                                                                txtUpdateDate,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                87,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(
+                                                                                                txtCompDate,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                87,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addGap(18, 18, 18)
+                                                                        .addGroup(
+                                                                                jPanel43Layout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(jLabel4)
+                                                                                        .addComponent(jLabel3)))
+                                                        .addComponent(jLabel60)).addContainerGap(31, Short.MAX_VALUE)));
+        jPanel43Layout.setVerticalGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel43Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel60)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel43Layout.createSequentialGroup()
-                                .addComponent(txtSiteCode, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40)
-                                .addComponent(jLabel42)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbSiteType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane25, javax.swing.GroupLayout.PREFERRED_SIZE, 888, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel43Layout.createSequentialGroup()
-                        .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel43Layout.createSequentialGroup()
-                                .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel43Layout.createSequentialGroup()
-                                .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(17, 17, 17)))
-                        .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCompDate, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(
+                                jPanel43Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel41)
+                                        .addComponent(txtSiteCode, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel42)
+                                        .addComponent(cmbSiteType, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)))
-                    .addComponent(jLabel60))
-                .addContainerGap(31, Short.MAX_VALUE))
-        );
-        jPanel43Layout.setVerticalGroup(
-            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel43Layout.createSequentialGroup()
-                .addComponent(jLabel60)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel41)
-                    .addComponent(txtSiteCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel42)
-                    .addComponent(cmbSiteType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel43Layout.createSequentialGroup()
-                        .addComponent(jScrollPane25, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                        .addGap(33, 33, 33))
-                    .addGroup(jPanel43Layout.createSequentialGroup()
-                        .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel44)
-                    .addComponent(txtCompDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel45)
-                    .addComponent(txtUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(162, 162, 162))
-        );
+                        .addGroup(
+                                jPanel43Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel43Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jScrollPane25, javax.swing.GroupLayout.DEFAULT_SIZE, 227,
+                                                                Short.MAX_VALUE).addGap(33, 33, 33))
+                                        .addGroup(
+                                                jPanel43Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 27,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(
+                                jPanel43Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel44)
+                                        .addComponent(txtCompDate, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(
+                                jPanel43Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel45)
+                                        .addComponent(txtUpdateDate, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel4)).addGap(162, 162, 162)));
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(95, Short.MAX_VALUE))
-        );
+        jPanel8Layout.setHorizontalGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel8Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(19, Short.MAX_VALUE)));
+        jPanel8Layout.setVerticalGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel8Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(95, Short.MAX_VALUE)));
 
         jPanelDate.addTab(resourceMap.getString("jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
 
@@ -2956,72 +3080,119 @@ public class SDFEditor extends javax.swing.JFrame {
         jScrollPane36.setViewportView(txtRespLocatorName);
 
         javax.swing.GroupLayout jPanel28Layout = new javax.swing.GroupLayout(jPanel28);
-        jPanel28Layout.setHorizontalGroup(
-            jPanel28Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel28Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel28Layout.createSequentialGroup()
-                            .addGroup(jPanel28Layout.createParallelGroup(Alignment.TRAILING)
-                                .addComponent(jLabel10, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING, false)
-                                    .addGroup(jPanel28Layout.createSequentialGroup()
-                                        .addGap(4)
-                                        .addComponent(jLabel9, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel16, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGap(10))
-                        .addGroup(jPanel28Layout.createSequentialGroup()
-                            .addComponent(jLabel11, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                            .addGap(18))
-                        .addGroup(jPanel28Layout.createSequentialGroup()
-                            .addComponent(jLabel13, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                            .addPreferredGap(ComponentPlacement.RELATED)))
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jScrollPane13, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
-                        .addComponent(jScrollPane7, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
-                        .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
-                        .addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
-                        .addGroup(jPanel28Layout.createSequentialGroup()
-                            .addComponent(jScrollPane21, GroupLayout.PREFERRED_SIZE, 287, GroupLayout.PREFERRED_SIZE)
-                            .addGap(42)
-                            .addComponent(jLabel15)
-                            .addGap(18)
-                            .addComponent(jScrollPane22, GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE))
-                        .addComponent(jScrollPane36, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
-        jPanel28Layout.setVerticalGroup(
-            jPanel28Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel28Layout.createSequentialGroup()
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel9)
-                        .addComponent(jScrollPane4, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel11)
-                        .addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-                    .addGap(18)
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel15)
-                        .addComponent(jLabel13)
-                        .addGroup(jPanel28Layout.createParallelGroup(Alignment.TRAILING, false)
-                            .addComponent(jScrollPane22, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                            .addComponent(jScrollPane21, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel12)
-                        .addComponent(jScrollPane13, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel28Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jScrollPane36, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel16))
-                    .addGap(106))
-        );
+        jPanel28Layout
+                .setHorizontalGroup(jPanel28Layout
+                        .createParallelGroup(Alignment.TRAILING)
+                        .addGroup(
+                                jPanel28Layout
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                jPanel28Layout
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                jPanel28Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                jPanel28Layout
+                                                                                        .createParallelGroup(Alignment.TRAILING)
+                                                                                        .addComponent(jLabel10,
+                                                                                                GroupLayout.PREFERRED_SIZE, 111,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addGroup(
+                                                                                                jPanel28Layout
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.LEADING,
+                                                                                                                false)
+                                                                                                        .addGroup(
+                                                                                                                jPanel28Layout
+                                                                                                                        .createSequentialGroup()
+                                                                                                                        .addGap(4)
+                                                                                                                        .addComponent(
+                                                                                                                                jLabel9,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                107,
+                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                        .addComponent(
+                                                                                                                jLabel12,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                Short.MAX_VALUE)
+                                                                                                        .addComponent(
+                                                                                                                jLabel16,
+                                                                                                                Alignment.TRAILING,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                Short.MAX_VALUE)))
+                                                                        .addGap(10))
+                                                        .addGroup(
+                                                                jPanel28Layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel11, GroupLayout.DEFAULT_SIZE, 103,
+                                                                                Short.MAX_VALUE).addGap(18))
+                                                        .addGroup(
+                                                                jPanel28Layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel13, GroupLayout.DEFAULT_SIZE, 117,
+                                                                                Short.MAX_VALUE)
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)))
+                                        .addGroup(
+                                                jPanel28Layout
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addComponent(jScrollPane13, GroupLayout.DEFAULT_SIZE, 822,
+                                                                Short.MAX_VALUE)
+                                                        .addComponent(jScrollPane7, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE,
+                                                                822, Short.MAX_VALUE)
+                                                        .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
+                                                        .addComponent(jScrollPane6, GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
+                                                        .addGroup(
+                                                                jPanel28Layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jScrollPane21, GroupLayout.PREFERRED_SIZE,
+                                                                                287, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGap(42)
+                                                                        .addComponent(jLabel15)
+                                                                        .addGap(18)
+                                                                        .addComponent(jScrollPane22, GroupLayout.DEFAULT_SIZE,
+                                                                                420, Short.MAX_VALUE))
+                                                        .addComponent(jScrollPane36, GroupLayout.DEFAULT_SIZE, 822,
+                                                                Short.MAX_VALUE)).addContainerGap()));
+        jPanel28Layout.setVerticalGroup(jPanel28Layout.createParallelGroup(Alignment.TRAILING).addGroup(
+                jPanel28Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel28Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel9)
+                                        .addComponent(jScrollPane4, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                jPanel28Layout.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel10))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                jPanel28Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel11)
+                                        .addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18)
+                        .addGroup(
+                                jPanel28Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jLabel15)
+                                        .addComponent(jLabel13)
+                                        .addGroup(
+                                                jPanel28Layout
+                                                        .createParallelGroup(Alignment.TRAILING, false)
+                                                        .addComponent(jScrollPane22, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                                                        .addComponent(jScrollPane21, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+                                                                29, Short.MAX_VALUE)))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel28Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel12)
+                                        .addComponent(jScrollPane13, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel28Layout.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jScrollPane36, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel16)).addGap(106)));
         jPanel28.setLayout(jPanel28Layout);
 
         jScrollPane35.setName("jScrollPane35"); // NOI18N
@@ -3043,79 +3214,105 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel61.setName("jLabel61"); // NOI18N
 
         javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
-        jPanel44Layout.setHorizontalGroup(
-            jPanel44Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel44Layout.createSequentialGroup()
-                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(jPanel44Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel44Layout.createParallelGroup(Alignment.TRAILING)
-                            .addComponent(jLabel61)
-                            .addGroup(jPanel44Layout.createSequentialGroup()
-                                .addGroup(jPanel44Layout.createParallelGroup(Alignment.TRAILING)
-                                    .addGroup(jPanel44Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jLabel47, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
-                                    .addComponent(jLabel46))
-                                .addGap(18)
-                                .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
-                                    .addComponent(jScrollPane35, GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane26, GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)))))
-                    .addContainerGap())
-                .addGroup(jPanel44Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel48, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 857, GroupLayout.PREFERRED_SIZE)
-                    .addGap(21))
-        );
-        jPanel44Layout.setVerticalGroup(
-            jPanel44Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel44Layout.createSequentialGroup()
-                    .addComponent(jLabel61)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel46)
-                        .addComponent(jScrollPane35, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel47)
-                        .addComponent(jScrollPane26, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel48)
-                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-                    .addGap(35))
-        );
+        jPanel44Layout
+                .setHorizontalGroup(jPanel44Layout
+                        .createParallelGroup(Alignment.TRAILING)
+                        .addGroup(
+                                jPanel44Layout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                jPanel44Layout
+                                                        .createParallelGroup(Alignment.TRAILING)
+                                                        .addGroup(
+                                                                jPanel44Layout
+                                                                        .createSequentialGroup()
+                                                                        .addContainerGap()
+                                                                        .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(
+                                                                jPanel44Layout
+                                                                        .createParallelGroup(Alignment.TRAILING)
+                                                                        .addComponent(jLabel61)
+                                                                        .addGroup(
+                                                                                jPanel44Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addGroup(
+                                                                                                jPanel44Layout
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.TRAILING)
+                                                                                                        .addGroup(
+                                                                                                                jPanel44Layout
+                                                                                                                        .createSequentialGroup()
+                                                                                                                        .addContainerGap()
+                                                                                                                        .addComponent(
+                                                                                                                                jLabel47,
+                                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                                91,
+                                                                                                                                Short.MAX_VALUE))
+                                                                                                        .addComponent(jLabel46))
+                                                                                        .addGap(18)
+                                                                                        .addGroup(
+                                                                                                jPanel44Layout
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.LEADING)
+                                                                                                        .addComponent(
+                                                                                                                jScrollPane35,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                866,
+                                                                                                                Short.MAX_VALUE)
+                                                                                                        .addComponent(
+                                                                                                                jScrollPane26,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                866,
+                                                                                                                Short.MAX_VALUE)))))
+                                        .addContainerGap())
+                        .addGroup(
+                                jPanel44Layout.createSequentialGroup().addContainerGap()
+                                        .addComponent(jLabel48, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 857, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(21)));
+        jPanel44Layout.setVerticalGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel44Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel61)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel46)
+                                        .addComponent(jScrollPane35, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel47)
+                                        .addComponent(jScrollPane26, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel48)
+                                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+                        .addGap(35)));
         jPanel44.setLayout(jPanel44Layout);
 
         jPanel28.getAccessibleContext().setAccessibleName(resourceMap.getString("jPanel28.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addComponent(jPanel44, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(40))
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel44, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE)
-                    .addGap(158))
-        );
+        jPanel9Layout.setHorizontalGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel9Layout.createSequentialGroup()
+                        .addComponent(jPanel44, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(40)));
+        jPanel9Layout.setVerticalGroup(jPanel9Layout.createParallelGroup(Alignment.TRAILING).addGroup(
+                jPanel9Layout.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel44, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE).addGap(158)));
         jPanel9.setLayout(jPanel9Layout);
 
         jPanelDate.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
 
-        jPanel11.setName("jPanel11"); // NOI18N
+        natura2000DatesPanel.setName("natura2000DatesPanel"); // NOI18N
+        natura2000DatesPanel.setVisible(!SDF_ManagerApp.isEmeraldMode());
 
-        jPanel45.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel45.border.title"))); // NOI18N
-        jPanel45.setName("jPanel45"); // NOI18N
+        natura2000DatesPanel_1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap
+                .getString("jPanel45.border.title"))); // NOI18N
+        natura2000DatesPanel_1.setName("natura2000DatesPanel_1"); // NOI18N
 
         jLabel49.setIcon(resourceMap.getIcon("jLabel49.icon")); // NOI18N
         jLabel49.setText(resourceMap.getString("jLabel49.text")); // NOI18N
@@ -3187,139 +3384,563 @@ public class SDFEditor extends javax.swing.JFrame {
         txtSacRef.setName("txtSacRef"); // NOI18N
         jScrollPane28.setViewportView(txtSacRef);
 
-        javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
-        jPanel45Layout.setHorizontalGroup(
-            jPanel45Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(Alignment.LEADING, jPanel45Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addComponent(jScrollPane27, GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
-                            .addContainerGap())
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addComponent(jScrollPane28, GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
-                            .addContainerGap())
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel45Layout.createSequentialGroup()
-                                    .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                                        .addGroup(jPanel45Layout.createSequentialGroup()
-                                            .addComponent(jLabel49, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(ComponentPlacement.RELATED)
-                                            .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                                            .addComponent(jLabel8))
+        javax.swing.GroupLayout gl_natura2000DatesPanel_1 = new javax.swing.GroupLayout(natura2000DatesPanel_1);
+        gl_natura2000DatesPanel_1
+                .setHorizontalGroup(gl_natura2000DatesPanel_1
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                gl_natura2000DatesPanel_1
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                gl_natura2000DatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jScrollPane27, GroupLayout.DEFAULT_SIZE,
+                                                                                985, Short.MAX_VALUE).addContainerGap())
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jScrollPane28, GroupLayout.DEFAULT_SIZE,
+                                                                                985, Short.MAX_VALUE).addContainerGap())
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                gl_natura2000DatesPanel_1
+                                                                                        .createParallelGroup(Alignment.LEADING,
+                                                                                                false)
+                                                                                        .addGroup(
+                                                                                                gl_natura2000DatesPanel_1
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addGroup(
+                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                        .createParallelGroup(
+                                                                                                                                Alignment.LEADING)
+                                                                                                                        .addGroup(
+                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                        .createSequentialGroup()
+                                                                                                                                        .addComponent(
+                                                                                                                                                jLabel49,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                191,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                        .addPreferredGap(
+                                                                                                                                                ComponentPlacement.UNRELATED)
+                                                                                                                                        .addComponent(
+                                                                                                                                                txtDateSpa,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                89,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                        .addPreferredGap(
+                                                                                                                                                ComponentPlacement.UNRELATED)
+                                                                                                                                        .addComponent(
+                                                                                                                                                jLabel8))
+                                                                                                                        .addComponent(
+                                                                                                                                jLabel55)
+                                                                                                                        .addGroup(
+                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                        .createSequentialGroup()
+                                                                                                                                        .addGroup(
+                                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                                        .createParallelGroup(
+                                                                                                                                                                Alignment.TRAILING)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                txtDatePropSci,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                89,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                        .addGroup(
+                                                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                                                        .createSequentialGroup()
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                jLabel52,
+                                                                                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                                190,
+                                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                                        .addPreferredGap(
+                                                                                                                                                                                ComponentPlacement.UNRELATED)
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                txtDateConfSci,
+                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                89,
+                                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                        .addGroup(
+                                                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                                                        .createSequentialGroup()
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                jLabel51)
+                                                                                                                                                                        .addPreferredGap(
+                                                                                                                                                                                ComponentPlacement.RELATED,
+                                                                                                                                                                                40,
+                                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                txtDateSac,
+                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                89,
+                                                                                                                                                                                GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                        .addPreferredGap(
+                                                                                                                                                ComponentPlacement.UNRELATED)
+                                                                                                                                        .addGroup(
+                                                                                                                                                gl_natura2000DatesPanel_1
+                                                                                                                                                        .createParallelGroup(
+                                                                                                                                                                Alignment.LEADING)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                jLabel7)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                jLabel6)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                jLabel5))))
+                                                                                                        .addGap(242))
+                                                                                        .addComponent(jSeparator1,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(jScrollPane33,
+                                                                                                GroupLayout.PREFERRED_SIZE, 949,
+                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                        .addContainerGap())
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel50, GroupLayout.DEFAULT_SIZE, 192,
+                                                                                Short.MAX_VALUE).addGap(803))
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel53, GroupLayout.DEFAULT_SIZE, 985,
+                                                                                Short.MAX_VALUE).addContainerGap())
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel54, GroupLayout.PREFERRED_SIZE, 345,
+                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                        .addContainerGap(650, Short.MAX_VALUE)))));
+        gl_natura2000DatesPanel_1
+                .setVerticalGroup(gl_natura2000DatesPanel_1
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                gl_natura2000DatesPanel_1
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                gl_natura2000DatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                        .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE).addComponent(jLabel8))
+                                                        .addComponent(jLabel49))
+                                        .addPreferredGap(ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel55)
-                                        .addGroup(jPanel45Layout.createSequentialGroup()
-                                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.TRAILING)
-                                                .addComponent(txtDatePropSci, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-                                                .addGroup(jPanel45Layout.createSequentialGroup()
-                                                    .addComponent(jLabel52, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                    .addComponent(txtDateConfSci, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel45Layout.createSequentialGroup()
-                                                    .addComponent(jLabel51)
-                                                    .addPreferredGap(ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                                                    .addComponent(txtDateSac, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)))
-                                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                                                .addComponent(jLabel7)
-                                                .addComponent(jLabel6)
-                                                .addComponent(jLabel5))))
-                                    .addPreferredGap(ComponentPlacement.RELATED, 639, Short.MAX_VALUE))
-                                .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 949, GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap())
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addComponent(jLabel50, GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                            .addGap(803))
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addComponent(jLabel53, GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
-                            .addContainerGap())
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addComponent(jLabel54, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(650, Short.MAX_VALUE))))
-        );
-        jPanel45Layout.setVerticalGroup(
-            jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel45Layout.createSequentialGroup()
-                    .addGroup(jPanel45Layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(jLabel49)
-                        .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8))
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jLabel55)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addGap(28)
-                            .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel45Layout.createParallelGroup(Alignment.BASELINE)
-                                    .addComponent(txtDatePropSci, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addComponent(jLabel50))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(txtDateConfSci, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel52))))
-                    .addGroup(jPanel45Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addGap(6)
-                            .addGroup(jPanel45Layout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(txtDateSac, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7)))
-                        .addGroup(jPanel45Layout.createSequentialGroup()
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(jLabel51)))
-                    .addGap(18)
-                    .addComponent(jLabel53)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane28, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jLabel54)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jScrollPane27, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(150, Short.MAX_VALUE))
-        );
-        jPanel45.setLayout(jPanel45Layout);
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(
+                                                gl_natura2000DatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGap(28)
+                                                                        .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10,
+                                                                                GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                        .addGroup(
+                                                                                gl_natura2000DatesPanel_1
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                gl_natura2000DatesPanel_1
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.BASELINE)
+                                                                                                        .addComponent(
+                                                                                                                txtDatePropSci,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addComponent(jLabel5))
+                                                                                        .addComponent(jLabel50))
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addGroup(
+                                                                                gl_natura2000DatesPanel_1
+                                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                                        .addComponent(txtDateConfSci,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(jLabel6)
+                                                                                        .addComponent(jLabel52))))
+                                        .addGroup(
+                                                gl_natura2000DatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGap(6)
+                                                                        .addGroup(
+                                                                                gl_natura2000DatesPanel_1
+                                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                                        .addComponent(txtDateSac,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(jLabel7)))
+                                                        .addGroup(
+                                                                gl_natura2000DatesPanel_1.createSequentialGroup()
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addComponent(jLabel51))).addGap(18)
+                                        .addComponent(jLabel53).addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane28, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(jLabel54)
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane27, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        natura2000DatesPanel_1.setLayout(gl_natura2000DatesPanel_1);
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel11Layout.createSequentialGroup()
-                    .addComponent(jPanel45, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(30, Short.MAX_VALUE))
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel11Layout.createSequentialGroup()
-                    .addComponent(jPanel45, GroupLayout.PREFERRED_SIZE, 433, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(144, Short.MAX_VALUE))
-        );
-        jPanel11.setLayout(jPanel11Layout);
+        javax.swing.GroupLayout gl_natura2000DatesPanel = new javax.swing.GroupLayout(natura2000DatesPanel);
+        gl_natura2000DatesPanel.setHorizontalGroup(gl_natura2000DatesPanel.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_natura2000DatesPanel
+                        .createSequentialGroup()
+                        .addComponent(natura2000DatesPanel_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE).addContainerGap(30, Short.MAX_VALUE)));
+        gl_natura2000DatesPanel.setVerticalGroup(gl_natura2000DatesPanel.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_natura2000DatesPanel.createSequentialGroup()
+                        .addComponent(natura2000DatesPanel_1, GroupLayout.PREFERRED_SIZE, 433, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(144, Short.MAX_VALUE)));
+        natura2000DatesPanel.setLayout(gl_natura2000DatesPanel);
 
-        jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), jPanel11); // NOI18N
+        if (!SDF_ManagerApp.isEmeraldMode()) {
+            jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), natura2000DatesPanel); // NOI18N
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanelDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanelDate, GroupLayout.PREFERRED_SIZE, 500, Short.MAX_VALUE)
-                    .addContainerGap())
-        );
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel1Layout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanelDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.PREFERRED_SIZE).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel1Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanelDate, GroupLayout.PREFERRED_SIZE, 500, Short.MAX_VALUE).addContainerGap()));
+
+        emeraldDatesPanel = new JPanel();
+        emeraldDatesPanel.setName("emeraldDatesPanel");
+        emeraldDatesPanel.setVisible(SDF_ManagerApp.isEmeraldMode());
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), emeraldDatesPanel);
+        }
+
+        emeraldDatesPanel_1 = new JPanel();
+        emeraldDatesPanel_1.setName("emeraldDatesPanel_1");
+        emeraldDatesPanel_1
+                .setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel45.border.title"))); // NOI18N
+
+        scrollPane = new JScrollPane();
+        scrollPane.setName("jScrollPane27");
+
+        scrollPane_1 = new JScrollPane();
+        scrollPane_1.setName("jScrollPane28");
+
+        lblDateSiteProposedASCI = new JLabel();
+        lblDateSiteProposedASCI.setIcon(resourceMap.getIcon("icon.mandatoryRed"));
+        lblDateSiteProposedASCI.setText("Date site proposed as ASCI :");
+        lblDateSiteProposedASCI.setName("lblDateSiteProposedASCI");
+
+        txtDateSiteProposedASCI = new JTextField();
+        txtDateSiteProposedASCI.setName("txtDateSiteProposedASCI");
+
+        hintDateSiteProposedASCI = new JLabel();
+        hintDateSiteProposedASCI.setText("(yyyy-mm)");
+        hintDateSiteProposedASCI.setName("hintDateSiteProposedASCI");
+
+        txtDateSiteConfirmedCandidateASCI = new JTextField();
+        txtDateSiteConfirmedCandidateASCI.setName("txtDateSiteConfirmedCandidateASCI");
+
+        lblDateSiteConfirmedASCI = new JLabel();
+        lblDateSiteConfirmedASCI.setIcon(resourceMap.getIcon("icon.mandatoryGreen"));
+        lblDateSiteConfirmedASCI.setText("Date site confirmed as ASCI :");
+        lblDateSiteConfirmedASCI.setName("lblDateSiteConfirmedASCI");
+
+        txtDateSiteConfirmedASCI = new JTextField();
+        txtDateSiteConfirmedASCI.setName("txtDateSiteConfirmedASCI");
+
+        lblDateSiteDesignatedASCI = new JLabel();
+        lblDateSiteDesignatedASCI.setIcon(resourceMap.getIcon("icon.mandatoryRed"));
+        lblDateSiteDesignatedASCI.setText("Date site designated as ASCI :");
+        lblDateSiteDesignatedASCI.setName("lblDateSiteDesignatedASCI");
+
+        txtDateSiteDesignatedASCI = new JTextField();
+        txtDateSiteDesignatedASCI.setName("txtDateSiteDesignatedASCI");
+
+        hintDateSiteConfirmedCandidateASCI = new JLabel();
+        hintDateSiteConfirmedCandidateASCI.setText("(yyyy-mm)");
+        hintDateSiteConfirmedCandidateASCI.setName("hintDateSiteConfirmedCandidateASCI");
+
+        separator = new JSeparator();
+        separator.setName("jSeparator1");
+
+        lblDateSiteConfirmedCandidateASCI = new JLabel();
+        lblDateSiteConfirmedCandidateASCI.setIcon(resourceMap.getIcon("icon.mandatoryGreen"));
+        lblDateSiteConfirmedCandidateASCI.setText("Date site confirmed as candidate ASCI :");
+        lblDateSiteConfirmedCandidateASCI.setName("lblDateSiteConfirmedCandidateASCI");
+
+        lblNationalLegalReference = new JLabel();
+        lblNationalLegalReference.setText("National legal reference of ASCI designation:");
+        lblNationalLegalReference.setName("lblNationalLegalReference");
+
+        lblExplanations = new JLabel();
+        lblExplanations.setText("Explanations:");
+        lblExplanations.setName("lblExplanations");
+
+        hintDateSiteConfirmedASCI = new JLabel();
+        hintDateSiteConfirmedASCI.setText("(yyyy-mm)");
+        hintDateSiteConfirmedASCI.setName("hintDateSiteConfirmedASCI");
+
+        hintDateSiteDesignatedASCI = new JLabel();
+        hintDateSiteDesignatedASCI.setText("(yyyy-mm)");
+        hintDateSiteDesignatedASCI.setName("hintDateSiteDesignatedASCI");
+        GroupLayout gl_emeraldDatesPanel_1 = new GroupLayout(emeraldDatesPanel_1);
+        gl_emeraldDatesPanel_1
+                .setHorizontalGroup(gl_emeraldDatesPanel_1
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                gl_emeraldDatesPanel_1
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                gl_emeraldDatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addComponent(lblNationalLegalReference, Alignment.TRAILING,
+                                                                GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+                                                        .addComponent(lblExplanations, GroupLayout.PREFERRED_SIZE, 345,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(
+                                                                Alignment.TRAILING,
+                                                                gl_emeraldDatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                gl_emeraldDatesPanel_1
+                                                                                        .createParallelGroup(Alignment.TRAILING)
+                                                                                        .addComponent(scrollPane,
+                                                                                                Alignment.LEADING,
+                                                                                                GroupLayout.DEFAULT_SIZE, 987,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addGroup(
+                                                                                                Alignment.LEADING,
+                                                                                                gl_emeraldDatesPanel_1
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addGroup(
+                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                        .createParallelGroup(
+                                                                                                                                Alignment.LEADING)
+                                                                                                                        .addComponent(
+                                                                                                                                lblDateSiteProposedASCI,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                191,
+                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addComponent(
+                                                                                                                                lblDateSiteConfirmedCandidateASCI,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                223,
+                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                        .addComponent(
+                                                                                                                                lblDateSiteDesignatedASCI)
+                                                                                                                        .addComponent(
+                                                                                                                                lblDateSiteConfirmedASCI,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                183,
+                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                        .addPreferredGap(
+                                                                                                                ComponentPlacement.UNRELATED)
+                                                                                                        .addGroup(
+                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                        .createParallelGroup(
+                                                                                                                                Alignment.LEADING)
+                                                                                                                        .addGroup(
+                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                        .createSequentialGroup()
+                                                                                                                                        .addComponent(
+                                                                                                                                                txtDateSiteDesignatedASCI,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                89,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                        .addGap(18)
+                                                                                                                                        .addComponent(
+                                                                                                                                                hintDateSiteDesignatedASCI,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                52,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                        .addGroup(
+                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                        .createSequentialGroup()
+                                                                                                                                        .addComponent(
+                                                                                                                                                txtDateSiteConfirmedASCI,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                89,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                        .addGap(18)
+                                                                                                                                        .addComponent(
+                                                                                                                                                hintDateSiteConfirmedASCI,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                52,
+                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                        .addGroup(
+                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                        .createSequentialGroup()
+                                                                                                                                        .addGroup(
+                                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                                        .createParallelGroup(
+                                                                                                                                                                Alignment.LEADING)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                txtDateSiteConfirmedCandidateASCI,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                89,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                                                                        .addComponent(
+                                                                                                                                                                txtDateSiteProposedASCI,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                89,
+                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                                        .addGroup(
+                                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                                        .createSequentialGroup()
+                                                                                                                                                        .addGap(18)
+                                                                                                                                                        .addGroup(
+                                                                                                                                                                gl_emeraldDatesPanel_1
+                                                                                                                                                                        .createParallelGroup(
+                                                                                                                                                                                Alignment.LEADING)
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                hintDateSiteConfirmedCandidateASCI)
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                hintDateSiteProposedASCI))))))
+                                                                                        .addComponent(scrollPane_1,
+                                                                                                Alignment.LEADING,
+                                                                                                GroupLayout.DEFAULT_SIZE, 987,
+                                                                                                Short.MAX_VALUE))
+                                                                        .addGap(18)
+                                                                        .addComponent(separator, GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE))).addContainerGap()));
+        gl_emeraldDatesPanel_1
+                .setVerticalGroup(gl_emeraldDatesPanel_1
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                gl_emeraldDatesPanel_1
+                                        .createSequentialGroup()
+                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(
+                                                gl_emeraldDatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_emeraldDatesPanel_1.createSequentialGroup()
+                                                                        .addComponent(lblDateSiteProposedASCI)
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addComponent(lblDateSiteConfirmedCandidateASCI)
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addComponent(lblDateSiteConfirmedASCI).addGap(11)
+                                                                        .addComponent(lblDateSiteDesignatedASCI))
+                                                        .addGroup(
+                                                                gl_emeraldDatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                gl_emeraldDatesPanel_1
+                                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                                        .addComponent(txtDateSiteProposedASCI,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(hintDateSiteProposedASCI))
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addGroup(
+                                                                                gl_emeraldDatesPanel_1
+                                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                                        .addComponent(
+                                                                                                txtDateSiteConfirmedCandidateASCI,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(
+                                                                                                hintDateSiteConfirmedCandidateASCI))
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addGroup(
+                                                                                gl_emeraldDatesPanel_1
+                                                                                        .createSequentialGroup()
+                                                                                        .addGroup(
+                                                                                                gl_emeraldDatesPanel_1
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.BASELINE)
+                                                                                                        .addComponent(
+                                                                                                                txtDateSiteConfirmedASCI,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addComponent(
+                                                                                                                hintDateSiteConfirmedASCI))
+                                                                                        .addPreferredGap(
+                                                                                                ComponentPlacement.RELATED)
+                                                                                        .addGroup(
+                                                                                                gl_emeraldDatesPanel_1
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.BASELINE)
+                                                                                                        .addComponent(
+                                                                                                                txtDateSiteDesignatedASCI,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addComponent(
+                                                                                                                hintDateSiteDesignatedASCI)))))
+                                        .addGap(18)
+                                        .addComponent(lblNationalLegalReference)
+                                        .addGroup(
+                                                gl_emeraldDatesPanel_1
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_emeraldDatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addGap(13)
+                                                                        .addComponent(separator, GroupLayout.PREFERRED_SIZE, 10,
+                                                                                GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(
+                                                                gl_emeraldDatesPanel_1
+                                                                        .createSequentialGroup()
+                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                        .addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE,
+                                                                                68, GroupLayout.PREFERRED_SIZE))).addGap(18)
+                                        .addComponent(lblExplanations).addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(88)));
+
+        JTextArea txtExplanations = new JTextArea();
+        txtExplanations.setRows(5);
+        txtExplanations.setName("txtExplanations");
+        txtExplanations.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
+        txtExplanations.setColumns(20);
+        scrollPane.setViewportView(txtExplanations);
+
+        JTextArea txtNationalLegalReference = new JTextArea();
+        txtNationalLegalReference.setRows(5);
+        txtNationalLegalReference.setName("txtNationalLegalReference");
+        txtNationalLegalReference.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
+        txtNationalLegalReference.setColumns(20);
+        scrollPane_1.setViewportView(txtNationalLegalReference);
+        emeraldDatesPanel_1.setLayout(gl_emeraldDatesPanel_1);
+        GroupLayout gl_emeraldDatesPanel = new GroupLayout(emeraldDatesPanel);
+        gl_emeraldDatesPanel.setHorizontalGroup(gl_emeraldDatesPanel.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_emeraldDatesPanel.createSequentialGroup()
+                        .addComponent(emeraldDatesPanel_1, GroupLayout.PREFERRED_SIZE, 1037, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(411, Short.MAX_VALUE)));
+        gl_emeraldDatesPanel.setVerticalGroup(gl_emeraldDatesPanel.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_emeraldDatesPanel.createSequentialGroup()
+                        .addComponent(emeraldDatesPanel_1, GroupLayout.PREFERRED_SIZE, 433, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(39, Short.MAX_VALUE)));
+        emeraldDatesPanel.setLayout(gl_emeraldDatesPanel);
         jPanel1.setLayout(jPanel1Layout);
 
         tabbedPane.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -3364,56 +3985,82 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel62.setName("jLabel62"); // NOI18N
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel12Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel12Layout.createSequentialGroup()
-                            .addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel17, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel14))
-                            .addGap(18)
-                            .addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING, false)
-                                .addComponent(txtLatitude)
-                                .addComponent(txtLongitude, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
-                            .addGap(39)
-                            .addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel18, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel20, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING, false)
-                                .addComponent(txtLength)
-                                .addComponent(txtArea, 149, 149, Short.MAX_VALUE))
-                            .addGap(49)
-                            .addComponent(jLabel19, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(txtMarineArea, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                            .addGap(190))
-                        .addGroup(jPanel12Layout.createSequentialGroup()
-                            .addComponent(jLabel62)
-                            .addContainerGap(990, Short.MAX_VALUE))))
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel12Layout.createSequentialGroup()
-                    .addComponent(jLabel62)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel12Layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(jLabel14)
-                        .addComponent(txtLongitude, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel20)
-                        .addComponent(jLabel19)
-                        .addComponent(txtMarineArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel12Layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(txtLatitude, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel17)
-                        .addComponent(txtArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel18))
-                    .addGap(88))
-        );
+        jPanel12Layout.setHorizontalGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel12Layout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        jPanel12Layout
+                                                .createParallelGroup(Alignment.LEADING)
+                                                .addGroup(
+                                                        jPanel12Layout
+                                                                .createSequentialGroup()
+                                                                .addGroup(
+                                                                        jPanel12Layout
+                                                                                .createParallelGroup(Alignment.LEADING)
+                                                                                .addComponent(jLabel17,
+                                                                                        GroupLayout.PREFERRED_SIZE, 136,
+                                                                                        GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(jLabel14))
+                                                                .addGap(18)
+                                                                .addGroup(
+                                                                        jPanel12Layout
+                                                                                .createParallelGroup(Alignment.LEADING, false)
+                                                                                .addComponent(txtLatitude)
+                                                                                .addComponent(txtLongitude,
+                                                                                        GroupLayout.DEFAULT_SIZE, 105,
+                                                                                        Short.MAX_VALUE))
+                                                                .addGap(39)
+                                                                .addGroup(
+                                                                        jPanel12Layout
+                                                                                .createParallelGroup(Alignment.LEADING)
+                                                                                .addComponent(jLabel18,
+                                                                                        GroupLayout.PREFERRED_SIZE, 90,
+                                                                                        GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(jLabel20,
+                                                                                        GroupLayout.PREFERRED_SIZE, 108,
+                                                                                        GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                .addGroup(
+                                                                        jPanel12Layout
+                                                                                .createParallelGroup(Alignment.LEADING, false)
+                                                                                .addComponent(txtLength)
+                                                                                .addComponent(txtArea, 149, 149, Short.MAX_VALUE))
+                                                                .addGap(49)
+                                                                .addComponent(jLabel19, GroupLayout.DEFAULT_SIZE, 141,
+                                                                        Short.MAX_VALUE)
+                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                .addComponent(txtMarineArea, GroupLayout.PREFERRED_SIZE, 111,
+                                                                        GroupLayout.PREFERRED_SIZE).addGap(190))
+                                                .addGroup(
+                                                        jPanel12Layout.createSequentialGroup().addComponent(jLabel62)
+                                                                .addContainerGap(990, Short.MAX_VALUE)))));
+        jPanel12Layout.setVerticalGroup(jPanel12Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel12Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel62)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel12Layout
+                                        .createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(jLabel14)
+                                        .addComponent(txtLongitude, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtLength, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel20)
+                                        .addComponent(jLabel19)
+                                        .addComponent(txtMarineArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel12Layout
+                                        .createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(txtLatitude, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel17)
+                                        .addComponent(txtArea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE).addComponent(jLabel18)).addGap(88)));
         jPanel12.setLayout(jPanel12Layout);
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel13.border.title"))); // NOI18N
@@ -3452,42 +4099,55 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel63.setName("jLabel63"); // NOI18N
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel13Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel63)
-                    .addGap(18)
-                    .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, 907, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING, false)
-                        .addGroup(jPanel13Layout.createSequentialGroup()
-                            .addComponent(btnDelRegion)
-                            .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel26))
-                        .addComponent(btnAddRegion))
-                    .addContainerGap())
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel13Layout.createSequentialGroup()
-                    .addGroup(jPanel13Layout.createParallelGroup(Alignment.TRAILING, false)
-                        .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel13Layout.createSequentialGroup()
-                            .addGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel13Layout.createSequentialGroup()
-                                    .addComponent(jLabel63)
-                                    .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel26)
-                                    .addGap(54))
-                                .addGroup(jPanel13Layout.createSequentialGroup()
-                                    .addComponent(btnAddRegion)
-                                    .addPreferredGap(ComponentPlacement.RELATED)
-                                    .addComponent(btnDelRegion)
-                                    .addGap(31)))
-                            .addGap(31)))
-                    .addContainerGap())
-        );
+        jPanel13Layout.setHorizontalGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel13Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel63)
+                        .addGap(18)
+                        .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, 907, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel13Layout
+                                        .createParallelGroup(Alignment.LEADING, false)
+                                        .addGroup(
+                                                jPanel13Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnDelRegion)
+                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
+                                                                Short.MAX_VALUE).addComponent(jLabel26))
+                                        .addComponent(btnAddRegion)).addContainerGap()));
+        jPanel13Layout.setVerticalGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel13Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel13Layout
+                                        .createParallelGroup(Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(
+                                                jPanel13Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel13Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addGroup(
+                                                                                jPanel13Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addComponent(jLabel63)
+                                                                                        .addPreferredGap(
+                                                                                                ComponentPlacement.RELATED,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(jLabel26).addGap(54))
+                                                                        .addGroup(
+                                                                                jPanel13Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addComponent(btnAddRegion)
+                                                                                        .addPreferredGap(
+                                                                                                ComponentPlacement.RELATED)
+                                                                                        .addComponent(btnDelRegion).addGap(31)))
+                                                        .addGap(31))).addContainerGap()));
         jPanel13.setLayout(jPanel13Layout);
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel14.border.title"))); // NOI18N
@@ -3516,14 +4176,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        tabBiogeo.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabBiogeo.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Region", "Area"
-            }
-        ));
+        }, new String[] {"Region", "Area"}));
         tabBiogeo.setName("tabBiogeo"); // NOI18N
         tabBiogeo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tabBiogeo);
@@ -3543,60 +4198,60 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel25.setName("jLabel25"); // NOI18N
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel14Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel25)
-                    .addGap(18)
-                    .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel14Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel14Layout.createParallelGroup(Alignment.TRAILING)
-                            .addComponent(btnDelBiogeo)
-                            .addComponent(editBioRegionButton))
-                        .addComponent(btnAddBiogeo))
-                    .addContainerGap())
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel14Layout.createSequentialGroup()
-                    .addGroup(jPanel14Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel14Layout.createSequentialGroup()
-                            .addGroup(jPanel14Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel25)
-                                .addComponent(btnAddBiogeo))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(btnDelBiogeo)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(editBioRegionButton))
-                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
+        jPanel14Layout.setHorizontalGroup(jPanel14Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel14Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel25)
+                        .addGap(18)
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                jPanel14Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel14Layout.createParallelGroup(Alignment.TRAILING).addComponent(btnDelBiogeo)
+                                                        .addComponent(editBioRegionButton)).addComponent(btnAddBiogeo))
+                        .addContainerGap()));
+        jPanel14Layout.setVerticalGroup(jPanel14Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel14Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel14Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel14Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel14Layout.createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jLabel25).addComponent(btnAddBiogeo))
+                                                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnDelBiogeo)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(editBioRegionButton))
+                                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
+                        .addContainerGap()));
         jPanel14.setLayout(jPanel14Layout);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jPanel12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel13, GroupLayout.PREFERRED_SIZE, 1028, Short.MAX_VALUE)
-                        .addComponent(jPanel14, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel12, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jPanel13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel14, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                    .addGap(24))
-        );
+        jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel2Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel2Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jPanel12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jPanel13, GroupLayout.PREFERRED_SIZE, 1028, Short.MAX_VALUE)
+                                        .addComponent(jPanel14, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE))
+                        .addContainerGap()));
+        jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel2Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanel12, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel14, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE).addGap(24)));
         jPanel2.setLayout(jPanel2Layout);
 
         tabbedPane.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -3613,29 +4268,23 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane8.setName("jScrollPane8"); // NOI18N
 
-        tabHabitats.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabHabitats.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Code", "PF", "NP", "Cover (ha)", "Caves", "Data Quality", "Representativity", "Relative Surface", "Conservation", "Global"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
-            };
+        }, new String[] {"Code", "PF", "NP", "Cover (ha)", "Caves", "Data Quality", "Representativity", "Relative Surface",
+                "Conservation", "Global"}) {
+            Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class};
+            boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false};
 
             @Override
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabHabitats.setName("tabHabitats"); // NOI18N
@@ -3682,51 +4331,57 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
-                        .addComponent(btnAddHabitat)
+        jPanel15Layout.setHorizontalGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel15Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel15Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(
+                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                jPanel15Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnAddHabitat)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnDelHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 52,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnEditHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 51,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)).addContainerGap()));
+        jPanel15Layout.setVerticalGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel15Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel15Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnDelHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnAddHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(btnEditHabitat))
+                        .addGap(29, 29, 29)
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDelHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEditHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDelHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddHabitat, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditHabitat))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap()));
 
         javax.swing.GroupLayout jPanel40Layout = new javax.swing.GroupLayout(jPanel40);
         jPanel40.setLayout(jPanel40Layout);
-        jPanel40Layout.setHorizontalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel40Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel40Layout.setVerticalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel40Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel40Layout.setHorizontalGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel40Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel40Layout.setVerticalGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel40Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jPanelOSpecies.addTab(resourceMap.getString("jPanel40.TabConstraints.tabTitle"), jPanel40); // NOI18N
 
@@ -3737,41 +4392,25 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane9.setName("jScrollPane9"); // NOI18N
 
-        tabSpecies.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabSpecies.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Group", "Code", "Name",
-                "S", "NP", "Type",
-                "Min. Size", "Max. Size", "Unit",
-                "Cat.", "Data Quality", "Pop.",
-                "Cons.", "Isol.", "Glob."
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false,
-                false, false, false,
-                false, false, false,
-                false, false, false,
-                false, false, false
-            };
+        }, new String[] {"Group", "Code", "Name", "S", "NP", "Type", "Min. Size", "Max. Size", "Unit", "Cat.", "Data Quality",
+                "Pop.", "Cons.", "Isol.", "Glob."}) {
+            Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class};
+            boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false, false, false,
+                    false, false, false};
 
             @Override
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabSpecies.setName("tabSpecies"); // NOI18N
@@ -3807,48 +4446,54 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(btnAddSpecies)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDelSpecies)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEditSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnDelSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditSpecies))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel16Layout.setHorizontalGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel16Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel16Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
+                                        .addGroup(
+                                                jPanel16Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnAddSpecies)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnDelSpecies)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(btnEditSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 49,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))).addContainerGap()));
+        jPanel16Layout
+                .setVerticalGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                        jPanel16Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel16Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(btnDelSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnAddSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(btnEditSpecies))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+                                .addContainerGap()));
 
         javax.swing.GroupLayout jPanel41Layout = new javax.swing.GroupLayout(jPanel41);
         jPanel41.setLayout(jPanel41Layout);
-        jPanel41Layout.setHorizontalGroup(
-            jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel41Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel41Layout.setVerticalGroup(
-            jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel41Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel41Layout.setHorizontalGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel41Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel41Layout.setVerticalGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel41Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jPanelOSpecies.addTab(resourceMap.getString("jPanel41.TabConstraints.tabTitle"), jPanel41); // NOI18N
 
@@ -3859,29 +4504,25 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane10.setName("jScrollPane10"); // NOI18N
 
-        tabOtherSpecies.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabOtherSpecies.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV", "Spec. Anex V", "A", "B", "C", "D"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            };
+        }, new String[] {"Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV",
+                "Spec. Anex V", "A", "B", "C", "D"}) {
+            Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class};
+            boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false, false, false,
+                    false, false, false};
 
             @Override
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabOtherSpecies.setName("tabOtherSpecies"); // NOI18N
@@ -3897,11 +4538,16 @@ public class SDFEditor extends javax.swing.JFrame {
         tabOtherSpecies.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title7")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title8")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(9).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title9")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(10).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title10")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(11).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title11")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(12).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title12")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(13).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title13")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(14).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title14")); // NOI18N
+        tabOtherSpecies.getColumnModel().getColumn(10)
+                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title10")); // NOI18N
+        tabOtherSpecies.getColumnModel().getColumn(11)
+                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title11")); // NOI18N
+        tabOtherSpecies.getColumnModel().getColumn(12)
+                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title12")); // NOI18N
+        tabOtherSpecies.getColumnModel().getColumn(13)
+                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title13")); // NOI18N
+        tabOtherSpecies.getColumnModel().getColumn(14)
+                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title14")); // NOI18N
 
         btnAddOtherSpecies.setIcon(resourceMap.getIcon("btnAddOtherSpecies.icon")); // NOI18N
         btnAddOtherSpecies.setName("btnAddOtherSpecies"); // NOI18N
@@ -3932,66 +4578,68 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
-                    .addGroup(jPanel17Layout.createSequentialGroup()
-                        .addComponent(btnAddOtherSpecies)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDelOtherSpecies)
-                        .addGap(18, 18, 18)
-                        .addComponent(tbnEditOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel17Layout.createSequentialGroup()
-                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(tbnEditOtherSpecies)
-                    .addComponent(btnDelOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel17Layout.setHorizontalGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel17Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel17Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.LEADING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, 967, Short.MAX_VALUE)
+                                        .addGroup(
+                                                jPanel17Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnAddOtherSpecies)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnDelOtherSpecies)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(tbnEditOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                49, javax.swing.GroupLayout.PREFERRED_SIZE))).addContainerGap()));
+        jPanel17Layout.setVerticalGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        jPanel17Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel17Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(tbnEditOtherSpecies)
+                                                .addComponent(btnDelOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnAddOtherSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+                                .addContainerGap()));
 
         javax.swing.GroupLayout jPanel42Layout = new javax.swing.GroupLayout(jPanel42);
         jPanel42.setLayout(jPanel42Layout);
-        jPanel42Layout.setHorizontalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel42Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel42Layout.setVerticalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel42Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel42Layout.setHorizontalGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel42Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel42Layout.setVerticalGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel42Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jPanelOSpecies.addTab(resourceMap.getString("jPanel42.TabConstraints.tabTitle"), jPanel42); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelOSpecies, javax.swing.GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelOSpecies, javax.swing.GroupLayout.DEFAULT_SIZE, 715, Short.MAX_VALUE))
-        );
+        jPanel3Layout.setHorizontalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel3Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanelOSpecies, javax.swing.GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
+                        .addContainerGap()));
+        jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel3Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanelOSpecies, javax.swing.GroupLayout.DEFAULT_SIZE, 715, Short.MAX_VALUE)));
 
         tabbedPane.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
 
@@ -4019,22 +4667,19 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
-        jPanel18Layout.setHorizontalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addComponent(jLabel29)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel18Layout.setVerticalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                    .addComponent(jLabel29))
-                .addContainerGap())
-        );
+        jPanel18Layout.setHorizontalGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        jPanel18Layout.createSequentialGroup().addComponent(jLabel29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
+                                .addContainerGap()));
+        jPanel18Layout.setVerticalGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel18Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                                        .addComponent(jLabel29)).addContainerGap()));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel4.border.title"))); // NOI18N
         jPanel4.setName("jPanel4"); // NOI18N
@@ -4070,14 +4715,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane19.setName("jScrollPane19"); // NOI18N
 
-        tabHabitatClass.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabHabitatClass.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Habitat Class", "%"
-            }
-        ));
+        }, new String[] {"Habitat Class", "%"}));
         tabHabitatClass.setName("tabHabitatClass"); // NOI18N
         tabHabitatClass.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane19.setViewportView(tabHabitatClass);
@@ -4101,69 +4741,84 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel27.setName("jLabel27"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel28)
-                        .addComponent(jLabel27))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel4Layout.createParallelGroup(Alignment.TRAILING)
-                        .addComponent(jScrollPane11, GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jScrollPane19, GroupLayout.DEFAULT_SIZE, 917, Short.MAX_VALUE)
-                            .addPreferredGap(ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel4Layout.createParallelGroup(Alignment.TRAILING)
-                                    .addComponent(btnAddHabitatClass)
-                                    .addComponent(btnDelHabitatClass))
-                                .addComponent(editHabClassButton)))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel21)
-                            .addContainerGap(858, Short.MAX_VALUE))))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jScrollPane19, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-                            .addGap(27)
-                            .addComponent(jLabel21))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(btnAddHabitatClass, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(btnDelHabitatClass, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(editHabClassButton))
-                        .addComponent(jLabel28))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel27)
-                        .addComponent(jScrollPane11, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(23, Short.MAX_VALUE))
-        );
+        jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel4Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel4Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel28)
+                                                .addComponent(jLabel27))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(
+                                        jPanel4Layout
+                                                .createParallelGroup(Alignment.TRAILING)
+                                                .addComponent(jScrollPane11, GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
+                                                .addGroup(
+                                                        jPanel4Layout
+                                                                .createSequentialGroup()
+                                                                .addComponent(jScrollPane19, GroupLayout.DEFAULT_SIZE, 917,
+                                                                        Short.MAX_VALUE)
+                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                .addGroup(
+                                                                        jPanel4Layout
+                                                                                .createParallelGroup(Alignment.LEADING)
+                                                                                .addGroup(
+                                                                                        jPanel4Layout
+                                                                                                .createParallelGroup(
+                                                                                                        Alignment.TRAILING)
+                                                                                                .addComponent(btnAddHabitatClass)
+                                                                                                .addComponent(btnDelHabitatClass))
+                                                                                .addComponent(editHabClassButton)))
+                                                .addGroup(
+                                                        jPanel4Layout.createSequentialGroup().addComponent(jLabel21)
+                                                                .addContainerGap(858, Short.MAX_VALUE)))));
+        jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel4Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel4Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel4Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jScrollPane19, GroupLayout.PREFERRED_SIZE, 102,
+                                                                GroupLayout.PREFERRED_SIZE).addGap(27).addComponent(jLabel21))
+                                        .addGroup(
+                                                jPanel4Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnAddHabitatClass, GroupLayout.PREFERRED_SIZE, 31,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(btnDelHabitatClass, GroupLayout.PREFERRED_SIZE, 31,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(editHabClassButton)).addComponent(jLabel28))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel4Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel27)
+                                        .addComponent(jScrollPane11, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(23, Short.MAX_VALUE)));
         jPanel4.setLayout(jPanel4Layout);
 
         javax.swing.GroupLayout jPanel37Layout = new javax.swing.GroupLayout(jPanel37);
-        jPanel37Layout.setHorizontalGroup(
-            jPanel37Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel37Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel37Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jPanel18, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
-                        .addComponent(jPanel4, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
-        jPanel37Layout.setVerticalGroup(
-            jPanel37Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel37Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, 327, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel18, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(54, Short.MAX_VALUE))
-        );
+        jPanel37Layout.setHorizontalGroup(jPanel37Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel37Layout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        jPanel37Layout
+                                                .createParallelGroup(Alignment.LEADING)
+                                                .addComponent(jPanel18, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1016,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(jPanel4, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1016,
+                                                        Short.MAX_VALUE)).addContainerGap()));
+        jPanel37Layout.setVerticalGroup(jPanel37Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel37Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, 327, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel18, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(54, Short.MAX_VALUE)));
         jPanel37.setLayout(jPanel37Layout);
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel37.TabConstraints.tabTitle"), jPanel37); // NOI18N
@@ -4196,40 +4851,32 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane14.setName("jScrollPane14"); // NOI18N
 
-        tabPositiveImpacts.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Rank", "Code", "Name", "Pollution", "i|o|b"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
+        tabPositiveImpacts.setModel(new javax.swing.table.DefaultTableModel(new Object[][] { {null, null, null, null, null},
+                {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null},
+                {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null},
+                {null, null, null, null, null}}, new String[] {"Rank", "Code", "Name", "Pollution", "i|o|b"}) {
+            boolean[] canEdit = new boolean[] {false, false, false, false, false};
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabPositiveImpacts.setName("tabPositiveImpacts"); // NOI18N
         tabPositiveImpacts.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane14.setViewportView(tabPositiveImpacts);
         tabPositiveImpacts.getColumnModel().getColumn(0).setResizable(false);
-        tabPositiveImpacts.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title0")); // NOI18N
-        tabPositiveImpacts.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title1")); // NOI18N
+        tabPositiveImpacts.getColumnModel().getColumn(0)
+                .setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title0")); // NOI18N
+        tabPositiveImpacts.getColumnModel().getColumn(1)
+                .setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title1")); // NOI18N
         tabPositiveImpacts.getColumnModel().getColumn(2).setResizable(false);
-        tabPositiveImpacts.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title4")); // NOI18N
-        tabPositiveImpacts.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title2")); // NOI18N
-        tabPositiveImpacts.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title3")); // NOI18N
+        tabPositiveImpacts.getColumnModel().getColumn(2)
+                .setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title4")); // NOI18N
+        tabPositiveImpacts.getColumnModel().getColumn(3)
+                .setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title2")); // NOI18N
+        tabPositiveImpacts.getColumnModel().getColumn(4)
+                .setHeaderValue(resourceMap.getString("tabPositiveImpacts.columnModel.title3")); // NOI18N
 
         jImpactNegEdit.setIcon(resourceMap.getIcon("jImpactNegEdit.icon")); // NOI18N
         jImpactNegEdit.setText(resourceMap.getString("jImpactNegEdit.text")); // NOI18N
@@ -4247,31 +4894,26 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
-        jPanel21Layout.setHorizontalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addComponent(jLabel31)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAddPosImpact)
-                .addGap(15, 15, 15)
-                .addComponent(btnDelPosImpact)
-                .addGap(18, 18, 18)
-                .addComponent(jImpactNegEdit)
-                .addContainerGap())
-        );
-        jPanel21Layout.setVerticalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddPosImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jImpactNegEdit)
-                    .addComponent(btnDelPosImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel31)
-                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        jPanel21Layout.setHorizontalGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel21Layout.createSequentialGroup().addComponent(jLabel31)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(btnAddPosImpact)
+                        .addGap(15, 15, 15).addComponent(btnDelPosImpact).addGap(18, 18, 18).addComponent(jImpactNegEdit)
+                        .addContainerGap()));
+        jPanel21Layout.setVerticalGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel21Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel21Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnAddPosImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jImpactNegEdit)
+                                        .addComponent(btnDelPosImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel31)
+                                        .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                        .addContainerGap()));
 
         jPanel27.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel27.border.title"))); // NOI18N
         jPanel27.setName("jPanel27"); // NOI18N
@@ -4296,38 +4938,30 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane20.setName("jScrollPane20"); // NOI18N
 
-        tabNegativeImpacts.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Rank", "Code", "Name", "Pollution", "i|o|b"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
+        tabNegativeImpacts.setModel(new javax.swing.table.DefaultTableModel(new Object[][] { {null, null, null, null, null},
+                {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null},
+                {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null},
+                {null, null, null, null, null}}, new String[] {"Rank", "Code", "Name", "Pollution", "i|o|b"}) {
+            boolean[] canEdit = new boolean[] {false, false, false, false, false};
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabNegativeImpacts.setName("tabNegativeImpacts"); // NOI18N
         tabNegativeImpacts.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane20.setViewportView(tabNegativeImpacts);
-        tabNegativeImpacts.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title0")); // NOI18N
-        tabNegativeImpacts.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title1")); // NOI18N
-        tabNegativeImpacts.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title4")); // NOI18N
-        tabNegativeImpacts.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title2")); // NOI18N
-        tabNegativeImpacts.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title3")); // NOI18N
+        tabNegativeImpacts.getColumnModel().getColumn(0)
+                .setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title0")); // NOI18N
+        tabNegativeImpacts.getColumnModel().getColumn(1)
+                .setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title1")); // NOI18N
+        tabNegativeImpacts.getColumnModel().getColumn(2)
+                .setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title4")); // NOI18N
+        tabNegativeImpacts.getColumnModel().getColumn(3)
+                .setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title2")); // NOI18N
+        tabNegativeImpacts.getColumnModel().getColumn(4)
+                .setHeaderValue(resourceMap.getString("tabNegativeImpacts.columnModel.title3")); // NOI18N
 
         jEditImpacts.setIcon(resourceMap.getIcon("jEditImpacts.icon")); // NOI18N
         jEditImpacts.setText(resourceMap.getString("jEditImpacts.text")); // NOI18N
@@ -4345,65 +4979,62 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
         jPanel27.setLayout(jPanel27Layout);
-        jPanel27Layout.setHorizontalGroup(
-            jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel27Layout.createSequentialGroup()
-                .addComponent(jLabel30)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAddNegImpact)
-                .addGap(14, 14, 14)
-                .addComponent(btnDelNegImpact)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jEditImpacts)
-                .addContainerGap())
-        );
-        jPanel27Layout.setVerticalGroup(
-            jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel27Layout.createSequentialGroup()
-                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddNegImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jEditImpacts)
-                    .addComponent(btnDelNegImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel30)
-                    .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        jPanel27Layout.setHorizontalGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel27Layout.createSequentialGroup().addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(btnAddNegImpact)
+                        .addGap(14, 14, 14).addComponent(btnDelNegImpact)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(jEditImpacts)
+                        .addContainerGap()));
+        jPanel27Layout.setVerticalGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel27Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel27Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnAddNegImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jEditImpacts)
+                                        .addComponent(btnDelNegImpact, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jLabel30)
+                                        .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                        .addContainerGap()));
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel19Layout.setVerticalGroup(
-            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel19Layout.createSequentialGroup()
-                .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel19Layout.setHorizontalGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel19Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel19Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jPanel27, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
+        jPanel19Layout.setVerticalGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel19Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         javax.swing.GroupLayout jPanel38Layout = new javax.swing.GroupLayout(jPanel38);
         jPanel38.setLayout(jPanel38Layout);
-        jPanel38Layout.setHorizontalGroup(
-            jPanel38Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel38Layout.createSequentialGroup()
-                .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel38Layout.setVerticalGroup(
-            jPanel38Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel38Layout.createSequentialGroup()
-                .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel38Layout.setHorizontalGroup(jPanel38Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel38Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel38Layout.setVerticalGroup(jPanel38Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel38Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel38.TabConstraints.tabTitle"), jPanel38); // NOI18N
 
@@ -4419,32 +5050,32 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel22.setName("jLabel22"); // NOI18N
 
         javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
-        jPanel24Layout.setHorizontalGroup(
-            jPanel24Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel24Layout.createSequentialGroup()
-                    .addGroup(jPanel24Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel22)
-                        .addGroup(jPanel24Layout.createSequentialGroup()
-                            .addGap(24)
-                            .addComponent(jScrollPane18, GroupLayout.PREFERRED_SIZE, 975, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(10, Short.MAX_VALUE))
-        );
-        jPanel24Layout.setVerticalGroup(
-            jPanel24Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel24Layout.createSequentialGroup()
-                    .addComponent(jLabel22)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jScrollPane18, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
-                    .addGap(295))
-        );
+        jPanel24Layout.setHorizontalGroup(jPanel24Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel24Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel24Layout
+                                                .createParallelGroup(Alignment.LEADING)
+                                                .addComponent(jLabel22)
+                                                .addGroup(
+                                                        jPanel24Layout
+                                                                .createSequentialGroup()
+                                                                .addGap(24)
+                                                                .addComponent(jScrollPane18, GroupLayout.PREFERRED_SIZE, 975,
+                                                                        GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(10, Short.MAX_VALUE)));
+        jPanel24Layout.setVerticalGroup(jPanel24Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel24Layout.createSequentialGroup().addComponent(jLabel22).addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane18, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE).addGap(295)));
         txtDocumentation = new javax.swing.JTextArea();
         jScrollPane18.setViewportView(txtDocumentation);
         txtDocumentation.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
 
-                txtDocumentation.setColumns(20);
-                txtDocumentation.setLineWrap(true);
-                txtDocumentation.setRows(5);
-                txtDocumentation.setName("txtDocumentation");
+        txtDocumentation.setColumns(20);
+        txtDocumentation.setLineWrap(true);
+        txtDocumentation.setRows(5);
+        txtDocumentation.setName("txtDocumentation");
         jPanel24.setLayout(jPanel24Layout);
 
         jPanel22.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel22.border.title"))); // NOI18N
@@ -4452,14 +5083,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane16.setName("jScrollPane16"); // NOI18N
 
-        tabOwnership.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabOwnership.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Type", "%"
-            }
-        ));
+        }, new String[] {"Type", "%"}));
         tabOwnership.setName("tabOwnership"); // NOI18N
         tabOwnership.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane16.setViewportView(tabOwnership);
@@ -4505,152 +5131,205 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
-        jPanel22Layout.setHorizontalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addComponent(jLabel32)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel22Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtOwnershipSum, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 903, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnAddOwner, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDelOwner, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editOwnershipButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel22Layout.setVerticalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel22Layout.createSequentialGroup()
-                        .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jPanel22Layout.setHorizontalGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel22Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel32)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtOwnershipSum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel32)
-                    .addGroup(jPanel22Layout.createSequentialGroup()
-                        .addComponent(btnAddOwner)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnDelOwner)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(editOwnershipButton)))
-                .addGap(12, 12, 12))
-        );
+                        .addGroup(
+                                jPanel22Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel22Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jLabel2)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtOwnershipSum, javax.swing.GroupLayout.PREFERRED_SIZE, 62,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 903,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(
+                                jPanel22Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnAddOwner, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnDelOwner, javax.swing.GroupLayout.Alignment.LEADING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
+                                        .addComponent(editOwnershipButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
+        jPanel22Layout.setVerticalGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel22Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel22Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel22Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 88,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addGroup(
+                                                                jPanel22Layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(jLabel2)
+                                                                        .addComponent(txtOwnershipSum,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jLabel32)
+                                        .addGroup(
+                                                jPanel22Layout.createSequentialGroup().addComponent(btnAddOwner)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(btnDelOwner)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(editOwnershipButton))).addGap(12, 12, 12)));
         jLabel23 = new javax.swing.JLabel();
 
-                jLabel23.setIcon(resourceMap.getIcon("jLabel23.icon")); // NOI18N
-                jLabel23.setText(resourceMap.getString("jLabel23.text")); // NOI18N
-                jLabel23.setName("jLabel23");
+        jLabel23.setIcon(resourceMap.getIcon("jLabel23.icon")); // NOI18N
+        jLabel23.setText(resourceMap.getString("jLabel23.text")); // NOI18N
+        jLabel23.setName("jLabel23");
         jScrollPane17 = new javax.swing.JScrollPane();
         lstLinks = new javax.swing.JList();
 
-                jScrollPane17.setName("jScrollPane17"); // NOI18N
+        jScrollPane17.setName("jScrollPane17"); // NOI18N
 
-                        lstLinks.setName("lstLinks"); // NOI18N
-                        jScrollPane17.setViewportView(lstLinks);
+        lstLinks.setName("lstLinks"); // NOI18N
+        jScrollPane17.setViewportView(lstLinks);
         btnAddDocLink = new javax.swing.JButton();
 
-                btnAddDocLink.setIcon(resourceMap.getIcon("btnAddDocLink.icon")); // NOI18N
-                btnAddDocLink.setName("btnAddDocLink"); // NOI18N
-                btnAddDocLink.addActionListener(new java.awt.event.ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        btnAddDocLinkActionPerformed(evt);
-                    }
-                });
+        btnAddDocLink.setIcon(resourceMap.getIcon("btnAddDocLink.icon")); // NOI18N
+        btnAddDocLink.setName("btnAddDocLink"); // NOI18N
+        btnAddDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddDocLinkActionPerformed(evt);
+            }
+        });
         btnDelDocLink = new javax.swing.JButton();
 
-                btnDelDocLink.setIcon(resourceMap.getIcon("btnDelDocLink.icon")); // NOI18N
-                btnDelDocLink.setName("btnDelDocLink"); // NOI18N
-                btnDelDocLink.addActionListener(new java.awt.event.ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        btnDelDocLinkActionPerformed(evt);
-                    }
-                });
+        btnDelDocLink.setIcon(resourceMap.getIcon("btnDelDocLink.icon")); // NOI18N
+        btnDelDocLink.setName("btnDelDocLink"); // NOI18N
+        btnDelDocLink.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelDocLinkActionPerformed(evt);
+            }
+        });
         editOwnershipButton1 = new javax.swing.JButton();
 
-                editOwnershipButton1.setIcon(resourceMap.getIcon("editOwnershipButton1.icon")); // NOI18N
-                editOwnershipButton1.setName("editOwnershipButton1"); // NOI18N
-                editOwnershipButton1.addActionListener(new java.awt.event.ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        editLinksActionPerformed(evt);
-                    }
-                });
+        editOwnershipButton1.setIcon(resourceMap.getIcon("editOwnershipButton1.icon")); // NOI18N
+        editOwnershipButton1.setName("editOwnershipButton1"); // NOI18N
+        editOwnershipButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel39Layout = new javax.swing.GroupLayout(jPanel39);
-        jPanel39Layout.setHorizontalGroup(
-            jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel39Layout.createSequentialGroup()
-                    .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel39Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jPanel24, 0, 1016, Short.MAX_VALUE)
-                                .addComponent(jPanel22, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel39Layout.createSequentialGroup()
-                            .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel39Layout.createSequentialGroup()
-                                    .addGap(36)
-                                    .addComponent(jScrollPane17, GroupLayout.PREFERRED_SIZE, 914, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel39Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(jLabel23, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)))
-                            .addGap(18)
-                            .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(editOwnershipButton1)
-                                .addComponent(btnDelDocLink)
-                                .addComponent(btnAddDocLink))))
-                    .addContainerGap())
-        );
-        jPanel39Layout.setVerticalGroup(
-            jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel39Layout.createSequentialGroup()
-                    .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel39Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jPanel22, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(jPanel24, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)
-                            .addGap(1)
-                            .addComponent(jLabel23)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jScrollPane17, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel39Layout.createSequentialGroup()
-                                    .addGap(25)
-                                    .addComponent(btnDelDocLink)
-                                    .addPreferredGap(ComponentPlacement.RELATED)
-                                    .addComponent(editOwnershipButton1))))
-                        .addGroup(jPanel39Layout.createSequentialGroup()
-                            .addGap(378)
-                            .addComponent(btnAddDocLink)))
-                    .addGap(10))
-        );
+        jPanel39Layout
+                .setHorizontalGroup(jPanel39Layout
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                jPanel39Layout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                jPanel39Layout
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                jPanel39Layout
+                                                                        .createSequentialGroup()
+                                                                        .addContainerGap()
+                                                                        .addGroup(
+                                                                                jPanel39Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addComponent(jPanel24, 0, 1016,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(jPanel22,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)))
+                                                        .addGroup(
+                                                                jPanel39Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                jPanel39Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                jPanel39Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addGap(36)
+                                                                                                        .addComponent(
+                                                                                                                jScrollPane17,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                914,
+                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                        .addGroup(
+                                                                                                jPanel39Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addContainerGap()
+                                                                                                        .addComponent(
+                                                                                                                jLabel23,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                110,
+                                                                                                                GroupLayout.PREFERRED_SIZE)))
+                                                                        .addGap(18)
+                                                                        .addGroup(
+                                                                                jPanel39Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addComponent(editOwnershipButton1)
+                                                                                        .addComponent(btnDelDocLink)
+                                                                                        .addComponent(btnAddDocLink))))
+                                        .addContainerGap()));
+        jPanel39Layout.setVerticalGroup(jPanel39Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel39Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel39Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel39Layout
+                                                        .createSequentialGroup()
+                                                        .addContainerGap()
+                                                        .addComponent(jPanel22, GroupLayout.PREFERRED_SIZE, 149,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(jPanel24, GroupLayout.PREFERRED_SIZE, 201,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(1)
+                                                        .addComponent(jLabel23)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addGroup(
+                                                                jPanel39Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jScrollPane17, GroupLayout.PREFERRED_SIZE,
+                                                                                95, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(
+                                                                                jPanel39Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addGap(25)
+                                                                                        .addComponent(btnDelDocLink)
+                                                                                        .addPreferredGap(
+                                                                                                ComponentPlacement.RELATED)
+                                                                                        .addComponent(editOwnershipButton1))))
+                                        .addGroup(jPanel39Layout.createSequentialGroup().addGap(378).addComponent(btnAddDocLink)))
+                        .addGap(10)));
         jPanel39.setLayout(jPanel39Layout);
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel39.TabConstraints.tabTitle"), jPanel39); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel5Layout.createSequentialGroup()
-                    .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 1041, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel5Layout.createSequentialGroup()
-                    .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 523, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(59, Short.MAX_VALUE))
-        );
+        jPanel5Layout.setHorizontalGroup(jPanel5Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel5Layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 1041, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        jPanel5Layout.setVerticalGroup(jPanel5Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel5Layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 523, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(59, Short.MAX_VALUE)));
         jPanel5.setLayout(jPanel5Layout);
 
         tabbedPane.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
@@ -4668,19 +5347,16 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane29.setName("jScrollPane29"); // NOI18N
 
-        tabDesigationTypes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabDesigationTypes.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Code", "Cover (%)"
-            }
-        ));
+        }, new String[] {"Code", "Cover (%)"}));
         tabDesigationTypes.setName("tabDesigationTypes"); // NOI18N
         tabDesigationTypes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane29.setViewportView(tabDesigationTypes);
-        tabDesigationTypes.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabDesigationTypes.columnModel.title0")); // NOI18N
-        tabDesigationTypes.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabDesigationTypes.columnModel.title1")); // NOI18N
+        tabDesigationTypes.getColumnModel().getColumn(0)
+                .setHeaderValue(resourceMap.getString("tabDesigationTypes.columnModel.title0")); // NOI18N
+        tabDesigationTypes.getColumnModel().getColumn(1)
+                .setHeaderValue(resourceMap.getString("tabDesigationTypes.columnModel.title1")); // NOI18N
 
         btnAddDesigType.setIcon(resourceMap.getIcon("btnAddDesigType.icon")); // NOI18N
         btnAddDesigType.setName("btnAddDesigType"); // NOI18N
@@ -4716,53 +5392,65 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel48Layout = new javax.swing.GroupLayout(jPanel48);
         jPanel48.setLayout(jPanel48Layout);
-        jPanel48Layout.setHorizontalGroup(
-            jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel48Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE)
-                    .addGroup(jPanel48Layout.createSequentialGroup()
-                        .addComponent(jLabel35)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 782, Short.MAX_VALUE)
-                        .addComponent(btnAddDesigType)
-                        .addGap(14, 14, 14)
-                        .addComponent(btnDelDesigType)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(editDTypesButton)))
-                .addContainerGap())
-        );
-        jPanel48Layout.setVerticalGroup(
-            jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel48Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editDTypesButton)
-                    .addGroup(jPanel48Layout.createSequentialGroup()
-                        .addGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddDesigType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel35)
-                            .addComponent(btnDelDesigType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane29, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel48Layout.setHorizontalGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel48Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel48Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane29, javax.swing.GroupLayout.Alignment.LEADING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE)
+                                        .addGroup(
+                                                jPanel48Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(jLabel35)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 782,
+                                                                Short.MAX_VALUE).addComponent(btnAddDesigType).addGap(14, 14, 14)
+                                                        .addComponent(btnDelDesigType)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(editDTypesButton))).addContainerGap()));
+        jPanel48Layout.setVerticalGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel48Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel48Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(editDTypesButton)
+                                        .addGroup(
+                                                jPanel48Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel48Layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(btnAddDesigType,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(jLabel35)
+                                                                        .addComponent(btnDelDesigType,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(jScrollPane29, javax.swing.GroupLayout.PREFERRED_SIZE, 383,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         javax.swing.GroupLayout jPanel26Layout = new javax.swing.GroupLayout(jPanel26);
         jPanel26.setLayout(jPanel26Layout);
-        jPanel26Layout.setHorizontalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel26Layout.createSequentialGroup()
-                .addComponent(jPanel48, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel26Layout.setVerticalGroup(
-            jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel26Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(193, Short.MAX_VALUE))
-        );
+        jPanel26Layout.setHorizontalGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel26Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel48, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel26Layout.setVerticalGroup(jPanel26Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel26Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(193, Short.MAX_VALUE)));
 
         jTabbedPane4.addTab(resourceMap.getString("jPanel26.TabConstraints.tabTitle"), jPanel26); // NOI18N
 
@@ -4776,21 +5464,20 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane30.setName("jScrollPane30"); // NOI18N
 
-        tabNationalRelations.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabNationalRelations.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Code", "Name", "Type", "Cover (%)"
-            }
-        ));
+        }, new String[] {"Code", "Name", "Type", "Cover (%)"}));
         tabNationalRelations.setName("tabNationalRelations"); // NOI18N
         tabNationalRelations.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane30.setViewportView(tabNationalRelations);
-        tabNationalRelations.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title0")); // NOI18N
-        tabNationalRelations.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title1")); // NOI18N
-        tabNationalRelations.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title2")); // NOI18N
-        tabNationalRelations.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title3")); // NOI18N
+        tabNationalRelations.getColumnModel().getColumn(0)
+                .setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title0")); // NOI18N
+        tabNationalRelations.getColumnModel().getColumn(1)
+                .setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title1")); // NOI18N
+        tabNationalRelations.getColumnModel().getColumn(2)
+                .setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title2")); // NOI18N
+        tabNationalRelations.getColumnModel().getColumn(3)
+                .setHeaderValue(resourceMap.getString("tabNationalRelations.columnModel.title3")); // NOI18N
 
         btnAddNatRel.setIcon(resourceMap.getIcon("btnAddNatRel.icon")); // NOI18N
         btnAddNatRel.setName("btnAddNatRel"); // NOI18N
@@ -4825,35 +5512,42 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel36.setName("jLabel36"); // NOI18N
 
         javax.swing.GroupLayout jPanel50Layout = new javax.swing.GroupLayout(jPanel50);
-        jPanel50Layout.setHorizontalGroup(
-            jPanel50Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel50Layout.createSequentialGroup()
-                    .addComponent(jLabel36)
-                    .addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                    .addComponent(jScrollPane30, GroupLayout.PREFERRED_SIZE, 877, GroupLayout.PREFERRED_SIZE)
-                    .addGap(18)
-                    .addGroup(jPanel50Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel50Layout.createParallelGroup(Alignment.TRAILING)
-                            .addComponent(btnAddNatRel)
-                            .addComponent(btnDelNatRel))
-                        .addComponent(editNationRelationsButton))
-                    .addContainerGap())
-        );
-        jPanel50Layout.setVerticalGroup(
-            jPanel50Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel50Layout.createSequentialGroup()
-                    .addGroup(jPanel50Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel50Layout.createSequentialGroup()
-                            .addGroup(jPanel50Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel36)
-                                .addComponent(btnAddNatRel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(btnDelNatRel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(editNationRelationsButton))
-                        .addComponent(jScrollPane30, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(30, Short.MAX_VALUE))
-        );
+        jPanel50Layout.setHorizontalGroup(jPanel50Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel50Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel36)
+                        .addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addComponent(jScrollPane30, GroupLayout.PREFERRED_SIZE, 877, GroupLayout.PREFERRED_SIZE)
+                        .addGap(18)
+                        .addGroup(
+                                jPanel50Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel50Layout.createParallelGroup(Alignment.TRAILING).addComponent(btnAddNatRel)
+                                                        .addComponent(btnDelNatRel)).addComponent(editNationRelationsButton))
+                        .addContainerGap()));
+        jPanel50Layout.setVerticalGroup(jPanel50Layout.createParallelGroup(Alignment.TRAILING).addGroup(
+                jPanel50Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel50Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel50Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel50Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jLabel36)
+                                                                        .addComponent(btnAddNatRel, GroupLayout.PREFERRED_SIZE,
+                                                                                31, GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(btnDelNatRel, GroupLayout.PREFERRED_SIZE, 31,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(editNationRelationsButton))
+                                        .addComponent(jScrollPane30, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(30, Short.MAX_VALUE)));
         jPanel50.setLayout(jPanel50Layout);
 
         jPanel51.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel51.border.title"))); // NOI18N
@@ -4861,21 +5555,20 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane31.setName("jScrollPane31"); // NOI18N
 
-        tabInternationalRelations.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabInternationalRelations.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Code", "Name", "Type", "Cover (%)"
-            }
-        ));
+        }, new String[] {"Code", "Name", "Type", "Cover (%)"}));
         tabInternationalRelations.setName("tabInternationalRelations"); // NOI18N
         tabInternationalRelations.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane31.setViewportView(tabInternationalRelations);
-        tabInternationalRelations.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title0")); // NOI18N
-        tabInternationalRelations.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title1")); // NOI18N
-        tabInternationalRelations.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title2")); // NOI18N
-        tabInternationalRelations.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title3")); // NOI18N
+        tabInternationalRelations.getColumnModel().getColumn(0)
+                .setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title0")); // NOI18N
+        tabInternationalRelations.getColumnModel().getColumn(1)
+                .setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title1")); // NOI18N
+        tabInternationalRelations.getColumnModel().getColumn(2)
+                .setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title2")); // NOI18N
+        tabInternationalRelations.getColumnModel().getColumn(3)
+                .setHeaderValue(resourceMap.getString("tabInternationalRelations.columnModel.title3")); // NOI18N
 
         btnAddInterRel.setIcon(resourceMap.getIcon("btnAddInterRel.icon")); // NOI18N
         btnAddInterRel.setName("btnAddInterRel"); // NOI18N
@@ -4910,39 +5603,47 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel37.setName("jLabel37"); // NOI18N
 
         javax.swing.GroupLayout jPanel51Layout = new javax.swing.GroupLayout(jPanel51);
-        jPanel51Layout.setHorizontalGroup(
-            jPanel51Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel51Layout.createSequentialGroup()
-                    .addComponent(jLabel37)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jScrollPane31, GroupLayout.PREFERRED_SIZE, 880, GroupLayout.PREFERRED_SIZE)
-                    .addGap(18)
-                    .addGroup(jPanel51Layout.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(jPanel51Layout.createSequentialGroup()
-                            .addComponent(btnAddInterRel)
-                            .addContainerGap())
-                        .addGroup(jPanel51Layout.createSequentialGroup()
-                            .addComponent(btnDelInterRel)
-                            .addContainerGap())
-                        .addGroup(jPanel51Layout.createSequentialGroup()
-                            .addComponent(editIntRelationsButton)
-                            .addContainerGap())))
-        );
-        jPanel51Layout.setVerticalGroup(
-            jPanel51Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel51Layout.createSequentialGroup()
-                    .addGroup(jPanel51Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel51Layout.createSequentialGroup()
-                            .addGroup(jPanel51Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel37)
-                                .addComponent(btnAddInterRel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(btnDelInterRel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(editIntRelationsButton))
-                        .addComponent(jScrollPane31, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
-                    .addGap(32))
-        );
+        jPanel51Layout.setHorizontalGroup(jPanel51Layout.createParallelGroup(Alignment.TRAILING).addGroup(
+                jPanel51Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel37)
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane31, GroupLayout.PREFERRED_SIZE, 880, GroupLayout.PREFERRED_SIZE)
+                        .addGap(18)
+                        .addGroup(
+                                jPanel51Layout
+                                        .createParallelGroup(Alignment.TRAILING)
+                                        .addGroup(
+                                                jPanel51Layout.createSequentialGroup().addComponent(btnAddInterRel)
+                                                        .addContainerGap())
+                                        .addGroup(
+                                                jPanel51Layout.createSequentialGroup().addComponent(btnDelInterRel)
+                                                        .addContainerGap())
+                                        .addGroup(
+                                                jPanel51Layout.createSequentialGroup().addComponent(editIntRelationsButton)
+                                                        .addContainerGap()))));
+        jPanel51Layout.setVerticalGroup(jPanel51Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel51Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel51Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel51Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel51Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jLabel37)
+                                                                        .addComponent(btnAddInterRel, GroupLayout.PREFERRED_SIZE,
+                                                                                31, GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(btnDelInterRel, GroupLayout.PREFERRED_SIZE, 31,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(editIntRelationsButton))
+                                        .addComponent(jScrollPane31, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
+                        .addGap(32)));
         jPanel51.setLayout(jPanel51Layout);
 
         jPanel52.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel52.border.title"))); // NOI18N
@@ -4960,77 +5661,68 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel38.setName("jLabel38"); // NOI18N
 
         javax.swing.GroupLayout jPanel52Layout = new javax.swing.GroupLayout(jPanel52);
-        jPanel52Layout.setHorizontalGroup(
-            jPanel52Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel52Layout.createSequentialGroup()
-                    .addComponent(jLabel38)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(jScrollPane32, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE)
-                    .addContainerGap())
-        );
-        jPanel52Layout.setVerticalGroup(
-            jPanel52Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel52Layout.createSequentialGroup()
-                    .addGroup(jPanel52Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel38)
-                        .addComponent(jScrollPane32, GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
+        jPanel52Layout.setHorizontalGroup(jPanel52Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel52Layout.createSequentialGroup().addComponent(jLabel38).addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane32, GroupLayout.DEFAULT_SIZE, 953, Short.MAX_VALUE).addContainerGap()));
+        jPanel52Layout.setVerticalGroup(jPanel52Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel52Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel52Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel38)
+                                        .addComponent(jScrollPane32, GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                        .addContainerGap()));
         jPanel52.setLayout(jPanel52Layout);
 
         javax.swing.GroupLayout jPanel49Layout = new javax.swing.GroupLayout(jPanel49);
-        jPanel49Layout.setHorizontalGroup(
-            jPanel49Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel49Layout.createSequentialGroup()
-                    .addGroup(jPanel49Layout.createParallelGroup(Alignment.TRAILING)
-                        .addComponent(jPanel52, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
-                        .addComponent(jPanel51, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE)
-                        .addComponent(jPanel50, GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
-        jPanel49Layout.setVerticalGroup(
-            jPanel49Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel49Layout.createSequentialGroup()
-                    .addComponent(jPanel50, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel51, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel52, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
-        );
+        jPanel49Layout.setHorizontalGroup(jPanel49Layout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(
+                        jPanel49Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel49Layout
+                                                .createParallelGroup(Alignment.TRAILING)
+                                                .addComponent(jPanel52, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1001,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(jPanel51, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1011,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(jPanel50, GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE))
+                                .addContainerGap()));
+        jPanel49Layout.setVerticalGroup(jPanel49Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel49Layout.createSequentialGroup()
+                        .addComponent(jPanel50, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel51, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel52, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)));
         jPanel49.setLayout(jPanel49Layout);
 
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
-        jPanel25Layout.setHorizontalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel25Layout.createSequentialGroup()
-                .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel25Layout.setVerticalGroup(
-            jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel25Layout.createSequentialGroup()
-                .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel25Layout.setHorizontalGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel25Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
+        jPanel25Layout.setVerticalGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel25Layout
+                        .createSequentialGroup()
+                        .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jTabbedPane4.addTab(resourceMap.getString("jPanel25.TabConstraints.tabTitle"), jPanel25); // NOI18N
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jPanel7Layout.setHorizontalGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        jPanel7Layout.createSequentialGroup()
+                                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
+                                .addContainerGap()));
+        jPanel7Layout
+                .setVerticalGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                        jPanel7Layout.createSequentialGroup().addContainerGap()
+                                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+                                .addContainerGap()));
 
         tabbedPane.addTab(resourceMap.getString("jPanel7.TabConstraints.tabTitle"), jPanel7); // NOI18N
 
@@ -5059,21 +5751,14 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane34.setName("jScrollPane34"); // NOI18N
 
-        tabMgmtBodies.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabMgmtBodies.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Organization", "Email"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+        }, new String[] {"Organization", "Email"}) {
+            boolean[] canEdit = new boolean[] {false, false};
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabMgmtBodies.setName("tabMgmtBodies"); // NOI18N
@@ -5097,36 +5782,44 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel39.setName("jLabel39"); // NOI18N
 
         javax.swing.GroupLayout jPanel30Layout = new javax.swing.GroupLayout(jPanel30);
-        jPanel30Layout.setHorizontalGroup(
-            jPanel30Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(Alignment.TRAILING, jPanel30Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel39)
-                    .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane34, GroupLayout.PREFERRED_SIZE, 903, GroupLayout.PREFERRED_SIZE)
-                    .addGap(18)
-                    .addGroup(jPanel30Layout.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(jPanel30Layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(btnAddMgmtBody)
-                            .addComponent(btnDelMgmtBody))
-                        .addComponent(editMgmtBodyButton))
-                    .addContainerGap())
-        );
-        jPanel30Layout.setVerticalGroup(
-            jPanel30Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel30Layout.createSequentialGroup()
-                    .addGroup(jPanel30Layout.createParallelGroup(Alignment.LEADING, false)
-                        .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addGroup(jPanel30Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel39)
-                                .addComponent(btnAddMgmtBody, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(btnDelMgmtBody, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editMgmtBodyButton))
-                        .addComponent(jScrollPane34, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(44, Short.MAX_VALUE))
-        );
+        jPanel30Layout.setHorizontalGroup(jPanel30Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                Alignment.TRAILING,
+                jPanel30Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel39)
+                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane34, GroupLayout.PREFERRED_SIZE, 903, GroupLayout.PREFERRED_SIZE)
+                        .addGap(18)
+                        .addGroup(
+                                jPanel30Layout
+                                        .createParallelGroup(Alignment.TRAILING)
+                                        .addGroup(
+                                                jPanel30Layout.createParallelGroup(Alignment.LEADING).addComponent(btnAddMgmtBody)
+                                                        .addComponent(btnDelMgmtBody)).addComponent(editMgmtBodyButton))
+                        .addContainerGap()));
+        jPanel30Layout.setVerticalGroup(jPanel30Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel30Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel30Layout
+                                        .createParallelGroup(Alignment.LEADING, false)
+                                        .addGroup(
+                                                jPanel30Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel30Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jLabel39)
+                                                                        .addComponent(btnAddMgmtBody, GroupLayout.PREFERRED_SIZE,
+                                                                                31, GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(btnDelMgmtBody, GroupLayout.PREFERRED_SIZE, 31,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
+                                                                Short.MAX_VALUE).addComponent(editMgmtBodyButton))
+                                        .addComponent(jScrollPane34, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(44, Short.MAX_VALUE)));
         jPanel30.setLayout(jPanel30Layout);
 
         jPanel32.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel32.border.title"))); // NOI18N
@@ -5134,21 +5827,14 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane23.setName("jScrollPane23"); // NOI18N
 
-        tabMgmtPlans.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabMgmtPlans.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Name", "Link"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
+        }, new String[] {"Name", "Link"}) {
+            boolean[] canEdit = new boolean[] {false, false};
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tabMgmtPlans.setName("tabMgmtPlans"); // NOI18N
@@ -5204,56 +5890,101 @@ public class SDFEditor extends javax.swing.JFrame {
         });
 
         javax.swing.GroupLayout jPanel32Layout = new javax.swing.GroupLayout(jPanel32);
-        jPanel32Layout.setHorizontalGroup(
-            jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel32Layout.createSequentialGroup()
-                    .addComponent(jLabel40)
-                    .addGap(18)
-                    .addGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(btnMgmtNo, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel32Layout.createSequentialGroup()
-                            .addGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel32Layout.createSequentialGroup()
-                                    .addComponent(jScrollPane23, GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
-                                    .addGap(16))
-                                .addGroup(jPanel32Layout.createSequentialGroup()
-                                    .addComponent(btnMgmtPrep, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(ComponentPlacement.RELATED)))
-                            .addGroup(jPanel32Layout.createParallelGroup(Alignment.TRAILING)
-                                .addComponent(editMgmtBodyButton1, GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                                .addComponent(btnDelMgmtPlan, GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                                .addComponent(btnAddMgmtPlan, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)))
-                        .addComponent(btnMgmtExists))
-                    .addContainerGap())
-        );
-        jPanel32Layout.setVerticalGroup(
-            jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel32Layout.createSequentialGroup()
-                    .addGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel32Layout.createSequentialGroup()
-                            .addGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel40)
-                                .addComponent(btnMgmtExists)
-                                .addGroup(jPanel32Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(btnAddMgmtPlan, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)))
-                            .addGap(2)
-                            .addGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel32Layout.createSequentialGroup()
-                                    .addGap(4)
-                                    .addComponent(btnDelMgmtPlan, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(ComponentPlacement.RELATED)
-                                    .addComponent(editMgmtBodyButton1))
-                                .addGroup(jPanel32Layout.createSequentialGroup()
-                                    .addGap(50)
-                                    .addComponent(btnMgmtPrep))))
-                        .addGroup(jPanel32Layout.createSequentialGroup()
-                            .addGap(25)
-                            .addComponent(jScrollPane23, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnMgmtNo)
-                    .addContainerGap(29, Short.MAX_VALUE))
-        );
+        jPanel32Layout.setHorizontalGroup(jPanel32Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel32Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel40)
+                        .addGap(18)
+                        .addGroup(
+                                jPanel32Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addComponent(btnMgmtNo, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(
+                                                jPanel32Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel32Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addGroup(
+                                                                                jPanel32Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addComponent(jScrollPane23,
+                                                                                                GroupLayout.DEFAULT_SIZE, 897,
+                                                                                                Short.MAX_VALUE).addGap(16))
+                                                                        .addGroup(
+                                                                                jPanel32Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addComponent(btnMgmtPrep,
+                                                                                                GroupLayout.PREFERRED_SIZE, 238,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addPreferredGap(
+                                                                                                ComponentPlacement.RELATED)))
+                                                        .addGroup(
+                                                                jPanel32Layout
+                                                                        .createParallelGroup(Alignment.TRAILING)
+                                                                        .addComponent(editMgmtBodyButton1,
+                                                                                GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                                                                        .addComponent(btnDelMgmtPlan, GroupLayout.DEFAULT_SIZE,
+                                                                                59, Short.MAX_VALUE)
+                                                                        .addComponent(btnAddMgmtPlan, Alignment.LEADING,
+                                                                                GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)))
+                                        .addComponent(btnMgmtExists)).addContainerGap()));
+        jPanel32Layout
+                .setVerticalGroup(jPanel32Layout
+                        .createParallelGroup(Alignment.LEADING)
+                        .addGroup(
+                                jPanel32Layout
+                                        .createSequentialGroup()
+                                        .addGroup(
+                                                jPanel32Layout
+                                                        .createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(
+                                                                jPanel32Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                jPanel32Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addComponent(jLabel40)
+                                                                                        .addComponent(btnMgmtExists)
+                                                                                        .addGroup(
+                                                                                                jPanel32Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addContainerGap()
+                                                                                                        .addComponent(
+                                                                                                                btnAddMgmtPlan,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                31,
+                                                                                                                GroupLayout.PREFERRED_SIZE)))
+                                                                        .addGap(2)
+                                                                        .addGroup(
+                                                                                jPanel32Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                jPanel32Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addGap(4)
+                                                                                                        .addComponent(
+                                                                                                                btnDelMgmtPlan,
+                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                31,
+                                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addPreferredGap(
+                                                                                                                ComponentPlacement.RELATED)
+                                                                                                        .addComponent(
+                                                                                                                editMgmtBodyButton1))
+                                                                                        .addGroup(
+                                                                                                jPanel32Layout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addGap(50)
+                                                                                                        .addComponent(btnMgmtPrep))))
+                                                        .addGroup(
+                                                                jPanel32Layout
+                                                                        .createSequentialGroup()
+                                                                        .addGap(25)
+                                                                        .addComponent(jScrollPane23, GroupLayout.PREFERRED_SIZE,
+                                                                                62, GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnMgmtNo)
+                                        .addContainerGap(29, Short.MAX_VALUE)));
         jPanel32.setLayout(jPanel32Layout);
 
         jPanel33.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel33.border.title"))); // NOI18N
@@ -5271,46 +6002,40 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel56.setName("jLabel56"); // NOI18N
 
         javax.swing.GroupLayout jPanel33Layout = new javax.swing.GroupLayout(jPanel33);
-        jPanel33Layout.setHorizontalGroup(
-            jPanel33Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel33Layout.createSequentialGroup()
-                    .addComponent(jLabel56)
-                    .addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                    .addComponent(jScrollPane24, GroupLayout.PREFERRED_SIZE, 974, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
-        );
-        jPanel33Layout.setVerticalGroup(
-            jPanel33Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel33Layout.createSequentialGroup()
-                    .addGroup(jPanel33Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel56)
-                        .addComponent(jScrollPane24, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel33Layout.setHorizontalGroup(jPanel33Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel33Layout.createSequentialGroup().addComponent(jLabel56)
+                        .addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addComponent(jScrollPane24, GroupLayout.PREFERRED_SIZE, 974, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()));
+        jPanel33Layout.setVerticalGroup(jPanel33Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel33Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel33Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel56)
+                                        .addComponent(jScrollPane24, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel33.setLayout(jPanel33Layout);
 
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
-        jPanel23Layout.setHorizontalGroup(
-            jPanel23Layout.createParallelGroup(Alignment.TRAILING)
-                .addGroup(jPanel23Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel23Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jPanel32, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
-                        .addComponent(jPanel30, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
-                        .addComponent(jPanel33, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE))
-                    .addContainerGap())
-        );
-        jPanel23Layout.setVerticalGroup(
-            jPanel23Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel23Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel30, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel32, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel33, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addGap(87))
-        );
+        jPanel23Layout.setHorizontalGroup(jPanel23Layout.createParallelGroup(Alignment.TRAILING).addGroup(
+                jPanel23Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel23Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jPanel32, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1028,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jPanel30, GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
+                                        .addComponent(jPanel33, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1028,
+                                                Short.MAX_VALUE)).addContainerGap()));
+        jPanel23Layout.setVerticalGroup(jPanel23Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel23Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(jPanel30, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel32, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel33, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE).addGap(87)));
         jPanel23.setLayout(jPanel23Layout);
 
         tabbedPane.addTab(resourceMap.getString("jPanel23.TabConstraints.tabTitle"), jPanel23); // NOI18N
@@ -5329,23 +6054,24 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel34Layout = new javax.swing.GroupLayout(jPanel34);
         jPanel34.setLayout(jPanel34Layout);
-        jPanel34Layout.setHorizontalGroup(
-            jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel34Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel57)
-                .addGap(28, 28, 28)
-                .addComponent(txtInspireID, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(684, Short.MAX_VALUE))
-        );
-        jPanel34Layout.setVerticalGroup(
-            jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel34Layout.createSequentialGroup()
-                .addGroup(jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel57)
-                    .addComponent(txtInspireID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel34Layout.setHorizontalGroup(jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel34Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel57)
+                        .addGap(28, 28, 28)
+                        .addComponent(txtInspireID, javax.swing.GroupLayout.PREFERRED_SIZE, 274,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(684, Short.MAX_VALUE)));
+        jPanel34Layout.setVerticalGroup(jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel34Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel34Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel57)
+                                        .addComponent(txtInspireID, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         jPanel35.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel35.border.title"))); // NOI18N
         jPanel35.setName("jPanel35"); // NOI18N
@@ -5370,30 +6096,30 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel35Layout = new javax.swing.GroupLayout(jPanel35);
         jPanel35.setLayout(jPanel35Layout);
-        jPanel35Layout.setHorizontalGroup(
-            jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel35Layout.createSequentialGroup()
-                .addGroup(jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel35Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPDFNo)
-                            .addComponent(btnPDFYes)))
-                    .addGroup(jPanel35Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel58)))
-                .addContainerGap(940, Short.MAX_VALUE))
-        );
-        jPanel35Layout.setVerticalGroup(
-            jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel35Layout.createSequentialGroup()
-                .addComponent(jLabel58)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPDFYes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnPDFNo)
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
+        jPanel35Layout.setHorizontalGroup(jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        jPanel35Layout
+                                .createSequentialGroup()
+                                .addGroup(
+                                        jPanel35Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(
+                                                        jPanel35Layout
+                                                                .createSequentialGroup()
+                                                                .addGap(29, 29, 29)
+                                                                .addGroup(
+                                                                        jPanel35Layout
+                                                                                .createParallelGroup(
+                                                                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addComponent(btnPDFNo).addComponent(btnPDFYes)))
+                                                .addGroup(
+                                                        jPanel35Layout.createSequentialGroup().addContainerGap()
+                                                                .addComponent(jLabel58))).addContainerGap(940, Short.MAX_VALUE)));
+        jPanel35Layout.setVerticalGroup(jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel35Layout.createSequentialGroup().addComponent(jLabel58)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(btnPDFYes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(btnPDFNo)
+                        .addContainerGap(12, Short.MAX_VALUE)));
 
         jPanel20.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel20.border.title"))); // NOI18N
         jPanel20.setName("jPanel20"); // NOI18N
@@ -5412,68 +6138,71 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
-                    .addComponent(jLabel59))
-                .addContainerGap())
-        );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addComponent(jLabel59)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel20Layout.setHorizontalGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        jPanel20Layout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        jPanel20Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
+                                                .addComponent(jLabel59)).addContainerGap()));
+        jPanel20Layout.setVerticalGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel20Layout
+                        .createSequentialGroup()
+                        .addComponent(jLabel59)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)));
 
         javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
         jPanel31.setLayout(jPanel31Layout);
-        jPanel31Layout.setHorizontalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel31Layout.setVerticalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jPanel34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel35, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(349, Short.MAX_VALUE))
-        );
+        jPanel31Layout.setHorizontalGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel31Layout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                jPanel31Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jPanel34, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel35, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addContainerGap()));
+        jPanel31Layout.setVerticalGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel31Layout
+                        .createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jPanel34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel35, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(349, Short.MAX_VALUE)));
 
         tabbedPane.addTab(resourceMap.getString("jPanel31.TabConstraints.tabTitle"), jPanel31); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 1053, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel6Layout.createSequentialGroup()
-                    .addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 550, Short.MAX_VALUE)
-                    .addContainerGap())
-        );
+        jPanel6Layout
+                .setHorizontalGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                        Alignment.TRAILING,
+                        jPanel6Layout.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 1053, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap()));
+        jPanel6Layout.setVerticalGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel6Layout.createSequentialGroup().addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 550, Short.MAX_VALUE)
+                        .addContainerGap()));
         jPanel6.setLayout(jPanel6Layout);
 
         tabbedPane.getAccessibleContext().setAccessibleName(resourceMap.getString("tabbedPane.AccessibleContext.accessibleName")); // NOI18N
 
-        //jLabel24.setIcon(resourceMap.getIcon("jLabel24.icon")); // NOI18N
+        // jLabel24.setIcon(resourceMap.getIcon("jLabel24.icon")); // NOI18N
         jLabel24.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel24.icon", SDF_ManagerApp.getMode()));
         jLabel24.setText(resourceMap.getString("jLabel24.text")); // NOI18N
         jLabel24.setName("jLabel24"); // NOI18N
@@ -5546,87 +6275,97 @@ public class SDFEditor extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(validateSiteButton)
-                .addGap(28, 28, 28)
-                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jViewButton)
-                .addGap(18, 18, 18)
-                .addComponent(btnGeneratePDF)
-                .addGap(18, 18, 18)
-                .addComponent(btnSave)
-                .addGap(26, 26, 26)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnClose)
-                    .addComponent(btnSave)
-                    .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jViewButton)
-                    .addComponent(btnExport)
-                    .addComponent(validateSiteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
+        jPanel10Layout.setHorizontalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        javax.swing.GroupLayout.Alignment.TRAILING,
+                        jPanel10Layout
+                                .createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(validateSiteButton)
+                                .addGap(28, 28, 28)
+                                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 91,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(jViewButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGeneratePDF)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSave)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 85,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap()));
+        jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                jPanel10Layout
+                        .createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(
+                                jPanel10Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnClose)
+                                        .addComponent(btnSave)
+                                        .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jViewButton)
+                                        .addComponent(btnExport)
+                                        .addComponent(validateSiteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel24)
-                            .addGap(204)
-                            .addComponent(jLabel1)
-                            .addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                            .addComponent(jPanel10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jPanel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGap(285))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(jLabel24)
-                        .addComponent(jLabel1)
-                        .addComponent(jPanel10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, 561, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(207, Short.MAX_VALUE))
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        Alignment.TRAILING,
+                        layout.createSequentialGroup()
+                                .addGroup(
+                                        layout.createParallelGroup(Alignment.TRAILING)
+                                                .addGroup(
+                                                        layout.createSequentialGroup()
+                                                                .addComponent(jLabel24)
+                                                                .addGap(204)
+                                                                .addComponent(jLabel1)
+                                                                .addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                                                .addComponent(jPanel10, GroupLayout.PREFERRED_SIZE,
+                                                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(jPanel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                        Short.MAX_VALUE)).addGap(285)));
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING).addGroup(
+                layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                layout.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(jLabel24)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jPanel10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE)).addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, 561, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(207, Short.MAX_VALUE)));
         getContentPane().setLayout(layout);
 
         pack();
     } // </editor-fold>//GEN-END:initComponents
 
-    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddRegionActionPerformed
+    private void btnAddRegionActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddRegionActionPerformed
         new EditorRegion(this, this.sitecode).setVisible(true);
-    } //GEN-LAST:event_btnAddRegionActionPerformed
+    } // GEN-LAST:event_btnAddRegionActionPerformed
 
-    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddBiogeoActionPerformed
-         if (checkSumPercentBioReg() == 100) {
-            SDFEditor.logger.error("The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
-            javax.swing.JOptionPane.showMessageDialog(this, "The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
+    private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddBiogeoActionPerformed
+        if (checkSumPercentBioReg() == 100) {
+            SDFEditor.logger
+                    .error("The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
             return;
         } else {
             new EditorBioregion(this).setVisible(true);
         }
 
-    } //GEN-LAST:event_btnAddBiogeoActionPerformed
+    } // GEN-LAST:event_btnAddBiogeoActionPerformed
 
-    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatActionPerformed
+    private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddHabitatActionPerformed
         new EditorHabitat(this).setVisible(true);
-    } //GEN-LAST:event_btnAddHabitatActionPerformed
+    } // GEN-LAST:event_btnAddHabitatActionPerformed
 
-    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditHabitatActionPerformed
+    private void btnEditHabitatActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnEditHabitatActionPerformed
         int row = tabHabitats.getSelectedRow();
         if (row < 0) {
             SDFEditor.logger.error("No habitat selected");
@@ -5640,15 +6379,15 @@ public class SDFEditor extends javax.swing.JFrame {
             eH.setVisible(true);
 
         }
-    } //GEN-LAST:event_btnEditHabitatActionPerformed
+    } // GEN-LAST:event_btnEditHabitatActionPerformed
 
-    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddSpeciesActionPerformed
+    private void btnAddSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddSpeciesActionPerformed
         EditorSpecies eS = new EditorSpecies(this);
         eS.init();
         eS.setVisible(true);
-    } //GEN-LAST:event_btnAddSpeciesActionPerformed
+    } // GEN-LAST:event_btnAddSpeciesActionPerformed
 
-    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditSpeciesActionPerformed
+    private void btnEditSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnEditSpeciesActionPerformed
         int row = tabSpecies.getSelectedRow();
         if (row < 0 || tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             SDFEditor.logger.error("No species selected");
@@ -5666,15 +6405,15 @@ public class SDFEditor extends javax.swing.JFrame {
             }
 
         }
-    } //GEN-LAST:event_btnEditSpeciesActionPerformed
+    } // GEN-LAST:event_btnEditSpeciesActionPerformed
 
-    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
+    private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
         EditorOtherSpecies eS = new EditorOtherSpecies(this);
         eS.init();
         eS.setVisible(true);
-    } //GEN-LAST:event_btnAddOtherSpeciesActionPerformed
+    } // GEN-LAST:event_btnAddOtherSpeciesActionPerformed
 
-    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
+    private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
         int row = tabOtherSpecies.getSelectedRow();
 
         if (row < 0 || tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
@@ -5688,455 +6427,389 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.setVisible(true);
 
         }
-    } //GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
+    } // GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
 
-    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddHabitatClassActionPerformed
+    private void btnAddHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddHabitatClassActionPerformed
         if (this.modelHabitatClasses.size() > 0) {
             if (checkHCPercent100(null)) {
                 SDFEditor.logger.error("The sum of cover percentage is 100.New habitat class cannot be added.");
-                JOptionPane.showMessageDialog(this, "The sum of cover percentage is 100.New habitat class cannot be added.", "Dialog", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "The sum of cover percentage is 100.New habitat class cannot be added.",
+                        "Dialog", JOptionPane.ERROR_MESSAGE);
             } else {
                 new EditorHabitatClass(this).setVisible(true);
             }
         } else {
             new EditorHabitatClass(this).setVisible(true);
         }
-    } //GEN-LAST:event_btnAddHabitatClassActionPerformed
+    } // GEN-LAST:event_btnAddHabitatClassActionPerformed
 
-    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNegImpactActionPerformed
+    private void btnAddNegImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddNegImpactActionPerformed
         if (this.modelNegativeImpacts.size() == 25) {
-            SDFEditor.logger.error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
-           JOptionPane.showMessageDialog(this, "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts", "Dialog", JOptionPane.ERROR_MESSAGE);
+            SDFEditor.logger
+                    .error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
+            JOptionPane.showMessageDialog(this,
+                    "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
         } else {
             new EditorImpact(this, "N").setVisible(true);
         }
 
-    } //GEN-LAST:event_btnAddNegImpactActionPerformed
+    } // GEN-LAST:event_btnAddNegImpactActionPerformed
 
-    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddPosImpactActionPerformed
+    private void btnAddPosImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddPosImpactActionPerformed
         if (this.modelPositiveImpacts.size() == 25) {
-            SDFEditor.logger.error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
-            JOptionPane.showMessageDialog(this, "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts", "Dialog", JOptionPane.ERROR_MESSAGE);
+            SDFEditor.logger
+                    .error("The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts.");
+            JOptionPane.showMessageDialog(this,
+                    "The data entries for the highest rank are limited to a maximum of 25 negative and 25 positive impacts",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
         } else {
             new EditorImpact(this, "P").setVisible(true);
         }
 
-    } //GEN-LAST:event_btnAddPosImpactActionPerformed
+    } // GEN-LAST:event_btnAddPosImpactActionPerformed
 
-    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOwnerActionPerformed
+    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddOwnerActionPerformed
         new EditorOwnership(this).setVisible(true);
-    } //GEN-LAST:event_btnAddOwnerActionPerformed
+    } // GEN-LAST:event_btnAddOwnerActionPerformed
 
-    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDesigTypeActionPerformed
+    private void btnAddDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddDesigTypeActionPerformed
         new EditorDesignationType(this).setVisible(true);
-} //GEN-LAST:event_btnAddDesigTypeActionPerformed
+    } // GEN-LAST:event_btnAddDesigTypeActionPerformed
 
-    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtBodyActionPerformed
+    private void btnAddMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddMgmtBodyActionPerformed
         new EditorMgmtBody(this).setVisible(true);
-    } //GEN-LAST:event_btnAddMgmtBodyActionPerformed
+    } // GEN-LAST:event_btnAddMgmtBodyActionPerformed
 
-    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMgmtPlanActionPerformed
+    private void btnAddMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddMgmtPlanActionPerformed
         new EditorMgmtPlan(this).setVisible(true);
-    } //GEN-LAST:event_btnAddMgmtPlanActionPerformed
+    } // GEN-LAST:event_btnAddMgmtPlanActionPerformed
 
-    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddNatRelActionPerformed
+    private void btnAddNatRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddNatRelActionPerformed
         new EditorNationalRelation(this).setVisible(true);
-    } //GEN-LAST:event_btnAddNatRelActionPerformed
+    } // GEN-LAST:event_btnAddNatRelActionPerformed
 
-    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddInterRelActionPerformed
+    private void btnAddInterRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddInterRelActionPerformed
         new EditorInternationalRelation(this).setVisible(true);
-    } //GEN-LAST:event_btnAddInterRelActionPerformed
+    } // GEN-LAST:event_btnAddInterRelActionPerformed
 
-    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelRegionActionPerformed
+    private void btnDelRegionActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelRegionActionPerformed
         int rows[] = this.lstRegions.getSelectedIndices();
         if (rows.length == 0) {
             SDFEditor.logger.error("No Regions selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(this,
-                    "Are you sure you want to delete selected region(s)?",
-                    "Confirm delete region",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected region(s)?",
+                            "Confirm delete region", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 for (int i = 0; i < rows.length; i++) {
-                    this.site.getRegions().remove(this.modelRegions.get(rows[i])); //delete from persistent object
+                    this.site.getRegions().remove(this.modelRegions.get(rows[i])); // delete from persistent object
                 }
-                this.saveAndReloadSession(); //save and update to database
-                this.loadRegions(); //repopulate the list in the view
+                this.saveAndReloadSession(); // save and update to database
+                this.loadRegions(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelRegionActionPerformed
+    } // GEN-LAST:event_btnDelRegionActionPerformed
 
-    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelBiogeoActionPerformed
+    private void btnDelBiogeoActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelBiogeoActionPerformed
         int row = this.tabBiogeo.getSelectedRow();
         if (row == -1 || this.tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
             SDFEditor.logger.error("No Regions selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No regions selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected region(s)?",
-                    "Confirm delete region",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected region(s)?",
+                            "Confirm delete region", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getSiteBiogeos().remove(this.modelBioregions.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadBiogeo(); //repopulate the list in the view
+                this.site.getSiteBiogeos().remove(this.modelBioregions.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadBiogeo(); // repopulate the list in the view
 
             }
         }
-    } //GEN-LAST:event_btnDelBiogeoActionPerformed
+    } // GEN-LAST:event_btnDelBiogeoActionPerformed
 
-    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatActionPerformed
+    private void btnDelHabitatActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelHabitatActionPerformed
         int row = this.tabHabitats.getSelectedRow();
         if (row == -1 || this.tabHabitats.getRowCount() < 1 || row > this.tabHabitats.getRowCount()) {
             SDFEditor.logger.error("No Habitat selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected habitat?",
-                    "Confirm delete habitat",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected habitat?",
+                            "Confirm delete habitat", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                tabHabitats.setSelectionModel(new DefaultListSelectionModel()); //gotta do to quiet the listener already set
+                tabHabitats.setSelectionModel(new DefaultListSelectionModel()); // gotta do to quiet the listener already set
                 SDFEditor.logger.info("Site update Date:" + "Removing row: " + Integer.toString(row));
-                SDFEditor.logger.info("Site update Date:" + "Removing object: " + ((Habitat) this.modelHabitats.get(row)).getHabitatCode());
-                this.site.getHabitats().remove(this.modelHabitats.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadHabitats(); //repopulate the list in the view
+                SDFEditor.logger.info("Site update Date:" + "Removing object: "
+                        + ((Habitat) this.modelHabitats.get(row)).getHabitatCode());
+                this.site.getHabitats().remove(this.modelHabitats.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadHabitats(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelHabitatActionPerformed
+    } // GEN-LAST:event_btnDelHabitatActionPerformed
 
-    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelSpeciesActionPerformed
+    private void btnDelSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelSpeciesActionPerformed
         int row = this.tabSpecies.getSelectedRow();
         if (row == -1 || this.tabSpecies.getRowCount() < 1 || row > this.tabSpecies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected species?",
-                    "Confirm delete species",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected species?",
+                            "Confirm delete species", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getSpecieses().remove(this.modelSpecies.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadSpecies(); //repopulate the list in the view
+                this.site.getSpecieses().remove(this.modelSpecies.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadSpecies(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelSpeciesActionPerformed
+    } // GEN-LAST:event_btnDelSpeciesActionPerformed
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCloseActionPerformed
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnCloseActionPerformed
         session.clear();
         this.exit();
-    } //GEN-LAST:event_btnCloseActionPerformed
+    } // GEN-LAST:event_btnCloseActionPerformed
 
-    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
+    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
         int row = this.tabOtherSpecies.getSelectedRow();
         if (row == -1 || this.tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
             SDFEditor.logger.error("No Species selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected species?",
-                    "Confirm delete species",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected species?",
+                            "Confirm delete species", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getOtherSpecieses().remove(this.modelOtherSpecies.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadOtherSpecies(); //repopulate the list in the view
+                this.site.getOtherSpecieses().remove(this.modelOtherSpecies.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadOtherSpecies(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelOtherSpeciesActionPerformed
+    } // GEN-LAST:event_btnDelOtherSpeciesActionPerformed
 
-    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelHabitatClassActionPerformed
+    private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelHabitatClassActionPerformed
         int row = this.tabHabitatClass.getSelectedRow();
         if (row == -1 || this.tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
             SDFEditor.logger.error("No Habitat Class selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No habitat class selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected habitat class?",
-                    "Confirm delete habitat class",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected habitat class?",
+                            "Confirm delete habitat class", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getHabitatClasses().remove(this.modelHabitatClasses.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadHabitatClasses(); //repopulate the list in the view
+                this.site.getHabitatClasses().remove(this.modelHabitatClasses.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadHabitatClasses(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelHabitatClassActionPerformed
+    } // GEN-LAST:event_btnDelHabitatClassActionPerformed
 
-    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNegImpactActionPerformed
+    private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelNegImpactActionPerformed
         int row = this.tabNegativeImpacts.getSelectedRow();
         if (row == -1 || this.tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
             SDFEditor.logger.error("No Negative Impact selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No negative impact selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected impact?",
-                    "Confirm delete impact",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected impact?",
+                            "Confirm delete impact", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Impact impact = (Impact) this.modelNegativeImpacts.get(row);
                 this.site.getImpacts().remove(impact);
-                this.saveAndReloadSession(); //save and update to database
+                this.saveAndReloadSession(); // save and update to database
                 this.loadImpacts();
             }
         }
-    } //GEN-LAST:event_btnDelNegImpactActionPerformed
+    } // GEN-LAST:event_btnDelNegImpactActionPerformed
 
-    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelPosImpactActionPerformed
+    private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelPosImpactActionPerformed
         int row = this.tabPositiveImpacts.getSelectedRow();
         if (row == -1 || this.tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             SDFEditor.logger.error("No positive impact selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No positive impact selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected impact?",
-                    "Confirm delete impact",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected impact?",
+                            "Confirm delete impact", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Impact impact = (Impact) this.modelPositiveImpacts.get(row);
                 this.site.getImpacts().remove(impact);
-                this.saveAndReloadSession(); //save and update to database
+                this.saveAndReloadSession(); // save and update to database
                 this.loadImpacts();
             }
         }
-    } //GEN-LAST:event_btnDelPosImpactActionPerformed
+    } // GEN-LAST:event_btnDelPosImpactActionPerformed
 
-    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelOwnerActionPerformed
+    private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelOwnerActionPerformed
         int row = this.tabOwnership.getSelectedRow();
         if (row == -1 || this.tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
             SDFEditor.logger.error("No ownership selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No ownership selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected ownership class?",
-                    "Confirm delete ownership class",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected ownership class?",
+                            "Confirm delete ownership class", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 SiteOwnership so = (SiteOwnership) this.modelOwnerships.get(row);
                 this.site.getSiteOwnerships().remove(so);
-                this.saveAndReloadSession(); //save and update to database
+                this.saveAndReloadSession(); // save and update to database
                 this.loadOwnerships();
             }
         }
-    } //GEN-LAST:event_btnDelOwnerActionPerformed
+    } // GEN-LAST:event_btnDelOwnerActionPerformed
 
-    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddDocLinkActionPerformed
+    private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddDocLinkActionPerformed
         new EditorDocLink(this).setVisible(true);
-    } //GEN-LAST:event_btnAddDocLinkActionPerformed
+    } // GEN-LAST:event_btnAddDocLinkActionPerformed
 
-    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDocLinkActionPerformed
+    private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelDocLinkActionPerformed
         int row = this.lstLinks.getSelectedIndex();
         if (row == -1) {
             SDFEditor.logger.error("No link  selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No link selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected link?",
-                    "Confirm delete link",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected link?",
+                            "Confirm delete link", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE,
+                            null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Doc doc = this.site.getDoc();
                 if (doc != null) {
                     doc.getDocLinks().remove(this.modelDocLinks.get(row));
                 }
                 this.saveAndReloadDoc(doc);
-                this.saveAndReloadSession(); //save and update to database
+                this.saveAndReloadSession(); // save and update to database
                 this.loadDocLinks();
             }
         }
-    } //GEN-LAST:event_btnDelDocLinkActionPerformed
+    } // GEN-LAST:event_btnDelDocLinkActionPerformed
 
-    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelDesigTypeActionPerformed
+    private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelDesigTypeActionPerformed
         int row = this.tabDesigationTypes.getSelectedRow();
         if (row == -1 || this.tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
             SDFEditor.logger.error("No designation type selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No designation type selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected designation?",
-                    "Confirm delete designation",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected designation?",
+                            "Confirm delete designation", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getNationalDtypes().remove(this.modelDesignationTypes.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadDesignationTypes(); //repopulate the list in the view
+                this.site.getNationalDtypes().remove(this.modelDesignationTypes.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadDesignationTypes(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelDesigTypeActionPerformed
+    } // GEN-LAST:event_btnDelDesigTypeActionPerformed
 
-    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelNatRelActionPerformed
+    private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelNatRelActionPerformed
         int row = this.tabNationalRelations.getSelectedRow();
         if (row == -1 || this.tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
             SDFEditor.logger.error("No national relation selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No national relation selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected relation?",
-                    "Confirm delete relation",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected relation?",
+                            "Confirm delete relation", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getSiteRelations().remove(this.modelNationalRelations.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadRelations(); //repopulate the list in the view
+                this.site.getSiteRelations().remove(this.modelNationalRelations.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadRelations(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelNatRelActionPerformed
+    } // GEN-LAST:event_btnDelNatRelActionPerformed
 
-    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelInterRelActionPerformed
+    private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelInterRelActionPerformed
         int row = this.tabInternationalRelations.getSelectedRow();
         if (row == -1 || this.tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
             SDFEditor.logger.error("No international relation selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No international relation selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected relation?",
-                    "Confirm delete relation",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected relation?",
+                            "Confirm delete relation", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-                this.site.getSiteRelations().remove(this.modelInternationalRelations.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadRelations(); //repopulate the list in the view
+                this.site.getSiteRelations().remove(this.modelInternationalRelations.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadRelations(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelInterRelActionPerformed
+    } // GEN-LAST:event_btnDelInterRelActionPerformed
 
-    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtBodyActionPerformed
+    private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelMgmtBodyActionPerformed
         int row = this.tabMgmtBodies.getSelectedRow();
         if (row == -1 || this.tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             SDFEditor.logger.error("No management body selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No Management body selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected Management Body?",
-                    "Confirm delete Management Body",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected Management Body?",
+                            "Confirm delete Management Body", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
 
                 this.deleteMgmBodyPlan(this.modelMgmtBodies.get(row));
-                this.site.getMgmt().getMgmtBodies().remove(this.modelMgmtBodies.get(row)); //delete from persistent object
+                this.site.getMgmt().getMgmtBodies().remove(this.modelMgmtBodies.get(row)); // delete from persistent object
 
-                this.saveAndReloadSession(); //save and update to database
+                this.saveAndReloadSession(); // save and update to database
 
-                this.loadMgmtBodies(); //repopulate the list in the view
+                this.loadMgmtBodies(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelMgmtBodyActionPerformed
+    } // GEN-LAST:event_btnDelMgmtBodyActionPerformed
 
-    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDelMgmtPlanActionPerformed
+    private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelMgmtPlanActionPerformed
         int row = this.tabMgmtPlans.getSelectedRow();
         if (row == -1 || this.tabMgmtPlans.getRowCount() < 1 || row > this.tabMgmtPlans.getRowCount()) {
             SDFEditor.logger.error("No management plan selected.");
             javax.swing.JOptionPane.showMessageDialog(this, "No management plan selected");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                    this,
-                    "Are you sure you want to delete selected Management Plan?",
-                    "Confirm delete Management Plan",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.WARNING_MESSAGE,
-                    null,
-                    null,
-                    null);
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "Are you sure you want to delete selected Management Plan?",
+                            "Confirm delete Management Plan", javax.swing.JOptionPane.YES_NO_OPTION,
+                            javax.swing.JOptionPane.WARNING_MESSAGE, null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 this.deleteMgmBodyPlan(this.modelMgmtPlans.get(row));
-                this.site.getMgmt().getMgmtPlans().remove(this.modelMgmtPlans.get(row)); //delete from persistent object
-                this.saveAndReloadSession(); //save and update to database
-                this.loadMgmtPlans(); //repopulate the list in the view
+                this.site.getMgmt().getMgmtPlans().remove(this.modelMgmtPlans.get(row)); // delete from persistent object
+                this.saveAndReloadSession(); // save and update to database
+                this.loadMgmtPlans(); // repopulate the list in the view
             }
         }
-    } //GEN-LAST:event_btnDelMgmtPlanActionPerformed
+    } // GEN-LAST:event_btnDelMgmtPlanActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnSaveActionPerformed
         this.save();
-    } //GEN-LAST:event_btnSaveActionPerformed
+    } // GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnExportActionPerformed
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
         new SDFExporterSite(sitecode).setVisible(true);
 
+    } // GEN-LAST:event_btnExportActionPerformed
 
-    } //GEN-LAST:event_btnExportActionPerformed
-
-    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jViewButtonActionPerformed
+    private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jViewButtonActionPerformed
         // TODO add your handling code here:
         File dbFile = new File("");
-        ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator + "logs" + File.separator + "log.txt");
+        ExporterSiteHTML exportHTML =
+                new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator + "logs" + File.separator + "log.txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
-    } //GEN-LAST:event_jViewButtonActionPerformed
+    } // GEN-LAST:event_jViewButtonActionPerformed
 
-    private void editMgmtBodyButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editMgmtBodyButtonActionPerformed
+    private void editMgmtBodyButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editMgmtBodyButtonActionPerformed
         int row = tabMgmtBodies.getSelectedRow();
         if (row < 0 || tabMgmtBodies.getRowCount() < 1 || row > this.tabMgmtBodies.getRowCount()) {
             javax.swing.JOptionPane.showMessageDialog(this, "No management body selected");
@@ -6146,24 +6819,24 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadMgmtBody(s, row);
             eS.setVisible(true);
         }
-    } //GEN-LAST:event_editMgmtBodyButtonActionPerformed
+    } // GEN-LAST:event_editMgmtBodyButtonActionPerformed
 
-    private void jEditImpactsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jEditImpactsActionPerformed
-       int row = tabNegativeImpacts.getSelectedRow();
-       if (row < 0 || tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
-           SDFEditor.logger.error("No negative impact selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No negative impact selected");
-       } else {
-           Impact s = (Impact) modelNegativeImpacts.get(row);
-           EditorImpact eS = new EditorImpact(this, "N");
+    private void jEditImpactsActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jEditImpactsActionPerformed
+        int row = tabNegativeImpacts.getSelectedRow();
+        if (row < 0 || tabNegativeImpacts.getRowCount() < 1 || row > this.tabNegativeImpacts.getRowCount()) {
+            SDFEditor.logger.error("No negative impact selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No negative impact selected");
+        } else {
+            Impact s = (Impact) modelNegativeImpacts.get(row);
+            EditorImpact eS = new EditorImpact(this, "N");
 
-           eS.loadImpact(s, row);
-           eS.setVisible(true);
-       }
+            eS.loadImpact(s, row);
+            eS.setVisible(true);
+        }
 
-    } //GEN-LAST:event_jEditImpactsActionPerformed
+    } // GEN-LAST:event_jEditImpactsActionPerformed
 
-    private void jImpactNegEditActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_jImpactNegEditActionPerformed
+    private void jImpactNegEditActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jImpactNegEditActionPerformed
         int row = tabPositiveImpacts.getSelectedRow();
         if (row < 0 || tabPositiveImpacts.getRowCount() < 1 || row > this.tabPositiveImpacts.getRowCount()) {
             SDFEditor.logger.error("No positive impact selected.");
@@ -6174,155 +6847,157 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadImpact(s, row);
             eS.setVisible(true);
         }
-    } //GEN-LAST:event_jImpactNegEditActionPerformed
+    } // GEN-LAST:event_jImpactNegEditActionPerformed
 
-    private void validateSiteButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_validateSiteButtonActionPerformed
+    private void validateSiteButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_validateSiteButtonActionPerformed
         ValidateSite validateSite = new ValidateSite();
 
         ArrayList xmlFieldsList = validateSite.validate(this.site);
         if (!xmlFieldsList.isEmpty()) {
-          File fileLog = null;
-          try {
-              SDFEditor.logger.error("The site is not valid.");
+            File fileLog = null;
+            try {
+                SDFEditor.logger.error("The site is not valid.");
 
-              Calendar cal = Calendar.getInstance();
-              SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyy_HHmm");
-              String formatDate = sdf.format(cal.getTime());
-              String dirPath = (new File("")).getAbsolutePath();
-              String logFileName = dirPath + System.getProperty("file.separator") + "logs" + System.getProperty("file.separator") + "ErrorSite_" + formatDate + ".log";
-              fileLog = SDF_Util.copyToLogErrorSite(xmlFieldsList, logFileName);
-              JOptionPane.showMessageDialog(this, "The site is not compliant with SDF schema.\n Please check the log file::" + fileLog.getName() + " for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
-              Desktop desktop = null;
-              if (Desktop.isDesktopSupported()) {
-                 desktop = Desktop.getDesktop();
-                 Desktop.getDesktop().open(fileLog);
-              }
-          } catch (IOException e) {
-              SDFEditor.logger.error("An error has occurred. Error Message::::" + e.getMessage());
-              //e.printStackTrace();;
-          }
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyy_HHmm");
+                String formatDate = sdf.format(cal.getTime());
+                String dirPath = (new File("")).getAbsolutePath();
+                String logFileName =
+                        dirPath + System.getProperty("file.separator") + "logs" + System.getProperty("file.separator")
+                                + "ErrorSite_" + formatDate + ".log";
+                fileLog = SDF_Util.copyToLogErrorSite(xmlFieldsList, logFileName);
+                JOptionPane.showMessageDialog(this, "The site is not compliant with SDF schema.\n Please check the log file::"
+                        + fileLog.getName() + " for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                    Desktop.getDesktop().open(fileLog);
+                }
+            } catch (IOException e) {
+                SDFEditor.logger.error("An error has occurred. Error Message::::" + e.getMessage());
+                // e.printStackTrace();;
+            }
 
-          return;
+            return;
         } else {
             SDFEditor.logger.info("The Site is valid.");
-           javax.swing.JOptionPane.showMessageDialog(this, "The Site is valid.");
-            //this.exit();
+            javax.swing.JOptionPane.showMessageDialog(this, "The Site is valid.");
+            // this.exit();
             return;
         }
-    } //GEN-LAST:event_validateSiteButtonActionPerformed
+    } // GEN-LAST:event_validateSiteButtonActionPerformed
 
-    private void editDTypesButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editDTypesButtonActionPerformed
-       int row = tabDesigationTypes.getSelectedRow();
-       if (row < 0 || tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
-           SDFEditor.logger.error("No Designation Type selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No Designation Type selected");
-       } else {
-           NationalDtype s = (NationalDtype) modelDesignationTypes.get(row);
-           EditorDesignationType eS = new EditorDesignationType(this);
+    private void editDTypesButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editDTypesButtonActionPerformed
+        int row = tabDesigationTypes.getSelectedRow();
+        if (row < 0 || tabDesigationTypes.getRowCount() < 1 || row > this.tabDesigationTypes.getRowCount()) {
+            SDFEditor.logger.error("No Designation Type selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No Designation Type selected");
+        } else {
+            NationalDtype s = (NationalDtype) modelDesignationTypes.get(row);
+            EditorDesignationType eS = new EditorDesignationType(this);
 
-           eS.loadDesignations(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editDTypesButtonActionPerformed
+            eS.loadDesignations(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editDTypesButtonActionPerformed
 
-    private void editNationRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editNationRelationsButtonActionPerformed
-       int row = tabNationalRelations.getSelectedRow();
-       if (row < 0 || tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
-           SDFEditor.logger.error("No national relation selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No National Relation selected");
-       } else {
-           SiteRelation s = (SiteRelation) modelNationalRelations.get(row);
-           EditorNationalRelation eS = new EditorNationalRelation(this);
+    private void editNationRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editNationRelationsButtonActionPerformed
+        int row = tabNationalRelations.getSelectedRow();
+        if (row < 0 || tabNationalRelations.getRowCount() < 1 || row > this.tabNationalRelations.getRowCount()) {
+            SDFEditor.logger.error("No national relation selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No National Relation selected");
+        } else {
+            SiteRelation s = (SiteRelation) modelNationalRelations.get(row);
+            EditorNationalRelation eS = new EditorNationalRelation(this);
 
-           eS.loadDesignations(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editNationRelationsButtonActionPerformed
+            eS.loadDesignations(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editNationRelationsButtonActionPerformed
 
-    private void editIntRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editIntRelationsButtonActionPerformed
-       int row = tabInternationalRelations.getSelectedRow();
-       if (row < 0 || tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
-           SDFEditor.logger.error("No international relation selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No International Relation selected");
-       } else {
-           SiteRelation s = (SiteRelation) modelInternationalRelations.get(row);
-           EditorInternationalRelation eS = new EditorInternationalRelation(this);
+    private void editIntRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editIntRelationsButtonActionPerformed
+        int row = tabInternationalRelations.getSelectedRow();
+        if (row < 0 || tabInternationalRelations.getRowCount() < 1 || row > this.tabInternationalRelations.getRowCount()) {
+            SDFEditor.logger.error("No international relation selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No International Relation selected");
+        } else {
+            SiteRelation s = (SiteRelation) modelInternationalRelations.get(row);
+            EditorInternationalRelation eS = new EditorInternationalRelation(this);
 
-           eS.loadConventions(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editIntRelationsButtonActionPerformed
+            eS.loadConventions(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editIntRelationsButtonActionPerformed
 
-    private void editHabClassButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editHabClassButtonActionPerformed
-       int row = tabHabitatClass.getSelectedRow();
-       if (row < 0 || tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
-           SDFEditor.logger.error("No habitat class selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No Habitat Class selected");
-       } else {
-           HabitatClass s = (HabitatClass) modelHabitatClasses.get(row);
-           EditorHabitatClass eS = new EditorHabitatClass(this);
+    private void editHabClassButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editHabClassButtonActionPerformed
+        int row = tabHabitatClass.getSelectedRow();
+        if (row < 0 || tabHabitatClass.getRowCount() < 1 || row > this.tabHabitatClass.getRowCount()) {
+            SDFEditor.logger.error("No habitat class selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No Habitat Class selected");
+        } else {
+            HabitatClass s = (HabitatClass) modelHabitatClasses.get(row);
+            EditorHabitatClass eS = new EditorHabitatClass(this);
 
-           eS.loadClasses(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editHabClassButtonActionPerformed
+            eS.loadClasses(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editHabClassButtonActionPerformed
 
-    private void editBioRegionButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editBioRegionButtonActionPerformed
-       int row = tabBiogeo.getSelectedRow();
-       if (row < 0 || tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
-           SDFEditor.logger.error("No Biogeographical regions selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No Biogeographical regions selected");
-       } else {
-           SiteBiogeo s = (SiteBiogeo) modelBioregions.get(row);
-           EditorBioregion eS = new EditorBioregion(this);
+    private void editBioRegionButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editBioRegionButtonActionPerformed
+        int row = tabBiogeo.getSelectedRow();
+        if (row < 0 || tabBiogeo.getRowCount() < 1 || row > this.tabBiogeo.getRowCount()) {
+            SDFEditor.logger.error("No Biogeographical regions selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No Biogeographical regions selected");
+        } else {
+            SiteBiogeo s = (SiteBiogeo) modelBioregions.get(row);
+            EditorBioregion eS = new EditorBioregion(this);
 
-           eS.loadRegions(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editBioRegionButtonActionPerformed
+            eS.loadRegions(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editBioRegionButtonActionPerformed
 
-    private void editOwnershipButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editOwnershipButtonActionPerformed
-       int row = tabOwnership.getSelectedRow();
-       if (row < 0 || tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
-           SDFEditor.logger.error("No ownership selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No OwnerShip selected");
-       } else {
-           SiteOwnership s = (SiteOwnership) modelOwnerships.get(row);
-           EditorOwnership eS = new EditorOwnership(this);
+    private void editOwnershipButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editOwnershipButtonActionPerformed
+        int row = tabOwnership.getSelectedRow();
+        if (row < 0 || tabOwnership.getRowCount() < 1 || row > this.tabOwnership.getRowCount()) {
+            SDFEditor.logger.error("No ownership selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No OwnerShip selected");
+        } else {
+            SiteOwnership s = (SiteOwnership) modelOwnerships.get(row);
+            EditorOwnership eS = new EditorOwnership(this);
 
-           eS.loadOwnership(s, row);
-           eS.setVisible(true);
-       }
-    } //GEN-LAST:event_editOwnershipButtonActionPerformed
+            eS.loadOwnership(s, row);
+            eS.setVisible(true);
+        }
+    } // GEN-LAST:event_editOwnershipButtonActionPerformed
 
-    private void btnPDFYesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnPDFYesActionPerformed
+    private void btnPDFYesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnPDFYesActionPerformed
         // TODO add your handling code here:
-    } //GEN-LAST:event_btnPDFYesActionPerformed
+    } // GEN-LAST:event_btnPDFYesActionPerformed
 
-    private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGeneratePDFActionPerformed
-         // TODO add your handling code here:
+    private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnGeneratePDFActionPerformed
+        // TODO add your handling code here:
         new SDFExporterPDF(sitecode).setVisible(true);
 
+    } // GEN-LAST:event_btnGeneratePDFActionPerformed
 
-    } //GEN-LAST:event_btnGeneratePDFActionPerformed
-
-    private void editLinksActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editLinksActionPerformed
+    private void editLinksActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editLinksActionPerformed
         // TODO add your handling code here:
         int row = lstLinks.getSelectedIndex();
         if (row < 0 || lstLinks.isSelectionEmpty()) {
-           SDFEditor.logger.error("No link selected.");
-           javax.swing.JOptionPane.showMessageDialog(this, "No link selected");
+            SDFEditor.logger.error("No link selected.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No link selected");
         } else {
 
-           EditorDocLink linkEditor = new EditorDocLink(this);
-           DocLink link = (DocLink) this.modelDocLinks.get(row);
-           linkEditor.loadDoc(link, row);
-           linkEditor.setVisible(true);
+            EditorDocLink linkEditor = new EditorDocLink(this);
+            DocLink link = (DocLink) this.modelDocLinks.get(row);
+            linkEditor.loadDoc(link, row);
+            linkEditor.setVisible(true);
 
         }
-    } //GEN-LAST:event_editLinksActionPerformed
+    } // GEN-LAST:event_editLinksActionPerformed
 
-    private void editMgmtBodyPlansButtonActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_editMgmtBodyPlansButtonActionPerformed
+    private void editMgmtBodyPlansButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editMgmtBodyPlansButtonActionPerformed
 
         int row = this.tabMgmtPlans.getSelectedRow();
         if (row == -1) {
@@ -6335,11 +7010,11 @@ public class SDFEditor extends javax.swing.JFrame {
             editor.setVisible(true);
             // this.site.getMgmt().getMgmtPlans()
 
-            //this.saveAndReloadSession(); //save and update to database
-            //this.loadMgmtPlans(); //repopulate the list in the view
+            // this.saveAndReloadSession(); //save and update to database
+            // this.loadMgmtPlans(); //repopulate the list in the view
         }
 
-    } //GEN-LAST:event_editMgmtBodyPlansButtonActionPerformed
+    } // GEN-LAST:event_editMgmtBodyPlansButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBiogeo;
@@ -6459,7 +7134,7 @@ public class SDFEditor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel natura2000DatesPanel;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
@@ -6494,7 +7169,7 @@ public class SDFEditor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel42;
     private javax.swing.JPanel jPanel43;
     private javax.swing.JPanel jPanel44;
-    private javax.swing.JPanel jPanel45;
+    private javax.swing.JPanel natura2000DatesPanel_1;
     private javax.swing.JPanel jPanel48;
     private javax.swing.JPanel jPanel49;
     private javax.swing.JPanel jPanel5;
@@ -6603,6 +7278,23 @@ public class SDFEditor extends javax.swing.JFrame {
     private javax.swing.JTextArea txtSpaRef;
     private javax.swing.JTextField txtUpdateDate;
     private javax.swing.JButton validateSiteButton;
-    // End of variables declaration//GEN-END:variables
-
+    private JPanel emeraldDatesPanel;
+    private JPanel emeraldDatesPanel_1;
+    private JScrollPane scrollPane;
+    private JScrollPane scrollPane_1;
+    private JLabel lblDateSiteProposedASCI;
+    private JTextField txtDateSiteProposedASCI;
+    private JLabel hintDateSiteProposedASCI;
+    private JTextField txtDateSiteConfirmedCandidateASCI;
+    private JLabel lblDateSiteConfirmedASCI;
+    private JTextField txtDateSiteConfirmedASCI;
+    private JLabel lblDateSiteDesignatedASCI;
+    private JTextField txtDateSiteDesignatedASCI;
+    private JLabel hintDateSiteConfirmedCandidateASCI;
+    private JSeparator separator;
+    private JLabel lblDateSiteConfirmedCandidateASCI;
+    private JLabel lblNationalLegalReference;
+    private JLabel lblExplanations;
+    private JLabel hintDateSiteConfirmedASCI;
+    private JLabel hintDateSiteDesignatedASCI;
 }

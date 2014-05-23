@@ -6,10 +6,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import sdf_manager.SDF_ManagerApp;
 
 import com.mysql.jdbc.Connection;
 
@@ -17,14 +21,38 @@ import com.mysql.jdbc.Connection;
 public class SDF_MysqlDatabaseTest {
 
     /**
-     * Hardwire the connection URL for now.
+     * returns database connection
+     */
+    private Connection getDBConnection(String mode) throws Exception {
+
+        ResourceBundle bundle = ResourceBundle.getBundle("liquibase");
+
+        Properties properties = new Properties();
+        String driver = bundle.getString("driver");
+        String url = bundle.getString("url");
+
+        if (mode.equals(SDF_ManagerApp.EMERALD_MODE)) {
+            url = StringUtils.replaceOnce(url, "natura2000", "emerald");
+        }
+        properties.setProperty("http://www.dbunit.org/properties/datatypeFactory", "org.dbunit.ext.mysql.MySqlDataTypeFactory");
+        properties.setProperty("user", bundle.getString("username"));
+        properties.setProperty("password", bundle.getString("password"));
+
+        Class.forName(driver);
+        Connection jdbcConn = (Connection)DriverManager.getConnection(url, properties);
+
+        return jdbcConn;
+    }
+
+
+    /**
+     * deafault connection is natura 2000 mode.
+     * @return db connection
+     * @throws Exception if fail
      */
     private Connection getDBConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        return (Connection) DriverManager.getConnection("jdbc:mysql:mxj://localhost:3336/natura2000"
-                + "?createDatabaseIfNotExist=true"
-                + "&server.lower_case_table_names=1"
-                + "&server.initialize-user=true", "testuser", "testpassword");
+
+        return getDBConnection(SDF_ManagerApp.NATURA_2000_MODE);
     }
 
     /**
@@ -52,7 +80,7 @@ public class SDF_MysqlDatabaseTest {
         ResultSet rs = null;
         try {
             con = getDBConnection();
-            msgError = SDF_MysqlDatabase.createNaturaDB(con);
+            msgError = SDF_MysqlDatabase.createOrUpdateDatabaseTables(con, false);
             assertEquals(null, msgError);
 
             // The SDF_MysqlDatabase.createNaturaDB closes the connection
@@ -118,6 +146,8 @@ public class SDF_MysqlDatabaseTest {
         }
 
     }
+
+
 
     @Test
     public void pathForDbScripts() throws Exception {

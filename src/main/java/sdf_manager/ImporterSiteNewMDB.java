@@ -1,37 +1,53 @@
 package sdf_manager;
 
 import java.awt.Frame;
-import pojos.*;
-
 import java.io.FileWriter;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.hibernate.Query;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import pojos.Biogeo;
+import pojos.Doc;
+import pojos.DocLink;
+import pojos.Habitat;
+import pojos.HabitatClass;
+import pojos.Impact;
+import pojos.Map;
+import pojos.Mgmt;
+import pojos.MgmtBody;
+import pojos.MgmtPlan;
+import pojos.NationalDtype;
+import pojos.OtherSpecies;
+import pojos.RefNuts;
+import pojos.Region;
+import pojos.Resp;
+import pojos.Site;
+import pojos.SiteBiogeo;
+import pojos.SiteBiogeoId;
+import pojos.SiteOwnership;
+import pojos.SiteOwnershipId;
+import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.SDF_Util;
 
@@ -105,6 +121,7 @@ public class ImporterSiteNewMDB implements Importer {
      *
      * @param fileName
      */
+    @Override
     public void initLogFile(String fileName) {
         try {
             outFile = new FileWriter(fileName);
@@ -149,6 +166,7 @@ public class ImporterSiteNewMDB implements Importer {
      * @param fileName
      * @return
      */
+    @Override
     public boolean processDatabase(String fileName) {
         Connection conn = null;
         boolean importOk = false;
@@ -1678,7 +1696,7 @@ public class ImporterSiteNewMDB implements Importer {
         boolean nutsOK = false;
 
         ImporterSiteNewMDB.log.info("Validating Region Code");
-        String hql = "select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
+        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
 
         try {
             Query q = session.createQuery(hql);

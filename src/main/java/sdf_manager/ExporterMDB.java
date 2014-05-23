@@ -219,7 +219,8 @@ public class ExporterMDB implements Exporter {
                     + properties.getProperty("db.port")
                     + "/natura2000?autoReconnect=true", properties.getProperty("db.user"), properties.getProperty("db.password"));
             DatabaseMetaData dbm = conn.getMetaData();
-            ResultSet rs = dbm.getTables(null, "natura2000", "%" , null);
+            String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
+            ResultSet rs = dbm.getTables(null, dbSchemaName, "%" , null);
             com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
 
             while (rs.next()) {

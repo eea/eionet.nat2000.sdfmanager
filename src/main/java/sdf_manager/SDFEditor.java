@@ -2077,6 +2077,7 @@ public class SDFEditor extends javax.swing.JFrame {
         Set oSpecies = site.getOtherSpecieses();
         modelOtherSpecies = new ArrayList();
 
+        boolean isEmerald = SDF_ManagerApp.isEmeraldMode();
         if (oSpecies != null) {
             Iterator itr = oSpecies.iterator();
             DefaultTableModel model = (DefaultTableModel) tabOtherSpecies.getModel();
@@ -2109,6 +2110,10 @@ public class SDFEditor extends javax.swing.JFrame {
                     minSize = sp.getOtherSpeciesSizeMin().toString();
                 }
 
+                String motI = "";
+                String motII = "";
+                String motIII = "";
+
                 String motIV = "";
                 String motV = "";
                 String motA = "";
@@ -2134,14 +2139,23 @@ public class SDFEditor extends javax.swing.JFrame {
                             motC = "X";
                         } else if (("D").equals(token)) {
                             motD = "X";
+                        } else if (("I").equals(token)) {
+                            motI = "X";
+                        } else if (("II").equals(token)) {
+                            motII = "X";
+                        } else if (("III").equals(token)) {
+                            motIII = "X";
                         } else {
 
                         }
                     }
                 }
 
-                Object[] tuple = {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize, maxSize, sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motIV, motV, motA, motB, motC, motD};
-                model.insertRow(i++, tuple);
+                Object[] tupleN2k = {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize,
+                        maxSize, sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motIV, motV, motA, motB, motC, motD};
+                Object[] tupleEmerald = {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np,
+                        minSize, maxSize, sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motI, motII, motIII, motA, motB, motC, motD};
+                model.insertRow(i++, (isEmerald ? tupleEmerald : tupleN2k));
                 modelOtherSpecies.add(sp);
             }
         }
@@ -3859,35 +3873,79 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane10.setName("jScrollPane10"); // NOI18N
 
-        tabOtherSpecies.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        //different tables for n2k and emerald
+        javax.swing.table.DefaultTableModel otherSpeciesModel;
 
-            },
-            new String [] {
-                "Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV", "Spec. Anex V", "A", "B", "C", "D"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            otherSpeciesModel = new javax.swing.table.DefaultTableModel (
+                new Object [][] {
+
+                },
+                new String [] {
+                    "Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Appendix I", "Appendix II", "Appendix III", "A", "B", "C", "D"
+                }
+            ) {
+                Class[] types = new Class [] {
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                };
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                };
+
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types [columnIndex];
+                }
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
-            };
+        } else {
+            otherSpeciesModel = new javax.swing.table.DefaultTableModel (
+                    new Object [][] {
 
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+                    },
+                    new String [] {
+                        "Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV", "Spec. Anex V", "A", "B", "C", "D"
+                    }
+                ) {
+                    Class[] types = new Class [] {
+                        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                        java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                        java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    };
+                    boolean[] canEdit = new boolean [] {
+                        false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                    };
 
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+                    @Override
+                    public Class getColumnClass(int columnIndex) {
+                        return types [columnIndex];
+                    }
+
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return canEdit [columnIndex];
+                    }
+                };
+
+        }
+        tabOtherSpecies.setModel(otherSpeciesModel);
         tabOtherSpecies.setName("tabOtherSpecies"); // NOI18N
         tabOtherSpecies.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane10.setViewportView(tabOtherSpecies);
-        tabOtherSpecies.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title0")); // NOI18N
+
+        boolean isEmerald = SDF_ManagerApp.isEmeraldMode();
+        int colCount = isEmerald ? 16 : 15;
+        for (int tabPos = 0; tabPos < colCount ; tabPos++)  {
+            String colPropName = "tabOtherSpecies.columnModel.title" + tabPos + (isEmerald ? ".emerald" : "");
+            tabOtherSpecies.getColumnModel().getColumn(tabPos).setHeaderValue(resourceMap.getString(colPropName));
+        }
+/*        tabOtherSpecies.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title0")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title1")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title2")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title3")); // NOI18N
@@ -3902,7 +3960,7 @@ public class SDFEditor extends javax.swing.JFrame {
         tabOtherSpecies.getColumnModel().getColumn(12).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title12")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(13).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title13")); // NOI18N
         tabOtherSpecies.getColumnModel().getColumn(14).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title14")); // NOI18N
-
+*/
         btnAddOtherSpecies.setIcon(resourceMap.getIcon("btnAddOtherSpecies.icon")); // NOI18N
         btnAddOtherSpecies.setName("btnAddOtherSpecies"); // NOI18N
         btnAddOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
@@ -5669,9 +5727,16 @@ public class SDFEditor extends javax.swing.JFrame {
     } //GEN-LAST:event_btnEditSpeciesActionPerformed
 
     private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
-        EditorOtherSpecies eS = new EditorOtherSpecies(this);
-        eS.init();
-        eS.setVisible(true);
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            EditorOtherSpeciesEmerald eS = new EditorOtherSpeciesEmerald(this);
+            eS.init();
+            eS.setVisible(true);
+
+        } else {
+            EditorOtherSpecies eS = new EditorOtherSpecies(this);
+            eS.init();
+            eS.setVisible(true);
+        }
     } //GEN-LAST:event_btnAddOtherSpeciesActionPerformed
 
     private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
@@ -5682,10 +5747,19 @@ public class SDFEditor extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
         } else {
             OtherSpecies s = (OtherSpecies) modelOtherSpecies.get(row);
-            EditorOtherSpecies eS = new EditorOtherSpecies(this);
-            eS.loadSpecies(s, row);
-            eS.enableCombos();
-            eS.setVisible(true);
+
+            if (SDF_ManagerApp.isEmeraldMode()) {
+                EditorOtherSpeciesEmerald eS = new EditorOtherSpeciesEmerald(this);
+                eS.loadSpecies(s, row);
+                eS.enableCombos();
+                eS.setVisible(true);
+            } else {
+                EditorOtherSpecies eS = new EditorOtherSpecies(this);
+                eS.loadSpecies(s, row);
+                eS.enableCombos();
+                eS.setVisible(true);
+
+            }
 
         }
     } //GEN-LAST:event_tbnEditOtherSpeciesActionPerformed

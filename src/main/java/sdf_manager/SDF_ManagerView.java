@@ -12,8 +12,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
@@ -135,7 +139,9 @@ public class SDF_ManagerView extends FrameView {
 
         mainPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel2 = new javax.swing.JLabel();
+        jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
         jPanel1 = new javax.swing.JPanel();
         btnManage3 = new javax.swing.JButton();
         btnManage2 = new javax.swing.JButton();
@@ -326,33 +332,32 @@ public class SDF_ManagerView extends FrameView {
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jLabel2))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel1))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+            mainPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                    .addGroup(mainPanelLayout.createParallelGroup(Alignment.TRAILING)
+                        .addGroup(Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                        .addGroup(Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(mainPanelLayout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(jLabel2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                                .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))))
+                    .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(11, 11, 11)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+            mainPanelLayout.createParallelGroup(Alignment.LEADING)
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(jLabel1)
+                    .addGap(18)
+                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        mainPanel.setLayout(mainPanelLayout);
 
         setComponent(mainPanel);
     } // </editor-fold>//GEN-END:initComponents
@@ -423,6 +428,6 @@ public class SDF_ManagerView extends FrameView {
      * @return true if EMERALD
      */
     private static boolean isEmeraldMode() {
-        return SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE);
+        return SDF_ManagerApp.isEmeraldMode();
     }
 }

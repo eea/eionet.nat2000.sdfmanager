@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -225,7 +226,7 @@ public class ExporterMDB implements Exporter {
 
             while (rs.next()) {
                 String tableName = rs.getString("TABLE_NAME");
-                if (tableName.toUpperCase().startsWith("REF_") || tableName.toUpperCase().equals("COUNTRY")) {
+                if (tableName.toUpperCase().startsWith("REF_") || StringUtils.startsWith(tableName.toUpperCase(), "COUNTRY")) {
                     continue;
                 }
                 log("Copying table: " + tableName);

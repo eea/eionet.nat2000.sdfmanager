@@ -72,6 +72,16 @@ import sdf_manager.util.ValidateSite;
 
 public class SDFEditor extends javax.swing.JFrame {
 
+    /** site type for birds */
+    private static final String SITE_TYPE_FOR_BIRDS = "Only birds";
+
+    /** site type other species or habitats. */
+    private static final String SITE_TYPE_FOR_OTHER = "Only other species and/or habitats";
+
+    /** site type both. */
+    private static final String SITE_TYPE_FOR_BOTH = "Both";
+
+
     /** Creates new form SDFEditor. */
     private ArrayList modelRegions = new ArrayList();
     private ArrayList modelBioregions = new ArrayList();
@@ -564,9 +574,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         }
         Character type;
-        if (this.cmbSiteType.getSelectedItem().equals("SPA")) {
+        if (this.cmbSiteType.getSelectedItem().equals("SPA") || this.cmbSiteType.getSelectedItem().equals(SITE_TYPE_FOR_BIRDS)) {
             type = 'A';
-        } else if (this.cmbSiteType.getSelectedItem().equals("SCI")) {
+        } else if (this.cmbSiteType.getSelectedItem().equals("SCI") || this.cmbSiteType.getSelectedItem().equals(SITE_TYPE_FOR_OTHER)) {
             type = 'B';
         } else {
             type = 'C';
@@ -2892,7 +2902,11 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel42.setText(resourceMap.getString("jLabel42.text")); // NOI18N
         jLabel42.setName("jLabel42"); // NOI18N
 
-        cmbSiteType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"SPA", "SCI", "Both"}));
+
+        String [] siteTypeValuesN2k = new String[] { "SPA", "SCI", "Both" };
+        String [] siteTypeValuesEmerald = new String[] { SITE_TYPE_FOR_BIRDS, SITE_TYPE_FOR_OTHER, SITE_TYPE_FOR_BOTH };
+
+        cmbSiteType.setModel(new javax.swing.DefaultComboBoxModel(SDF_ManagerApp.isEmeraldMode() ? siteTypeValuesEmerald : siteTypeValuesN2k));
         cmbSiteType.setName("cmbSiteType"); // NOI18N
 
         txtSiteCode.setEditable(false);

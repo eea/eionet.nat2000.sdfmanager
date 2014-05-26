@@ -189,8 +189,8 @@ public class EditorSitecode extends javax.swing.JDialog {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
        if (this.txtSitecode.getText().length() != 9) {
-            EditorSitecode.log.error("Not a valid siteocde: incorrect length.::" + this.txtSitecode.getText());
-            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid siteocde: incorrect length.");
+            EditorSitecode.log.error("Not a valid sitecode: incorrect length.::" + this.txtSitecode.getText());
+            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: incorrect length.");
             return;
         }
 
@@ -198,12 +198,12 @@ public class EditorSitecode extends javax.swing.JDialog {
        //Check if the site code is valid (it must start with country code
        String cuntryCode = this.txtSitecode.getText();
        cuntryCode = cuntryCode.substring(0, 2);
-
-       String hqlCountry = "from Country where countryCode='" + cuntryCode + "'";
+       String tableName = SDF_ManagerApp.isEmeraldMode() ? "CountryEmerald" : "Country";
+       String hqlCountry = "from " + tableName + " where countryCode='" + cuntryCode + "'";
        Iterator itrCountry = session.createQuery(hqlCountry).iterate();
        if (!itrCountry.hasNext()) {
             EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::" + this.txtSitecode.getText());
-            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid siteocde: It must start with country code");
+            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: It must start with country code");
             return;
        }
 

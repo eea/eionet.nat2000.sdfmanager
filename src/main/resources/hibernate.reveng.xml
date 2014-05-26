@@ -34,4 +34,5 @@
   <table-filter match-name="REF_CONVENTIONS"/>
   <table-filter match-name="RESP"/>
   <table-filter match-name="COUNTRY"/>
+  <table-filter match-name="COUNTRY_EMERALD"/>
 </hibernate-reverse-engineering>

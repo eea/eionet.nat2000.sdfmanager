@@ -55,6 +55,7 @@
     <mapping resource="pojos/RefImpacts.hbm.xml"/>
     <mapping resource="pojos/RefConventions.hbm.xml"/>
     <mapping resource="pojos/Country.hbm.xml"/>
+    <mapping resource="pojos/CountryEmerald.hbm.xml"/>
     <mapping resource="pojos/RefQuality.hbm.xml"/>
     <mapping resource="pojos/RefPopulation.hbm.xml"/>
     <mapping resource="pojos/RefUnit.hbm.xml"/>

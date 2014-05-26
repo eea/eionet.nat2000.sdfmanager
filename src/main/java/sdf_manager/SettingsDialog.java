@@ -239,6 +239,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         appVersionLabel.setName("appVersionLabel");
 
         JTextPane txtpnThisIs = new JTextPane();
+        txtpnThisIs.setEditable(false);
         txtpnThisIs.setBackground(UIManager.getColor("CheckBox.background"));
         txtpnThisIs.setFont(new Font("Tahoma", Font.PLAIN, 12));
         txtpnThisIs.setText("The database settings and application running mode have not yet been specified.\r\n"

@@ -21,6 +21,7 @@ import org.jdesktop.application.SingleFrameApplication;
 
 import sdf_manager.util.PropertyUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
+import sdf_manager.util.SDF_Util;
 
 /**
  * The main class of the application.
@@ -37,6 +38,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /** seed file name for SDF properties. */
     public static final String SEED_PROPERTIES_FILE = CURRENT_PATH + File.separator + "config"
             + File.separator + "seed_sdf.properties";
+
+    /** seed file name for EMERALD properties. */
+    public static final String SEED_EMERALD_PROPERTIES_FILE = CURRENT_PATH + File.separator + "config"
+            + File.separator + "seed_emerald.properties";
 
     /** possibly existing old DB properties. */
     public static final String OLD_DB_PROPERTIES_FILE = CURRENT_PATH + File.separator + "lib"
@@ -106,6 +111,17 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                 // take Dbprops from old db props in lib folder
                 if (!propsFileExists()) {
+
+                    //if it is an EMERALD install package refuse to install as it is the location of an old N2k tool?
+
+                    if (SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE)) {
+                        JOptionPane.showMessageDialog(null,
+                                "Emerald SDFManager cannot be installed in Natura2000 SDFManager folder \n" +
+                                        "Please uninstall and select a different folder", "Installation Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        System.exit(0);
+                    }
+
                     log.info("No sdf.properties file, take Db props from the old props file.");
                     Map<String, String> props = new HashMap<String, String>(15);
 
@@ -116,7 +132,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                     props.put("db.user", oldDbProps.getProperty("user"));
                     props.put("db.password", oldDbProps.getProperty("password"));
 
-                    // default Natura 2000?
+                    //it is upgrade -  n2k mode
                     props.put("application.mode", NATURA_2000_MODE);
 
                     log.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
@@ -131,8 +147,15 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 }
 
                 log.info("Launching...");
+
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
                 mode = properties.getProperty("application.mode");
+
+                //check if installed in correct folder:
+                if (!installationCorrect()) {
+                    exitApp();
+                }
+
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
                 if (errorMesg != null) {
@@ -153,6 +176,14 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             } else {
                 log.info("No sdf.properties file in the application root folder and no lib/sdf_database.properties.");
                 settingsDialog = new SettingsDialog(null, true);
+
+                //check which seed file is installed by the package seed_sdf or seed_emerald
+                if (SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE)) {
+                    settingsDialog.getRdbtnEmerald().setSelected(true);
+                } else if (SDF_Util.fileExists(SEED_PROPERTIES_FILE)) {
+                    settingsDialog.getRdbtnNatura().setSelected(true);
+                }
+
                 settingsDialog.setModal(true);
                 settingsDialog.setVisible(true);
             }
@@ -162,7 +193,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                     JOptionPane.ERROR_MESSAGE);
             log.error("Error::::" + e.getMessage());
             e.printStackTrace();
-            System.exit(0);
+            exitApp();
         }
 
     }
@@ -178,7 +209,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             //init seed properties
             Map<String, String> props = new HashMap<String, String>(15);
 
-            Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
+            String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
+            mode = appMode;
+
+            String seedPropsFileName = isEmeraldMode() ? SEED_EMERALD_PROPERTIES_FILE : SEED_PROPERTIES_FILE;
+            Properties seedProps = PropertyUtils.readProperties(seedPropsFileName);
+
             for (Object key : seedProps.keySet()) {
                 props.put((String)key, seedProps.getProperty((String)key));
             }
@@ -188,7 +224,6 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             String dbUser = dialog.getTxtDatabaseUser().getText();
             String dbPassword = dialog.getTxtDatabasePassword().getText();
 
-            String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
 
 
             props.put("db.host", dbHost);
@@ -201,7 +236,6 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
             log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 
-            mode = appMode;
 
             log.info("create database");
             properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
@@ -275,4 +309,35 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         return mode.equals(EMERALD_MODE);
     }
 
+    /**
+     * Checks if installed in a wrong existing folder.
+     * @return true if fresh install or reinstalling in a correct app folder
+     */
+    private static boolean installationCorrect() {
+        boolean installationCorrect = true;
+        if (SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE) && !isEmeraldMode()) {
+            JOptionPane.showMessageDialog(null,
+                    "Natura 2000 SDFManager cannot be installed in EMERALD SDFManager folder \n" +
+                            "Please uninstall and select a different folder", "Installation Error",
+                    JOptionPane.ERROR_MESSAGE);
+            installationCorrect = false;
+
+        } else if (SDF_Util.fileExists(SEED_PROPERTIES_FILE) && isEmeraldMode()) {
+            JOptionPane.showMessageDialog(null,
+                    "Emerald SDFManager cannot be installed in Natura2000 SDFManager folder \n" +
+                            "Please uninstall and select a different folder", "Installation Error",
+                    JOptionPane.ERROR_MESSAGE);
+            installationCorrect = false;
+
+        }
+
+        return installationCorrect;
+    }
+
+    /**
+     * Close window and JRE.
+     */
+    private static void exitApp() {
+        System.exit(0);
+    }
 }

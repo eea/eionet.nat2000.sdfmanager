@@ -4,22 +4,27 @@
 #define MyAppName "SDFManager"
 #define MyAppVersion "4.0"
 #define MyAppPublisher "TripleDev"
-#define MyAppExeName "SDFManager.exe"
+#define MyAppURL "http://bd.eionet.europa.eu/activities/Natura_2000/index_html"
+#define MyAppExeName "SDFManagerNatura2000.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{DD80C857-3CF7-4017-BE41-4CF60529FC49}
+AppId={{872F6301-DCAB-4E5D-A7BC-BF97036EAF56}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName=C:/{#MyAppName}
+AppPublisherURL={#MyAppURL}
+AppSupportURL={#MyAppURL}
+AppUpdatesURL={#MyAppURL}
+DefaultDirName=/{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=.\
-OutputBaseFilename=SDFManagerSetup
+OutputBaseFilename=SDFManagerNatura2000Setup
+SetupIconFile=natura2000_logo.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -27,12 +32,13 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "SDFManager.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SDFManagerNatura2000.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
-Source: "config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "config\*"; Excludes: "seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -41,8 +47,10 @@ Source: "xsl\*"; DestDir: "{app}\xsl"; Flags: ignoreversion recursesubdirs creat
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

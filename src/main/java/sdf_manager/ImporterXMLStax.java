@@ -163,7 +163,7 @@ public class ImporterXMLStax implements Importer {
         Session session = null;
 
         try {
-
+            String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
             Properties properties = new Properties();
             //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" + File.separator + "sdf_database.properties"));
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
@@ -172,7 +172,7 @@ public class ImporterXMLStax implements Importer {
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
             annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("db.host")
-                    + "/natura2000?autoReconnect=true");
+                    + "/" + dbSchemaName + "?autoReconnect=true");
             annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("db.user"));
             annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("db.password"));
             annotationConfig.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
@@ -1055,7 +1055,7 @@ public class ImporterXMLStax implements Importer {
         boolean nutsOK = false;
 
         ImporterXMLStax.log.info("Validating Region Code");
-        String hql = "select n.REF_NUTS_DESCRIPTION from natura2000.ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
+        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
 
         try {
             Query q = session.createQuery(hql);

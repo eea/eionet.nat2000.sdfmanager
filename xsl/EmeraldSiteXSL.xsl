@@ -878,7 +878,7 @@
                     <th class="DivisorTop DivisorRight">
                       Cat.
                     </th>
-                    <th class="DivisorTop DivisorRight" colspan="2">
+                    <th class="DivisorTop DivisorRight" colspan="3">
                       Species Annex
                     </th>
                     <th class="DivisorTop DivisorRight" colspan="4">
@@ -891,12 +891,13 @@
                     <th class="DivisorTop DivisorRight" width="15%">&#160;</th>
                     <th class="DivisorTop DivisorRight" width="5%">&#160;</th>
                     <th class="DivisorTop DivisorRight" width="5%">&#160;</th>
-                    <th class="DivisorTop DivisorRight" width="10%">Min</th>
-                    <th class="DivisorTop DivisorRight" width="10%">Max</th>
+                    <th class="DivisorTop DivisorRight" width="9%">Min</th>
+                    <th class="DivisorTop DivisorRight" width="9%">Max</th>
                     <th class="DivisorTop DivisorRight" width="5%">&#160;</th>
                     <th class="DivisorTop DivisorRight" width="10%">C|R|V|P</th>
-                    <th class="DivisorTop DivisorRight" width="5%">IV</th>
-                    <th class="DivisorTop DivisorRight" width="5%">V</th>
+                    <th class="DivisorTop DivisorRight" width="4%">I</th>
+                    <th class="DivisorTop DivisorRight" width="4%">II</th>
+                    <th class="DivisorTop DivisorRight" width="4%">III</th>
                     <th class="DivisorTop DivisorRight" width="5%">A</th>
                     <th class="DivisorTop DivisorRight" width="5%">B</th>
                     <th class="DivisorTop DivisorRight" width="5%">C</th>
@@ -949,12 +950,17 @@
                         </td>
                         <td class="DivisorTop DivisorRight">
                           <xsl:for-each select="motivations">
-                            <xsl:if test="motivation = 'IV'">X</xsl:if>
+                            <xsl:if test="motivation = 'I'">X</xsl:if>
                           </xsl:for-each>&#160;
                         </td>
                         <td class="DivisorTop DivisorRight">
                           <xsl:for-each select="motivations">
-                            <xsl:if test="motivation = 'V'">X</xsl:if>
+                            <xsl:if test="motivation = 'II'">X</xsl:if>
+                          </xsl:for-each>&#160;
+                        </td>
+                        <td class="DivisorTop DivisorRight">
+                          <xsl:for-each select="motivations">
+                            <xsl:if test="motivation = 'III'">X</xsl:if>
                           </xsl:for-each>&#160;
                         </td>
                         <td class="DivisorTop DivisorRight">

@@ -38,6 +38,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -327,6 +328,14 @@ public class SDFEditor extends javax.swing.JFrame {
         this.txtLength.setText(wrap(site.getSiteLength()));
         this.txtArea.setText(wrap(site.getSiteArea()));
         this.txtMarineArea.setText(wrap(site.getSiteMarineArea()));
+
+        this.txtDateSiteProposedASCI.setText(wrap(site.getSiteProposedAsciDate()));
+        this.txtDateSiteConfirmedCandidateASCI.setText(wrap(site.getSiteConfirmedCandidateAsciDate()));
+        this.txtDateSiteConfirmedASCI.setText(wrap(site.getSiteConfirmedAsciDate()));
+        this.txtDateSiteDesignatedASCI.setText(wrap(site.getSiteDesignatedAsciDate()));
+        this.txtAsciNationalLegalReference.setText(wrap(site.getSiteAsciLegalRef()));
+        this.txtAsciExplanations.setText(wrap(site.getSiteExplanations()));
+
         this.loadRegions();
         this.loadBiogeo();
         this.loadSpecies();
@@ -734,15 +743,106 @@ public class SDFEditor extends javax.swing.JFrame {
     }
 
     /**
+     * Saves the dates tab.
      *
-     * @return
+     * @return Status (i.e. empty string or error message(s)).
      */
     private String saveDates() {
-        boolean saveOK = true;
-        String errorDates = "";
-        SDFEditor.logger.info("Saving dates.");
-        String spaDate = this.txtDateSpa.getText();
 
+        return SDF_ManagerApp.isEmeraldMode() ? saveEmeraldDates() : saveNatura2000Dates();
+    }
+
+    /**
+     * Saves the dates tab in Emerald mode.
+     *
+     * @return Status (i.e. empty string or error message(s)).
+     */
+    private String saveEmeraldDates() {
+
+        SDFEditor.logger.info("Saving dates...");
+
+        // Date when site proposed as ASCI.
+        site.setSiteProposedAsciDate(parseDateValue(txtDateSiteProposedASCI, lblDateSiteProposedASCI,
+                site.getSiteProposedAsciDate()));
+
+        // Date when site confirmed as candidate for ASCI.
+        site.setSiteConfirmedCandidateAsciDate(parseDateValue(txtDateSiteConfirmedCandidateASCI,
+                lblDateSiteConfirmedCandidateASCI, site.getSiteConfirmedCandidateAsciDate()));
+
+        // Date when site confirmed as ASCI.
+        site.setSiteConfirmedAsciDate(parseDateValue(txtDateSiteConfirmedASCI, lblDateSiteConfirmedASCI,
+                site.getSiteConfirmedAsciDate()));
+
+        // Date when site confirmed as ASCI.
+        site.setSiteDesignatedAsciDate(parseDateValue(txtDateSiteDesignatedASCI, lblDateSiteDesignatedASCI,
+                site.getSiteDesignatedAsciDate()));
+
+        // National legal reference of ASCI designation.
+        String txt = txtAsciNationalLegalReference == null ? StringUtils.EMPTY : txtAsciNationalLegalReference.getText();
+        if (StringUtils.isNotBlank(txt)) {
+            this.site.setSiteAsciLegalRef(txt);
+        }
+
+        // Explanations.
+        txt = txtAsciExplanations == null ? StringUtils.EMPTY : txtAsciExplanations.getText();
+        if (StringUtils.isNotBlank(txt)) {
+            this.site.setSiteExplanations(txt);
+        }
+
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * Calls {@link #parseDateValue(String, String, Date)} by taking texts from the given text field and label.
+     *
+     * @param txtField the txt field
+     * @param label the label
+     * @param current Current value of this field in the bean.
+     * @return parsed value
+     */
+    private Date parseDateValue(JTextField txtField, JLabel label, Date current) {
+
+        if (txtField == null) {
+            return null;
+        } else {
+            String valueText = txtField.getText();
+            String labelText = label == null ? StringUtils.EMPTY : label.getText();
+            return parseDateValue(valueText, labelText, current);
+        }
+    }
+
+    /**
+     * Parses given text value as YYYY-MM date.
+     *
+     * @param txtValue The date property's value, as it came from form input.
+     * @param label Label of the form input where the text value came from.
+     * @param current Current value of this field in the bean.
+     * @return Parsed value.
+     */
+    private Date parseDateValue(String txtValue, String label, Date current) {
+
+        Date dateValue = null;
+        if (StringUtils.isNotBlank(txtValue)) {
+            dateValue = ConversionTools.convertToDate(txtValue);
+            if (dateValue == null) {
+                SDFEditor.logger.error("Illegal format for field: " + label);
+                return current;
+            }
+        }
+        return dateValue;
+    }
+
+    /**
+     * Saves the dates tab in Natura2000 mode.
+     *
+     * @return Status (i.e. empty string or error message(s)).
+     */
+    private String saveNatura2000Dates() {
+
+        SDFEditor.logger.info("Saving dates...");
+
+        // Date when site classified as SPA.
+        String spaDate = this.txtDateSpa.getText();
         if (!spaDate.equals("")) {
             Date spaDateFormat = ConversionTools.convertToDate(spaDate);
             if (spaDateFormat != null) {
@@ -753,8 +853,11 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
             this.site.setSiteSpaDate(null);
         }
+
+        // National legal reference of SPA designation.
         this.site.setSiteSpaLegalRef(this.txtSpaRef.getText());
 
+        // Date when site proposed as SCI.
         String sciPropDate = this.txtDatePropSci.getText();
         if (!sciPropDate.equals("")) {
             Date date = ConversionTools.convertToDate(sciPropDate);
@@ -766,6 +869,8 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
             this.site.setSiteSciPropDate(null);
         }
+
+        // Date when site confirmed as SCI.
         String sciConfDate = this.txtDateConfSci.getText();
         if (!sciConfDate.equals("")) {
             Date date = ConversionTools.convertToDate(sciConfDate);
@@ -777,6 +882,8 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
             this.site.setSiteSciConfDate(null);
         }
+
+        // Date when site designated as SAC.
         String sacDate = this.txtDateSac.getText();
         if (!sacDate.equals("")) {
             Date date = ConversionTools.convertToDate(sacDate);
@@ -788,34 +895,20 @@ public class SDFEditor extends javax.swing.JFrame {
         } else {
             this.site.setSiteSacDate(null);
         }
-        String msgErrorDates = "";
+
+        // National legal reference of SAC designation.
         String sacLegalRef = this.txtSacRef.getText();
         if (!("").equals(sacLegalRef)) {
-            /*
-             * if (this.txtSacRef.getText().length() > 512) {
-             * msgErrorDates += ".-Sac Reference\n";
-             * saveOK = false;
-             * } else {
-             */
             this.site.setSiteSacLegalRef(this.txtSacRef.getText());
-            // }
         }
+
+        // Explanations.
         String explanations = this.txtSacExpl.getText();
         if (!explanations.equals("")) {
-            /*
-             * if (this.txtSacExpl.getText().length() > 512) {
-             * msgErrorDates += ".-Explanations\n";
-             * saveOK = false;
-             * } else {
-             */
             this.site.setSiteExplanations(this.txtSacExpl.getText());
-            // }
         }
-        if (!saveOK) {
-            String msgError = "The following fields arere too long: \n";
-            errorDates = msgError + msgErrorDates;
-        }
-        return errorDates;
+
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -2110,6 +2203,7 @@ public class SDFEditor extends javax.swing.JFrame {
         Set oSpecies = site.getOtherSpecieses();
         modelOtherSpecies = new ArrayList();
 
+        boolean isEmerald = SDF_ManagerApp.isEmeraldMode();
         if (oSpecies != null) {
             Iterator itr = oSpecies.iterator();
             DefaultTableModel model = (DefaultTableModel) tabOtherSpecies.getModel();
@@ -2142,6 +2236,10 @@ public class SDFEditor extends javax.swing.JFrame {
                     minSize = sp.getOtherSpeciesSizeMin().toString();
                 }
 
+                String motI = "";
+                String motII = "";
+                String motIII = "";
+
                 String motIV = "";
                 String motV = "";
                 String motA = "";
@@ -2167,16 +2265,26 @@ public class SDFEditor extends javax.swing.JFrame {
                             motC = "X";
                         } else if (("D").equals(token)) {
                             motD = "X";
+                        } else if (("I").equals(token)) {
+                            motI = "X";
+                        } else if (("II").equals(token)) {
+                            motII = "X";
+                        } else if (("III").equals(token)) {
+                            motIII = "X";
                         } else {
 
                         }
                     }
                 }
 
-                Object[] tuple =
+                Object[] tupleN2k =
                         {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize, maxSize,
                                 sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motIV, motV, motA, motB, motC, motD};
-                model.insertRow(i++, tuple);
+                Object[] tupleEmerald =
+                        {otherSpeciesGroup, sp.getOtherSpeciesCode(), sp.getOtherSpeciesName(), sensitive, np, minSize, maxSize,
+                                sp.getOtherSpeciesUnit(), sp.getOtherSpeciesCategory(), motI, motII, motIII, motA, motB, motC,
+                                motD};
+                model.insertRow(i++, (isEmerald ? tupleEmerald : tupleN2k));
                 modelOtherSpecies.add(sp);
             }
         }
@@ -3917,19 +4025,19 @@ public class SDFEditor extends javax.swing.JFrame {
                                         .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
                                         .addGap(88)));
 
-        JTextArea txtExplanations = new JTextArea();
-        txtExplanations.setRows(5);
-        txtExplanations.setName("txtExplanations");
-        txtExplanations.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
-        txtExplanations.setColumns(20);
-        scrollPane.setViewportView(txtExplanations);
+        txtAsciExplanations = new JTextArea();
+        txtAsciExplanations.setRows(5);
+        txtAsciExplanations.setName("txtAsciExplanations");
+        txtAsciExplanations.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
+        txtAsciExplanations.setColumns(20);
+        scrollPane.setViewportView(txtAsciExplanations);
 
-        JTextArea txtNationalLegalReference = new JTextArea();
-        txtNationalLegalReference.setRows(5);
-        txtNationalLegalReference.setName("txtNationalLegalReference");
-        txtNationalLegalReference.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
-        txtNationalLegalReference.setColumns(20);
-        scrollPane_1.setViewportView(txtNationalLegalReference);
+        txtAsciNationalLegalReference = new JTextArea();
+        txtAsciNationalLegalReference.setRows(5);
+        txtAsciNationalLegalReference.setName("txtAsciNationalLegalReference");
+        txtAsciNationalLegalReference.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
+        txtAsciNationalLegalReference.setColumns(20);
+        scrollPane_1.setViewportView(txtAsciNationalLegalReference);
         emeraldDatesPanel_1.setLayout(gl_emeraldDatesPanel_1);
         GroupLayout gl_emeraldDatesPanel = new GroupLayout(emeraldDatesPanel);
         gl_emeraldDatesPanel.setHorizontalGroup(gl_emeraldDatesPanel.createParallelGroup(Alignment.LEADING).addGroup(
@@ -4504,51 +4612,101 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jScrollPane10.setName("jScrollPane10"); // NOI18N
 
-        tabOtherSpecies.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
+        // different tables for n2k and emerald
+        javax.swing.table.DefaultTableModel otherSpeciesModel;
 
-        }, new String[] {"Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV",
-                "Spec. Anex V", "A", "B", "C", "D"}) {
-            Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class};
-            boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false, false, false,
-                    false, false, false};
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            otherSpeciesModel =
+                    new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            @Override
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
+                    }, new String[] {"Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Appendix I",
+                            "Appendix II", "Appendix III", "A", "B", "C", "D"}) {
+                        Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class};
+                        boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false,
+                                false, false, false, false, false, false};
 
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
+                        @Override
+                        public Class getColumnClass(int columnIndex) {
+                            return types[columnIndex];
+                        }
+
+                        @Override
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                            return canEdit[columnIndex];
+                        }
+                    };
+        } else {
+            otherSpeciesModel =
+                    new javax.swing.table.DefaultTableModel(new Object[][] {
+
+                    }, new String[] {"Group", "Code", "Name", "S", "NP", "Min Size", "Max Size", "Unit", "Cat.", "Spec. Anex IV",
+                            "Spec. Anex V", "A", "B", "C", "D"}) {
+                        Class[] types = new Class[] {java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class};
+                        boolean[] canEdit = new boolean[] {false, false, false, false, false, false, false, false, false, false,
+                                false, false, false, false, false};
+
+                        @Override
+                        public Class getColumnClass(int columnIndex) {
+                            return types[columnIndex];
+                        }
+
+                        @Override
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                            return canEdit[columnIndex];
+                        }
+                    };
+
+        }
+        tabOtherSpecies.setModel(otherSpeciesModel);
         tabOtherSpecies.setName("tabOtherSpecies"); // NOI18N
         tabOtherSpecies.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane10.setViewportView(tabOtherSpecies);
-        tabOtherSpecies.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title0")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title1")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title2")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title3")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title4")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title5")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title6")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title7")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title8")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(9).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title9")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(10)
-                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title10")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(11)
-                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title11")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(12)
-                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title12")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(13)
-                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title13")); // NOI18N
-        tabOtherSpecies.getColumnModel().getColumn(14)
-                .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title14")); // NOI18N
 
+        boolean isEmerald = SDF_ManagerApp.isEmeraldMode();
+        int colCount = isEmerald ? 16 : 15;
+        for (int tabPos = 0; tabPos < colCount; tabPos++) {
+            String colPropName = "tabOtherSpecies.columnModel.title" + tabPos + (isEmerald ? ".emerald" : "");
+            tabOtherSpecies.getColumnModel().getColumn(tabPos).setHeaderValue(resourceMap.getString(colPropName));
+        }
+        /*
+         * tabOtherSpecies.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title0"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title1"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title2"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title3"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title4"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title5"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title6"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title7"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title8"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(9).setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title9"));
+         * // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(10)
+         * .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title10")); // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(11)
+         * .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title11")); // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(12)
+         * .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title12")); // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(13)
+         * .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title13")); // NOI18N
+         * tabOtherSpecies.getColumnModel().getColumn(14)
+         * .setHeaderValue(resourceMap.getString("tabOtherSpecies.columnModel.title14")); // NOI18N
+         */
         btnAddOtherSpecies.setIcon(resourceMap.getIcon("btnAddOtherSpecies.icon")); // NOI18N
         btnAddOtherSpecies.setName("btnAddOtherSpecies"); // NOI18N
         btnAddOtherSpecies.addActionListener(new java.awt.event.ActionListener() {
@@ -6408,9 +6566,16 @@ public class SDFEditor extends javax.swing.JFrame {
     } // GEN-LAST:event_btnEditSpeciesActionPerformed
 
     private void btnAddOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddOtherSpeciesActionPerformed
-        EditorOtherSpecies eS = new EditorOtherSpecies(this);
-        eS.init();
-        eS.setVisible(true);
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            EditorOtherSpeciesEmerald eS = new EditorOtherSpeciesEmerald(this);
+            eS.init();
+            eS.setVisible(true);
+
+        } else {
+            EditorOtherSpecies eS = new EditorOtherSpecies(this);
+            eS.init();
+            eS.setVisible(true);
+        }
     } // GEN-LAST:event_btnAddOtherSpeciesActionPerformed
 
     private void tbnEditOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_tbnEditOtherSpeciesActionPerformed
@@ -6421,10 +6586,19 @@ public class SDFEditor extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "No species selected");
         } else {
             OtherSpecies s = (OtherSpecies) modelOtherSpecies.get(row);
-            EditorOtherSpecies eS = new EditorOtherSpecies(this);
-            eS.loadSpecies(s, row);
-            eS.enableCombos();
-            eS.setVisible(true);
+
+            if (SDF_ManagerApp.isEmeraldMode()) {
+                EditorOtherSpeciesEmerald eS = new EditorOtherSpeciesEmerald(this);
+                eS.loadSpecies(s, row);
+                eS.enableCombos();
+                eS.setVisible(true);
+            } else {
+                EditorOtherSpecies eS = new EditorOtherSpecies(this);
+                eS.loadSpecies(s, row);
+                eS.enableCombos();
+                eS.setVisible(true);
+
+            }
 
         }
     } // GEN-LAST:event_tbnEditOtherSpeciesActionPerformed
@@ -7297,4 +7471,6 @@ public class SDFEditor extends javax.swing.JFrame {
     private JLabel lblExplanations;
     private JLabel hintDateSiteConfirmedASCI;
     private JLabel hintDateSiteDesignatedASCI;
+    private JTextArea txtAsciNationalLegalReference;
+    private JTextArea txtAsciExplanations;
 }

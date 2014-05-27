@@ -52,6 +52,7 @@ import pojos.SiteOwnership;
 import pojos.SiteOwnershipId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
 
@@ -167,82 +168,29 @@ public class ImporterNewMDB implements Importer {
      */
     @Override
     public boolean processDatabase(String fileName) {
+
         Connection conn = null;
         boolean importOk = false;
-        String msgValidError = "";
 
         try {
-            /*
-            ArrayList siteList = this.loadSpecies(conn);
-            //ArrayList sitesDB = validateSites(siteList);
-            HashMap sitesDB = validateSites(siteList);
-            ImporterNewMDB.log.info("Validation has finished");
-            log("Validation has finished.", 1);
-
-            if (sitesDB != null && (sitesDB.isEmpty())) {
-               ImporterNewMDB.log.info("Import process is starting");
-               log("Import process is starting.", 1);
-               importOk =this.processSites(conn, fileName);
-               //importOk = true;
-            } else {
-                importOk = false;
-                ImporterNewMDB.log.error("Error in validation");
-                ImporterNewMDB.log.error("Some sites are already stored in Data Base. Please check the log file for details");
-                log("Error in validation.", 1);
-                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
-                File fileLog = SDF_Util.copyToLogImportFile(sitesDB, "NewDB");
-                if (fileLog != null) {
-                    Desktop desktop = null;
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                        Desktop.getDesktop().open(fileLog);
-                    }
-
-                }
-            }*/
-
             conn = getConnection(fileName);
 
             if (conn != null) {
+
                 ArrayList<Site> siteList = this.loadSpecies(conn);
                 importOk = validateAndProcessSites(conn, siteList);
-                //HashMap<String, ArrayList<String>> sitesDB = validateSites(siteList);
                 ImporterNewMDB.log.info("Validation has finished");
                 log("Validation has finished.", 1);
-/*
-                if (sitesDB != null && (sitesDB.isEmpty())) {
-                   ImporterNewMDB.log.info("Import process is starting");
-                   log("Import process is starting.", 1);
-                   importOk =this.processSites(conn, fileName);
-                } else {
-                    importOk = false;
-                    ImporterNewMDB.log.error("Error in validation");
-                    ImporterNewMDB.log.error("Some sites are already stored in Data Base. Please check the log file for details");
-                    log("Error in validation.", 1);
-                    JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
-                    File fileLog = SDF_Util.copyToLogImportFile(sitesDB, "NewDB");
-                    if (fileLog != null) {
-                        Desktop desktop = null;
-                        if (Desktop.isDesktopSupported()) {
-                            desktop = Desktop.getDesktop();
-                            Desktop.getDesktop().open(fileLog);
-                        }
-
-                    }
-                }
-*/
             } else {
                 importOk = false;
-                msgValidError = "A DB error occurs. Please check the SDF_log file for more details";
             }
 
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage());
             importOk = false;
             importOk = false;
-             //e.printStackTrace();
-            //return importOk;
         } finally {
+            SDF_MysqlDatabase.closeQuietly(conn);
             if (importOk) {
                 javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);;
             } else {

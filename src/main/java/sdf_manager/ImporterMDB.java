@@ -258,7 +258,6 @@ public class ImporterMDB implements Importer {
                     return false;
                 }
                 this.importDate = getImportDate();
-                // this.sitesDB = validateSites(conn);
 
                 saveOK = validateAndProcessSites(conn);
 
@@ -268,7 +267,6 @@ public class ImporterMDB implements Importer {
             }
         } catch (Exception e) {
             ImporterMDB.log.error("ERROR in processDatabase::" + e.getMessage());
-            // e.printStackTrace();
             saveOK = false;
         } finally {
             SDF_MysqlDatabase.closeQuietly(conn);
@@ -276,12 +274,12 @@ public class ImporterMDB implements Importer {
                 JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                String msgError = "There are some errors in import process";
                 JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError,
                         "Dialog", JOptionPane.INFORMATION_MESSAGE);
             }
-            return saveOK;
         }
+
+        return saveOK;
     }
 
     /**

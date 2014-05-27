@@ -3755,9 +3755,9 @@ public class SDFEditor extends javax.swing.JFrame {
         emeraldDatesPanel = new JPanel();
         emeraldDatesPanel.setName("emeraldDatesPanel");
         emeraldDatesPanel.setVisible(SDF_ManagerApp.isEmeraldMode());
-//        if (SDF_ManagerApp.isEmeraldMode()) {
+        if (SDF_ManagerApp.isEmeraldMode()) {
             jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), emeraldDatesPanel);
-//        }
+        }
 
         emeraldDatesPanel_1 = new JPanel();
         emeraldDatesPanel_1.setName("emeraldDatesPanel_1");

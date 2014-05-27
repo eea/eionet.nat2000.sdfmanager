@@ -1,5 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
+    <organization>
+        <name>European Environment Agency</name>
+    </organization>
     <modelVersion>4.0.0</modelVersion>
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
@@ -133,7 +136,7 @@
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
                             <jar>SDFmanager-4.0-SNAPSHOT.jar</jar>
-                            <outfile>SDFManager.exe</outfile>
+                            <outfile>SDFManagerNatura2000.exe</outfile>
                             <errTitle></errTitle>
                             <cmdLine></cmdLine>
                             <chdir>.</chdir>
@@ -191,6 +194,7 @@
                     <outputDirectory>${project.basedir}</outputDirectory>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
@@ -215,6 +219,39 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                  <execution>
+                      <phase>package</phase>
+                      <id>build-emerald-setup</id>
+                      <goals>
+                        <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                        <executable>iscc</executable>
+                        <arguments>
+                            <argument>${project.basedir}/SDFEmerald.iss</argument>
+                        </arguments>
+                      </configuration>
+                  </execution>
+                  <execution>
+                      <phase>package</phase>
+                      <id>build-natura2000-setup</id>
+                      <goals>
+                        <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                        <executable>iscc</executable>
+                        <arguments>
+                            <argument>${project.basedir}/SDFNatura2000.iss</argument>
+                        </arguments>
+                      </configuration>
+                  </execution>
+                </executions>
+          </plugin>
         </plugins>
         <!-- Definition of resources. -->
         <resources>
@@ -458,6 +495,11 @@
             <artifactId>mysql-connector-mxj-db-files</artifactId>
             <version>5.0.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-javafx</artifactId>
+            <version>4.2</version>
         </dependency>
     </dependencies>
     <reporting>

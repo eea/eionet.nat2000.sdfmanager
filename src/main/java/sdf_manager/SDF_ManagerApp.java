@@ -160,7 +160,8 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                 if (errorMesg != null) {
                     log.error("db Error: " + errorMesg);
-                    JOptionPane.showMessageDialog(null, "A DB error has occured:" + errorMesg + "\n please check and change the database settings in the appearing dialog", "DB Error",
+                    JOptionPane.showMessageDialog(null, "A DB error has occured:"
+                            + errorMesg + "\n please check and change the database settings in the appearing dialog", "DB Error",
                             JOptionPane.ERROR_MESSAGE);
 
 
@@ -180,8 +181,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 //check which seed file is installed by the package seed_sdf or seed_emerald
                 if (SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE)) {
                     settingsDialog.getRdbtnEmerald().setSelected(true);
+                    settingsDialog.getRdbtnEmerald().setEnabled(false);
+                    settingsDialog.getRdbtnNatura().setEnabled(false);
                 } else if (SDF_Util.fileExists(SEED_PROPERTIES_FILE)) {
                     settingsDialog.getRdbtnNatura().setSelected(true);
+                    settingsDialog.getRdbtnEmerald().setEnabled(false);
+                    settingsDialog.getRdbtnNatura().setEnabled(false);
                 }
 
                 settingsDialog.setModal(true);

@@ -3755,9 +3755,9 @@ public class SDFEditor extends javax.swing.JFrame {
         emeraldDatesPanel = new JPanel();
         emeraldDatesPanel.setName("emeraldDatesPanel");
         emeraldDatesPanel.setVisible(SDF_ManagerApp.isEmeraldMode());
-        if (SDF_ManagerApp.isEmeraldMode()) {
+//        if (SDF_ManagerApp.isEmeraldMode()) {
             jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), emeraldDatesPanel);
-        }
+//        }
 
         emeraldDatesPanel_1 = new JPanel();
         emeraldDatesPanel_1.setName("emeraldDatesPanel_1");
@@ -3771,7 +3771,6 @@ public class SDFEditor extends javax.swing.JFrame {
         scrollPane_1.setName("jScrollPane28");
 
         lblDateSiteProposedASCI = new JLabel();
-        lblDateSiteProposedASCI.setIcon(resourceMap.getIcon("icon.mandatoryRed"));
         lblDateSiteProposedASCI.setText("Date site proposed as ASCI :");
         lblDateSiteProposedASCI.setName("lblDateSiteProposedASCI");
 
@@ -3786,7 +3785,6 @@ public class SDFEditor extends javax.swing.JFrame {
         txtDateSiteConfirmedCandidateASCI.setName("txtDateSiteConfirmedCandidateASCI");
 
         lblDateSiteConfirmedASCI = new JLabel();
-        lblDateSiteConfirmedASCI.setIcon(resourceMap.getIcon("icon.mandatoryGreen"));
         lblDateSiteConfirmedASCI.setText("Date site confirmed as ASCI :");
         lblDateSiteConfirmedASCI.setName("lblDateSiteConfirmedASCI");
 
@@ -3794,7 +3792,6 @@ public class SDFEditor extends javax.swing.JFrame {
         txtDateSiteConfirmedASCI.setName("txtDateSiteConfirmedASCI");
 
         lblDateSiteDesignatedASCI = new JLabel();
-        lblDateSiteDesignatedASCI.setIcon(resourceMap.getIcon("icon.mandatoryRed"));
         lblDateSiteDesignatedASCI.setText("Date site designated as ASCI :");
         lblDateSiteDesignatedASCI.setName("lblDateSiteDesignatedASCI");
 
@@ -3809,7 +3806,6 @@ public class SDFEditor extends javax.swing.JFrame {
         separator.setName("jSeparator1");
 
         lblDateSiteConfirmedCandidateASCI = new JLabel();
-        lblDateSiteConfirmedCandidateASCI.setIcon(resourceMap.getIcon("icon.mandatoryGreen"));
         lblDateSiteConfirmedCandidateASCI.setText("Date site confirmed as candidate ASCI :");
         lblDateSiteConfirmedCandidateASCI.setName("lblDateSiteConfirmedCandidateASCI");
 
@@ -3829,215 +3825,85 @@ public class SDFEditor extends javax.swing.JFrame {
         hintDateSiteDesignatedASCI.setText("(yyyy-mm)");
         hintDateSiteDesignatedASCI.setName("hintDateSiteDesignatedASCI");
         GroupLayout gl_emeraldDatesPanel_1 = new GroupLayout(emeraldDatesPanel_1);
-        gl_emeraldDatesPanel_1
-                .setHorizontalGroup(gl_emeraldDatesPanel_1
-                        .createParallelGroup(Alignment.LEADING)
-                        .addGroup(
-                                gl_emeraldDatesPanel_1
-                                        .createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(
-                                                gl_emeraldDatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addComponent(lblNationalLegalReference, Alignment.TRAILING,
-                                                                GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
-                                                        .addComponent(lblExplanations, GroupLayout.PREFERRED_SIZE, 345,
-                                                                GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(
-                                                                Alignment.TRAILING,
-                                                                gl_emeraldDatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGroup(
-                                                                                gl_emeraldDatesPanel_1
-                                                                                        .createParallelGroup(Alignment.TRAILING)
-                                                                                        .addComponent(scrollPane,
-                                                                                                Alignment.LEADING,
-                                                                                                GroupLayout.DEFAULT_SIZE, 987,
-                                                                                                Short.MAX_VALUE)
-                                                                                        .addGroup(
-                                                                                                Alignment.LEADING,
-                                                                                                gl_emeraldDatesPanel_1
-                                                                                                        .createSequentialGroup()
-                                                                                                        .addGroup(
-                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                        .createParallelGroup(
-                                                                                                                                Alignment.LEADING)
-                                                                                                                        .addComponent(
-                                                                                                                                lblDateSiteProposedASCI,
-                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                191,
-                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(
-                                                                                                                                lblDateSiteConfirmedCandidateASCI,
-                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                223,
-                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                        .addComponent(
-                                                                                                                                lblDateSiteDesignatedASCI)
-                                                                                                                        .addComponent(
-                                                                                                                                lblDateSiteConfirmedASCI,
-                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                183,
-                                                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addPreferredGap(
-                                                                                                                ComponentPlacement.UNRELATED)
-                                                                                                        .addGroup(
-                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                        .createParallelGroup(
-                                                                                                                                Alignment.LEADING)
-                                                                                                                        .addGroup(
-                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                        .createSequentialGroup()
-                                                                                                                                        .addComponent(
-                                                                                                                                                txtDateSiteDesignatedASCI,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                89,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addGap(18)
-                                                                                                                                        .addComponent(
-                                                                                                                                                hintDateSiteDesignatedASCI,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                52,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addGroup(
-                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                        .createSequentialGroup()
-                                                                                                                                        .addComponent(
-                                                                                                                                                txtDateSiteConfirmedASCI,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                89,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addGap(18)
-                                                                                                                                        .addComponent(
-                                                                                                                                                hintDateSiteConfirmedASCI,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                52,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addGroup(
-                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                        .createSequentialGroup()
-                                                                                                                                        .addGroup(
-                                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                                        .createParallelGroup(
-                                                                                                                                                                Alignment.LEADING)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                txtDateSiteConfirmedCandidateASCI,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                                89,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                txtDateSiteProposedASCI,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                                89,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                                                                                        .addGroup(
-                                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                                        .createSequentialGroup()
-                                                                                                                                                        .addGap(18)
-                                                                                                                                                        .addGroup(
-                                                                                                                                                                gl_emeraldDatesPanel_1
-                                                                                                                                                                        .createParallelGroup(
-                                                                                                                                                                                Alignment.LEADING)
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                hintDateSiteConfirmedCandidateASCI)
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                hintDateSiteProposedASCI))))))
-                                                                                        .addComponent(scrollPane_1,
-                                                                                                Alignment.LEADING,
-                                                                                                GroupLayout.DEFAULT_SIZE, 987,
-                                                                                                Short.MAX_VALUE))
-                                                                        .addGap(18)
-                                                                        .addComponent(separator, GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE))).addContainerGap()));
-        gl_emeraldDatesPanel_1
-                .setVerticalGroup(gl_emeraldDatesPanel_1
-                        .createParallelGroup(Alignment.LEADING)
-                        .addGroup(
-                                gl_emeraldDatesPanel_1
-                                        .createSequentialGroup()
-                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(
-                                                gl_emeraldDatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_emeraldDatesPanel_1.createSequentialGroup()
-                                                                        .addComponent(lblDateSiteProposedASCI)
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addComponent(lblDateSiteConfirmedCandidateASCI)
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addComponent(lblDateSiteConfirmedASCI).addGap(11)
-                                                                        .addComponent(lblDateSiteDesignatedASCI))
-                                                        .addGroup(
-                                                                gl_emeraldDatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGroup(
-                                                                                gl_emeraldDatesPanel_1
-                                                                                        .createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(txtDateSiteProposedASCI,
-                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(hintDateSiteProposedASCI))
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addGroup(
-                                                                                gl_emeraldDatesPanel_1
-                                                                                        .createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(
-                                                                                                txtDateSiteConfirmedCandidateASCI,
-                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(
-                                                                                                hintDateSiteConfirmedCandidateASCI))
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addGroup(
-                                                                                gl_emeraldDatesPanel_1
-                                                                                        .createSequentialGroup()
-                                                                                        .addGroup(
-                                                                                                gl_emeraldDatesPanel_1
-                                                                                                        .createParallelGroup(
-                                                                                                                Alignment.BASELINE)
-                                                                                                        .addComponent(
-                                                                                                                txtDateSiteConfirmedASCI,
-                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(
-                                                                                                                hintDateSiteConfirmedASCI))
-                                                                                        .addPreferredGap(
-                                                                                                ComponentPlacement.RELATED)
-                                                                                        .addGroup(
-                                                                                                gl_emeraldDatesPanel_1
-                                                                                                        .createParallelGroup(
-                                                                                                                Alignment.BASELINE)
-                                                                                                        .addComponent(
-                                                                                                                txtDateSiteDesignatedASCI,
-                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(
-                                                                                                                hintDateSiteDesignatedASCI)))))
-                                        .addGap(18)
-                                        .addComponent(lblNationalLegalReference)
-                                        .addGroup(
-                                                gl_emeraldDatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_emeraldDatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGap(13)
-                                                                        .addComponent(separator, GroupLayout.PREFERRED_SIZE, 10,
-                                                                                GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(
-                                                                gl_emeraldDatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE,
-                                                                                68, GroupLayout.PREFERRED_SIZE))).addGap(18)
-                                        .addComponent(lblExplanations).addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(88)));
+        gl_emeraldDatesPanel_1.setHorizontalGroup(
+            gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.TRAILING)
+                        .addComponent(lblNationalLegalReference, GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+                        .addComponent(lblExplanations, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE)
+                                .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(lblDateSiteProposedASCI, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblDateSiteDesignatedASCI)
+                                        .addComponent(lblDateSiteConfirmedASCI, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblDateSiteConfirmedCandidateASCI, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE))
+                                    .addGap(10)
+                                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                                            .addComponent(txtDateSiteDesignatedASCI, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18)
+                                            .addComponent(hintDateSiteDesignatedASCI, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                                            .addComponent(txtDateSiteConfirmedASCI, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18)
+                                            .addComponent(hintDateSiteConfirmedASCI, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                                .addComponent(txtDateSiteConfirmedCandidateASCI, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtDateSiteProposedASCI, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+                                            .addGap(18)
+                                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                                .addComponent(hintDateSiteConfirmedCandidateASCI)
+                                                .addComponent(hintDateSiteProposedASCI)))))
+                                .addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE))
+                            .addGap(18)
+                            .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap())
+        );
+        gl_emeraldDatesPanel_1.setVerticalGroup(
+            gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addComponent(lblDateSiteProposedASCI)
+                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(txtDateSiteProposedASCI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hintDateSiteProposedASCI))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(txtDateSiteConfirmedCandidateASCI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hintDateSiteConfirmedCandidateASCI)
+                                .addComponent(lblDateSiteConfirmedCandidateASCI))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(txtDateSiteConfirmedASCI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hintDateSiteConfirmedASCI)
+                                .addComponent(lblDateSiteConfirmedASCI))
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                .addComponent(txtDateSiteDesignatedASCI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hintDateSiteDesignatedASCI)
+                                .addComponent(lblDateSiteDesignatedASCI))))
+                    .addGap(18)
+                    .addComponent(lblNationalLegalReference)
+                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                            .addGap(13)
+                            .addComponent(separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
+                    .addGap(18)
+                    .addComponent(lblExplanations)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                    .addGap(88))
+        );
 
         txtAsciExplanations = new JTextArea();
         txtAsciExplanations.setRows(5);

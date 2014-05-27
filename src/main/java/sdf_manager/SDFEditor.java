@@ -3336,95 +3336,69 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel61.setName("jLabel61"); // NOI18N
 
         javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
-        jPanel44Layout
-                .setHorizontalGroup(jPanel44Layout
-                        .createParallelGroup(Alignment.TRAILING)
-                        .addGroup(
-                                jPanel44Layout
-                                        .createSequentialGroup()
-                                        .addGroup(
-                                                jPanel44Layout
-                                                        .createParallelGroup(Alignment.TRAILING)
-                                                        .addGroup(
-                                                                jPanel44Layout
-                                                                        .createSequentialGroup()
-                                                                        .addContainerGap()
-                                                                        .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(
-                                                                jPanel44Layout
-                                                                        .createParallelGroup(Alignment.TRAILING)
-                                                                        .addComponent(jLabel61)
-                                                                        .addGroup(
-                                                                                jPanel44Layout
-                                                                                        .createSequentialGroup()
-                                                                                        .addGroup(
-                                                                                                jPanel44Layout
-                                                                                                        .createParallelGroup(
-                                                                                                                Alignment.TRAILING)
-                                                                                                        .addGroup(
-                                                                                                                jPanel44Layout
-                                                                                                                        .createSequentialGroup()
-                                                                                                                        .addContainerGap()
-                                                                                                                        .addComponent(
-                                                                                                                                jLabel47,
-                                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                                91,
-                                                                                                                                Short.MAX_VALUE))
-                                                                                                        .addComponent(jLabel46))
-                                                                                        .addGap(18)
-                                                                                        .addGroup(
-                                                                                                jPanel44Layout
-                                                                                                        .createParallelGroup(
-                                                                                                                Alignment.LEADING)
-                                                                                                        .addComponent(
-                                                                                                                jScrollPane35,
-                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                866,
-                                                                                                                Short.MAX_VALUE)
-                                                                                                        .addComponent(
-                                                                                                                jScrollPane26,
-                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                866,
-                                                                                                                Short.MAX_VALUE)))))
-                                        .addContainerGap())
-                        .addGroup(
-                                jPanel44Layout.createSequentialGroup().addContainerGap()
-                                        .addComponent(jLabel48, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 857, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(21)));
-        jPanel44Layout.setVerticalGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING).addGroup(
-                jPanel44Layout
-                        .createSequentialGroup()
-                        .addComponent(jLabel61)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(
-                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel46)
-                                        .addComponent(jScrollPane35, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                        .addGroup(
-                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel47)
-                                        .addComponent(jScrollPane26, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(
-                                jPanel44Layout.createParallelGroup(Alignment.LEADING).addComponent(jLabel48)
-                                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
-                        .addGap(35)));
+        jPanel44Layout.setHorizontalGroup(
+            jPanel44Layout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(jPanel44Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(jPanel28, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel44Layout.createSequentialGroup()
+                            .addComponent(jLabel48, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                            .addPreferredGap(ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 857, GroupLayout.PREFERRED_SIZE)
+                            .addGap(11))
+                        .addComponent(jLabel61, Alignment.TRAILING)
+                        .addGroup(jPanel44Layout.createSequentialGroup()
+                            .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                                .addGroup(jPanel44Layout.createSequentialGroup()
+                                    .addComponent(jLabel46)
+                                    .addGap(18))
+                                .addGroup(jPanel44Layout.createSequentialGroup()
+                                    .addComponent(jLabel47, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                                    .addPreferredGap(ComponentPlacement.RELATED)))
+                            .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                                .addComponent(jScrollPane26, GroupLayout.DEFAULT_SIZE, 876, Short.MAX_VALUE)
+                                .addComponent(jScrollPane35, GroupLayout.DEFAULT_SIZE, 876, Short.MAX_VALUE))))
+                    .addContainerGap())
+        );
+        jPanel44Layout.setVerticalGroup(
+            jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(Alignment.TRAILING, jPanel44Layout.createSequentialGroup()
+                    .addComponent(jLabel61)
+                    .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(jLabel46)
+                        .addComponent(jScrollPane35, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(jLabel47)
+                        .addComponent(jScrollPane26, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(jPanel28, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addGroup(jPanel44Layout.createParallelGroup(Alignment.LEADING)
+                        .addComponent(jLabel48)
+                        .addComponent(jScrollPane37, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
+        );
         jPanel44.setLayout(jPanel44Layout);
 
         jPanel28.getAccessibleContext().setAccessibleName(resourceMap.getString("jPanel28.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9Layout.setHorizontalGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING).addGroup(
-                jPanel9Layout.createSequentialGroup()
-                        .addComponent(jPanel44, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(40)));
-        jPanel9Layout.setVerticalGroup(jPanel9Layout.createParallelGroup(Alignment.TRAILING).addGroup(
-                jPanel9Layout.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel44, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE).addGap(158)));
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(jPanel9Layout.createSequentialGroup()
+                    .addComponent(jPanel44, GroupLayout.PREFERRED_SIZE, 1022, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(640, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(Alignment.TRAILING)
+                .addGroup(Alignment.LEADING, jPanel9Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel44, GroupLayout.PREFERRED_SIZE, 446, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(158, Short.MAX_VALUE))
+        );
         jPanel9.setLayout(jPanel9Layout);
 
         jPanelDate.addTab(resourceMap.getString("jPanel9.TabConstraints.tabTitle"), jPanel9); // NOI18N
@@ -3829,10 +3803,9 @@ public class SDFEditor extends javax.swing.JFrame {
             gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
                 .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.TRAILING)
-                        .addComponent(lblNationalLegalReference, GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
-                        .addComponent(lblExplanations, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
+                    .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addComponent(lblNationalLegalReference, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+                        .addGroup(Alignment.TRAILING, gl_emeraldDatesPanel_1.createSequentialGroup()
                             .addGroup(gl_emeraldDatesPanel_1.createParallelGroup(Alignment.LEADING)
                                 .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE)
                                 .addGroup(gl_emeraldDatesPanel_1.createSequentialGroup()
@@ -3861,7 +3834,8 @@ public class SDFEditor extends javax.swing.JFrame {
                                                 .addComponent(hintDateSiteProposedASCI)))))
                                 .addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 987, Short.MAX_VALUE))
                             .addGap(18)
-                            .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblExplanations, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap())
         );
         gl_emeraldDatesPanel_1.setVerticalGroup(

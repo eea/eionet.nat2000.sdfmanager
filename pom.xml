@@ -70,7 +70,7 @@
                 <version>1.7.1</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>assembly:assembly</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
@@ -93,8 +93,8 @@
                 <version>1.5.1</version>
                 <executions>
                     <execution>
-                        <id>l4j-emerald</id>
-                        <phase>package</phase>
+                        <id>l4j-create</id>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
@@ -102,7 +102,7 @@
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
                             <jar>SDFmanager-4.0-SNAPSHOT.jar</jar>
-                            <outfile>SDFManagerEmerald.exe</outfile>
+                            <outfile>SDFManager.exe</outfile>
                             <errTitle></errTitle>
                             <cmdLine></cmdLine>
                             <chdir>.</chdir>
@@ -111,41 +111,7 @@
                             <supportUrl></supportUrl>
                             <stayAlive>false</stayAlive>
                             <manifest></manifest>
-                            <icon>${basedir}/emeraude_logo.ico</icon>
-                            <jre>
-                                <path>./jre</path>
-                                <minVersion></minVersion>
-                                <maxVersion></maxVersion>
-                                <jdkPreference>jreOnly</jdkPreference>
-                            </jre>
-                            <splash>
-                                <file>./tripledev_logo.bmp</file>
-                                <waitForWindow>true</waitForWindow>
-                                <timeout>60</timeout>
-                                <timeoutErr>true</timeoutErr>
-                            </splash>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>l4j-natura2000</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <jar>SDFmanager-4.0-SNAPSHOT.jar</jar>
-                            <outfile>SDFManagerNatura2000.exe</outfile>
-                            <errTitle></errTitle>
-                            <cmdLine></cmdLine>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <supportUrl></supportUrl>
-                            <stayAlive>false</stayAlive>
-                            <manifest></manifest>
-                            <icon>${basedir}/natura2000_logo.ico</icon>
+                            <icon>${basedir}/sdfmanager.ico</icon>
                             <jre>
                                 <path>./jre</path>
                                 <minVersion></minVersion>
@@ -225,28 +191,15 @@
                 <version>1.3</version>
                 <executions>
                   <execution>
-                      <phase>package</phase>
-                      <id>build-emerald-setup</id>
+                      <phase>deploy</phase>
+                      <id>build-setup</id>
                       <goals>
                         <goal>exec</goal>
                       </goals>
                       <configuration>
                         <executable>iscc</executable>
                         <arguments>
-                            <argument>${project.basedir}/SDFEmerald.iss</argument>
-                        </arguments>
-                      </configuration>
-                  </execution>
-                  <execution>
-                      <phase>package</phase>
-                      <id>build-natura2000-setup</id>
-                      <goals>
-                        <goal>exec</goal>
-                      </goals>
-                      <configuration>
-                        <executable>iscc</executable>
-                        <arguments>
-                            <argument>${project.basedir}/SDFNatura2000.iss</argument>
+                            <argument>${project.basedir}/SDFManager.iss</argument>
                         </arguments>
                       </configuration>
                   </execution>

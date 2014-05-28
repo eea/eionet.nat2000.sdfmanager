@@ -217,31 +217,18 @@
       </xsl:choose>
 
 
-      <xsl:choose>
-        <xsl:when test="string(siteIdentification/spaClassificationDate) or string(siteIdentification/spaLegalReference)">
+      <!-- xsl:choose>
+        <xsl:when test="string(siteIdentification/asciProposalDate)">
           <h2>1.7 Site indication and designation / classification dates</h2>
           <table class="SDFtable WholeWidth">
             <tr>
-              <td width="50%" class="Bold">Date site classified as SPA:</td>
+              <td width="50%" class="Bold">Date site proposed as ASCI:</td>
               <td width="50%" class="DivisorTop MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/spaClassificationDate)">
+                  <xsl:when test="string(siteIdentification/asciProposalDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/spaClassificationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciProposalDate"/>
                     </xsl:call-template>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    No data
-                  </xsl:otherwise>
-                </xsl:choose>
-              </td>
-            </tr>
-            <tr>
-              <td width="50%" class="DivisorRight DivisorTop Bold">National legal reference of SPA designation</td>
-              <td class="DivisorTop MinimalHeight">
-                <xsl:choose>
-                  <xsl:when test="string(siteIdentification/spaLegalReference)">
-                    <xsl:value-of select="siteIdentification/spaLegalReference"/>
                   </xsl:when>
                   <xsl:otherwise>
                     No data
@@ -251,18 +238,34 @@
             </tr>
           </table>
         </xsl:when>
-      </xsl:choose>
+      </xsl:choose-->
 
       <xsl:choose>
-        <xsl:when test="string(siteIdentification/sciProposalDate) or string(siteIdentification/sciConfirmationDate) or string(siteIdentification/sacDesignationDate) or string(siteIdentification/sacLegalReference)">
+        <xsl:when test="string(siteIdentification/asciProposalDate) or string(siteIdentification/asciConfirmedCandidateDate) or string(siteIdentification/asciConfirmationDate) or string(siteIdentification/asciDesignationDate) or string(siteIdentification/asciLegalReference)">
           <table class="SDFtable WholeWidth">
-            <tr>
-              <td width="50%" class="Bold">Date site proposed as SCI:</td>
+           <tr>
+              <td width="50%" class="Bold">Date site proposed as ASCI:</td>
               <td width="50%" class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sciProposalDate)">
+                  <xsl:when test="string(siteIdentification/asciProposalDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sciProposalDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciProposalDate"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    No data
+                  </xsl:otherwise>
+                </xsl:choose>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="Bold">Date site confirmed as candidate ASCI:</td>
+              <td width="50%" class="MinimalHeight">
+                <xsl:choose>
+                  <xsl:when test="string(siteIdentification/asciConfirmedCandidateDate)">
+                    <xsl:call-template name="FormatYearMonth">
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciConfirmedCandidateDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -272,12 +275,12 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="Bold">Date site confirmed as SCI:</td>
+              <td width="50%" class="Bold">Date site confirmed as ASCI:</td>
               <td class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sciConfirmationDate)">
+                  <xsl:when test="string(siteIdentification/asciConfirmationDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sciConfirmationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciConfirmationDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -287,12 +290,12 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="Bold">Date site designated as SAC:</td>
+              <td width="50%" class="Bold">Date site designated as ASCI:</td>
               <td width="50%" class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sacDesignationDate)">
+                  <xsl:when test="string(siteIdentification/asciDesignationDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sacDesignationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciDesignationDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -302,14 +305,11 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="DivisorRight Bold">National legal reference of SAC designation:</td>
+              <td width="50%" class="DivisorRight Bold">National legal reference of ASCI designation:</td>
               <td class="DivisorTop MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sacLegalReference)">
-                    <!--<xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sacLegalReference"/>
-                    </xsl:call-template>-->
-                    <xsl:value-of select="siteIdentification/sacLegalReference"/>
+                  <xsl:when test="string(siteIdentification/asciLegalReference)">
+                    <xsl:value-of select="siteIdentification/asciLegalReference"/>
                   </xsl:when>
                   <xsl:otherwise>
                     No data

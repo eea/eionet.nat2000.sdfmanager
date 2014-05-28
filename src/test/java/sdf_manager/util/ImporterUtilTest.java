@@ -24,12 +24,4 @@ public class ImporterUtilTest {
     }
 
 
-    @Test
-    public void testCyrillic() throws Exception {
-        byte bb[] = {40, 63, 63, 63, 63, 63, -27, -28, 63, 63, 63, 63, 32, 63, 32, 63, 63, -10, 63, 63, 63, 63, 63};
-
-        System.out.println(System.getProperty("java.io.tmpdir"));
-
-    }
-
 }

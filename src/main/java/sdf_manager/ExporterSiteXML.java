@@ -68,8 +68,8 @@ import pojos.SiteBiogeo;
 import pojos.SiteOwnership;
 import pojos.SiteRelation;
 import pojos.Species;
-import sdf_manager.util.SDF_Constants;
 import sdf_manager.util.SDF_Util;
+import sdf_manager.util.XmlGenerationUtils;
 
 /**
  *
@@ -185,6 +185,7 @@ public class ExporterSiteXML implements Exporter {
      * @param fileName
      * @return
      */
+    @Override
     public ArrayList createXMLFromDataBase(String fileName) {
         this.fileName = fileName;
         log("Creating requested XML document: "  + fileName);
@@ -578,6 +579,7 @@ public class ExporterSiteXML implements Exporter {
      * @param filename
      * @return
      */
+    @Override
     public boolean processDatabase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -736,77 +738,84 @@ public class ExporterSiteXML implements Exporter {
             Calendar cal = Calendar.getInstance();
             cal.set(0, 0, 0);
             Date dateNull = cal.getTime();
-            if (("A").equals(siteType)) {
-                if (site.getSiteSpaDate() != null) {
-                   siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()), "spaClassificationDate")));
-                } else {
+            boolean isEmeraldMode = SDF_ManagerApp.isEmeraldMode();
 
-//                    xmlValidFields.add("Date site classificated as SPA in Identification section (Dates tab)\n");
+            if (isEmeraldMode) {
+                XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate", doc);
+                if (("B").equals(siteType) && site.getSiteProposedAsciDate() == null ) {
+                    XmlGenerationUtils.appendDateElement(dateNull, siteIdentification, "asciProposalDate", doc);
+                }
+                //siteIdentification.appendChild(doc.createElement("asciLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciLegalReference")));
+                XmlGenerationUtils.appendDateElement(site.getSiteConfirmedCandidateAsciDate(), siteIdentification, "asciConfirmedCandidateDate", doc);
+                XmlGenerationUtils.appendDateElement(site.getSiteConfirmedAsciDate(), siteIdentification, "asciConfirmationDate", doc);
+                XmlGenerationUtils.appendDateElement(site.getSiteDesignatedAsciDate(), siteIdentification, "asciDesignationDate", doc);
+
+                siteIdentification.appendChild(doc.createElement("asciLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciLegalReference")));
+
+
+            } else {
+                XmlGenerationUtils.appendDateElement(site.getSiteSpaDate(), siteIdentification, "spaClassificationDate", doc);
+                if (("B").equals(siteType) && site.getSiteSpaDate() == null ) {
+                    XmlGenerationUtils.appendDateElement(dateNull, siteIdentification, "spaClassificationDate", doc);
                 }
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
+                XmlGenerationUtils.appendDateElement(site.getSiteSciPropDate(), siteIdentification, "sciProposalDate", doc);
+                XmlGenerationUtils.appendDateElement(site.getSiteSciConfDate(), siteIdentification, "sciConfirmationDate", doc);
+                XmlGenerationUtils.appendDateElement(site.getSiteSacDate(), siteIdentification, "sacDesignationDate", doc);
+
+                siteIdentification.appendChild(doc.createElement("sacLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSacLegalRef(), "sacLegalReference")));
+            }
+
+
+  /*          if (("A").equals(siteType)) {
+                if (site.getSiteSpaDate() != null) {
+                   siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()), "spaClassificationDate")));
+                }
+               siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
 
                 if (site.getSiteSciPropDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()), "sciProposalDate")));
-                } else {
-//                    siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
                 if (site.getSiteSciConfDate() != null) {
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
                 }
                 if (site.getSiteSacDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()), "sacDesignationDate")));
-                } else {
-//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
 
             } else if (("B").equals(siteType)) {
                 if (site.getSiteSpaDate() != null) {
                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()), "spaClassificationDate")));
                 } else {
-
                     siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(dateNull), "spaClassificationDate")));
                 }
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
                 if (site.getSiteSciPropDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()), "sciProposalDate")));
-                } else {
-
-//                    xmlValidFields.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
                 }
                 if (site.getSiteSciConfDate() != null) {
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
                 }
                 if (site.getSiteSacDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()), "sacDesignationDate")));
-                } else {
-//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
 
             } else if (("C").equals(siteType)) {
                 if (site.getSiteSpaDate() != null) {
                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()), "spaClassificationDate")));
-                } else {
-
-//                    xmlValidFields.add("Date site classificated as SPA in Identification section (Dates tab)\n");
                 }
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
                 if (site.getSiteSciPropDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()), "sciProposalDate")));
-                } else {
-
-//                    xmlValidFields.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
                 }
                 if (site.getSiteSciConfDate() != null) {
                   siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
                 }
                 if (site.getSiteSacDate() != null) {
                     siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()), "sacDesignationDate")));
-                } else {
-//                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(SDF_Constants.NULL_DATE));
                 }
             }
-
-            siteIdentification.appendChild(doc.createElement("sacLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSacLegalRef(), "sacLegalReference")));
+*/
             siteIdentification.appendChild(doc.createElement("explanations")).appendChild(doc.createTextNode(fmt(site.getSiteExplanations(), "explanations")));
             sdf.appendChild(siteIdentification);
 
@@ -1405,5 +1414,7 @@ public class ExporterSiteXML implements Exporter {
         return doc;
 
     }
+
+
 
 }

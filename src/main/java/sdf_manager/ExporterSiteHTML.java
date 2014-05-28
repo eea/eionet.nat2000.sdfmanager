@@ -1,4 +1,4 @@
-opackage sdf_manager;
+package sdf_manager;
 
 import java.awt.Desktop;
 import java.io.BufferedWriter;

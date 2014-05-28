@@ -900,62 +900,30 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     private String saveNatura2000Dates() {
 
-        SDFEditor.logger.info("Saving dates...");
+        SDFEditor.logger.info("Saving Natura2000 dates...");
 
-        // Date when site classified as SPA.
-        String spaDate = this.txtDateSpa.getText();
-        if (!spaDate.equals("")) {
-            Date spaDateFormat = ConversionTools.convertToDate(spaDate);
-            if (spaDateFormat != null) {
-                this.site.setSiteSpaDate(spaDateFormat);
-            } else {
-                SDFEditor.logger.error("SPA date illegal format");
-            }
-        } else {
-            this.site.setSiteSpaDate(null);
+        Date classifiedSPA = null;
+        Date proposedSCI = null;
+        Date confirmedSCI = null;
+        Date designatedSAC = null;
+
+        try {
+            classifiedSPA = parseDateValue(txtDateSpa, lblDateClassifiedSPA, true);
+            proposedSCI = parseDateValue(txtDatePropSci, lblDateProposedSCI, true);
+            confirmedSCI = parseDateValue(txtDateConfSci, lblDateConfirmedSCI, false);
+            designatedSAC = parseDateValue(txtDateSac, lblDateDesignatedSAC, true);
+        } catch (ValidationException e) {
+            return e.getMessage();
         }
 
-        // National legal reference of SPA designation.
-        this.site.setSiteSpaLegalRef(this.txtSpaRef.getText());
-
-        // Date when site proposed as SCI.
-        String sciPropDate = this.txtDatePropSci.getText();
-        if (!sciPropDate.equals("")) {
-            Date date = ConversionTools.convertToDate(sciPropDate);
-            if (date != null) {
-                this.site.setSiteSciPropDate(date);
-            } else {
-                SDFEditor.logger.error("SCI proposition date illegal format");
-            }
-        } else {
-            this.site.setSiteSciPropDate(null);
+        if (!isDatesAscendingOrder(proposedSCI, confirmedSCI)) {
+            return "SCI proposal and confirmation dates must be in chronological order!";
         }
 
-        // Date when site confirmed as SCI.
-        String sciConfDate = this.txtDateConfSci.getText();
-        if (!sciConfDate.equals("")) {
-            Date date = ConversionTools.convertToDate(sciConfDate);
-            if (date != null) {
-                this.site.setSiteSciConfDate(date);
-            } else {
-                SDFEditor.logger.error("SCI confirmation date illegal format");
-            }
-        } else {
-            this.site.setSiteSciConfDate(null);
-        }
-
-        // Date when site designated as SAC.
-        String sacDate = this.txtDateSac.getText();
-        if (!sacDate.equals("")) {
-            Date date = ConversionTools.convertToDate(sacDate);
-            if (date != null) {
-                this.site.setSiteSacDate(date);
-            } else {
-                SDFEditor.logger.error("SAC date illegal format");
-            }
-        } else {
-            this.site.setSiteSacDate(null);
-        }
+        site.setSiteSpaDate(classifiedSPA);
+        site.setSiteSciPropDate(proposedSCI);
+        site.setSiteSciConfDate(confirmedSCI);
+        site.setSiteSacDate(designatedSAC);
 
         // National legal reference of SAC designation.
         String sacLegalRef = this.txtSacRef.getText();
@@ -2714,10 +2682,10 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel61 = new javax.swing.JLabel();
         natura2000DatesPanel = new javax.swing.JPanel();
         natura2000DatesPanel_1 = new javax.swing.JPanel();
-        jLabel49 = new javax.swing.JLabel();
-        jLabel50 = new javax.swing.JLabel();
-        jLabel51 = new javax.swing.JLabel();
-        jLabel52 = new javax.swing.JLabel();
+        lblDateClassifiedSPA = new javax.swing.JLabel();
+        lblDateProposedSCI = new javax.swing.JLabel();
+        lblDateDesignatedSAC = new javax.swing.JLabel();
+        lblDateConfirmedSCI = new javax.swing.JLabel();
         jLabel53 = new javax.swing.JLabel();
         jLabel54 = new javax.swing.JLabel();
         jScrollPane27 = new javax.swing.JScrollPane();
@@ -3473,21 +3441,21 @@ public class SDFEditor extends javax.swing.JFrame {
                 .getString("jPanel45.border.title"))); // NOI18N
         natura2000DatesPanel_1.setName("natura2000DatesPanel_1"); // NOI18N
 
-        jLabel49.setIcon(resourceMap.getIcon("jLabel49.icon")); // NOI18N
-        jLabel49.setText(resourceMap.getString("jLabel49.text")); // NOI18N
-        jLabel49.setName("jLabel49"); // NOI18N
+        lblDateClassifiedSPA.setIcon(resourceMap.getIcon("jLabel49.icon")); // NOI18N
+        lblDateClassifiedSPA.setText(resourceMap.getString("jLabel49.text")); // NOI18N
+        lblDateClassifiedSPA.setName("lblDateClassifiedSPA"); // NOI18N
 
-        jLabel50.setIcon(resourceMap.getIcon("jLabel50.icon")); // NOI18N
-        jLabel50.setText(resourceMap.getString("jLabel50.text")); // NOI18N
-        jLabel50.setName("jLabel50"); // NOI18N
+        lblDateProposedSCI.setIcon(resourceMap.getIcon("jLabel50.icon")); // NOI18N
+        lblDateProposedSCI.setText(resourceMap.getString("jLabel50.text")); // NOI18N
+        lblDateProposedSCI.setName("lblDateProposedSCI"); // NOI18N
 
-        jLabel51.setIcon(resourceMap.getIcon("jLabel51.icon")); // NOI18N
-        jLabel51.setText(resourceMap.getString("jLabel51.text")); // NOI18N
-        jLabel51.setName("jLabel51"); // NOI18N
+        lblDateDesignatedSAC.setIcon(resourceMap.getIcon("jLabel51.icon")); // NOI18N
+        lblDateDesignatedSAC.setText(resourceMap.getString("jLabel51.text")); // NOI18N
+        lblDateDesignatedSAC.setName("lblDateDesignatedSAC"); // NOI18N
 
-        jLabel52.setIcon(resourceMap.getIcon("jLabel52.icon")); // NOI18N
-        jLabel52.setText(resourceMap.getString("jLabel52.text")); // NOI18N
-        jLabel52.setName("jLabel52"); // NOI18N
+        lblDateConfirmedSCI.setIcon(resourceMap.getIcon("jLabel52.icon")); // NOI18N
+        lblDateConfirmedSCI.setText(resourceMap.getString("jLabel52.text")); // NOI18N
+        lblDateConfirmedSCI.setName("lblDateConfirmedSCI"); // NOI18N
 
         jLabel53.setIcon(resourceMap.getIcon("jLabel53.icon")); // NOI18N
         jLabel53.setText(resourceMap.getString("jLabel53.text")); // NOI18N
@@ -3544,221 +3512,98 @@ public class SDFEditor extends javax.swing.JFrame {
         jScrollPane28.setViewportView(txtSacRef);
 
         javax.swing.GroupLayout gl_natura2000DatesPanel_1 = new javax.swing.GroupLayout(natura2000DatesPanel_1);
-        gl_natura2000DatesPanel_1
-                .setHorizontalGroup(gl_natura2000DatesPanel_1
-                        .createParallelGroup(Alignment.LEADING)
-                        .addGroup(
-                                gl_natura2000DatesPanel_1
-                                        .createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(
-                                                gl_natura2000DatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addComponent(jScrollPane27, GroupLayout.DEFAULT_SIZE,
-                                                                                985, Short.MAX_VALUE).addContainerGap())
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addComponent(jScrollPane28, GroupLayout.DEFAULT_SIZE,
-                                                                                985, Short.MAX_VALUE).addContainerGap())
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGroup(
-                                                                                gl_natura2000DatesPanel_1
-                                                                                        .createParallelGroup(Alignment.LEADING,
-                                                                                                false)
-                                                                                        .addGroup(
-                                                                                                gl_natura2000DatesPanel_1
-                                                                                                        .createSequentialGroup()
-                                                                                                        .addGroup(
-                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                        .createParallelGroup(
-                                                                                                                                Alignment.LEADING)
-                                                                                                                        .addGroup(
-                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                        .createSequentialGroup()
-                                                                                                                                        .addComponent(
-                                                                                                                                                jLabel49,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                191,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addPreferredGap(
-                                                                                                                                                ComponentPlacement.UNRELATED)
-                                                                                                                                        .addComponent(
-                                                                                                                                                txtDateSpa,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                89,
-                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                        .addPreferredGap(
-                                                                                                                                                ComponentPlacement.UNRELATED)
-                                                                                                                                        .addComponent(
-                                                                                                                                                jLabel8))
-                                                                                                                        .addComponent(
-                                                                                                                                jLabel55)
-                                                                                                                        .addGroup(
-                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                        .createSequentialGroup()
-                                                                                                                                        .addGroup(
-                                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                                        .createParallelGroup(
-                                                                                                                                                                Alignment.TRAILING)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                txtDatePropSci,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                                89,
-                                                                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        .addGroup(
-                                                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                                                        .createSequentialGroup()
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                jLabel52,
-                                                                                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                                                                                190,
-                                                                                                                                                                                Short.MAX_VALUE)
-                                                                                                                                                                        .addPreferredGap(
-                                                                                                                                                                                ComponentPlacement.UNRELATED)
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                txtDateConfSci,
-                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                                                89,
-                                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                        .addGroup(
-                                                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                                                        .createSequentialGroup()
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                jLabel51)
-                                                                                                                                                                        .addPreferredGap(
-                                                                                                                                                                                ComponentPlacement.RELATED,
-                                                                                                                                                                                40,
-                                                                                                                                                                                Short.MAX_VALUE)
-                                                                                                                                                                        .addComponent(
-                                                                                                                                                                                txtDateSac,
-                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                                                                                89,
-                                                                                                                                                                                GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                        .addPreferredGap(
-                                                                                                                                                ComponentPlacement.UNRELATED)
-                                                                                                                                        .addGroup(
-                                                                                                                                                gl_natura2000DatesPanel_1
-                                                                                                                                                        .createParallelGroup(
-                                                                                                                                                                Alignment.LEADING)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                jLabel7)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                jLabel6)
-                                                                                                                                                        .addComponent(
-                                                                                                                                                                jLabel5))))
-                                                                                                        .addGap(242))
-                                                                                        .addComponent(jSeparator1,
-                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(jScrollPane33,
-                                                                                                GroupLayout.PREFERRED_SIZE, 949,
-                                                                                                GroupLayout.PREFERRED_SIZE))
-                                                                        .addContainerGap())
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addComponent(jLabel50, GroupLayout.DEFAULT_SIZE, 192,
-                                                                                Short.MAX_VALUE).addGap(803))
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addComponent(jLabel53, GroupLayout.DEFAULT_SIZE, 985,
-                                                                                Short.MAX_VALUE).addContainerGap())
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addComponent(jLabel54, GroupLayout.PREFERRED_SIZE, 345,
-                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                        .addContainerGap(650, Short.MAX_VALUE)))));
-        gl_natura2000DatesPanel_1
-                .setVerticalGroup(gl_natura2000DatesPanel_1
-                        .createParallelGroup(Alignment.LEADING)
-                        .addGroup(
-                                gl_natura2000DatesPanel_1
-                                        .createSequentialGroup()
-                                        .addGroup(
-                                                gl_natura2000DatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createParallelGroup(Alignment.BASELINE)
-                                                                        .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE,
-                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                GroupLayout.PREFERRED_SIZE).addComponent(jLabel8))
-                                                        .addComponent(jLabel49))
-                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+        gl_natura2000DatesPanel_1.setHorizontalGroup(
+            gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addComponent(jScrollPane27, GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addComponent(jScrollPane28, GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING, false)
+                                .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                                            .addComponent(lblDateClassifiedSPA, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addComponent(jLabel8))
                                         .addComponent(jLabel55)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(
-                                                gl_natura2000DatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGap(28)
-                                                                        .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10,
-                                                                                GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                        .addGroup(
-                                                                                gl_natura2000DatesPanel_1
-                                                                                        .createParallelGroup(Alignment.LEADING)
-                                                                                        .addGroup(
-                                                                                                gl_natura2000DatesPanel_1
-                                                                                                        .createParallelGroup(
-                                                                                                                Alignment.BASELINE)
-                                                                                                        .addComponent(
-                                                                                                                txtDatePropSci,
-                                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                                        .addComponent(jLabel5))
-                                                                                        .addComponent(jLabel50))
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addGroup(
-                                                                                gl_natura2000DatesPanel_1
-                                                                                        .createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(txtDateConfSci,
-                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(jLabel6)
-                                                                                        .addComponent(jLabel52))))
-                                        .addGroup(
-                                                gl_natura2000DatesPanel_1
-                                                        .createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1
-                                                                        .createSequentialGroup()
-                                                                        .addGap(6)
-                                                                        .addGroup(
-                                                                                gl_natura2000DatesPanel_1
-                                                                                        .createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(txtDateSac,
-                                                                                                GroupLayout.PREFERRED_SIZE,
-                                                                                                GroupLayout.DEFAULT_SIZE,
-                                                                                                GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(jLabel7)))
-                                                        .addGroup(
-                                                                gl_natura2000DatesPanel_1.createSequentialGroup()
-                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                        .addComponent(jLabel51))).addGap(18)
-                                        .addComponent(jLabel53).addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane28, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(jLabel54)
-                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane27, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                                            .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                                .addComponent(lblDateConfirmedSCI, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(lblDateDesignatedSAC))
+                                            .addGap(38)
+                                            .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.TRAILING)
+                                                .addComponent(txtDatePropSci, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtDateConfSci, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtDateSac, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+                                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                                            .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                                .addComponent(jLabel7)
+                                                .addComponent(jLabel6)
+                                                .addComponent(jLabel5))))
+                                    .addGap(170))
+                                .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 949, GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap(46, Short.MAX_VALUE))
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addComponent(lblDateProposedSCI, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addGap(803))
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addComponent(jLabel54, GroupLayout.PREFERRED_SIZE, 345, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(650, Short.MAX_VALUE))
+                        .addComponent(jLabel53, GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)))
+        );
+        gl_natura2000DatesPanel_1.setVerticalGroup(
+            gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                            .addComponent(txtDateSpa, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addComponent(lblDateClassifiedSPA))
+                    .addPreferredGap(ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel55)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane33, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addGap(28)
+                            .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                            .addPreferredGap(ComponentPlacement.UNRELATED)
+                            .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.LEADING)
+                                .addGroup(gl_natura2000DatesPanel_1.createSequentialGroup()
+                                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(txtDatePropSci, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel5))
+                                    .addPreferredGap(ComponentPlacement.RELATED)
+                                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(txtDateConfSci, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel6)
+                                        .addComponent(lblDateConfirmedSCI))
+                                    .addGap(6)
+                                    .addGroup(gl_natura2000DatesPanel_1.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(txtDateSac, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7)
+                                        .addComponent(lblDateDesignatedSAC)))
+                                .addComponent(lblDateProposedSCI))))
+                    .addGap(28)
+                    .addComponent(jLabel53)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane28, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(jLabel54)
+                    .addPreferredGap(ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane27, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
         natura2000DatesPanel_1.setLayout(gl_natura2000DatesPanel_1);
 
         javax.swing.GroupLayout gl_natura2000DatesPanel = new javax.swing.GroupLayout(natura2000DatesPanel);
@@ -3773,9 +3618,9 @@ public class SDFEditor extends javax.swing.JFrame {
                         .addContainerGap(144, Short.MAX_VALUE)));
         natura2000DatesPanel.setLayout(gl_natura2000DatesPanel);
 
-        if (!SDF_ManagerApp.isEmeraldMode()) {
+//        if (!SDF_ManagerApp.isEmeraldMode()) {
             jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), natura2000DatesPanel); // NOI18N
-        }
+//        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
@@ -7306,11 +7151,11 @@ public class SDFEditor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel lblDateClassifiedSPA;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel lblDateProposedSCI;
+    private javax.swing.JLabel lblDateDesignatedSAC;
+    private javax.swing.JLabel lblDateConfirmedSCI;
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;

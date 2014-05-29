@@ -597,19 +597,11 @@
                       <td class="DivisorTop DivisorRight">
                         <xsl:value-of select = "code"/>
                         <xsl:variable name="habcode" select="code"/>
-                        <xsl:variable name="habcodeURL" select="concat('HabCodePopup.aspx?habcode=', $habcode)"/>
+                        <!--  TODO similar manual to n2k? -->
                         <xsl:variable name="apos">'</xsl:variable>
                         <xsl:variable name="apos2">http://natura2000.eea.europa.eu/Natura2000/</xsl:variable>
-                        <!--<img src="images/info.jpg" border="0" alt="info">
-                        <xsl:attribute name="onclick">
-                          <xsl:value-of select="concat('window.open(', $apos, $habcodeURL, $apos, ',', $apos, 'habpopup', $apos, ',', $apos, 'height=130,width=300,toolbar=no,scrollbars=yes', $apos, ')')"/>
-                        </xsl:attribute>
-                      </img>&#160; -->
                         <!-- In the following image, the path, to which the link points to has been changed in order to show the linked page from here ("http://natura..." added) -->
-                        <img src="images/info.jpg" border="0" alt="info">
-                          <xsl:attribute name="onclick">
-                            <xsl:value-of select="concat('window.open(', $apos, $apos2, $habcodeURL, $apos, ',', $apos, 'habpopup', $apos, ',', $apos, 'height=130,width=300,toolbar=no,scrollbars=yes', $apos, ')')" />
-                          </xsl:attribute>
+                        <img src="images/info.jpg" border="0" alt="info" onClick="window.open('https://wcd.coe.int/com.instranet.InstraServlet?command=com.instranet.CmdBlobGet&amp;InstranetImage=2335081&amp;SecMode=1&amp;DocId=2044598&amp;Usage=2')">
                         </img>&#160;
                       </td>
                       <td class="DivisorTop DivisorRight">

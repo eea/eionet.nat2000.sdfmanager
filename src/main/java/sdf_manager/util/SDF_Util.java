@@ -271,4 +271,11 @@ public class SDF_Util {
          File file = new File(fileName);
          return file.exists() && !file.isDirectory() && file.canRead();
      }
+
+     public static boolean renameFile(String srcFileName, String destFileName) {
+         File f1 = new File(srcFileName);
+         File f2 = new File(destFileName);
+
+         return f1.renameTo(f2);
+     }
 }

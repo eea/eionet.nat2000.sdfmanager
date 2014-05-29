@@ -51,9 +51,6 @@ var
   Natura2000BMPFileName, EmeraldBMPFileName: String;
      
 begin
-  
- 
-
   Page := CreateCustomPage(wpWelcome, 'Application Mode', 'Please select In which network the SDFManager will be used');
 
   Natura2000BMPFileName := ExpandConstant('{tmp}\natura2000_logo_small.bmp'); 
@@ -88,18 +85,11 @@ begin
   EmeraldRadio.Checked := False;
   EmeraldRadio.Left := Natura2000Image.Width + ScaleX(5);
   EmeraldRadio.Top := ScaleY(58);
-
-
-
-   
-  
-  end;
-
-
+ 
+end;
    
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
-    
   if CurPageID = Page.ID then begin
       IsEmerald := EmeraldRadio.Checked;
       IsNatura2000 := Not IsEmerald;
@@ -114,7 +104,6 @@ end;
 
 function IsNatura2000Mode(): Boolean;
 begin
-  
   Result := IsNatura2000;
 end;
 
@@ -134,7 +123,6 @@ Source: "jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs creat
 Source: "lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "xsl\*"; DestDir: "{app}\xsl"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-
  
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";IconFilename: {app}\emeraude_logo.ico; Comment: "SDFManager"; Check: IsEmeraldMode

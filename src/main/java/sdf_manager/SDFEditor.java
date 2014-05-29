@@ -785,7 +785,7 @@ public class SDFEditor extends javax.swing.JFrame {
             return e.getMessage();
         }
 
-        if (!isDatesAscendingOrder(proposedASCI, confirmedCandidateASCI, confirmedASCI, designatedASCI)) {
+        if (!ValidateSite.isDatesAscendingOrder(proposedASCI, confirmedCandidateASCI, confirmedASCI, designatedASCI)) {
             return "Dates must be in chronological order!";
         }
 
@@ -807,40 +807,6 @@ public class SDFEditor extends javax.swing.JFrame {
         }
 
         return StringUtils.EMPTY;
-    }
-
-    /**
-     * Return true if the given dates are in chronologically ascending order, otherwise return false.
-     * Null dates are simply ignored and not compared.
-     *
-     * @param dates The array of dates to compare.
-     * @return true/false
-     */
-    private boolean isDatesAscendingOrder(Date... dates) {
-
-        if (dates == null || dates.length <= 1) {
-            return true;
-        }
-
-        boolean result = true;
-        if (dates != null && dates.length > 1) {
-
-            Date prevDate = dates[0];
-            for (int i = 1; i < dates.length; i++) {
-
-                Date thisDate = dates[i];
-                if (thisDate != null && prevDate != null && prevDate.after(thisDate)) {
-                    result = false;
-                    break;
-                }
-
-                if (thisDate != null) {
-                    prevDate = thisDate;
-                }
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -916,7 +882,7 @@ public class SDFEditor extends javax.swing.JFrame {
             return e.getMessage();
         }
 
-        if (!isDatesAscendingOrder(proposedSCI, confirmedSCI)) {
+        if (!ValidateSite.isDatesAscendingOrder(proposedSCI, confirmedSCI)) {
             return "SCI proposal and confirmation dates must be in chronological order!";
         }
 
@@ -3618,9 +3584,9 @@ public class SDFEditor extends javax.swing.JFrame {
                         .addContainerGap(144, Short.MAX_VALUE)));
         natura2000DatesPanel.setLayout(gl_natura2000DatesPanel);
 
-//        if (!SDF_ManagerApp.isEmeraldMode()) {
+        if (!SDF_ManagerApp.isEmeraldMode()) {
             jPanelDate.addTab(resourceMap.getString("jPanel11.TabConstraints.tabTitle"), natura2000DatesPanel); // NOI18N
-//        }
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)

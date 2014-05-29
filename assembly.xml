@@ -28,6 +28,8 @@
             <excludes>
                 <exclude>lib/mysql-connector-mxj-*.jar</exclude>
                 <exclude>lib/junit-*.jar</exclude>
+                <exclude>*.exe</exclude>
+                <exclude>jre/**</exclude>
             </excludes>
         </fileSet>
         <!-- Include the SDFManager JAR -->

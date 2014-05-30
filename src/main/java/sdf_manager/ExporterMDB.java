@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -41,6 +43,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import pojos.Site;
+import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.ValidateSite;
 
 import com.healthmarketscience.jackcess.Database;
@@ -63,7 +66,7 @@ public class ExporterMDB implements Exporter {
 
     private ArrayList sitecodes = new ArrayList();
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterMDB.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterMDB.class.getName());
 
     /**
      *
@@ -79,7 +82,7 @@ public class ExporterMDB implements Exporter {
      *
      * @param logger
      */
-    public ExporterMDB(Logger logger, String encoding,  String logFileName, String mdbFileName) {
+    public ExporterMDB(Logger logger, String encoding, String logFileName, String mdbFileName) {
         this.logger = logger;
         this.encoding = encoding;
         this.logExportFileName = logFileName;
@@ -87,51 +90,91 @@ public class ExporterMDB implements Exporter {
         init();
     }
 
-
-     /**
+    /**
      *
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private File validateSites() {
-        File fileMDBLog = null;
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
-            String hql = " from Site as site order by site.siteCode";
-            Iterator itrSites = session.createQuery(hql).iterate();
-            HashMap errorMsgMap = new HashMap();
 
-            while (itrSites.hasNext()) {
-                Site site = (Site) itrSites.next();
-                ArrayList errMsgList = ValidateSite.validate(site);
-                errorMsgMap.put(site.getSiteCode(), errMsgList);
-                log("Validating::" + site.getSiteCode());
+        File fileMDBLog = null;
+        HashMap<String, List<String>> validationErrorsMap = new HashMap<String, List<String>>();
+        Session session = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+
+            String hql = " from Site as site order by site.siteCode";
+            Iterator sitesIter = session.createQuery(hql).iterate();
+
+            while (sitesIter.hasNext()) {
+
+                Site site = (Site) sitesIter.next();
+                String siteCode = site.getSiteCode();
+
+                log("Validating::" + siteCode);
+
+                List<String> validationErrors = ValidateSite.validate(site);
+                if (validationErrors != null && !validationErrors.isEmpty()) {
+                    validationErrorsMap.put(siteCode, validationErrors);
+                }
+
                 this.sitecodes.add(site);
             }
-            tx.commit();
-            session.close();
-            if (errorMsgMap != null && !errorMsgMap.isEmpty()) {
-                fileMDBLog = copyToLogExportFile(errorMsgMap);
-            }
 
+            commit(tx);
+
+            if (!validationErrorsMap.isEmpty()) {
+                fileMDBLog = copyToLogExportFile(validationErrorsMap);
+            }
         } catch (Exception e) {
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterMDB.log.error("ERROR loadSitecodes():::" + e.getMessage());
             e.printStackTrace();
+        } finally {
+            close(session);
         }
         log("End of Validation");
 
         return fileMDBLog;
     }
 
+    /**
+     * Utility method for committing a Hibernate transaction null-safely and quietly.
+     *
+     * @param tx Hibernate transaction.
+     */
+    private void commit(Transaction tx) {
+        try {
+            tx.commit();
+        } catch (Exception e) {
+            // Ignore deliberately;
+        }
+    }
 
+    /**
+     * Utility method for closing Hibernate session null-safely and quietly.
+     *
+     * @param session The Hibernate session.
+     */
+    private static void close(Session session) {
+        try {
+            if (session != null) {
+                session.close();
+            }
+        } catch (HibernateException e) {
+            // Ignore deliberately.
+        }
+    }
 
     /**
      *
      */
     void init() {
-         this.tables = new HashMap();
-         this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
-     }
+        this.tables = new HashMap();
+        this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
+    }
+
     /**
      *
      * @param fileName
@@ -140,15 +183,13 @@ public class ExporterMDB implements Exporter {
     @Override
     public boolean processDatabase(String fileName) {
 
-        File fileLog = this.validateSites();
+        File validationErrorsLogFile = this.validateSites();
 
         this.createDatabase(fileName);
-        this.copyData(fileName, fileLog);
+        this.copyData(fileName, validationErrorsLogFile);
 
         return true;
     }
-
-
 
     /**
      *
@@ -163,6 +204,7 @@ public class ExporterMDB implements Exporter {
             log("Failed to create MDB file.");
         }
     }
+
     /**
      *
      * @param fileName
@@ -178,7 +220,9 @@ public class ExporterMDB implements Exporter {
             String[] cmds = cfg.generateSchemaCreationScript(new MSAccessDialect());
             stmt = conn.createStatement();
             for (String cmd : cmds) {
-                if (!cmd.toLowerCase().startsWith("create table")) continue;
+                if (!cmd.toLowerCase().startsWith("create table")) {
+                    continue;
+                }
                 String sql = cmd.replaceAll("PUBLIC.", "");
                 sql = sql.replaceAll("VARCHAR\\([0-9]+\\)", "MEMO");
                 stmt.execute(sql);
@@ -187,9 +231,10 @@ public class ExporterMDB implements Exporter {
             }
             conn.close();
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             log.error("Error createSchema().:::" + e.getMessage());
-            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 stmt.close();
@@ -198,92 +243,134 @@ public class ExporterMDB implements Exporter {
             }
         }
     }
+
     /**
      *
      * @param fileName
      */
-    void copyData(String fileName, File fileLog) {
+    void copyData(String fileName, File validationErrorsLogFile) {
+
+        // The MS Access database we're going to write.
+        com.healthmarketscience.jackcess.Database accessDb = null;
+
+        // Connection to the SQL database we're about to query and copy into MS Access.
+        Connection conn = null;
+        ResultSet rsTables = null;
+        ResultSet rsTableRows = null;
+        Statement stmt = null;
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
+
             Configuration cfg = new Configuration();
             cfg.configure();
             Properties props = cfg.getProperties();
             Properties properties = new Properties();
-            //properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + "\\database\\sdf_database.properties"));
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
             Class.forName("com.mysql.jdbc.Driver");
 
-            log("Conecting to MySQL");
+            log("Connecting to MySQL");
             log.info("Connecting to MySQL");
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.host") + ":"
-                    + properties.getProperty("db.port")
-                    + "/natura2000?autoReconnect=true", properties.getProperty("db.user"), properties.getProperty("db.password"));
-            DatabaseMetaData dbm = conn.getMetaData();
-            String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
-            ResultSet rs = dbm.getTables(null, dbSchemaName, "%" , null);
-            com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
+            String dbHost = properties.getProperty("db.host");
+            String dbPort = properties.getProperty("db.port");
+            String dbUser = properties.getProperty("db.user");
+            String dbPassword = properties.getProperty("db.password");
 
-            while (rs.next()) {
-                String tableName = rs.getString("TABLE_NAME");
+            String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
+            String dbConnUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbSchemaName + "?autoReconnect=true";
+
+            conn = DriverManager.getConnection(dbConnUrl, dbUser, dbPassword);
+            DatabaseMetaData dbMetaData = conn.getMetaData();
+
+            rsTables = dbMetaData.getTables(null, dbSchemaName, "%", null);
+            accessDb = Database.open(new File(fileName));
+
+            while (rsTables.next()) {
+
+                String tableName = rsTables.getString("TABLE_NAME");
                 if (tableName.toUpperCase().startsWith("REF_") || StringUtils.startsWith(tableName.toUpperCase(), "COUNTRY")) {
                     continue;
                 }
-                log("Copying table: " + tableName);
 
+                log("Copying table: " + tableName);
                 log.info("Copying table: " + tableName);
-                ResultSet data = conn.createStatement().executeQuery("select * from " + tableName);
-                db.copyTable(tableName, data);
+
+                stmt = conn.createStatement();
+                rsTableRows = stmt.executeQuery("select * from " + tableName);
+
+                accessDb.copyTable(tableName, rsTableRows);
+
+                SDF_MysqlDatabase.closeQuietly(rsTableRows);
+
                 log("Copied data to database from table: " + tableName);
                 log.info("Copied data to database from table: " + tableName);
             }
-            conn.close();
+            SDF_MysqlDatabase.closeQuietly(rsTables);
+            SDF_MysqlDatabase.closeQuietly(conn);
 
+            String msg = "Finishing export process, closing connection to database.";
+            log(msg);
+            ExporterMDB.log.info(msg);
 
-            log("Finishing export process.Closing connection to Data Base");
-            ExporterMDB.log.info("Finishing export process");
-            if (fileLog != null) {
-                log("The validation of the data has been failed,the data in DB is not compliant with SDF the schema.\nPlease check the log file, for more details.");
-                JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe data is not compliant with SDF the schema.\n Please check the log file, for more details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
+            if (validationErrorsLogFile != null) {
+
+                msg = "The data was exported, but there were data validation errors!\nPlease check the log file for more details.";
+                log(msg);
+                JOptionPane
+                        .showMessageDialog(new JFrame(), msg, "Dialog", JOptionPane.WARNING_MESSAGE);
 
                 Desktop desktop = null;
                 if (Desktop.isDesktopSupported()) {
                     desktop = Desktop.getDesktop();
-                    Desktop.getDesktop().open(fileLog);
+                    Desktop.getDesktop().open(validationErrorsLogFile);
                 }
             } else {
-                ExporterMDB.log.error("Export process has finished succesfully");
-                JOptionPane.showMessageDialog(new JFrame(), "Export process has finished succesfully.", "Dialog", JOptionPane.ERROR_MESSAGE);
+                msg = "Export process has finished succesfully!";
+                ExporterMDB.log.info(msg);
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Dialog", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
             log("Failed exporting data to database.");
-            //e.printStackTrace();
             log.error("Error copyData().:::" + e.getMessage());
-            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details",
+                    "Dialog", JOptionPane.ERROR_MESSAGE);
 
         } finally {
-
+            SDF_MysqlDatabase.closeQuietly(rsTableRows);
+            SDF_MysqlDatabase.closeQuietly(rsTables);
+            SDF_MysqlDatabase.closeQuietly(conn);
+            if (accessDb != null) {
+                try {
+                    accessDb.close();
+                } catch (Exception e) {
+                    // Ignore deliberately.
+                }
+            }
         }
     }
 
-
+    /**
+     *
+     * @param msg
+     */
     void log(String msg) {
-         this.logger.log(msg);
+        this.logger.log(msg);
     }
 
-     /**
-      *
-      * @param fileName
-      * @param map
-      * @param topElement
-      * @param fields
-      * @return
-      */
+    /**
+     *
+     * @param fileName
+     * @param map
+     * @param topElement
+     * @param fields
+     * @return
+     */
     public Boolean parse(String fileName, HashMap map, String topElement, String[] fields) {
-       Element root = this.parseXML(fileName);
-       if (root != null) {
-           NodeList nl = root.getElementsByTagName(topElement);
-           if (nl != null && nl.getLength() > 0) {
+        Element root = this.parseXML(fileName);
+        if (root != null) {
+            NodeList nl = root.getElementsByTagName(topElement);
+            if (nl != null && nl.getLength() > 0) {
                 for (int i = 0; i < nl.getLength(); i++) {
                     Element el = (Element) nl.item(i);
                     String key = this.getTextValue(el, fields[0]);
@@ -291,77 +378,77 @@ public class ExporterMDB implements Exporter {
                     map.put(key, value);
                 }
             }
-           //this.dManager.writeLog("Successfully loaded regions from file.\n");
-           return true;
-       } else {
-           return false;
-       }
+            // this.dManager.writeLog("Successfully loaded regions from file.\n");
+            return true;
+        } else {
+            return false;
+        }
 
     }
-     /**
-      *
-      * @param fileName
-      * @return
-      */
+
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     public Element parseXML(String fileName) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Document dom;
         try {
-            //Using factory get an instance of document builder
+            // Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
-            //parse using builder to get DOM representation of the XML file
+            // parse using builder to get DOM representation of the XML file
             log("Parsing: " + fileName);
             dom = db.parse(fileName);
             return dom.getDocumentElement();
         } catch (ParserConfigurationException pce) {
-            //pce.printStackTrace();
+            // pce.printStackTrace();
             log.error("Error copyData().:::" + pce.getMessage());
             return null;
         } catch (SAXException se) {
-            //se.printStackTrace();
+            // se.printStackTrace();
             log.error("Error copyData().:::" + se.getMessage());
             return null;
         } catch (IOException ioe) {
-            //ioe.printStackTrace();
+            // ioe.printStackTrace();
             log.error("Error copyData().:::" + ioe.getMessage());
             return null;
         }
-     }
+    }
+
     /**
      *
      * @param ele
      * @param tagName
      * @return
      */
-     private String getTextValue(Element ele, String tagName) {
-            String textVal = "";
-            NodeList nl = ele.getElementsByTagName(tagName);
-            if (nl != null && nl.getLength() > 0) {
-                Element el = (Element) nl.item(0);
-                Node n = el.getFirstChild();
-                if (n != null) {
-                    textVal = el.getFirstChild().getNodeValue();
-                } else {
-                    textVal = "";
-                }
-
+    private String getTextValue(Element ele, String tagName) {
+        String textVal = "";
+        NodeList nl = ele.getElementsByTagName(tagName);
+        if (nl != null && nl.getLength() > 0) {
+            Element el = (Element) nl.item(0);
+            Node n = el.getFirstChild();
+            if (n != null) {
+                textVal = el.getFirstChild().getNodeValue();
+            } else {
+                textVal = "";
             }
-            return textVal;
-      }
 
-     /**
-      *
-      * @param filename
-      * @return
-      */
+        }
+        return textVal;
+    }
+
+    /**
+     *
+     * @param filename
+     * @return
+     */
     @Override
     public ArrayList createXMLFromDataBase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-
-
-     /**
+    /**
      *
      * @param exportErrorMap
      * @return
@@ -369,42 +456,46 @@ public class ExporterMDB implements Exporter {
     private File copyToLogExportFile(HashMap exportErrorMap) {
         File fileLog = null;
         try {
-          fileLog = new File(this.logExportFileName);
-          logErrorFile = new FileWriter(fileLog);
-          Set ErrorSiteKeySet = exportErrorMap.keySet();
-          Iterator it = ErrorSiteKeySet.iterator();
-          while (it.hasNext()) {
-              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator"));
-              Calendar cal = Calendar.getInstance();
-              SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
-              String dateLine = sdf.format(cal.getTime());
-              String siteCode = (String) it.next();
+            fileLog = new File(this.logExportFileName);
+            logErrorFile = new FileWriter(fileLog);
+            Set ErrorSiteKeySet = exportErrorMap.keySet();
+            Iterator it = ErrorSiteKeySet.iterator();
+            while (it.hasNext()) {
+                logErrorFile.write("------------------------------------------------------------"
+                        + System.getProperty("line.separator"));
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
+                String dateLine = sdf.format(cal.getTime());
+                String siteCode = (String) it.next();
 
-              logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: "
-                      + siteCode + System.getProperty("line.separator"));
-              ArrayList arraySites = (ArrayList) exportErrorMap.get(siteCode);
+                logErrorFile.write(dateLine + ": An error has been produced in the export process for the site: " + siteCode
+                        + System.getProperty("line.separator"));
+                ArrayList arraySites = (ArrayList) exportErrorMap.get(siteCode);
 
-              if (!arraySites.isEmpty()) {
-                  logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:"
-                          + System.getProperty("line.separator"));
-                  Iterator itSite = arraySites.iterator();
-                  while (itSite.hasNext()) {
-                     String lineExport = (String) itSite.next();
-                     logErrorFile.write("     " + dateLine + ": " + lineExport + System.getProperty("line.separator"));
-                     logErrorFile.flush();
-                  }
-              }
-              logErrorFile.write("------------------------------------------------------------" + System.getProperty("line.separator"));
-          }
-          logErrorFile.flush();
-          logErrorFile.close();
-         // write("LOG file : exportLog" + formatDate + ".log");
-       } catch (Exception e) {
-           JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);
-           e.printStackTrace();
-           ExporterMDB.log.error("Error copyToLogExportFile(). " + e.getMessage());
-       }
-       return fileLog;
+                if (!arraySites.isEmpty()) {
+                    logErrorFile.write(dateLine + ": Please, check the following fields of the site in the SDF editor:"
+                            + System.getProperty("line.separator"));
+                    Iterator itSite = arraySites.iterator();
+                    while (itSite.hasNext()) {
+                        String lineExport = (String) itSite.next();
+                        logErrorFile.write("     " + dateLine + ": " + lineExport + System.getProperty("line.separator"));
+                        logErrorFile.flush();
+                    }
+                }
+                logErrorFile.write("------------------------------------------------------------"
+                        + System.getProperty("line.separator"));
+            }
+            logErrorFile.flush();
+            logErrorFile.close();
+            // write("LOG file : exportLog" + formatDate + ".log");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            ExporterMDB.log.error("Error copyToLogExportFile(). " + e.getMessage());
+        }
+        return fileLog;
     }
 
 }

@@ -207,7 +207,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame {
              this.chkMotivationAnnexII.setSelected(true);
            }
            if (("III").equals(mot)) {
-               this.chkMotivationAnnexII.setSelected(true);
+               this.chkMotivationAnnexIII.setSelected(true);
            }
            if (("A").equals(mot)) {
              this.chkMotivationNatRedList.setSelected(true);

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Properties;
 
 import javax.swing.JFrame;
@@ -56,8 +58,7 @@ public class SDF_MysqlDatabase {
             SDF_MysqlDatabase.LOGGER.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
                     + properties.getProperty("db.password") + "<==");
 
-            String dbUrl = "jdbc:mysql://" + properties.getProperty("db.host") + ":"
-                    + properties.getProperty("db.port") + "/";
+            String dbUrl = "jdbc:mysql://" + properties.getProperty("db.host") + ":" + properties.getProperty("db.port") + "/";
 
             SDF_MysqlDatabase.LOGGER.info("database connection URL: " + dbUrl);
             con =
@@ -67,7 +68,6 @@ public class SDF_MysqlDatabase {
 
             boolean refTalesNeedUpdating = false;
             String schemaName = isEmeraldMode() ? "emerald" : "natura2000";
-
 
             if (schemaExists) {
                 if (isRefSpeciesUpdated(con)) {
@@ -329,6 +329,9 @@ public class SDF_MysqlDatabase {
                 }
             }
 
+            // Ensure that ASCI date fields (specific to EMERALD mode) are present in sites table.
+            ensureSiteAsciDateFieldsPresent(con, schemaName);
+
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
             SDF_MysqlDatabase.LOGGER.error("Error in Data Base:::" + s.getMessage());
@@ -435,7 +438,7 @@ public class SDF_MysqlDatabase {
             msgErrorCreate = "A general error has been produced: " + e.getMessage();
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
-            closeStatement(st);
+            closeQuietly(st);
             IOUtils.closeQuietly(fstreamSchema);
             return msgErrorCreate;
         }
@@ -634,7 +637,7 @@ public class SDF_MysqlDatabase {
         } catch (Exception e) {
             SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated");
         } finally {
-            closeStatement(st);
+            closeQuietly(st);
             return refSpeciesUpdated;
         }
     }
@@ -1346,6 +1349,7 @@ public class SDF_MysqlDatabase {
 
     /**
      * updates for emerald schema.
+     *
      * @param con db connection
      * @return error string or null if no errors
      * @throws SQLException if sQL fails
@@ -1377,13 +1381,19 @@ public class SDF_MysqlDatabase {
             msgErrorCreate = "EmeraldUpdates:A general error has been produced";
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
-
-            if (st != null) {
-                st.close();
-            }
-            return msgErrorCreate;
+            closeQuietly(st);
         }
 
+        return msgErrorCreate;
+    }
+
+    /**
+     * Local method to reflect mode from main app.
+     *
+     * @return true is application is running in mode
+     */
+    private static boolean isEmeraldMode() {
+        return SDF_ManagerApp.isEmeraldMode();
     }
 
     /**
@@ -1403,27 +1413,105 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * Closes Statement.
+     * Utility method for closing SQL result set.
      *
-     * @param rs
-     *            statement
+     * @param rs The result set.
      */
-    static void closeStatement(Statement rs) {
-        try {
-            if (rs != null) {
+    public static void closeQuietly(ResultSet rs) {
+        if (rs != null) {
+            try {
                 rs.close();
+            } catch (SQLException sqle) {
+                // Ignore deliberately.
             }
-        } catch (Exception e) {
-            LOGGER.error("Error closing statement " + e);
         }
     }
 
     /**
-     * Local method to reflect mode from main app.
+     * Utility method for closing SQL statement.
      *
-     * @return true is application is running in mode
+     * @param stmt The statement.
      */
-    private static boolean isEmeraldMode() {
-        return SDF_ManagerApp.isEmeraldMode();
+    public static void closeQuietly(Statement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException sqle) {
+                // Ignore deliberately.
+            }
+        }
+    }
+
+    /**
+     * Utility method that ensures the ASCI date fields (specific to EMERALD mode) are present in sites table.
+     *
+     * @param conn SQL connection to use.
+     * @param schemaName Schema (i.e. database) name where the sites table is expected to be present.
+     */
+    private static void ensureSiteAsciDateFieldsPresent(Connection conn, String schemaName) {
+
+        if (conn == null || StringUtils.isBlank(schemaName)) {
+            LOGGER.warn("Cannot check existence of ASCI date fields: DB connetion or schema name is null/blank.");
+            return;
+        }
+
+        String tableName = "site";
+        LOGGER.info("Checking existence of ASCI date fields in table \"" + tableName + "\" in database " + schemaName);
+
+        HashSet<String> existingColumns = new HashSet<String>();
+        ResultSet rs = null;
+        try {
+            DatabaseMetaData dbMetaData = conn.getMetaData();
+            if (dbMetaData != null) {
+
+                rs = dbMetaData.getColumns(null, schemaName, tableName, null);
+                while (rs.next()) {
+                    String colName = rs.getString(4);
+                    if (colName != null) {
+                        existingColumns.add(colName.toUpperCase());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed querying columns of \"" + schemaName + "." + tableName + "\": ", e);
+        } finally {
+            closeQuietly(rs);
+        }
+
+        LOGGER.info("Existing columns in \"" + schemaName + "." + tableName + "\": " + existingColumns);
+
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+
+            // SITE_ASCI_PROP_DATE
+            if (!existingColumns.contains("SITE_ASCI_PROP_DATE")) {
+                stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_PROP_DATE DATE DEFAULT NULL");
+            }
+
+            // SITE_ASCI_CONF_CAND_DATE
+            if (!existingColumns.contains("SITE_ASCI_CONF_CAND_DATE")) {
+                stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_CONF_CAND_DATE DATE DEFAULT NULL");
+            }
+
+            // SITE_ASCI_CONF_DATE
+            if (!existingColumns.contains("SITE_ASCI_CONF_DATE")) {
+                stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_CONF_DATE DATE DEFAULT NULL");
+            }
+
+            // SITE_ASCI_DESIG_DATE
+            if (!existingColumns.contains("SITE_ASCI_DESIG_DATE")) {
+                stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_DESIG_DATE DATE DEFAULT NULL");
+            }
+
+            // SITE_ASCI_LEGAL_REF
+            if (!existingColumns.contains("SITE_ASCI_LEGAL_REF")) {
+                stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_LEGAL_REF LONGTEXT DEFAULT NULL");
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed creating ASCI date fields: " + e.toString());
+        } finally {
+            closeQuietly(stmt);
+        }
     }
 }

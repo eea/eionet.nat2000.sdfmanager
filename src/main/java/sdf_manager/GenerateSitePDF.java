@@ -56,6 +56,7 @@ import pojos.SiteOwnership;
 import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.SDF_Util;
+import sdf_manager.util.XmlGenerationUtils;
 
 /**
  *
@@ -114,7 +115,7 @@ public class GenerateSitePDF implements Exporter {
      */
     @Override
     public boolean processDatabase(String fileName) {
-        GenerateSitePDF.log.error("Starting processDatabase. The file name is:::" + fileName);
+        GenerateSitePDF.log.info("Starting processDatabase. The file name is:::" + fileName);
         boolean isOK = false;
         try {
             this.fileName = fileName;
@@ -243,16 +244,6 @@ public class GenerateSitePDF implements Exporter {
                         addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespPostCode(), "postCode")));
                         addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorDesig(), "locatorDesignator")));
                         respNode.appendChild(addresElem);
-
-                       // addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(resp.getRespAdminUnit(), "adminUnit")));
-                       // addresElem.appendChild(doc.createElement("locatorDesignator")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorDesig(), "locatorDesignator")));
-                       // addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorName(), "locatorName")));
-                       // addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespAddressArea(), "addressArea")));
-                       // addresElem.appendChild(doc.createElement("postName")).appendChild(doc.createTextNode(fmt(resp.getRespPostName(), "postName")));
-                       // addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(resp.getRespPostCode(), "postCode")));
-                       // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(resp.getRespThoroughFare(), "thoroughfare")));
-                       // respNode.appendChild(addresElem);
-
                     } else {
                         Element addresElem = doc.createElement("address");
                         addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespAddress(), "addressArea")));
@@ -264,29 +255,58 @@ public class GenerateSitePDF implements Exporter {
                     siteIdentification.appendChild(respNode);
                 }
 
-                if (site.getSiteSpaDate() != null) {
-                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()), "spaClassificationDate")));
-                 } else { //AMG.
-                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
+                if (SDF_ManagerApp.isEmeraldMode()) {
+                    XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate",
+                            doc);
+                    if (site.getSiteProposedAsciDate() == null) {
+                        XmlGenerationUtils.appendDateElement(XmlGenerationUtils.nullDate(), siteIdentification,
+                                "asciProposalDate", doc);
+                    }
+                    XmlGenerationUtils.appendDateElement(site.getSiteConfirmedCandidateAsciDate(), siteIdentification,
+                            "asciConfirmedCandidateDate", doc);
+                    XmlGenerationUtils.appendDateElement(site.getSiteConfirmedAsciDate(), siteIdentification,
+                            "asciConfirmationDate", doc);
+                    XmlGenerationUtils.appendDateElement(site.getSiteDesignatedAsciDate(), siteIdentification,
+                            "asciDesignationDate", doc);
+
+                    siteIdentification.appendChild(doc.createElement("asciLegalReference")).appendChild(
+                            doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciLegalReference")));
+
+                } else {
+                    if (site.getSiteSpaDate() != null) {
+                        siteIdentification.appendChild(doc.createElement("spaClassificationDate"))
+                                .appendChild(
+                                        doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSpaDate()),
+                                                "spaClassificationDate")));
+                    } else {
+                        siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(
+                                doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
+                    }
+
+                    siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
+                            doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
+
+                    if (site.getSiteSciPropDate() != null) {
+                        siteIdentification.appendChild(doc.createElement("sciProposalDate"))
+                                .appendChild(
+                                        doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()),
+                                                "sciProposalDate")));
+                    }
+
+                    if (site.getSiteSciConfDate() != null) {
+                        siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(
+                                doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()),
+                                        "sciConfirmationDate")));
+                    }
+
+                    if (site.getSiteSacDate() != null) {
+                        siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(
+                                doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()), "sacDesignationDate")));
+                    }
+
+                    siteIdentification.appendChild(doc.createElement("sacLegalReference")).appendChild(
+                            doc.createTextNode(fmt(site.getSiteSacLegalRef(), "sacLegalReference")));
                 }
-                //AMG.
-
-                siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
-
-                if (site.getSiteSciPropDate() != null) {
-                    siteIdentification.appendChild(doc.createElement("sciProposalDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciPropDate()), "sciProposalDate")));
-                }
-
-                if (site.getSiteSciConfDate() != null) {
-                    siteIdentification.appendChild(doc.createElement("sciConfirmationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSciConfDate()), "sciConfirmationDate")));
-                 }
-
-                if (site.getSiteSacDate() != null) {
-                    siteIdentification.appendChild(doc.createElement("sacDesignationDate")).appendChild(doc.createTextNode(fmt(SDF_Util.getFormatDateToXML(site.getSiteSacDate()), "sacDesignationDate")));
-                 }
-
-
-                siteIdentification.appendChild(doc.createElement("sacLegalReference")).appendChild(doc.createTextNode(fmt(site.getSiteSacLegalRef(), "sacLegalReference")));
                 siteIdentification.appendChild(doc.createElement("explanations")).appendChild(doc.createTextNode(fmt(site.getSiteExplanations(), "explanations")));
                 sdf.appendChild(siteIdentification);
 

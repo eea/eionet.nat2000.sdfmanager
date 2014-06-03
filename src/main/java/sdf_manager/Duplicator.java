@@ -7,9 +7,10 @@ package sdf_manager;
 
 import java.util.Iterator;
 import java.util.Set;
-import pojos.Site;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import pojos.Doc;
 import pojos.DocLink;
 import pojos.Habitat;
@@ -23,6 +24,7 @@ import pojos.NationalDtype;
 import pojos.OtherSpecies;
 import pojos.Region;
 import pojos.Resp;
+import pojos.Site;
 import pojos.SiteBiogeo;
 import pojos.SiteBiogeoId;
 import pojos.SiteOwnership;
@@ -122,6 +124,13 @@ public class Duplicator {
         outSite.setSiteLatitude(inSite.getSiteLatitude());
         outSite.setSiteMarineArea(inSite.getSiteMarineArea());
         outSite.setSiteLength(inSite.getSiteLength());
+
+        outSite.setSiteProposedAsciDate(inSite.getSiteProposedAsciDate());
+        outSite.setSiteConfirmedCandidateAsciDate(inSite.getSiteConfirmedCandidateAsciDate());
+        outSite.setSiteConfirmedAsciDate(inSite.getSiteConfirmedAsciDate());
+        outSite.setSiteDesignatedAsciDate(inSite.getSiteDesignatedAsciDate());
+        outSite.setSiteAsciLegalRef(inSite.getSiteAsciLegalRef());
+
         Set regions = inSite.getRegions();
         Iterator itr = regions.iterator();
         while (itr.hasNext()) {

@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-
 package sdf_manager;
 
 import java.awt.Desktop;
@@ -76,176 +75,170 @@ import sdf_manager.util.ImporterUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
-
 /**
  * Importer for old MS Access file and EMERALD files.
+ *
  * @author charbda
  */
 public class ImporterMDB implements Importer {
 
-     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterMDB.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterMDB.class.getName());
 
-     /**
-      * table file for N2K.
-      */
-     private static final String TABLE_FILE_NAME_N2K = "table_names.xml";
+    /**
+     * table file for N2K.
+     */
+    private static final String TABLE_FILE_NAME_N2K = "table_names.xml";
 
-     /**
-      * table file for EMERALD.
-      */
-     private static final String TABLE_FILE_NAME_EMERALD = "table_names_emerald.xml";
+    /**
+     * table file for EMERALD.
+     */
+    private static final String TABLE_FILE_NAME_EMERALD = "table_names_emerald.xml";
 
-     /**
-      * field mappings file for EMERALD.
-      */
-     private static final String FIELD_FILE_NAME_EMERALD = "field_maps_emerald.xml";
+    /**
+     * field mappings file for EMERALD.
+     */
+    private static final String FIELD_FILE_NAME_EMERALD = "field_maps_emerald.xml";
 
-     /**
-      * field mappings file for N2K.
-      */
-     private static final String FIELD_FILE_NAME_N2K = "field_maps.xml";
+    /**
+     * field mappings file for N2K.
+     */
+    private static final String FIELD_FILE_NAME_N2K = "field_maps.xml";
 
+    /**
+     * full path of table file. Default: n2k.
+     */
+    private String tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_N2K;
 
+    /**
+     * full path of field file. Default: n2k.
+     */
+    private String fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_N2K;
 
-     /**
-      * full path of table file. Default: n2k.
-      */
-     private String tableFile = "config" + System.getProperty("file.separator") + TABLE_FILE_NAME_N2K;
+    private String table_element = "table";
+    private String field_element = "field";
+    private HashMap<String, String> tables;
+    private HashMap<String, String> fields;
+    private String[] tableKeys = {"name", "used_name"};
+    private String[] fieldKeys = {"reference", "oldname"};
+    private Logger logger;
+    private String encoding;
+    private HashMap speciesByCode = new HashMap();
+    private HashMap speciesByName = new HashMap();
+    private FileWriter outFile;
+    private PrintWriter out;
+    private String importDate;
+    private ArrayList sitesDB = new ArrayList();
+    private HashMap nutsKO = new HashMap();
+    private String accessVersion;
 
-     /**
-      * full path of field file. Default: n2k.
-      */
-     private String fieldFile = "config" + System.getProperty("file.separator") + FIELD_FILE_NAME_N2K;
+    /**
+     *
+     * @param logger
+     * @param encoding
+     * @param logFile
+     * @param accessVersion
+     */
+    public ImporterMDB(Logger logger, String encoding, String logFile, String accessVersion) {
+        this.logger = logger;
+        this.encoding = encoding;
+        this.accessVersion = accessVersion;
 
-     private String table_element = "table";
-     private String field_element = "field";
-     private HashMap<String, String> tables;
-     private HashMap<String, String> fields;
-     private String[] tableKeys = {"name", "used_name"};
-     private String[] fieldKeys = {"reference", "oldname"};
-     private Logger logger;
-     private String encoding;
-     private HashMap speciesByCode = new HashMap();
-     private HashMap speciesByName = new HashMap();
-     private FileWriter outFile;
-     private PrintWriter out;
-     private String importDate;
-     private ArrayList sitesDB = new ArrayList();
-     private HashMap nutsKO = new HashMap();
-     private String accessVersion;
-
-     /**
-      *
-      * @param logger
-      * @param encoding
-      * @param logFile
-      * @param accessVersion
-      */
-     public ImporterMDB(Logger logger, String encoding, String logFile, String accessVersion) {
-         this.logger = logger;
-         this.encoding = encoding;
-         this.accessVersion = accessVersion;
-
-         this.initLogFile(logFile);
-         this.init();
-     }
+        this.initLogFile(logFile);
+        this.init();
+    }
 
     /**
       *
       */
-     void init() {
-         this.tables = new HashMap<String, String>();
-         this.fields = new HashMap<String, String>();
-         this.parse(this.tableFile, this.tables, this.table_element, this.tableKeys);
-         this.parse(this.fieldFile, this.fields, this.field_element, this.fieldKeys);
-     }
+    void init() {
+        this.tables = new HashMap<String, String>();
+        this.fields = new HashMap<String, String>();
+        this.parse(this.tableFile, this.tables, this.table_element, this.tableKeys);
+        this.parse(this.fieldFile, this.fields, this.field_element, this.fieldKeys);
+    }
 
-     /**
-      *
-      * @param msg
-      */
-     public void log(String msg) {
-         this.logger.log(msg);
-     }
+    /**
+     *
+     * @param msg
+     */
+    public void log(String msg) {
+        this.logger.log(msg);
+    }
 
-     /**
-      *
-      * @param msg
-      * @param priority
-      */
-     public void log(String msg, int priority) {
-         if (priority == 1) {
+    /**
+     *
+     * @param msg
+     * @param priority
+     */
+    public void log(String msg, int priority) {
+        if (priority == 1) {
             this.logger.log(msg);
             logToFile(msg);
-         } else {
+        } else {
             logToFile(msg);
-         }
-     }
+        }
+    }
 
-
-     /**
-      *
-      * @param fileName
-      */
-     @Override
+    /**
+     *
+     * @param fileName
+     */
+    @Override
     public void initLogFile(String fileName) {
-         try {
+        try {
             outFile = new FileWriter(fileName);
             out = new PrintWriter(outFile);
-         } catch (Exception e) {
+        } catch (Exception e) {
             ImporterMDB.log.error("ERROR::" + e.getMessage());
-         }
-     }
+        }
+    }
 
-
-     /**
+    /**
       *
       */
-     public void closeLogFile() {
-         try {
-             out.close();
-             outFile.close();
-         } catch (Exception e) {
+    public void closeLogFile() {
+        try {
+            out.close();
+            outFile.close();
+        } catch (Exception e) {
             ImporterMDB.log.error("ERROR::" + e.getMessage());
-         }
-     }
+        }
+    }
 
+    /**
+     *
+     * @param msg
+     */
+    void logToFile(String msg) {
+        out.write(msg);
+        if (!msg.endsWith("\n")) {
+            out.write("\n");
+        }
+    }
 
-     /**
-      *
-      * @param msg
-      */
-     void logToFile(String msg) {
-         out.write(msg);
-         if (!msg.endsWith("\n")) {
-             out.write("\n");
-         }
-     }
-
-
-     /**
+    /**
       *
       */
-     void flushFile() {
-         out.flush();
-     }
+    void flushFile() {
+        out.flush();
+    }
 
-     /**
-      *
-      * @return
-      */
-     private String getImportDate() {
-         Calendar cal = Calendar.getInstance();
-         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-         return sdf.format(cal.getTime());
-     }
+    /**
+     *
+     * @return
+     */
+    private String getImportDate() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return sdf.format(cal.getTime());
+    }
 
-     /**
-      *
-      * @param fileName
-      * @return
-      */
-     @Override
+    /**
+     *
+     * @param fileName
+     * @return
+     */
+    @Override
     public boolean processDatabase(String fileName) {
         Connection conn = null;
         boolean saveOK = false;
@@ -257,13 +250,14 @@ public class ImporterMDB implements Importer {
 
                 if (!checkTables(conn)) {
                     log("Failed to find all tables in the database. Please check the database schema and configuration files.", 1);
-                    ImporterMDB.log.error("Failed to find all tables in the database. Please check the database schema and configuration files");
-                    msgValidError = "Failed to find all tables in the database. Please check the database schema and configuration files";
+                    ImporterMDB.log
+                            .error("Failed to find all tables in the database. Please check the database schema and configuration files");
+                    msgValidError =
+                            "Failed to find all tables in the database. Please check the database schema and configuration files";
                     saveOK = false;
                     return false;
                 }
                 this.importDate = getImportDate();
-                //this.sitesDB = validateSites(conn);
 
                 saveOK = validateAndProcessSites(conn);
 
@@ -273,100 +267,109 @@ public class ImporterMDB implements Importer {
             }
         } catch (Exception e) {
             ImporterMDB.log.error("ERROR in processDatabase::" + e.getMessage());
-            //e.printStackTrace();
             saveOK = false;
         } finally {
             SDF_MysqlDatabase.closeQuietly(conn);
-          if (saveOK) {
-                JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);
-          } else {
-              String msgError = "There are some errors in import process";
-              JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError, "Dialog", JOptionPane.INFORMATION_MESSAGE);
-          }
-          return saveOK;
+            if (saveOK) {
+                JOptionPane.showMessageDialog(new JFrame(), "Import Processing has finished succesfully.", "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError,
+                        "Dialog", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
-     }
-     /**
-      *
-      * @param fileName
-      * @return
-      * @throws ClassNotFoundException
-      * @throws SQLException
-      */
-     private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
-         Connection conn = null;
-         try {
+
+        return saveOK;
+    }
+
+    /**
+     *
+     * @param fileName
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        try {
             // java.util.Properties prop = new java.util.Properties();
             // prop.put("charSet", "UTF-8");
 
-             if (accessVersion.equals("2003")) {
-                 /*open read-only*/
+            if (accessVersion.equals("2003")) {
+                /* open read-only */
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";useUnicode=true;characterEncoding=UTF-8";
+                String db =
+                        "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName
+                                + ";useUnicode=true;characterEncoding=UTF-8";
                 // String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
                 conn = DriverManager.getConnection(db, "", "");
 
-             } else {
-                /*open read-only*/
+            } else {
+                /* open read-only */
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
+                // añadido , *.accdb) a la cadena db
                 // String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";useUnicode=true;characterEncoding=UTF-8";
+                String db =
+                        "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName
+                                + ";useUnicode=true;characterEncoding=UTF-8";
                 conn = DriverManager.getConnection(db, "", "");
-             }
+            }
 
-         } catch (ClassNotFoundException e) {
-             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             //e.printStackTrace();
-         } catch (SQLException e) {
-             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             //e.printStackTrace();
-         } catch (Exception e) {
-             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             //e.printStackTrace();
-         } finally {
-             return conn;
-         }
-     }
-     /**
-      *
-      * @param conn
-      * @return
-      */
-     boolean checkTables(Connection conn) {
-         try {
+        } catch (ClassNotFoundException e) {
+            ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            // e.printStackTrace();
+        } catch (SQLException e) {
+            ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            // e.printStackTrace();
+        } catch (Exception e) {
+            ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            // e.printStackTrace();
+        } finally {
+            return conn;
+        }
+    }
+
+    /**
+     *
+     * @param conn
+     * @return
+     */
+    boolean checkTables(Connection conn) {
+        try {
             DatabaseMetaData dbm = conn.getMetaData();
 
             Iterator itr = this.tables.keySet().iterator();
-             while (itr.hasNext()) {
+            while (itr.hasNext()) {
                 String tmpStr = this.tables.get(itr.next());
-                ResultSet rs = dbm.getTables(null, null, tmpStr , null);
+                ResultSet rs = dbm.getTables(null, null, tmpStr, null);
                 if (!rs.next()) {
-                   ImporterMDB.log.error("Could not find table: " + tmpStr);
+                    ImporterMDB.log.error("Could not find table: " + tmpStr);
                     log("Could not find table: " + tmpStr, 1);
                     return false;
                 }
             }
-         } catch (Exception e) {
+        } catch (Exception e) {
             ImporterMDB.log.error("Failed processing tables: " + e.getMessage());
-            //e.printStackTrace();
-             log("Failed processing tables.");
-             return false;
-         }
-         return true;
-     }
-     /**
+            // e.printStackTrace();
+            log("Failed processing tables.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
       *
       */
-     void freeSpecies() {
-         this.speciesByCode.clear();
-         this.speciesByName.clear();
-     }
-     /**
-      *
-      * @param conn
-      */
-     void loadSpecies(Connection conn, Session session) {
+    void freeSpecies() {
+        this.speciesByCode.clear();
+        this.speciesByName.clear();
+    }
+
+    /**
+     *
+     * @param conn
+     */
+    void loadSpecies(Connection conn, Session session) {
         String hql = "from RefSpecies";
         try {
             Query q = session.createQuery(hql);
@@ -377,10 +380,10 @@ public class ImporterMDB implements Importer {
                 String name = rs.getRefSpeciesName();
                 Character group = rs.getRefSpeciesGroup();
                 if (code != null) {
-                    this.speciesByCode.put(code, new Object[]{name, group});
+                    this.speciesByCode.put(code, new Object[] {name, group});
                 }
                 if (name != null) {
-                    this.speciesByName.put(name, new Object[]{code, group});
+                    this.speciesByName.put(name, new Object[] {code, group});
                 }
             }
             hql = "select refBirds from RefBirds as refBirds";
@@ -393,19 +396,17 @@ public class ImporterMDB implements Importer {
                 String name = rs.getRefBirdsName();
                 Character group = 'B';
                 if (code != null) {
-                    this.speciesByCode.put(code, new Object[]{name, group});
+                    this.speciesByCode.put(code, new Object[] {name, group});
                 }
                 if (name != null) {
-                    this.speciesByName.put(name, new Object[]{code, group});
+                    this.speciesByName.put(name, new Object[] {code, group});
                 }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
-           ImporterMDB.log.error("Failed loading species: " + e.getMessage());
+            // e.printStackTrace();
+            ImporterMDB.log.error("Failed loading species: " + e.getMessage());
         }
-     }
-
-
+    }
 
     /**
      * New method for validating and process only the ones that doesn't exist
@@ -422,146 +423,145 @@ public class ImporterMDB implements Importer {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
 
-              loadSpecies(conn, session);
-              stmt = conn.createStatement();
-              ResultSet rs = stmt.executeQuery(sql);
+            loadSpecies(conn, session);
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
-              //int i = 0;
+            // int i = 0;
 
-              while (rs.next()) {
+            while (rs.next()) {
 
-                       Site site = new Site();
-                       String sitecode = rs.getString(this.fields.get("sitecode"));
+                Site site = new Site();
+                String sitecode = rs.getString(this.fields.get("sitecode"));
 
-                       // Validate each site
-                       try {
+                // Validate each site
+                try {
 
-                          ImporterMDB.log.info("Validating site: " + sitecode);
-                          log("Validating site: " + sitecode, 1);
+                    ImporterMDB.log.info("Validating site: " + sitecode);
+                    log("Validating site: " + sitecode, 1);
 
-                          if (SDF_Util.validateSite(session, sitecode)) {
-                              notProcessedSiteCodesList.add(sitecode);
-                          } else {
-                              log("Processing: " + sitecode, 1);
-                              ImporterMDB.log.info("Processing: " + sitecode);
+                    if (SDF_Util.validateSite(session, sitecode)) {
+                        notProcessedSiteCodesList.add(sitecode);
+                    } else {
+                        log("Processing: " + sitecode, 1);
+                        ImporterMDB.log.info("Processing: " + sitecode);
 
-                              // BIOTOP
-                              Transaction tx = session.beginTransaction();
-                              site.setSiteCode(sitecode);
-                              processBiotop(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // BIOTOP
+                        Transaction tx = session.beginTransaction();
+                        site.setSiteCode(sitecode);
+                        processBiotop(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // HABITATS
-                              tx = session.beginTransaction();
-                              processHabitats(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // HABITATS
+                        tx = session.beginTransaction();
+                        processHabitats(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // HABITAT CLASSES
-                              tx = session.beginTransaction();
-                              processHabitatClasses(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // HABITAT CLASSES
+                        tx = session.beginTransaction();
+                        processHabitatClasses(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // REGIONS
-                              tx = session.beginTransaction();
-                              processRegions(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // REGIONS
+                        tx = session.beginTransaction();
+                        processRegions(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // RELATIONS
-                              tx = session.beginTransaction();
-                              processRelations(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // RELATIONS
+                        tx = session.beginTransaction();
+                        processRelations(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // DTYPES
-                              tx = session.beginTransaction();
-                              processDTypes(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // DTYPES
+                        tx = session.beginTransaction();
+                        processDTypes(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // IMPACTS
-                              tx = session.beginTransaction();
-                              processImpacts(conn, session, site);
-                              tx.commit();
-                              session.flush();
+                        // IMPACTS
+                        tx = session.beginTransaction();
+                        processImpacts(conn, session, site);
+                        tx.commit();
+                        session.flush();
 
-                              // SPECIES
-                              processSpecies(conn, session, site);
+                        // SPECIES
+                        processSpecies(conn, session, site);
 
-                              processOK = true;
-                              session.flush();
-                              session.evict(site);
-
-                          }
-
-                      } catch (Exception e) {
-                          ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
-                          log("Failed processing site: " + sitecode, 1);
-                          break;
-                      }
+                        processOK = true;
+                        session.flush();
+                        session.evict(site);
 
                     }
-
-                    ImporterMDB.log.info("Finishing import process.Closing connection to Data Base");
-                    log("Finishing import process.Closing connection to Data Base");
 
                 } catch (Exception e) {
+                    ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
+                    log("Failed processing site: " + sitecode, 1);
+                    break;
+                }
 
-                   ImporterMDB.log.error("The error: " + e.getMessage());
-                   //e.printStackTrace();
-                   processOK = false;
-                   return false;
-          } finally {
-                    if (stmt != null) {
-                        stmt.close();
-                    }
-                    session.clear();
-                    session.close();
-          }
+            }
 
-          /**
-           * If a sitecode already exists, show log file with the conflictive sitecodes
-           */
-          if (notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()) {
+            ImporterMDB.log.info("Finishing import process.Closing connection to Data Base");
+            log("Finishing import process.Closing connection to Data Base");
 
-              ImporterMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-              log("Error in validation.", 1);
-              //msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
+        } catch (Exception e) {
 
-              File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList, "OldDB");
-              if (fileLog != null) {
-                  Desktop desktop = null;
-                  if (Desktop.isDesktopSupported()) {
-                      desktop = Desktop.getDesktop();
-                      try {
+            ImporterMDB.log.error("The error: " + e.getMessage());
+            // e.printStackTrace();
+            processOK = false;
+            return false;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            session.clear();
+            session.close();
+        }
+
+        /**
+         * If a sitecode already exists, show log file with the conflictive sitecodes
+         */
+        if (notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()) {
+
+            ImporterMDB.log
+                    .error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
+            log("Error in validation.", 1);
+            // msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
+
+            File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList, "OldDB");
+            if (fileLog != null) {
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                    try {
                         Desktop.getDesktop().open(fileLog);
-                      } catch (Exception ex) {
-                          ImporterMDB.log.error("The error: " + ex.getMessage());
-                      }
-                  }
+                    } catch (Exception ex) {
+                        ImporterMDB.log.error("The error: " + ex.getMessage());
+                    }
+                }
 
-              }
-             // return false;
-          }
+            }
+            // return false;
+        }
 
-          return processOK;
-      }
+        return processOK;
+    }
 
-
-     /**
-      *
-      * @param conn
-      */
-     private ArrayList<String> validateSites(Connection conn) throws SQLException {
+    /**
+     *
+     * @param conn
+     */
+    private ArrayList<String> validateSites(Connection conn) throws SQLException {
 
         String sql = "select sitecode from " + this.tables.get("biotop");
-        Session session = new Configuration().configure()
-                .setProperty("hibernate.jdbc.batch_size", "20")
-                .setProperty("hibernate.cache.use_second_level_cache", "false")
-                .buildSessionFactory().openSession();
+        Session session =
+                new Configuration().configure().setProperty("hibernate.jdbc.batch_size", "20")
+                        .setProperty("hibernate.cache.use_second_level_cache", "false").buildSessionFactory().openSession();
         ArrayList<String> siteCodeDB = new ArrayList<String>();
         Statement stmt = null;
 
@@ -577,19 +577,19 @@ public class ImporterMDB implements Importer {
                 String sitecode = rs.getString(this.fields.get("sitecode"));
 
                 try {
-                   Transaction tx = session.beginTransaction();
-                   ImporterMDB.log.info("Validating site: " + sitecode);
-                   log("Validating site: " + sitecode, 1);
+                    Transaction tx = session.beginTransaction();
+                    ImporterMDB.log.info("Validating site: " + sitecode);
+                    log("Validating site: " + sitecode, 1);
 
-                   if (SDF_Util.validateSite(session, sitecode)) {
-                       siteCodeDB.add(sitecode);
-                   }
-                   tx.commit();
+                    if (SDF_Util.validateSite(session, sitecode)) {
+                        siteCodeDB.add(sitecode);
+                    }
+                    tx.commit();
 
                 } catch (Exception e) {
-                   ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
-                   log("Failed processing site: " + sitecode, 1);
-                   break;
+                    ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
+                    log("Failed processing site: " + sitecode, 1);
+                    break;
                 }
 
                 if (++i % 20 == 0) {
@@ -598,8 +598,8 @@ public class ImporterMDB implements Importer {
                 }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
-           ImporterMDB.log.error("Error: " + e.getMessage());
+            // e.printStackTrace();
+            ImporterMDB.log.error("Error: " + e.getMessage());
             return siteCodeDB;
         } finally {
             if (stmt != null) {
@@ -608,40 +608,38 @@ public class ImporterMDB implements Importer {
             session.close();
         }
         return siteCodeDB;
-     }
+    }
 
+    /**
+     *
+     * @param rs
+     * @param fieldName
+     * @return
+     */
+    Double getDouble(ResultSet rs, String fieldName) {
+        try {
+            return rs.getDouble(fieldName);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            ImporterMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
+            log("Failed extracting field: " + fieldName, 1);
+            return null;
+        }
+    }
 
-
-     /**
-      *
-      * @param rs
-      * @param fieldName
-      * @return
-      */
-      Double getDouble(ResultSet rs, String fieldName) {
-         try {
-             return rs.getDouble(fieldName);
-         } catch (Exception e) {
-             //e.printStackTrace();
-             ImporterMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
-             log("Failed extracting field: " + fieldName, 1);
-             return null;
-         }
-      }
-
-     /**
-      *
-      * @param rs
-      * @param fieldName
-      * @return
-      */
-     private String getString(ResultSet rs, String fieldName) {
+    /**
+     *
+     * @param rs
+     * @param fieldName
+     * @return
+     */
+    private String getString(ResultSet rs, String fieldName) {
         try {
             if (!("UTF-8").equals(this.encoding)) {
                 byte[] result = rs.getBytes(fieldName);
                 if (result != null && result.length == 0) {
                     return null;
-                } //don't enter empty string in the database
+                } // don't enter empty string in the database
                 else {
                     if (result != null) {
                         Charset charset = Charset.forName(this.encoding);
@@ -665,79 +663,83 @@ public class ImporterMDB implements Importer {
 
             }
 
-         } catch (Exception e) {
-             e.printStackTrace();
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
-             ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
-             return null;
-         }
-     }
-     /**
-      *
-      * @param rs
-      * @param fieldName
-      * @return
-      */
-     Character getChar(ResultSet rs, String fieldName) {
-         String tmp = getString(rs, fieldName);
-         if (tmp != null && !tmp.equals("")) {
-             return tmp.charAt(0);
-         } else {
+        } catch (Exception e) {
+            e.printStackTrace();
+            log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
+            ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::"
+                    + e.getMessage());
+            return null;
+        }
+    }
 
-             return null;
-         }
+    /**
+     *
+     * @param rs
+     * @param fieldName
+     * @return
+     */
+    Character getChar(ResultSet rs, String fieldName) {
+        String tmp = getString(rs, fieldName);
+        if (tmp != null && !tmp.equals("")) {
+            return tmp.charAt(0);
+        } else {
 
-     }
-     /**
-      *
-      * @param rs
-      * @param fieldName
-      * @return
-      */
-      Boolean getBoolean(ResultSet rs, String fieldName) {
-         try {
-             Boolean bol = rs.getBoolean(fieldName);
-             return bol;
-         } catch (Exception e) {
-             //ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
-             return Boolean.valueOf(false);
-         }
-     }
-     /**
-      *
-      * @param c
-      * @return
-      */
-     Character getType(Character c) {
+            return null;
+        }
 
-         if (c == null) {
-             return null;
-         }
-         String strC = c.toString().toUpperCase();
-         //c = Character.toUpperCase(c);
-         if (strC.equals("C")) {
-             return 'C';
-         } else if (strC.equals("A") || strC.equals("D") || strC.equals("F") || strC.equals("H") || strC.equals("J")) {
-         //else if (c.equals('A') || c.equals('D') || c.equals('F') || c.equals('H') || c.equals('J')) {
+    }
+
+    /**
+     *
+     * @param rs
+     * @param fieldName
+     * @return
+     */
+    Boolean getBoolean(ResultSet rs, String fieldName) {
+        try {
+            Boolean bol = rs.getBoolean(fieldName);
+            return bol;
+        } catch (Exception e) {
+            // ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" +
+            // e.getMessage());
+            return Boolean.valueOf(false);
+        }
+    }
+
+    /**
+     *
+     * @param c
+     * @return
+     */
+    Character getType(Character c) {
+
+        if (c == null) {
+            return null;
+        }
+        String strC = c.toString().toUpperCase();
+        // c = Character.toUpperCase(c);
+        if (strC.equals("C")) {
+            return 'C';
+        } else if (strC.equals("A") || strC.equals("D") || strC.equals("F") || strC.equals("H") || strC.equals("J")) {
+            // else if (c.equals('A') || c.equals('D') || c.equals('F') || c.equals('H') || c.equals('J')) {
 
             return 'A';
-         } else if (strC.equals("B") || strC.equals("E") || strC.equals("G") || strC.equals("I") || strC.equals("K")) {
-         //else if (c.equals('B') || c.equals('E') || c.equals('G') || c.equals('I') || c.equals('K')) {
+        } else if (strC.equals("B") || strC.equals("E") || strC.equals("G") || strC.equals("I") || strC.equals("K")) {
+            // else if (c.equals('B') || c.equals('E') || c.equals('G') || c.equals('I') || c.equals('K')) {
             return 'B';
-         } else {
-             return Character.toUpperCase(c);
-         }
-     }
+        } else {
+            return Character.toUpperCase(c);
+        }
+    }
 
-
-     /**
-      *
-      * @param conn
-      * @param session
-      * @param sitecode
-      * @return
-      */
-     boolean validateSite(Connection conn, Session session, String sitecode) {
+    /**
+     *
+     * @param conn
+     * @param session
+     * @param sitecode
+     * @return
+     */
+    boolean validateSite(Connection conn, Session session, String sitecode) {
         String hql = " from Site where siteCode='" + sitecode + "'";
         boolean isOK = false;
         try {
@@ -748,22 +750,21 @@ public class ImporterMDB implements Importer {
             }
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             ImporterMDB.log.error("Error:::" + e.getMessage());
         } finally {
             return isOK;
         }
 
-     }
+    }
 
-
-     /**
-      *
-      * @param conn
-      * @param session
-      * @param site
-      */
-     void processBiotop(Connection conn, Session session, Site site) {
+    /**
+     *
+     * @param conn
+     * @param session
+     * @param site
+     */
+    void processBiotop(Connection conn, Session session, Site site) {
 
         Statement stmt = null;
 
@@ -796,16 +797,25 @@ public class ImporterMDB implements Importer {
                 if (tmpDate != null) {
                     site.setSiteUpdateDate(tmpDate);
                 }
+
                 tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_prop_date")));
                 if (tmpDate != null) {
-                    site.setSiteSciPropDate(tmpDate);
+                    if (!SDF_ManagerApp.isEmeraldMode()) {
+                        site.setSiteSciPropDate(tmpDate);
+                    } else {
+                        site.setSiteProposedAsciDate(tmpDate);
+                    }
                 }
                 tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_conf_date")));
                 if (tmpDate != null) {
-                    site.setSiteSciConfDate(tmpDate);
+                    if (!SDF_ManagerApp.isEmeraldMode()) {
+                        site.setSiteSciConfDate(tmpDate);
+                    } else {
+                        site.setSiteConfirmedAsciDate(tmpDate);
+                    }
                 }
 
-                //EMERALD does not have SAC and SPA dates
+                // EMERALD does not have SAC and SPA dates.
                 if (!SDF_ManagerApp.isEmeraldMode()) {
                     tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
                     if (tmpDate != null) {
@@ -817,85 +827,87 @@ public class ImporterMDB implements Importer {
                         site.setSiteSacDate(tmpDate);
                     }
                 }
-                 tmpStr = getString(rs, this.fields.get("respondent"));
-                 if (tmpStr != null) {
+                tmpStr = getString(rs, this.fields.get("respondent"));
+                if (tmpStr != null) {
                     Resp resp = new Resp();
                     resp.setRespAddress(tmpStr);
                     resp.getSites().add(site);
                     session.save(resp);
                     site.setResp(resp);
-                 }
+                }
 
-                 //area and site_length are textual in emerald:
-                 if (SDF_ManagerApp.isEmeraldMode()) {
-                     tmpStr = rs.getString(this.fields.get("area"));
-                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
-                     site.setSiteArea(tmpDouble);
+                // area and site_length are textual in emerald:
+                if (SDF_ManagerApp.isEmeraldMode()) {
+                    tmpStr = rs.getString(this.fields.get("area"));
+                    tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+                    site.setSiteArea(tmpDouble);
 
-                     tmpStr = rs.getString(this.fields.get("site_length"));
-                     tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
-                     site.setSiteLength(tmpDouble);
-                 } else {
-                     tmpDouble = getDouble(rs, this.fields.get("area"));
-                     site.setSiteArea(tmpDouble);
-                     tmpDouble = getDouble(rs, this.fields.get("site_length"));
-                     site.setSiteLength(tmpDouble);
-                 }
+                    tmpStr = rs.getString(this.fields.get("site_length"));
+                    tmpDouble = ImporterUtils.fixAndGetDouble(tmpStr);
+                    site.setSiteLength(tmpDouble);
+                } else {
+                    tmpDouble = getDouble(rs, this.fields.get("area"));
+                    site.setSiteArea(tmpDouble);
+                    tmpDouble = getDouble(rs, this.fields.get("site_length"));
+                    site.setSiteLength(tmpDouble);
+                }
 
-                 String sign = getString(rs, this.fields.get("lon_ew"));
-                 Double deg = getDouble(rs, this.fields.get("lon_deg"));
-                 Double min = getDouble(rs, this.fields.get("lon_min"));
-                 Double sec = getDouble(rs, this.fields.get("lon_sec"));
-                 Double longitude = this.convertCoordinate(1, sign, deg, min, sec);
-                 if (longitude != null) {
-                     site.setSiteLongitude(longitude);
-                 }
-                 deg = getDouble(rs, this.fields.get("lat_deg"));
-                 min = getDouble(rs, this.fields.get("lat_min"));
-                 sec = getDouble(rs, this.fields.get("lat_sec"));
-                 Double latitude = this.convertCoordinate(2, sign, deg, min, sec);
-                 if (latitude != null) {
-                     site.setSiteLatitude(latitude);
-                 }
-                 tmpStr = getString(rs, this.fields.get("designation"));
-                 if (tmpStr != null) {
-                     site.setSiteDesignation(tmpStr);
-                 }
-                 tmpStr = getString(rs, this.fields.get("quality"));
-                 if (tmpStr != null) {
-                     site.setSiteQuality(tmpStr);
-                 }
+                String sign = getString(rs, this.fields.get("lon_ew"));
+                Double deg = getDouble(rs, this.fields.get("lon_deg"));
+                Double min = getDouble(rs, this.fields.get("lon_min"));
+                Double sec = getDouble(rs, this.fields.get("lon_sec"));
+                Double longitude = this.convertCoordinate(1, sign, deg, min, sec);
+                if (longitude != null) {
+                    site.setSiteLongitude(longitude);
+                }
+                deg = getDouble(rs, this.fields.get("lat_deg"));
+                min = getDouble(rs, this.fields.get("lat_min"));
+                sec = getDouble(rs, this.fields.get("lat_sec"));
+                Double latitude = this.convertCoordinate(2, sign, deg, min, sec);
+                if (latitude != null) {
+                    site.setSiteLatitude(latitude);
+                }
+                tmpStr = getString(rs, this.fields.get("designation"));
+                if (tmpStr != null) {
+                    site.setSiteDesignation(tmpStr);
+                }
+                tmpStr = getString(rs, this.fields.get("quality"));
+                if (tmpStr != null) {
+                    site.setSiteQuality(tmpStr);
+                }
 
-                 tmpStr = getString(rs, this.fields.get("characteristics"));
-                 if (tmpStr != null) {
-                     site.setSiteCharacteristics(tmpStr);
-                 }
+                tmpStr = getString(rs, this.fields.get("characteristics"));
+                if (tmpStr != null) {
+                    site.setSiteCharacteristics(tmpStr);
+                }
 
-                 tmpStr = getString(rs, this.fields.get("documentation"));
+                tmpStr = getString(rs, this.fields.get("documentation"));
 
-                 if (tmpStr != null) {
+                if (tmpStr != null) {
                     Doc doc = new Doc();
                     doc.setDocDescription(tmpStr);
                     doc.getSites().add(site);
                     session.save(doc);
                     site.setDoc(doc);
-                 }
-                 tmpStr = getString(rs, this.fields.get("mgmt_plan"));
+                }
+                tmpStr = getString(rs, this.fields.get("mgmt_plan"));
 
-                 String tmpStrMgmtBody = getString(rs, this.fields.get("mgmt_body"));
+                String tmpStrMgmtBody = getString(rs, this.fields.get("mgmt_body"));
 
-                 if (tmpStr != null) {
+                if (tmpStr != null) {
 
                     Mgmt mgmt = new Mgmt();
 
                     mgmt.setMgmtConservMeasures(tmpStr);
                     mgmt.setMgmtStatus('Y');
                     session.save(mgmt);
-                    /*MgmtPlan mgmtPlan = new MgmtPlan();
-                    mgmtPlan.setMgmtPlanName(tmpStr);
-                    mgmtPlan.setMgmt(mgmt);
-                    mgmt.getMgmtPlans().add(mgmtPlan);
-                    session.save(mgmtPlan);*/
+                    /*
+                     * MgmtPlan mgmtPlan = new MgmtPlan();
+                     * mgmtPlan.setMgmtPlanName(tmpStr);
+                     * mgmtPlan.setMgmt(mgmt);
+                     * mgmt.getMgmtPlans().add(mgmtPlan);
+                     * session.save(mgmtPlan);
+                     */
                     if (tmpStrMgmtBody != null) {
 
                         MgmtBody mgmtBody = new MgmtBody();
@@ -909,11 +921,11 @@ public class ImporterMDB implements Importer {
                     session.save(mgmt);
                     site.setMgmt(mgmt);
 
-                 } else {
-                     Mgmt mgmt = new Mgmt();
-                     mgmt.setMgmtStatus('N');
-                     session.save(mgmt);
-                     if (tmpStrMgmtBody != null) {
+                } else {
+                    Mgmt mgmt = new Mgmt();
+                    mgmt.setMgmtStatus('N');
+                    session.save(mgmt);
+                    if (tmpStrMgmtBody != null) {
 
                         MgmtBody mgmtBody = new MgmtBody();
                         mgmtBody.setMgmtBodyOrg(tmpStrMgmtBody);
@@ -925,7 +937,7 @@ public class ImporterMDB implements Importer {
                     mgmt.getSites().add(site);
                     session.save(mgmt);
                     site.setMgmt(mgmt);
-                 }
+                }
 
                 ArrayList<String> regions = new ArrayList<String>();
                 regions.add("ALPINE");
@@ -958,83 +970,83 @@ public class ImporterMDB implements Importer {
                 Calendar cal = Calendar.getInstance();
                 site.setSiteDateCreation(cal.getTime());
                 session.save(site);
-           }
-           stmt.close();
-         } catch (SQLException e) {
-             //e.printStackTrace();
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-         } catch (Exception e) {
-             //e.printStackTrace();
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-         }
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            // e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+        } catch (Exception e) {
+            // e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+        }
 
-     }
+    }
 
-     /**
-      *
-      * @param oldBioRegName
-      * @return
-      */
-     private String translateBioRegions(String oldBioRegName) {
-         String newBioRegCode = "";
-         if (oldBioRegName.equals("ALPINE")) {
-             newBioRegCode = "alpine";
-         } else if (oldBioRegName.equals("ATLANTIC")) {
-             newBioRegCode = "atlantic";
-         } else if (oldBioRegName.equals("BOREAL")) {
-             newBioRegCode = "boreal";
-         } else if (oldBioRegName.equals("CONTINENT")) {
-             newBioRegCode = "continental";
-         } else if (oldBioRegName.equals("MACARONES")) {
-             newBioRegCode = "macaronesian";
-         } else if (oldBioRegName.equals("MEDITERR")) {
-             newBioRegCode = "mediterranean";
-         } else if (oldBioRegName.equals("PANNONIC")) {
-             newBioRegCode = "pannonian";
-         } else if (oldBioRegName.equals("STEPPIC")) {
-             newBioRegCode = "steppic";
-         } else if (oldBioRegName.equals("ANATOL")) {
-             newBioRegCode = "anatolian";
-         } else if (oldBioRegName.equals("ARCTIC")) {
-             newBioRegCode = "arctic";
-         } else if (oldBioRegName.equals("PONTIC")) {
-              newBioRegCode = "blacksea";
-         } else if (oldBioRegName.equals("BLACKSEA")) {
-              newBioRegCode = "blacksea";
-         } else {
+    /**
+     *
+     * @param oldBioRegName
+     * @return
+     */
+    private String translateBioRegions(String oldBioRegName) {
+        String newBioRegCode = "";
+        if (oldBioRegName.equals("ALPINE")) {
+            newBioRegCode = "alpine";
+        } else if (oldBioRegName.equals("ATLANTIC")) {
+            newBioRegCode = "atlantic";
+        } else if (oldBioRegName.equals("BOREAL")) {
+            newBioRegCode = "boreal";
+        } else if (oldBioRegName.equals("CONTINENT")) {
+            newBioRegCode = "continental";
+        } else if (oldBioRegName.equals("MACARONES")) {
+            newBioRegCode = "macaronesian";
+        } else if (oldBioRegName.equals("MEDITERR")) {
+            newBioRegCode = "mediterranean";
+        } else if (oldBioRegName.equals("PANNONIC")) {
+            newBioRegCode = "pannonian";
+        } else if (oldBioRegName.equals("STEPPIC")) {
+            newBioRegCode = "steppic";
+        } else if (oldBioRegName.equals("ANATOL")) {
+            newBioRegCode = "anatolian";
+        } else if (oldBioRegName.equals("ARCTIC")) {
+            newBioRegCode = "arctic";
+        } else if (oldBioRegName.equals("PONTIC")) {
+            newBioRegCode = "blacksea";
+        } else if (oldBioRegName.equals("BLACKSEA")) {
+            newBioRegCode = "blacksea";
+        } else {
 
-         }
+        }
 
-         return newBioRegCode;
-     }
-     /**
-      *
-      * @param session
-      * @param bioRegCode
-      * @return
-      */
-     private int getBioRegionId(Session session, String bioRegCode) {
+        return newBioRegCode;
+    }
+
+    /**
+     *
+     * @param session
+     * @param bioRegCode
+     * @return
+     */
+    private int getBioRegionId(Session session, String bioRegCode) {
         Integer b = 0;
         try {
-             String hql = "select biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + bioRegCode + "'";
-             Query q = session.createQuery(hql);
-             b = (Integer) q.uniqueResult();
+            String hql = "select biogeoId from Biogeo biogeo where biogeo.biogeoCode like '" + bioRegCode + "'";
+            Query q = session.createQuery(hql);
+            b = (Integer) q.uniqueResult();
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             ImporterMDB.log.error("An error has occurred, searching the bioregion Id. Error Message:::" + e.getMessage());
         }
         return b.intValue();
-     }
+    }
 
-
-     /**
-      *
-      * @param table
-      * @param code
-      * @param name
-      * @return
-      */
+    /**
+     *
+     * @param table
+     * @param code
+     * @param name
+     * @return
+     */
     Character getGroup(String table, String code, String name) {
         Character c = null;
         if (table.equals(this.tables.get("bird"))) {
@@ -1067,7 +1079,6 @@ public class ImporterMDB implements Importer {
         return c;
     }
 
-
     /**
      *
      * @param val
@@ -1099,13 +1110,11 @@ public class ImporterMDB implements Importer {
      */
     private boolean isPair(String val) {
         if (val.startsWith("p") || val.endsWith("p")) {
-                return true;
+            return true;
         } else {
             return false;
         }
     }
-
-
 
     /**
      *
@@ -1115,7 +1124,7 @@ public class ImporterMDB implements Importer {
     private Object[] getMinMax(String value) {
         Object[] result = {null, null, null, null, null};
         String val = value.toLowerCase();
-            /* some know cases with direct translation */
+        /* some know cases with direct translation */
         if (val.matches("[0-9]+")) {
             Integer intVal = convertToIntN(val);
             result[0] = intVal;
@@ -1139,17 +1148,17 @@ public class ImporterMDB implements Importer {
             return result;
         }
         if (val.matches("[ip]{0,1}[crvp]")) {
-            //String unit = null;
+            // String unit = null;
             String popType = null;
             if ((val.length() > 1) && (val.startsWith("i") || val.startsWith("p"))) {
-                //unit = val.substring(0, 1);
+                // unit = val.substring(0, 1);
                 popType = val.substring(1, 2);
             } else {
                 popType = val.substring(0, 1);
             }
             result[0] = null;
             result[1] = null;
-            result[2] = null; //no unit after all, is useless
+            result[2] = null; // no unit after all, is useless
             result[3] = popType.toUpperCase();
             return result;
         }
@@ -1214,7 +1223,6 @@ public class ImporterMDB implements Importer {
         return result;
     }
 
-
     /**
      *
      * @param species
@@ -1238,14 +1246,15 @@ public class ImporterMDB implements Importer {
             species.setSpeciesCategory(((String) tokens[3]).charAt(0));
         }
         if (tokens[4] != null) {
-            //species.setSpeciesDataQuality(((String) tokens[4]).charAt(0));
+            // species.setSpeciesDataQuality(((String) tokens[4]).charAt(0));
             species.setSpeciesDataQuality((String) tokens[4]);
         }
-        log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
-        ImporterMDB.log.info(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
+        log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString,
+                species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+        ImporterMDB.log.info(String.format(
+                "\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString,
+                species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
     }
-
 
     /**
      *
@@ -1257,7 +1266,7 @@ public class ImporterMDB implements Importer {
      * @return
      */
     private Object[] processPopulationSize(String spName, String resident, String breeding, String wintering, String staging) {
-        /*return population min/max/unit/catgory/data quality */
+        /* return population min/max/unit/catgory/data quality */
         Object[] result = {null, null, null, null, null};
         String resident2 = preparePopField(resident);
         String breeding2 = preparePopField(breeding);
@@ -1296,10 +1305,11 @@ public class ImporterMDB implements Importer {
         result[2] = tokens[2];
         result[3] = tokens[3];
         result[4] = tokens[4];
-        log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                literal, spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+        log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", literal,
+                spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
         return result;
     }
+
     /**
      *
      * @param conn
@@ -1309,13 +1319,14 @@ public class ImporterMDB implements Importer {
      */
     private void processSpecies(Connection conn, Session session, Site site) throws SQLException {
         /****** attention: need to add species categories and perhaps check existence of codes and names *****/
-        /***Add species groups**/
+        /*** Add species groups **/
         Statement stmt = null;
         ResultSet rs = null;
         try {
 
-            String[] tables = {this.tables.get("amprep"), this.tables.get("bird"), this.tables.get("fishes"), this.tables.get("invert"),
-                                this.tables.get("mammal"), this.tables.get("plant"), this.tables.get("spec")};
+            String[] tables =
+                    {this.tables.get("amprep"), this.tables.get("bird"), this.tables.get("fishes"), this.tables.get("invert"),
+                            this.tables.get("mammal"), this.tables.get("plant"), this.tables.get("spec")};
             for (int i = 0; i < tables.length; i++) {
                 Transaction tx = session.beginTransaction();
                 String sql = "select * from " + tables[i] + " where sitecode ='" + site.getSiteCode() + "'";
@@ -1366,7 +1377,7 @@ public class ImporterMDB implements Importer {
 
                         tmpStr = getString(rs, this.fields.get("species_resident"));
 
-                        boolean saveDefault = true; //if no other category is found, the default will be saved.
+                        boolean saveDefault = true; // if no other category is found, the default will be saved.
                         if (tmpStr != null && !tmpStr.trim().equals("")) {
                             saveDefault = false;
                             resident = tmpStr;
@@ -1411,13 +1422,13 @@ public class ImporterMDB implements Importer {
                             species.setSite(site);
                             site.getSpecieses().add(species);
                         }
-                        //session.save(species);
+                        // session.save(species);
                     } else if (tables[i].equals(this.tables.get("spec"))) {
                         OtherSpecies oSpecies = new OtherSpecies();
 
                         System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
-                        //EMERALD DB does not have species code in SPEC:
+                        // EMERALD DB does not have species code in SPEC:
                         if (!SDF_ManagerApp.isEmeraldMode()) {
                             tmpStr = getString(rs, this.fields.get("species_code"));
                             if (tmpStr != null) {
@@ -1429,7 +1440,6 @@ public class ImporterMDB implements Importer {
                             System.out.println(":: NAME ==> " + tmpStr);
                             oSpecies.setOtherSpeciesName(tmpStr);
                         }
-
 
                         String strPopulationInput = getString(rs, this.fields.get("species_population"));
                         if (strPopulationInput != null) {
@@ -1448,7 +1458,6 @@ public class ImporterMDB implements Importer {
                                 String strMinPatternString = "(>\\d+).*";
                                 String strMaxPatternString = "(<\\d+).*";
 
-
                                 // Finds patterns like "20-100" and get min-max
                                 if (Pattern.matches(strMinMaxPatterString, strPopulationInput)) {
 
@@ -1464,10 +1473,11 @@ public class ImporterMDB implements Importer {
                                             String[] arr = tmp.split("-");
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(arr[0]));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(arr[1]));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
 
-                                // Finds patterns like "100 A" and get min and max from number and type from char
+                                    // Finds patterns like "100 A" and get min and max from number and type from char
                                 } else if (Pattern.matches(strNumberAndCharacter, strPopulationInput)) {
                                     System.out.println(":: MATCH 2");
 
@@ -1478,7 +1488,8 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
 
                                     pattern = Pattern.compile("([C,V,R,P])");
@@ -1487,10 +1498,11 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesCategory(tmp.charAt(0));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
 
-                                // Finds patterns like ">100" and get min
+                                    // Finds patterns like ">100" and get min
                                 } else if (Pattern.matches(strMinPatternString, strPopulationInput)) {
                                     System.out.println(":: MATCH 3");
 
@@ -1500,10 +1512,11 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
 
-                                // Finds patterns like "<100" and get max
+                                    // Finds patterns like "<100" and get max
                                 } else if (Pattern.matches(strMaxPatternString, strPopulationInput)) {
 
                                     System.out.println(":: MATCH 4");
@@ -1514,7 +1527,8 @@ public class ImporterMDB implements Importer {
                                         try {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
 
                                 } else if (Pattern.matches(strOnlyNumbers, strPopulationInput)) {
@@ -1527,7 +1541,8 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
                                 } else if (Pattern.matches(strOnlyNumber, strPopulationInput)) {
                                     System.out.println(":: MATCH 6");
@@ -1539,7 +1554,8 @@ public class ImporterMDB implements Importer {
                                             String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                             oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                             oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                        } catch (Exception ex) { }
+                                        } catch (Exception ex) {
+                                        }
                                     }
                                 }
 
@@ -1553,7 +1569,8 @@ public class ImporterMDB implements Importer {
                                         String tmp = strPopulationInput.substring(matcher.start(), matcher.end());
                                         oSpecies.setOtherSpeciesSizeMin(new Integer(tmp));
                                         oSpecies.setOtherSpeciesSizeMax(new Integer(tmp));
-                                    } catch (Exception ex) { }
+                                    } catch (Exception ex) {
+                                    }
                                 }
                             }
 
@@ -1561,7 +1578,7 @@ public class ImporterMDB implements Importer {
 
                         tmpStr = getString(rs, this.fields.get("species_motivation"));
                         if (tmpStr != null) {
-                            /* value is either A, B, C or D*/
+                            /* value is either A, B, C or D */
                             tmpStr = tmpStr.toUpperCase();
                             oSpecies.setOtherSpeciesMotivation(tmpStr);
                         }
@@ -1575,7 +1592,7 @@ public class ImporterMDB implements Importer {
                         }
                         oSpecies.setSite(site);
                         site.getOtherSpecieses().add(oSpecies);
-                        //session.save(oSpecies);
+                        // session.save(oSpecies);
                     }
                 }
 
@@ -1586,16 +1603,19 @@ public class ImporterMDB implements Importer {
 
             }
         } catch (SQLException e) {
-            //e.printStackTrace();
-           ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
-            /*rs.close();
-            stmt.close();*/
+            /*
+             * rs.close();
+             * stmt.close();
+             */
         }
     }
+
     /**
      *
      * @param conn
@@ -1643,16 +1663,17 @@ public class ImporterMDB implements Importer {
                 site.getHabitats().add(habitat);
             }
         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-            //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
             rs.close();
             stmt.close();
         }
     }
+
     /**
      *
      * @param conn
@@ -1685,18 +1706,17 @@ public class ImporterMDB implements Importer {
                 site.getNationalDtypes().add(dType);
             }
         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-            //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
             rs.close();
             stmt.close();
         }
 
     }
-
 
     /**
      *
@@ -1745,19 +1765,18 @@ public class ImporterMDB implements Importer {
                 site.getSiteRelations().add(relation);
             }
 
-         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+        } catch (SQLException e) {
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
             rs.close();
             stmt.close();
         }
 
     }
-
 
     /**
      *
@@ -1767,7 +1786,7 @@ public class ImporterMDB implements Importer {
      * @throws SQLException
      */
     private void processHabitatClasses(Connection conn, Session session, Site site) throws SQLException {
-         Statement stmt = null;
+        Statement stmt = null;
         ResultSet rs = null;
         try {
             String sql = "select * from " + tables.get("habit2") + " where sitecode ='" + site.getSiteCode() + "'";
@@ -1792,17 +1811,16 @@ public class ImporterMDB implements Importer {
                 habitat.setSite(site);
                 site.getHabitatClasses().add(habitat);
             }
-         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-            //e.printStackTrace();
+        } catch (SQLException e) {
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-            //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
             rs.close();
             stmt.close();
         }
-
 
     }
 
@@ -1826,7 +1844,6 @@ public class ImporterMDB implements Importer {
         return descHabClass;
     }
 
-
     /**
      *
      * @param conn
@@ -1847,17 +1864,17 @@ public class ImporterMDB implements Importer {
                 Region region = new Region();
                 tmpStr = getString(rs, this.fields.get("region_code"));
                 if (tmpStr != null) {
-                    /*just get NUT2 level*/
+                    /* just get NUT2 level */
                     if (tmpStr.length() > 4) {
 
-                        //in some EMERALD DB code starts with unnecessary apostrophe
+                        // in some EMERALD DB code starts with unnecessary apostrophe
                         if (SDF_ManagerApp.isEmeraldMode() && StringUtils.startsWith(tmpStr, "'")) {
                             tmpStr = tmpStr.substring(1, 5);
                         } else {
                             tmpStr = tmpStr.substring(0, 4);
                         }
                     }
-                    //concatenating with 'ZZ' for unknown works only for N2k
+                    // concatenating with 'ZZ' for unknown works only for N2k
                     if (!SDF_ManagerApp.isEmeraldMode() && (tmpStr.equals("0") || tmpStr.equals("00"))) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
                         region.setRegionName("Marine");
@@ -1865,7 +1882,9 @@ public class ImporterMDB implements Importer {
                     } else {
                         try {
                             String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
-                            Iterator itr =  session.createQuery(" from " + tableName + " as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
+                            Iterator itr =
+                                    session.createQuery(" from " + tableName + " as rn where rn.refNutsCode like '" + tmpStr + "'")
+                                            .iterate();
 
                             if (itr.hasNext()) {
                                 if (SDF_ManagerApp.isEmeraldMode()) {
@@ -1881,8 +1900,8 @@ public class ImporterMDB implements Importer {
 
                             }
                         } catch (Exception e) {
-                           ImporterMDB.log.error("Error:::" + e.getMessage());
-                            //e.printStackTrace();
+                            ImporterMDB.log.error("Error:::" + e.getMessage());
+                            // e.printStackTrace();
                         }
                     }
 
@@ -1897,11 +1916,11 @@ public class ImporterMDB implements Importer {
             }
 
         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-          //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
-           //e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
         } finally {
             rs.close();
             stmt.close();
@@ -1974,7 +1993,8 @@ public class ImporterMDB implements Importer {
                                     impact.setImpactType('P');
                                 } else if (("-").equals(tmpChar.toString())) {
                                     impact.setImpactType('N');
-                                } else if (("0").equals(tmpChar.toString()) || ("O").equals(tmpChar.toString()) || ("o").equals(tmpChar.toString())) {
+                                } else if (("0").equals(tmpChar.toString()) || ("O").equals(tmpChar.toString())
+                                        || ("o").equals(tmpChar.toString())) {
                                     impactClon = new Impact();
                                     impactClon.setImpactOccurrence(impact.getImpactOccurrence());
                                     impactClon.setImpactRank(impact.getImpactRank());
@@ -2006,10 +2026,10 @@ public class ImporterMDB implements Importer {
             }
 
         } catch (SQLException e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
+            ImporterMDB.log.error("Error:::" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-           ImporterMDB.log.error("Error:::" + e.getMessage());
+            ImporterMDB.log.error("Error:::" + e.getMessage());
             e.printStackTrace();
         } finally {
             rs.close();
@@ -2033,17 +2053,16 @@ public class ImporterMDB implements Importer {
             Query q = session.createQuery(hql);
             RefImpacts impact = (RefImpacts) q.uniqueResult();
             if (impact != null) {
-               impactCode = impact.getRefImpactsCode();
+                impactCode = impact.getRefImpactsCode();
             }
 
         } catch (Exception e) {
-            //e.printStackTrace();
-           ImporterMDB.log.error("Error:::" + e.getMessage());
+            // e.printStackTrace();
+            ImporterMDB.log.error("Error:::" + e.getMessage());
         }
         return impactCode;
 
     }
-
 
     /**
      *
@@ -2054,7 +2073,7 @@ public class ImporterMDB implements Importer {
      * @param sec
      * @return
      */
-     Double convertCoordinate(int type, String sig, Double degree, Double minute, Double second) {
+    Double convertCoordinate(int type, String sig, Double degree, Double minute, Double second) {
 
         /**
          * 1 = longitude; 2 = latitude
@@ -2066,102 +2085,100 @@ public class ImporterMDB implements Importer {
         Double tmp = degree + (minute / 60) + (second / 3600);
 
         if (type == 1) {
-             String sign = sig == null ? "E" : sig.toUpperCase(); //default to east
-             tmp = sign.equals("E") ? tmp : (sign.equals("W") ? -tmp : tmp); //unknown default to east as well
+            String sign = sig == null ? "E" : sig.toUpperCase(); // default to east
+            tmp = sign.equals("E") ? tmp : (sign.equals("W") ? -tmp : tmp); // unknown default to east as well
         }
         return tmp == 0.0 ? null : tmp;
 
-     }
+    }
 
-     /**
-      *
-      * @param oldType
-      * @return
-      */
-     String convertType(char oldType) {
+    /**
+     *
+     * @param oldType
+     * @return
+     */
+    String convertType(char oldType) {
 
-         Character charOldType = Character.toUpperCase(oldType);
-         char[] spa = {'A', 'D', 'F', 'H', 'J'};
-         char[] sci = {'B', 'E', 'G', 'I', 'K'};
-         if (ArrayUtils.contains(spa, charOldType)) {
-             return "A";
-         } else if (ArrayUtils.contains(sci, charOldType)) {
-             return "B";
-         } else if (("C").equals(charOldType.toString())) {
-             return "C";
-         } else {
-             return "";
-         }
-     }
+        Character charOldType = Character.toUpperCase(oldType);
+        char[] spa = {'A', 'D', 'F', 'H', 'J'};
+        char[] sci = {'B', 'E', 'G', 'I', 'K'};
+        if (ArrayUtils.contains(spa, charOldType)) {
+            return "A";
+        } else if (ArrayUtils.contains(sci, charOldType)) {
+            return "B";
+        } else if (("C").equals(charOldType.toString())) {
+            return "C";
+        } else {
+            return "";
+        }
+    }
 
-     /**
-      *
-      * @param sdate
-      * @return
-      */
-     Date convertToDate(String sDate) {
-         if (sDate == null || (("").equals(sDate))) {
-             return null;
-         }
-         if (sDate.length() < 6) {
-             ImporterMDB.log.error("\tDate doesn't match size: " + sDate);
-             return null;
-         }
+    /**
+     *
+     * @param sdate
+     * @return
+     */
+    Date convertToDate(String sDate) {
+        if (sDate == null || (("").equals(sDate))) {
+            return null;
+        }
+        if (sDate.length() < 6) {
+            ImporterMDB.log.error("\tDate doesn't match size: " + sDate);
+            return null;
+        }
 
-         String month = sDate.substring(4, 6);
-         String year = sDate.substring(0, 4);
-         int imonth = this.converToInt(month);
-         int iyear = this.converToInt(year);
-         Date d = new Date();
-         Calendar cal = GregorianCalendar.getInstance();
-         cal.set(iyear, imonth - 1, 1);
-         d = cal.getTime();
-         return d;
-     }
+        String month = sDate.substring(4, 6);
+        String year = sDate.substring(0, 4);
+        int imonth = this.converToInt(month);
+        int iyear = this.converToInt(year);
+        Date d = new Date();
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.set(iyear, imonth - 1, 1);
+        d = cal.getTime();
+        return d;
+    }
 
-     /**
-      *
-      * @param num
-      * @return
-      */
-     int converToInt(String num) {
-         try {
-             return Integer.parseInt(num);
-         } catch (Exception e) {
+    /**
+     *
+     * @param num
+     * @return
+     */
+    int converToInt(String num) {
+        try {
+            return Integer.parseInt(num);
+        } catch (Exception e) {
             ImporterMDB.log.error("Error:::" + e.getMessage());
             return 1;
-         }
-     }
+        }
+    }
 
+    /**
+     *
+     * @param num
+     * @return
+     */
+    Integer convertToIntN(String num) {
+        try {
+            return Integer.parseInt(num.replaceAll("[^0-9]", ""));
+        } catch (Exception e) {
+            ImporterMDB.log.error("Error:::" + e.getMessage());
+            return null;
+        }
+    }
 
-     /**
-      *
-      * @param num
-      * @return
-      */
-     Integer convertToIntN(String num) {
-         try {
-             return Integer.parseInt(num.replaceAll("[^0-9]", ""));
-         } catch (Exception e) {
-             ImporterMDB.log.error("Error:::" + e.getMessage());
-             return null;
-         }
-     }
-
-
-     /**
-      *
-      * @param fileName
-      * @param map
-      * @param topElement
-      * @param fields
-      * @return
-      */
-     public Boolean parse(String fileName, HashMap map, String topElement, String[] fields) {
-       Element root = this.parseXML(fileName);
-       if (root != null) {
-           NodeList nl = root.getElementsByTagName(topElement);
-           if (nl != null && nl.getLength() > 0) {
+    /**
+     *
+     * @param fileName
+     * @param map
+     * @param topElement
+     * @param fields
+     * @return
+     */
+    public Boolean parse(String fileName, HashMap map, String topElement, String[] fields) {
+        Element root = this.parseXML(fileName);
+        if (root != null) {
+            NodeList nl = root.getElementsByTagName(topElement);
+            if (nl != null && nl.getLength() > 0) {
                 for (int i = 0; i < nl.getLength(); i++) {
                     Element el = (Element) nl.item(i);
                     String key = this.getTextValue(el, fields[0]);
@@ -2169,44 +2186,42 @@ public class ImporterMDB implements Importer {
                     map.put(key, value);
                 }
             }
-           return true;
-       } else {
-           return false;
-       }
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
-
-     /**
-      *
-      * @param fileName
-      * @return
-      */
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     public Element parseXML(String fileName) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Document dom;
         try {
-            //Using factory get an instance of document builder
+            // Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
-            //parse using builder to get DOM representation of the XML file
+            // parse using builder to get DOM representation of the XML file
             log("Parsing: " + fileName, 1);
             dom = db.parse(fileName);
             return dom.getDocumentElement();
         } catch (ParserConfigurationException pce) {
-             //pc//e.printStackTrace();
-           ImporterMDB.log.error("Error`parsing XML:::" + pce.getMessage());
+            // pc//e.printStackTrace();
+            ImporterMDB.log.error("Error`parsing XML:::" + pce.getMessage());
             return null;
         } catch (SAXException se) {
-            //s//e.printStackTrace();
-           ImporterMDB.log.error("Error`parsing XML:::" + se.getMessage());
+            // s//e.printStackTrace();
+            ImporterMDB.log.error("Error`parsing XML:::" + se.getMessage());
             return null;
         } catch (IOException ioe) {
-           ImporterMDB.log.error("Error`parsing XML:::" + ioe.getMessage());
-            //io//e.printStackTrace();
+            ImporterMDB.log.error("Error`parsing XML:::" + ioe.getMessage());
+            // io//e.printStackTrace();
             return null;
         }
-     }
-
+    }
 
     /**
      *

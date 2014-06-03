@@ -688,14 +688,22 @@ public class ImporterSiteMDB implements Importer {
                  ImporterSiteMDB.log.info("Processing SCI Proposal Date");
                  tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_prop_date")));
                  if (tmpDate != null) {
-                     site.setSiteSciPropDate(tmpDate);
+                     if (!SDF_ManagerApp.isEmeraldMode()) {
+                         site.setSiteSciPropDate(tmpDate);
+                     } else {
+                         site.setSiteProposedAsciDate(tmpDate);
+                     }
                  }
 
                  log("Processing SCI Confirmed Date");
                  ImporterSiteMDB.log.info("Processing SCI Confirmed Date");
                  tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_conf_date")));
                  if (tmpDate != null) {
-                     site.setSiteSciConfDate(tmpDate);
+                     if (!SDF_ManagerApp.isEmeraldMode()) {
+                         site.setSiteSciConfDate(tmpDate);
+                     } else {
+                         site.setSiteConfirmedAsciDate(tmpDate);
+                     }
                  }
 
                  if (!SDF_ManagerApp.isEmeraldMode()) {
@@ -2012,7 +2020,9 @@ public class ImporterSiteMDB implements Importer {
              return "B";
          } else if (oldType == 'C') {
              return "C";
-         } else return "";
+         } else {
+            return "";
+        }
      }
 
      /**

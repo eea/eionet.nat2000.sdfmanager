@@ -15,8 +15,11 @@ import java.util.TreeSet;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingWorker;
@@ -45,11 +48,11 @@ class FilterWorker extends SwingWorker<Boolean, Void> {
     private JDialog dlg;
     private SDFFilter filter;
 
-
     @Override
     public Boolean doInBackground() {
-       return filter.init();
+        return filter.init();
     }
+
     /**
      *
      * @param dlg
@@ -57,11 +60,12 @@ class FilterWorker extends SwingWorker<Boolean, Void> {
     public void setDialog(JDialog dlg) {
         this.dlg = dlg;
     }
+
     /**
      *
      * @param filter
      */
-    public void setFilter (SDFFilter filter) {
+    public void setFilter(SDFFilter filter) {
         this.filter = filter;
     }
 
@@ -88,7 +92,8 @@ class DeleteWorker extends SwingWorker<Boolean, Void> {
     public void setDialog(JDialog dlg) {
         this.dlg = dlg;
     }
-    public void setFilter (SDFFilter filter) {
+
+    public void setFilter(SDFFilter filter) {
         this.filter = filter;
     }
 
@@ -99,7 +104,6 @@ class DeleteWorker extends SwingWorker<Boolean, Void> {
     }
 }
 
-
 /**
  *
  * @author
@@ -108,11 +112,12 @@ public final class SDFFilter extends javax.swing.JFrame {
     /** Creates new form SDFFilter2 */
     private String newSitecode = "";
     private Criteria criteria;
-    private final static Logger log = Logger.getLogger(SDFFilter.class .getName());
+    private final static Logger log = Logger.getLogger(SDFFilter.class.getName());
     int numReg = 0;
 
     /**
      * application mode.
+     *
      * @param mode N2k or EMERALD
      */
     public SDFFilter(String appMode) {
@@ -120,8 +125,8 @@ public final class SDFFilter extends javax.swing.JFrame {
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent e) {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
                 exit();
             }
         });
@@ -142,7 +147,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param msg
      */
-    void log (String msg) {
+    void log(String msg) {
         SDFFilter.log.info(msg);
     }
 
@@ -152,10 +157,12 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     Boolean init() {
         SDFFilter.log.info("Init....");
-        /*Session session = new Configuration().configure()
-                .setProperty("hibernate.jdbc.batch_size", "20")
-                .setProperty("hibernate.cache.use_second_level_cache", "false")
-                .buildSessionFactory().openSession();*/
+        /*
+         * Session session = new Configuration().configure()
+         * .setProperty("hibernate.jdbc.batch_size", "20")
+         * .setProperty("hibernate.cache.use_second_level_cache", "false")
+         * .buildSessionFactory().openSession();
+         */
 
         Session session = HibernateUtil.getSessionFactory().openSession();
         populateFilters(session);
@@ -181,6 +188,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         return nSites;
 
     }
+
     /**
      *
      * @param session
@@ -190,26 +198,28 @@ public final class SDFFilter extends javax.swing.JFrame {
         try {
             if (!filterSitename.getText().equals("") && filterSitename.getText().equals(filterSitename.getText().toUpperCase())) {
                 SDFFilter.log.error("Site name shouldn't be in capital letters:::" + filterSitename.getText());
-                JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Site name shouldn't be in capital letters", "Dialog",
+                        JOptionPane.ERROR_MESSAGE);
             } else {
                 this.criteria = prepareQuery(session);
                 displaySites(session, this.criteria);
                 this.txtNumberSites.setText((new Integer(numReg)).toString());
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             SDFFilter.log.error("An error has ocurred applaying filters. Error Message::::" + e.getMessage());
         }
     }
 
     /**
      * Prepares query
+     *
      * @param session
      * @return
      */
     Criteria prepareQuery(Session session) {
         SDFFilter.log.info("Preparing query::::" + filterSitecode.getText());
-        /*analyse the filter*/
+        /* analyse the filter */
         Criteria criteria = null;
         session.clear();
         criteria = session.createCriteria(Site.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).setCacheable(false);
@@ -224,18 +234,45 @@ public final class SDFFilter extends javax.swing.JFrame {
         if (!filterSitename.getText().equals("")) {
             criteria.add(Restrictions.ilike("siteName", filterSitename.getText(), MatchMode.ANYWHERE));
         }
-        if (!filterSPADate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSpaDate", ConversionTools.convertStringToDate((String) filterSPADate.getSelectedItem())));
+
+        if (!SDF_ManagerApp.isEmeraldMode()) {
+            if (!filterSPADate.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteSpaDate",
+                        ConversionTools.convertStringToDate((String) filterSPADate.getSelectedItem())));
+            }
+            if (!filterSCIPropDate.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteSciPropDate",
+                        ConversionTools.convertStringToDate((String) filterSCIPropDate.getSelectedItem())));
+            }
+            if (!filterSCIDesigDate.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteSciConfDate",
+                        ConversionTools.convertStringToDate((String) filterSCIDesigDate.getSelectedItem())));
+            }
+            if (!filterSACDate.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteSacDate",
+                        ConversionTools.convertStringToDate((String) filterSACDate.getSelectedItem())));
+            }
+        } else {
+
+            if (filterDateProposedASCI != null && !filterDateProposedASCI.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteProposedAsciDate",
+                        ConversionTools.convertStringToDate((String) filterDateProposedASCI.getSelectedItem())));
+            }
+            if (filterDateConfirmedCandidateASCI != null && !filterDateConfirmedCandidateASCI.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteConfirmedCandidateAsciDate",
+                        ConversionTools.convertStringToDate((String) filterDateConfirmedCandidateASCI.getSelectedItem())));
+            }
+            if (filterDateConfirmedASCI != null && !filterDateConfirmedASCI.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteConfirmedAsciDate",
+                        ConversionTools.convertStringToDate((String) filterDateConfirmedASCI.getSelectedItem())));
+            }
+            if (filterDateDesignatedASCI != null && !filterDateDesignatedASCI.getSelectedItem().equals("-")) {
+                criteria.add(Restrictions.eq("siteConfirmedAsciDate",
+                        ConversionTools.convertStringToDate((String) filterDateDesignatedASCI.getSelectedItem())));
+            }
+
         }
-        if (!filterSCIPropDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSciPropDate", ConversionTools.convertStringToDate((String) filterSCIPropDate.getSelectedItem())));
-        }
-        if (!filterSCIDesigDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSciConfDate", ConversionTools.convertStringToDate((String) filterSCIDesigDate.getSelectedItem())));
-        }
-        if (!filterSACDate.getSelectedItem().equals("-")) {
-            criteria.add(Restrictions.eq("siteSacDate", ConversionTools.convertStringToDate((String) filterSACDate.getSelectedItem())));
-        }
+
         if (!filterArea.getText().equals("")) {
             Double area = ConversionTools.stringToDoubleN(filterArea.getText());
             if (area != null) {
@@ -327,13 +364,28 @@ public final class SDFFilter extends javax.swing.JFrame {
         this.filterSitename.setText("");
         this.filterSpecies.setSelectedItem("-");
         this.filterSpeciesGroup.setSelectedItem("-");
+
+        if (filterDateProposedASCI != null) {
+            filterDateProposedASCI.setSelectedItem("-");
+        }
+        if (filterDateConfirmedCandidateASCI != null) {
+            filterDateConfirmedCandidateASCI.setSelectedItem("-");
+        }
+        if (filterDateConfirmedASCI != null) {
+            filterDateConfirmedASCI.setSelectedItem("-");
+        }
+        if (filterDateDesignatedASCI != null) {
+            filterDateDesignatedASCI.setSelectedItem("-");
+        }
+
     }
 
     /**
      * Populste filters
+     *
      * @param session
      */
-    void populateFilters (Session session) {
+    void populateFilters(Session session) {
         SDFFilter.log.info("populating filter site");
         populateSiteSpecificInfo(session);
         SDFFilter.log.info("populating filter region");
@@ -356,18 +408,29 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param session
      */
+    @SuppressWarnings("unchecked")
     void populateSiteSpecificInfo(Session session) {
+
         TreeSet spaDate = new TreeSet();
         TreeSet sciPropDate = new TreeSet();
         TreeSet sciDesigDate = new TreeSet();
         TreeSet sacDate = new TreeSet();
         TreeSet siteType = new TreeSet();
+
+        TreeSet dateProposedASCI = new TreeSet();
+        TreeSet dateConfirmedCandidateASCI = new TreeSet();
+        TreeSet dateConfirmedASCI = new TreeSet();
+        TreeSet dateDesignatedASCI = new TreeSet();
+
         String hql = "select s from Site as s order by siteCode";
         try {
             Query q = session.createQuery(hql);
+
             Iterator itr = q.iterate();
             while (itr.hasNext()) {
+
                 Site site = (Site) itr.next();
+
                 if (site.getSiteSpaDate() != null) {
                     spaDate.add(site.getSiteSpaDate());
                 }
@@ -382,6 +445,19 @@ public final class SDFFilter extends javax.swing.JFrame {
                 }
                 if (site.getSiteType() != null) {
                     siteType.add(site.getSiteType());
+                }
+
+                if (site.getSiteProposedAsciDate() != null) {
+                    dateProposedASCI.add(site.getSiteProposedAsciDate());
+                }
+                if (site.getSiteConfirmedCandidateAsciDate() != null) {
+                    dateConfirmedCandidateASCI.add(site.getSiteConfirmedCandidateAsciDate());
+                }
+                if (site.getSiteConfirmedAsciDate() != null) {
+                    dateConfirmedASCI.add(site.getSiteConfirmedAsciDate());
+                }
+                if (site.getSiteDesignatedAsciDate() != null) {
+                    dateDesignatedASCI.add(site.getSiteDesignatedAsciDate());
                 }
             }
             itr = siteType.iterator();
@@ -409,11 +485,36 @@ public final class SDFFilter extends javax.swing.JFrame {
             while (itr.hasNext()) {
                 filterSACDate.addItem(ConversionTools.convertDateToString((Date) itr.next()));
             }
+
+            itr = dateProposedASCI.iterator();
+            filterDateProposedASCI.addItem("-");
+            while (itr.hasNext()) {
+                filterDateProposedASCI.addItem(ConversionTools.convertDateToString((Date) itr.next()));
+            }
+
+            itr = dateConfirmedCandidateASCI.iterator();
+            filterDateConfirmedCandidateASCI.addItem("-");
+            while (itr.hasNext()) {
+                filterDateConfirmedCandidateASCI.addItem(ConversionTools.convertDateToString((Date) itr.next()));
+            }
+
+            itr = dateConfirmedASCI.iterator();
+            filterDateConfirmedASCI.addItem("-");
+            while (itr.hasNext()) {
+                filterDateConfirmedASCI.addItem(ConversionTools.convertDateToString((Date) itr.next()));
+            }
+
+            itr = dateDesignatedASCI.iterator();
+            filterDateDesignatedASCI.addItem("-");
+            while (itr.hasNext()) {
+                filterDateDesignatedASCI.addItem(ConversionTools.convertDateToString((Date) itr.next()));
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
     }
+
     /**
      *
      * @param session
@@ -423,25 +524,27 @@ public final class SDFFilter extends javax.swing.JFrame {
             String hql = "select distinct r.regionCode, r.regionName from Region as r order by r.regionCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
-            filterRegion.addItem("-"); //blank item first
+            filterRegion.addItem("-"); // blank item first
             while (itr.hasNext()) {
                 Object[] obj = (Object[]) itr.next();
-                filterRegion.addItem(obj[0] + " - "  + obj[1]);
+                filterRegion.addItem(obj[0] + " - " + obj[1]);
             }
         } catch (Exception e) {
-           log.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
+
     /**
      *
      * @param session
      */
     void populateBioRegions(Session session) {
         try {
-            String hql = "select distinct biogeo.biogeoCode from SiteBiogeo as sb inner join sb.biogeo as biogeo order by biogeo.biogeoCode";
+            String hql =
+                    "select distinct biogeo.biogeoCode from SiteBiogeo as sb inner join sb.biogeo as biogeo order by biogeo.biogeoCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
-            filterBiogeo.addItem("-"); //blank item first
+            filterBiogeo.addItem("-"); // blank item first
             while (itr.hasNext()) {
                 filterBiogeo.addItem(itr.next());
             }
@@ -449,39 +552,41 @@ public final class SDFFilter extends javax.swing.JFrame {
             log.error(e.getMessage());
         }
     }
+
     /**
      *
      * @param session
      */
     void populateSpecies(Session session) {
         try {
-           String hql = "select distinct sp.speciesName from Species as sp order by sp.speciesName";
-           Query q = session.createQuery(hql);
-           Iterator itr = q.iterate();
-           filterSpecies.addItem("-"); //blank item first
+            String hql = "select distinct sp.speciesName from Species as sp order by sp.speciesName";
+            Query q = session.createQuery(hql);
+            Iterator itr = q.iterate();
+            filterSpecies.addItem("-"); // blank item first
 
-           while (itr.hasNext()) {
-               String speciesName = (String) itr.next();
-               filterSpecies.addItem(speciesName);
-           }
+            while (itr.hasNext()) {
+                String speciesName = (String) itr.next();
+                filterSpecies.addItem(speciesName);
+            }
 
-           String hqlGroup = "select distinct sp.speciesGroup from Species as sp order by sp.speciesGroup";
-           Query qGroup = session.createQuery(hqlGroup);
-           Iterator itrGroup = qGroup.iterate();
-           filterSpeciesGroup.addItem("-");
-           while (itrGroup.hasNext()) {
-              Character c = (Character) itrGroup.next();
-               if (c != null) {
-                   String groupSName = TranslationCodeName.getGroupSpeciesByCode(c.toString());
-                   filterSpeciesGroup.addItem(groupSName);
-               }
-           }
+            String hqlGroup = "select distinct sp.speciesGroup from Species as sp order by sp.speciesGroup";
+            Query qGroup = session.createQuery(hqlGroup);
+            Iterator itrGroup = qGroup.iterate();
+            filterSpeciesGroup.addItem("-");
+            while (itrGroup.hasNext()) {
+                Character c = (Character) itrGroup.next();
+                if (c != null) {
+                    String groupSName = TranslationCodeName.getGroupSpeciesByCode(c.toString());
+                    filterSpeciesGroup.addItem(groupSName);
+                }
+            }
 
-       } catch (Exception e) {
-           log.error(e.getMessage());
-           //e.printStackTrace();
-       }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            // e.printStackTrace();
+        }
     }
+
     /**
      *
      * @param session
@@ -492,7 +597,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
             TreeSet hash = new TreeSet();
-            filterOSpecies.addItem("-"); //blank item first
+            filterOSpecies.addItem("-"); // blank item first
             while (itr.hasNext()) {
                 String otherSpeciesName = (String) itr.next();
                 filterOSpecies.addItem(otherSpeciesName);
@@ -513,6 +618,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             log.error(e.getMessage());
         }
     }
+
     /**
      *
      * @param session
@@ -522,7 +628,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             String hql = "select distinct h.habitatCode, h.habitatPriority from Habitat as h order by h.habitatCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
-            filterHabitats.addItem("-"); //blank item first
+            filterHabitats.addItem("-"); // blank item first
             while (itr.hasNext()) {
                 Object[] obj = (Object[]) itr.next();
                 String habCode = (String) obj[0];
@@ -536,6 +642,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             log.error(e.getMessage());
         }
     }
+
     /**
      *
      * @param session
@@ -545,7 +652,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             String hql = "select distinct h.habitatClassCode from HabitatClass as h order by h.habitatClassCode";
             Query q = session.createQuery(hql);
             Iterator itr = q.iterate();
-            filterHabitatClass.addItem("-"); //blank item first
+            filterHabitatClass.addItem("-"); // blank item first
             while (itr.hasNext()) {
                 String habCode = (String) itr.next();
                 filterHabitatClass.addItem(habCode);
@@ -554,6 +661,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             log.error(e.getMessage());
         }
     }
+
     /**
      *
      */
@@ -565,6 +673,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         }
         tabDisplaySites.repaint();
     }
+
     /**
      *
      * @param session
@@ -583,9 +692,7 @@ public final class SDFFilter extends javax.swing.JFrame {
                 numReg = criteria.list().size();
             }
 
-
             DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-
 
             TableCellRenderer renderer;
             Component comp;
@@ -604,7 +711,9 @@ public final class SDFFilter extends javax.swing.JFrame {
                 Object[] tuple = {new Boolean(edited), site.getSiteCode(), site.getSiteName(), dateModification};
                 model.insertRow(i, tuple);
                 renderer = tabDisplaySites.getCellRenderer(i, 1);
-                comp = renderer.getTableCellRendererComponent(tabDisplaySites, tabDisplaySites.getValueAt(i, 1), false, false, 1, 1);
+                comp =
+                        renderer.getTableCellRendererComponent(tabDisplaySites, tabDisplaySites.getValueAt(i, 1), false, false, 1,
+                                1);
                 width = Math.max(width, comp.getPreferredSize().width);
                 i++;
 
@@ -616,11 +725,11 @@ public final class SDFFilter extends javax.swing.JFrame {
             col = tabDisplaySites.getColumnModel().getColumn(1);
             col.setPreferredWidth(100);
             col = tabDisplaySites.getColumnModel().getColumn(2);
-            col.setPreferredWidth(300); //+ margin
+            col.setPreferredWidth(300); // + margin
             col = tabDisplaySites.getColumnModel().getColumn(3);
-            col.setPreferredWidth(100); //+ margin
+            col.setPreferredWidth(100); // + margin
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             log.error(e.getMessage());
         }
         tabDisplaySites.repaint();
@@ -629,9 +738,10 @@ public final class SDFFilter extends javax.swing.JFrame {
     /**
      *
      */
-   static class ThumbRenderer extends DefaultTableCellRenderer {
-        public ThumbRenderer() { super();
-   }
+    static class ThumbRenderer extends DefaultTableCellRenderer {
+        public ThumbRenderer() {
+            super();
+        }
 
         @Override
         public void setValue(Object value) {
@@ -642,7 +752,8 @@ public final class SDFFilter extends javax.swing.JFrame {
                 setIcon(imageIcon);
             }
         }
-}
+    }
+
     /**
      *
      */
@@ -654,13 +765,13 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      */
     public void centerScreen() {
-      Dimension dim = getToolkit().getScreenSize();
-      Rectangle abounds = getBounds();
-      setLocation((dim.width - abounds.width) / 2,
-          (dim.height - abounds.height) / 2);
-      super.setVisible(true);
-      requestFocus();
+        Dimension dim = getToolkit().getScreenSize();
+        Rectangle abounds = getBounds();
+        setLocation((dim.width - abounds.width) / 2, (dim.height - abounds.height) / 2);
+        super.setVisible(true);
+        requestFocus();
     }
+
     /**
      *
      * @return
@@ -674,24 +785,26 @@ public final class SDFFilter extends javax.swing.JFrame {
             return sitecode;
         }
 
-     }
-
+    }
 
     /**
      *
      * @param newSitecode
      */
-     void setNewSitecode(String newSitecode) {
-         this.newSitecode = newSitecode;
-     }
-    /** This method is called from within the constructor to
+    void setNewSitecode(String newSitecode) {
+        this.newSitecode = newSitecode;
+    }
+
+    /**
+     * This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+            private
+            void initComponents() {
 
         jPanel6 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -703,7 +816,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         filterSitecode = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         filterSitename = new javax.swing.JTextField();
-        pnlDates = new javax.swing.JPanel();
+        pnlDatesNatura2000 = new javax.swing.JPanel();
         jLabel49 = new javax.swing.JLabel();
         filterSPADate = new javax.swing.JComboBox();
         filterSCIPropDate = new javax.swing.JComboBox();
@@ -781,38 +894,64 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         javax.swing.GroupLayout pnlGeneralLayout = new javax.swing.GroupLayout(pnlGeneral);
         pnlGeneral.setLayout(pnlGeneralLayout);
-        pnlGeneralLayout.setHorizontalGroup(
-            pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlGeneralLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(labDirective, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(40, 40, 40)
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filterDirective, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterSitecode, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterSitename, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        pnlGeneralLayout.setVerticalGroup(
-            pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlGeneralLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labDirective, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterDirective, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(filterSitecode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(filterSitename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
+        pnlGeneralLayout.setHorizontalGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        pnlGeneralLayout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        pnlGeneralLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(labDirective, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(40, 40, 40)
+                                .addGroup(
+                                        pnlGeneralLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(filterDirective, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(filterSitecode, javax.swing.GroupLayout.PREFERRED_SIZE, 131,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(filterSitename, javax.swing.GroupLayout.DEFAULT_SIZE, 317,
+                                                        Short.MAX_VALUE)).addContainerGap()));
+        pnlGeneralLayout.setVerticalGroup(pnlGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        pnlGeneralLayout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        pnlGeneralLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(labDirective, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(filterDirective, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(
+                                        pnlGeneralLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jLabel2)
+                                                .addComponent(filterSitecode, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(
+                                        pnlGeneralLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jLabel3)
+                                                .addComponent(filterSitename, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(75, Short.MAX_VALUE)));
 
         tabbedPane.addTab("General", pnlGeneral);
 
@@ -824,56 +963,197 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         jLabel51.setText("Date site designated as SAC:");
 
-        javax.swing.GroupLayout pnlDatesLayout = new javax.swing.GroupLayout(pnlDates);
-        pnlDates.setLayout(pnlDatesLayout);
-        pnlDatesLayout.setHorizontalGroup(
-            pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDatesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlDatesLayout.createSequentialGroup()
-                        .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel51)
-                            .addComponent(jLabel52))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(filterSCIDesigDate, 0, 263, Short.MAX_VALUE)
-                            .addComponent(filterSACDate, 0, 263, Short.MAX_VALUE)))
-                    .addGroup(pnlDatesLayout.createSequentialGroup()
-                        .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel50)
-                            .addComponent(jLabel49))
-                        .addGap(29, 29, 29)
-                        .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(filterSPADate, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(filterSCIPropDate, 0, 263, Short.MAX_VALUE))))
-                .addGap(14, 14, 14))
-        );
-        pnlDatesLayout.setVerticalGroup(
-            pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDatesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlDatesLayout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel50)
-                            .addComponent(filterSCIPropDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel49)
-                        .addComponent(filterSPADate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel52)
-                    .addComponent(filterSCIDesigDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlDatesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel51)
-                    .addComponent(filterSACDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
-        );
+        javax.swing.GroupLayout gl_pnlDatesNatura2000 = new javax.swing.GroupLayout(pnlDatesNatura2000);
+        pnlDatesNatura2000.setLayout(gl_pnlDatesNatura2000);
+        gl_pnlDatesNatura2000
+                .setHorizontalGroup(gl_pnlDatesNatura2000
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                gl_pnlDatesNatura2000
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                gl_pnlDatesNatura2000
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_pnlDatesNatura2000
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                gl_pnlDatesNatura2000
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(jLabel51)
+                                                                                        .addComponent(jLabel52))
+                                                                        .addGap(18, 18, 18)
+                                                                        .addGroup(
+                                                                                gl_pnlDatesNatura2000
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(filterSCIDesigDate, 0, 263,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(filterSACDate, 0, 263,
+                                                                                                Short.MAX_VALUE)))
+                                                        .addGroup(
+                                                                gl_pnlDatesNatura2000
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                gl_pnlDatesNatura2000
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(jLabel50)
+                                                                                        .addComponent(jLabel49))
+                                                                        .addGap(29, 29, 29)
+                                                                        .addGroup(
+                                                                                gl_pnlDatesNatura2000
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                false)
+                                                                                        .addComponent(
+                                                                                                filterSPADate,
+                                                                                                0,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(filterSCIPropDate, 0, 263,
+                                                                                                Short.MAX_VALUE))))
+                                        .addGap(14, 14, 14)));
+        gl_pnlDatesNatura2000
+                .setVerticalGroup(gl_pnlDatesNatura2000
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                gl_pnlDatesNatura2000
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                gl_pnlDatesNatura2000
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(
+                                                                gl_pnlDatesNatura2000
+                                                                        .createSequentialGroup()
+                                                                        .addGap(38, 38, 38)
+                                                                        .addGroup(
+                                                                                gl_pnlDatesNatura2000
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                        .addComponent(jLabel50)
+                                                                                        .addComponent(
+                                                                                                filterSCIPropDate,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addGroup(
+                                                                gl_pnlDatesNatura2000
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addComponent(jLabel49)
+                                                                        .addComponent(filterSPADate,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                                        .addGroup(
+                                                gl_pnlDatesNatura2000
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(jLabel52)
+                                                        .addComponent(filterSCIDesigDate, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(
+                                                gl_pnlDatesNatura2000
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel51)
+                                                        .addComponent(filterSACDate, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(20, 20, 20)));
 
-        tabbedPane.addTab("Dates", pnlDates);
+        if (!SDF_ManagerApp.isEmeraldMode()) {
+            tabbedPane.addTab("Dates", pnlDatesNatura2000);
+        }
+
+        pnlDatesEmerald = new JPanel();
+        if (SDF_ManagerApp.isEmeraldMode()) {
+            tabbedPane.addTab("Dates", pnlDatesEmerald);
+        }
+
+        lblDateDesignatedASCI = new JLabel();
+        lblDateDesignatedASCI.setText("Date site designated as ASCI :");
+
+        lblDateConfirmedASCI = new JLabel();
+        lblDateConfirmedASCI.setText("Date site confirmed as ASCI :");
+
+        filterDateConfirmedASCI = new JComboBox();
+
+        filterDateDesignatedASCI = new JComboBox();
+
+        lblDateConfirmedCandidateASCI = new JLabel();
+        lblDateConfirmedCandidateASCI.setText("Date site confirmed as candidate ASCI :");
+
+        lblDateProposedASCI = new JLabel();
+        lblDateProposedASCI.setText("Date site proposed as ASCI :");
+
+        filterDateProposedASCI = new JComboBox();
+
+        filterDateConfirmedCandidateASCI = new JComboBox();
+        GroupLayout gl_pnlDatesEmerald = new GroupLayout(pnlDatesEmerald);
+        gl_pnlDatesEmerald.setHorizontalGroup(gl_pnlDatesEmerald.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_pnlDatesEmerald
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                gl_pnlDatesEmerald.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(lblDateConfirmedCandidateASCI).addComponent(lblDateProposedASCI)
+                                        .addComponent(lblDateDesignatedASCI).addComponent(lblDateConfirmedASCI))
+                        .addGap(29)
+                        .addGroup(
+                                gl_pnlDatesEmerald
+                                        .createParallelGroup(Alignment.LEADING, false)
+                                        .addComponent(filterDateConfirmedASCI, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(filterDateProposedASCI, Alignment.TRAILING, 0, GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
+                                        .addComponent(filterDateConfirmedCandidateASCI, Alignment.TRAILING, 0, 263,
+                                                Short.MAX_VALUE)
+                                        .addComponent(filterDateDesignatedASCI, Alignment.TRAILING, 0, GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)).addGap(14)));
+        gl_pnlDatesEmerald.setVerticalGroup(gl_pnlDatesEmerald.createParallelGroup(Alignment.LEADING).addGroup(
+                gl_pnlDatesEmerald
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(
+                                gl_pnlDatesEmerald
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                gl_pnlDatesEmerald
+                                                        .createSequentialGroup()
+                                                        .addGap(38)
+                                                        .addGroup(
+                                                                gl_pnlDatesEmerald
+                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                        .addComponent(lblDateConfirmedCandidateASCI)
+                                                                        .addComponent(filterDateConfirmedCandidateASCI,
+                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(
+                                                gl_pnlDatesEmerald
+                                                        .createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(lblDateProposedASCI)
+                                                        .addComponent(filterDateProposedASCI, GroupLayout.PREFERRED_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addGroup(
+                                gl_pnlDatesEmerald
+                                        .createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblDateConfirmedASCI)
+                                        .addComponent(filterDateConfirmedASCI, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                gl_pnlDatesEmerald
+                                        .createParallelGroup(Alignment.TRAILING)
+                                        .addComponent(lblDateDesignatedASCI)
+                                        .addComponent(filterDateDesignatedASCI, GroupLayout.PREFERRED_SIZE,
+                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addGap(20)));
+        pnlDatesEmerald.setLayout(gl_pnlDatesEmerald);
 
         filterSpecies.setMaximumSize(new java.awt.Dimension(56, 20));
 
@@ -895,52 +1175,107 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         javax.swing.GroupLayout pnlSpeciesLayout = new javax.swing.GroupLayout(pnlSpecies);
         pnlSpecies.setLayout(pnlSpeciesLayout);
-        pnlSpeciesLayout.setHorizontalGroup(
-            pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlSpeciesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filterSensitive)
-                    .addGroup(pnlSpeciesLayout.createSequentialGroup()
-                        .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labSpecies1)
-                            .addComponent(jLabel7)
-                            .addComponent(labSpecies2)
-                            .addComponent(labSpecies))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(filterSpeciesGroup, javax.swing.GroupLayout.Alignment.TRAILING, 0, 316, Short.MAX_VALUE)
-                            .addComponent(filterOSpecies, javax.swing.GroupLayout.Alignment.TRAILING, 0, 316, Short.MAX_VALUE)
-                            .addComponent(filterSpecies, javax.swing.GroupLayout.Alignment.TRAILING, 0, 316, Short.MAX_VALUE)
-                            .addComponent(filterOSpeciesGroup, javax.swing.GroupLayout.Alignment.TRAILING, 0, 316, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        pnlSpeciesLayout.setVerticalGroup(
-            pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlSpeciesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labSpecies2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterSpeciesGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSpeciesLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(1, 1, 1))
-                    .addGroup(pnlSpeciesLayout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(filterSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filterOSpeciesGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlSpeciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(filterOSpecies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labSpecies1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addComponent(filterSensitive)
-                .addContainerGap())
-        );
+        pnlSpeciesLayout
+                .setHorizontalGroup(pnlSpeciesLayout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                pnlSpeciesLayout
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                pnlSpeciesLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(filterSensitive)
+                                                        .addGroup(
+                                                                pnlSpeciesLayout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                pnlSpeciesLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(labSpecies1)
+                                                                                        .addComponent(jLabel7)
+                                                                                        .addComponent(labSpecies2)
+                                                                                        .addComponent(labSpecies))
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addGroup(
+                                                                                pnlSpeciesLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(
+                                                                                                filterSpeciesGroup,
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                0, 316, Short.MAX_VALUE)
+                                                                                        .addComponent(
+                                                                                                filterOSpecies,
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                0, 316, Short.MAX_VALUE)
+                                                                                        .addComponent(
+                                                                                                filterSpecies,
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                0, 316, Short.MAX_VALUE)
+                                                                                        .addComponent(
+                                                                                                filterOSpeciesGroup,
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                0, 316, Short.MAX_VALUE))))
+                                        .addContainerGap()));
+        pnlSpeciesLayout
+                .setVerticalGroup(pnlSpeciesLayout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                pnlSpeciesLayout
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                pnlSpeciesLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(labSpecies2, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(filterSpeciesGroup, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(
+                                                pnlSpeciesLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(
+                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                pnlSpeciesLayout.createSequentialGroup().addComponent(jLabel7)
+                                                                        .addGap(1, 1, 1))
+                                                        .addGroup(
+                                                                pnlSpeciesLayout
+                                                                        .createSequentialGroup()
+                                                                        .addGap(11, 11, 11)
+                                                                        .addGroup(
+                                                                                pnlSpeciesLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                        .addComponent(
+                                                                                                filterSpecies,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                        .addComponent(
+                                                                                                labSpecies,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                14,
+                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(filterOSpeciesGroup,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(
+                                                pnlSpeciesLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(filterOSpecies, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(labSpecies1, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(14, 14, 14)
+                                        .addComponent(filterSensitive).addContainerGap()));
 
         tabbedPane.addTab("Species", pnlSpecies);
 
@@ -954,38 +1289,51 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         javax.swing.GroupLayout pnlHabitatsLayout = new javax.swing.GroupLayout(pnlHabitats);
         pnlHabitats.setLayout(pnlHabitatsLayout);
-        pnlHabitatsLayout.setHorizontalGroup(
-            pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlHabitatsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                    .addComponent(labValidTo))
-                .addGap(18, 18, 18)
-                .addGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filterHabitats, 0, 338, Short.MAX_VALUE)
-                    .addComponent(filterHabitatClass, 0, 338, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        pnlHabitatsLayout.setVerticalGroup(
-            pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlHabitatsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labValidFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterHabitats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labValidTo, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterHabitatClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
+        pnlHabitatsLayout.setHorizontalGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        javax.swing.GroupLayout.Alignment.TRAILING,
+                        pnlHabitatsLayout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        pnlHabitatsLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(labValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 67,
+                                                        Short.MAX_VALUE).addComponent(labValidTo))
+                                .addGap(18, 18, 18)
+                                .addGroup(
+                                        pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(filterHabitats, 0, 338, Short.MAX_VALUE)
+                                                .addComponent(filterHabitatClass, 0, 338, Short.MAX_VALUE)).addContainerGap()));
+        pnlHabitatsLayout.setVerticalGroup(pnlHabitatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(
+                        pnlHabitatsLayout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        pnlHabitatsLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(labValidFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(filterHabitats, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(17, 17, 17)
+                                .addGroup(
+                                        pnlHabitatsLayout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(labValidTo, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(filterHabitatClass, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(90, Short.MAX_VALUE)));
 
         tabbedPane.addTab("Habitats", pnlHabitats);
 
         labCountry1.setText("Marine:");
 
-        filterAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">" }));
+        filterAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">"}));
         filterAreaSign.setMaximumSize(new java.awt.Dimension(56, 20));
 
         labBioRegion1.setText("Area:");
@@ -996,88 +1344,172 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         filterRegion.setMaximumSize(new java.awt.Dimension(56, 20));
 
-        filterMarineAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">" }));
+        filterMarineAreaSign.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"<", ">"}));
         filterMarineAreaSign.setMaximumSize(new java.awt.Dimension(56, 20));
 
         jLabel6.setText("Region:");
 
         javax.swing.GroupLayout pnlGeoLayout = new javax.swing.GroupLayout(pnlGeo);
         pnlGeo.setLayout(pnlGeoLayout);
-        pnlGeoLayout.setHorizontalGroup(
-            pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlGeoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlGeoLayout.createSequentialGroup()
-                        .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(labCountry1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labBioRegion1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                        .addGap(24, 24, 24)
-                        .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlGeoLayout.createSequentialGroup()
-                                .addComponent(filterAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(filterArea, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlGeoLayout.createSequentialGroup()
-                                .addComponent(filterMarineAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(filterMarineArea, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(pnlGeoLayout.createSequentialGroup()
-                        .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labBioRegion, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                            .addGroup(pnlGeoLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlGeoLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlGeoLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterBiogeo, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(165, 165, 165))
-        );
-        pnlGeoLayout.setVerticalGroup(
-            pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlGeoLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(filterRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labBioRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterBiogeo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labBioRegion1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labCountry1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterMarineAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterMarineArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
-        );
+        pnlGeoLayout
+                .setHorizontalGroup(pnlGeoLayout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                pnlGeoLayout
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(
+                                                pnlGeoLayout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(
+                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                pnlGeoLayout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                pnlGeoLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                false)
+                                                                                        .addComponent(
+                                                                                                labCountry1,
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(
+                                                                                                labBioRegion1,
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                36, Short.MAX_VALUE))
+                                                                        .addGap(24, 24, 24)
+                                                                        .addGroup(
+                                                                                pnlGeoLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                pnlGeoLayout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(
+                                                                                                                filterAreaSign,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                42,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addGap(18, 18, 18)
+                                                                                                        .addComponent(
+                                                                                                                filterArea,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                54,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                        .addGroup(
+                                                                                                pnlGeoLayout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(
+                                                                                                                filterMarineAreaSign,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                42,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                        .addGap(18, 18, 18)
+                                                                                                        .addComponent(
+                                                                                                                filterMarineArea,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                54,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                        .addGroup(
+                                                                pnlGeoLayout
+                                                                        .createSequentialGroup()
+                                                                        .addGroup(
+                                                                                pnlGeoLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addComponent(
+                                                                                                labBioRegion,
+                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                57, Short.MAX_VALUE)
+                                                                                        .addGroup(
+                                                                                                pnlGeoLayout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addComponent(jLabel6)
+                                                                                                        .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                                                        .addGroup(
+                                                                                pnlGeoLayout
+                                                                                        .createParallelGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                        .addGroup(
+                                                                                                pnlGeoLayout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                        .addComponent(
+                                                                                                                filterRegion,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                359,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                                        .addGroup(
+                                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                                pnlGeoLayout
+                                                                                                        .createSequentialGroup()
+                                                                                                        .addPreferredGap(
+                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                                        .addComponent(
+                                                                                                                filterBiogeo,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                                359,
+                                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(165, 165, 165)));
+        pnlGeoLayout.setVerticalGroup(pnlGeoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                pnlGeoLayout
+                        .createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(
+                                pnlGeoLayout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(filterRegion, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(
+                                pnlGeoLayout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(labBioRegion, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterBiogeo, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(
+                                pnlGeoLayout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(labBioRegion1, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterArea, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(
+                                pnlGeoLayout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(labCountry1, javax.swing.GroupLayout.PREFERRED_SIZE, 14,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterMarineAreaSign, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterMarineArea, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(29, Short.MAX_VALUE)));
 
         tabbedPane.addTab("Geography", pnlGeo);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel4Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE).addContainerGap()));
+        jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel4Layout
+                        .createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 186,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)));
 
         jPanel9.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -1140,7 +1572,6 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         });
 
-
         btnGeneratePdfs.setText("Pdf");
         btnGeneratePdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
         btnGeneratePdfs.addActionListener(new java.awt.event.ActionListener() {
@@ -1159,58 +1590,46 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         });
 
-
-
-
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING)
-                        .addComponent(btnView, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addComponent(btnDuplicate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEdit, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addComponent(btnDeleteAll, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addComponent(btnNew, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                        .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap())
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(btnView, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnNew)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnDuplicate)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnEdit)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnDelete)
-                    .addPreferredGap(ComponentPlacement.RELATED)
-                    .addComponent(btnDeleteAll)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(ComponentPlacement.UNRELATED)
-                    .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(82, Short.MAX_VALUE))
-        );
+        jPanel9Layout.setHorizontalGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        jPanel9Layout
+                                .createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(
+                                        jPanel9Layout
+                                                .createParallelGroup(Alignment.LEADING)
+                                                .addComponent(btnView, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(btnDuplicate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(btnEdit, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(btnDeleteAll, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(btnNew, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                                .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 103,
+                                                        GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 103,
+                                                        GroupLayout.PREFERRED_SIZE)).addContainerGap()));
+        jPanel9Layout.setVerticalGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel9Layout.createSequentialGroup().addContainerGap()
+                        .addComponent(btnView, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNew)
+                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnDuplicate)
+                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnEdit)
+                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnDelete)
+                        .addPreferredGap(ComponentPlacement.RELATED).addComponent(btnDeleteAll)
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(82, Short.MAX_VALUE)));
         jPanel9.setLayout(jPanel9Layout);
 
         pnlDisplaySites.setBorder(javax.swing.BorderFactory.createTitledBorder("SDF"));
 
-        tabDisplaySites.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tabDisplaySites.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
 
-            },
-            new String [] {
-                "Edited", "Site code", "Site name", "Updated Date"
-            }
-        ));
+        }, new String[] {"Edited", "Site code", "Site name", "Updated Date"}));
         tabDisplaySites.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(tabDisplaySites);
         tabDisplaySites.getColumnModel().getColumn(0).setResizable(false);
@@ -1218,16 +1637,14 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         javax.swing.GroupLayout pnlDisplaySitesLayout = new javax.swing.GroupLayout(pnlDisplaySites);
         pnlDisplaySites.setLayout(pnlDisplaySitesLayout);
-        pnlDisplaySitesLayout.setHorizontalGroup(
-            pnlDisplaySitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDisplaySitesLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        pnlDisplaySitesLayout.setVerticalGroup(
-            pnlDisplaySitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-        );
+        pnlDisplaySitesLayout
+                .setHorizontalGroup(pnlDisplaySitesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                        pnlDisplaySitesLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+                                .addContainerGap()));
+        pnlDisplaySitesLayout.setVerticalGroup(pnlDisplaySitesLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jScrollPane1,
+                        javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE));
         if (SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE)) {
             jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/emeraude_logo_smaller.png"))); // NOI18N
         } else {
@@ -1261,97 +1678,146 @@ public final class SDFFilter extends javax.swing.JFrame {
         });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel6Layout.createSequentialGroup()
-                    .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(38)
-                            .addComponent(jLabel4))
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                                    .addComponent(pnlDisplaySites, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                    .addGap(10)
-                                    .addComponent(jLabel5)
-                                    .addGap(18)
-                                    .addComponent(txtNumberSites, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(429)))
-                            .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                    .addGap(32)
-                                    .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(btnApplyFilter)
-                                        .addComponent(btnResetFilter)))
-                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                    .addGap(18)
-                                    .addComponent(jPanel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-                    .addContainerGap(22, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(jPanel6Layout.createSequentialGroup()
-                    .addGroup(jPanel6Layout.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addGroup(jPanel6Layout.createSequentialGroup()
-                                    .addGap(22)
-                                    .addComponent(jLabel4)))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(ComponentPlacement.RELATED))
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addComponent(btnApplyFilter, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-                            .addGap(18)
-                            .addComponent(btnResetFilter, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-                            .addGap(78)))
-                    .addGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING, false)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
-                            .addGap(9)
-                            .addGroup(jPanel6Layout.createParallelGroup(Alignment.BASELINE)
-                                .addComponent(jLabel5)
-                                .addComponent(txtNumberSites, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(ComponentPlacement.RELATED)
-                            .addComponent(pnlDisplaySites, GroupLayout.PREFERRED_SIZE, 332, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())
-                        .addGroup(Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                            .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel9, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
-                            .addGap(24))))
-        );
+        jPanel6Layout.setHorizontalGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel6Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel6Layout
+                                        .createParallelGroup(Alignment.LEADING)
+                                        .addGroup(
+                                                jPanel6Layout.createSequentialGroup().addComponent(jLabel1).addGap(38)
+                                                        .addComponent(jLabel4))
+                                        .addGroup(
+                                                jPanel6Layout
+                                                        .createSequentialGroup()
+                                                        .addContainerGap()
+                                                        .addGroup(
+                                                                jPanel6Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addGroup(
+                                                                                jPanel6Layout
+                                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                                        .addComponent(pnlDisplaySites,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addComponent(jPanel4,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                        .addGroup(
+                                                                                jPanel6Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addGap(10)
+                                                                                        .addComponent(jLabel5)
+                                                                                        .addGap(18)
+                                                                                        .addComponent(txtNumberSites,
+                                                                                                GroupLayout.PREFERRED_SIZE, 59,
+                                                                                                GroupLayout.PREFERRED_SIZE)
+                                                                                        .addGap(429)))
+                                                        .addGroup(
+                                                                jPanel6Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addGroup(
+                                                                                jPanel6Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addGap(32)
+                                                                                        .addGroup(
+                                                                                                jPanel6Layout
+                                                                                                        .createParallelGroup(
+                                                                                                                Alignment.LEADING)
+                                                                                                        .addComponent(
+                                                                                                                btnApplyFilter)
+                                                                                                        .addComponent(
+                                                                                                                btnResetFilter)))
+                                                                        .addGroup(
+                                                                                jPanel6Layout
+                                                                                        .createSequentialGroup()
+                                                                                        .addGap(18)
+                                                                                        .addComponent(jPanel9,
+                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                GroupLayout.PREFERRED_SIZE)))))
+                        .addContainerGap(22, Short.MAX_VALUE)));
+        jPanel6Layout.setVerticalGroup(jPanel6Layout.createParallelGroup(Alignment.LEADING).addGroup(
+                jPanel6Layout
+                        .createSequentialGroup()
+                        .addGroup(
+                                jPanel6Layout
+                                        .createParallelGroup(Alignment.TRAILING)
+                                        .addGroup(
+                                                jPanel6Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(
+                                                                jPanel6Layout
+                                                                        .createParallelGroup(Alignment.LEADING)
+                                                                        .addComponent(jLabel1)
+                                                                        .addGroup(
+                                                                                jPanel6Layout.createSequentialGroup().addGap(22)
+                                                                                        .addComponent(jLabel4)))
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(ComponentPlacement.RELATED))
+                                        .addGroup(
+                                                jPanel6Layout
+                                                        .createSequentialGroup()
+                                                        .addComponent(btnApplyFilter, GroupLayout.PREFERRED_SIZE, 38,
+                                                                GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18)
+                                                        .addComponent(btnResetFilter, GroupLayout.PREFERRED_SIZE, 38,
+                                                                GroupLayout.PREFERRED_SIZE).addGap(78)))
+                        .addGroup(
+                                jPanel6Layout
+                                        .createParallelGroup(Alignment.LEADING, false)
+                                        .addGroup(
+                                                jPanel6Layout
+                                                        .createSequentialGroup()
+                                                        .addGap(9)
+                                                        .addGroup(
+                                                                jPanel6Layout
+                                                                        .createParallelGroup(Alignment.BASELINE)
+                                                                        .addComponent(jLabel5)
+                                                                        .addComponent(txtNumberSites, GroupLayout.PREFERRED_SIZE,
+                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                        .addComponent(pnlDisplaySites, GroupLayout.PREFERRED_SIZE, 332,
+                                                                GroupLayout.PREFERRED_SIZE).addContainerGap())
+                                        .addGroup(
+                                                Alignment.TRAILING,
+                                                jPanel6Layout
+                                                        .createSequentialGroup()
+                                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE,
+                                                                Short.MAX_VALUE)
+                                                        .addComponent(jPanel9, GroupLayout.PREFERRED_SIZE, 300,
+                                                                GroupLayout.PREFERRED_SIZE).addGap(24)))));
         jPanel6.setLayout(jPanel6Layout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(43, Short.MAX_VALUE)));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                layout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     } // </editor-fold>//GEN-END:initComponents
 
-    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnApplyFilterActionPerformed
-          this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-} //GEN-LAST:event_btnApplyFilterActionPerformed
+    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnApplyFilterActionPerformed
+        this.applyFilters(HibernateUtil.getSessionFactory().openSession());
+    } // GEN-LAST:event_btnApplyFilterActionPerformed
+
     /**
      *
      * @param evt
      */
-    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnNewActionPerformed
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnNewActionPerformed
         EditorSitecode editorSitecode = new EditorSitecode(this, this, true);
         if (editorSitecode.ok) {
             SDFEditor editor = new SDFEditor(this, "new");
@@ -1360,12 +1826,13 @@ public final class SDFFilter extends javax.swing.JFrame {
             SDFFilter.log.info("New site::::" + newSitecode);
         }
         editorSitecode.dispose();
-    } //GEN-LAST:event_btnNewActionPerformed
+    } // GEN-LAST:event_btnNewActionPerformed
+
     /**
      *
      * @param evt
      */
-    private void btnDuplicateActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDuplicateActionPerformed
+    private void btnDuplicateActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDuplicateActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
@@ -1379,20 +1846,22 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
             editorSitecode.dispose();
         }
-    } //GEN-LAST:event_btnDuplicateActionPerformed
+    } // GEN-LAST:event_btnDuplicateActionPerformed
+
     /**
      *
      * @param evt
      */
-    private void btnResetFilterActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnResetFilterActionPerformed
+    private void btnResetFilterActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnResetFilterActionPerformed
         this.clearFilterSelections();
         this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-    } //GEN-LAST:event_btnResetFilterActionPerformed
+    } // GEN-LAST:event_btnResetFilterActionPerformed
+
     /**
      *
      * @param evt
      */
-    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnEditActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnEditActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site from the list");
@@ -1405,27 +1874,21 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
             editor.setVisible(true);
         }
-    } //GEN-LAST:event_btnEditActionPerformed
+    } // GEN-LAST:event_btnEditActionPerformed
+
     /**
      *
      * @param evt
      */
-    private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDeleteAllActionPerformed
+    private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDeleteAllActionPerformed
 
         int crow = this.tabDisplaySites.getRowCount();
         if (crow != 0) {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                 this,
-                "This will permanently delete all sites. Continue?",
-                "Confirm Deletion",
-                javax.swing.JOptionPane.YES_NO_OPTION,
-                 javax.swing.JOptionPane.WARNING_MESSAGE,
-                 null,
-                 null,
-                 null
-                 );
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "This will permanently delete all sites. Continue?",
+                            "Confirm Deletion", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE,
+                            null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
-
 
                 DeleteWorker worker = new DeleteWorker();
                 final ProgressDialog dialog = new ProgressDialog(this, true);
@@ -1443,7 +1906,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         }
 
-    } //GEN-LAST:event_btnDeleteAllActionPerformed
+    } // GEN-LAST:event_btnDeleteAllActionPerformed
 
     public void deleteAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -1461,20 +1924,18 @@ public final class SDFFilter extends javax.swing.JFrame {
             tx.commit();
         }
 
-
         javax.swing.JOptionPane.showMessageDialog(this, "Deletion all the sites has finished properly");
         tabDisplaySites.repaint();
         this.txtNumberSites.setText(getNumberOfSites(session));
         session.close();
     }
 
-
     /**
      *
      * @param evt
      */
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDeleteActionPerformed
 
         int[] row = tabDisplaySites.getSelectedRows();
         if (row == null) {
@@ -1482,16 +1943,10 @@ public final class SDFFilter extends javax.swing.JFrame {
         } else if (row != null && row.length == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
         } else {
-            int answer = javax.swing.JOptionPane.showOptionDialog(
-                 this,
-                "This will permanently delete the selected site . Continue?",
-                "Confirm Deletion",
-                javax.swing.JOptionPane.YES_NO_OPTION,
-                 javax.swing.JOptionPane.WARNING_MESSAGE,
-                 null,
-                 null,
-                 null
-                 );
+            int answer =
+                    javax.swing.JOptionPane.showOptionDialog(this, "This will permanently delete the selected site . Continue?",
+                            "Confirm Deletion", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE,
+                            null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
@@ -1519,110 +1974,93 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         }
 
-    } //GEN-LAST:event_btnDeleteActionPerformed
-
-
-    /**
-    *
-    * @param evt
-    */
-
-   private void btnGeneratePDFsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGeneratePDFs
-
-
-       ArrayList<String> siteCodes = new ArrayList<String>();
-
-       int[] row = tabDisplaySites.getSelectedRows();
-       if (row == null) {
-           javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-       } else if (row != null && row.length == 0) {
-           javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
-       } else {
-           /*int answer = javax.swing.JOptionPane.showOptionDialog(
-                this,
-               "This operation can take a long time. Do you want to continue?",
-               "Pdf Generation",
-               javax.swing.JOptionPane.YES_NO_OPTION,
-                javax.swing.JOptionPane.WARNING_MESSAGE,
-                null,
-                null,
-                null
-                );
-           if (answer == javax.swing.JOptionPane.YES_OPTION) {
-           */
-               for (int i = 0; i < row.length; i++) {
-
-                   String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
-                   siteCodes.add(sitecode);
-
-               }
-               new SDFExporterSelPDF(siteCodes).setVisible(true);
-
-
-               this.tabDisplaySites.repaint();
-           //}
-
-       }
-
-   } //GEN-LAST:event_btnGeneratePDFsActionPerformed
-
-
-   /**
-   *
-   * @param evt
-   */
-
-  private void btnGenerateAllPDFsActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnGenerateAllPDFs
-
-     ArrayList<String> siteCodes = new ArrayList<String>();
-
-
-      int row = this.tabDisplaySites.getRowCount();
-
-
-      int answer = javax.swing.JOptionPane.showOptionDialog(
-         this,
-         "This operation will generate all sites and could take a long time. Do you want to continue?",
-         "Pdf Generation",
-         javax.swing.JOptionPane.YES_NO_OPTION,
-         javax.swing.JOptionPane.WARNING_MESSAGE,
-         null,
-         null,
-         null
-        );
-       if (answer == javax.swing.JOptionPane.YES_OPTION) {
-
-              for (int i = 0; i < row; i++) {
-
-                  String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
-                  siteCodes.add(sitecode);
-
-              }
-              new SDFExporterSelPDF(siteCodes).setVisible(true);
-
-
-              this.tabDisplaySites.repaint();
-
-          }
-      //}
-
-  } //GEN-LAST:event_btnGenerateAllPDFs
-
-
-
-
-
-
-
+    } // GEN-LAST:event_btnDeleteActionPerformed
 
     /**
-     *
-     * @param evt
-     */    /**
      *
      * @param evt
      */
-    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnViewActionPerformed
+
+    private void btnGeneratePDFsActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnGeneratePDFs
+
+        ArrayList<String> siteCodes = new ArrayList<String>();
+
+        int[] row = tabDisplaySites.getSelectedRows();
+        if (row == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
+        } else if (row != null && row.length == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
+        } else {
+            /*
+             * int answer = javax.swing.JOptionPane.showOptionDialog(
+             * this,
+             * "This operation can take a long time. Do you want to continue?",
+             * "Pdf Generation",
+             * javax.swing.JOptionPane.YES_NO_OPTION,
+             * javax.swing.JOptionPane.WARNING_MESSAGE,
+             * null,
+             * null,
+             * null
+             * );
+             * if (answer == javax.swing.JOptionPane.YES_OPTION) {
+             */
+            for (int i = 0; i < row.length; i++) {
+
+                String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
+                siteCodes.add(sitecode);
+
+            }
+            new SDFExporterSelPDF(siteCodes).setVisible(true);
+
+            this.tabDisplaySites.repaint();
+            // }
+
+        }
+
+    } // GEN-LAST:event_btnGeneratePDFsActionPerformed
+
+    /**
+     *
+     * @param evt
+     */
+
+    private void btnGenerateAllPDFsActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnGenerateAllPDFs
+
+        ArrayList<String> siteCodes = new ArrayList<String>();
+
+        int row = this.tabDisplaySites.getRowCount();
+
+        int answer =
+                javax.swing.JOptionPane.showOptionDialog(this,
+                        "This operation will generate all sites and could take a long time. Do you want to continue?",
+                        "Pdf Generation", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null,
+                        null, null);
+        if (answer == javax.swing.JOptionPane.YES_OPTION) {
+
+            for (int i = 0; i < row; i++) {
+
+                String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
+                siteCodes.add(sitecode);
+
+            }
+            new SDFExporterSelPDF(siteCodes).setVisible(true);
+
+            this.tabDisplaySites.repaint();
+
+        }
+        // }
+
+    } // GEN-LAST:event_btnGenerateAllPDFs
+
+    /**
+     *
+     * @param evt
+     */
+    /**
+     *
+     * @param evt
+     */
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnViewActionPerformed
         String sitecode = getSelectedSiteCode();
         if (sitecode == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
@@ -1632,9 +2070,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             exportHTML.processDatabase("xsl/exportSite.html");
         }
 
-    } //GEN-LAST:event_btnViewActionPerformed
-
-
+    } // GEN-LAST:event_btnViewActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApplyFilter;
@@ -1691,7 +2127,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     private javax.swing.JLabel labSpecies2;
     private javax.swing.JLabel labValidFrom;
     private javax.swing.JLabel labValidTo;
-    private javax.swing.JPanel pnlDates;
+    private javax.swing.JPanel pnlDatesNatura2000;
     private javax.swing.JPanel pnlDisplaySites;
     private javax.swing.JPanel pnlGeneral;
     private javax.swing.JPanel pnlGeo;
@@ -1700,6 +2136,15 @@ public final class SDFFilter extends javax.swing.JFrame {
     private javax.swing.JTable tabDisplaySites;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTextField txtNumberSites;
+    private JPanel pnlDatesEmerald;
+    private JLabel lblDateDesignatedASCI;
+    private JLabel lblDateConfirmedASCI;
+    private JComboBox filterDateConfirmedASCI;
+    private JComboBox filterDateDesignatedASCI;
+    private JLabel lblDateConfirmedCandidateASCI;
+    private JLabel lblDateProposedASCI;
+    private JComboBox filterDateProposedASCI;
+    private JComboBox filterDateConfirmedCandidateASCI;
     // End of variables declaration//GEN-END:variables
 
 }

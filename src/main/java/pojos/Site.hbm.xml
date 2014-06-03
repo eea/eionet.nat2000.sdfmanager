@@ -147,6 +147,21 @@
     <property name="siteDateUpdate" type="date">
       <column length="20" name="DATE_UPDATE"/>
     </property>
+    <property name="siteProposedAsciDate" type="date">
+      <column length="10" name="SITE_ASCI_PROP_DATE"/>
+    </property>
+    <property name="siteConfirmedCandidateAsciDate" type="date">
+      <column length="10" name="SITE_ASCI_CONF_CAND_DATE"/>
+    </property>
+    <property name="siteConfirmedAsciDate" type="date">
+      <column length="10" name="SITE_ASCI_CONF_DATE"/>
+    </property>
+    <property name="siteDesignatedAsciDate" type="date">
+      <column length="10" name="SITE_ASCI_DESIG_DATE"/>
+    </property>
+    <property name="siteAsciLegalRef" type="string">
+      <column length="512" name="SITE_ASCI_LEGAL_REF"/>
+    </property>
     <!--<filter name="sitecodeFilter" condition="SITE_CODE like :sitecode"/>-->
   </class>
   <!--<filter-def name="sitecodeFilter">

@@ -5,12 +5,7 @@
     <xsl:import href="DateFormat.xsl" />
     <xsl:output method="xml" indent="yes" encoding="utf-16" omit-xml-declaration="yes"/>
 
-
-
-    <xsl:template match="sdf" >
-
-
-
+    <xsl:template match="sdf">
     <html>
       <head><link href="css/Natura2000_SDF.css" rel="stylesheet" type="text/css" /></head>
       <body>
@@ -30,9 +25,7 @@
         Sites of Community Importance (SCI) and <br/>for Special Areas of Conservation (SAC)
       </p>
 
-
       <div class="siteData_title">
-
         <xsl:choose>
           <xsl:when test="string(siteIdentification/siteCode)">
             <table class="invisible WholeWidth">
@@ -217,31 +210,18 @@
       </xsl:choose>
 
 
-      <xsl:choose>
-        <xsl:when test="string(siteIdentification/spaClassificationDate) or string(siteIdentification/spaLegalReference)">
+      <!-- xsl:choose>
+        <xsl:when test="string(siteIdentification/asciProposalDate)">
           <h2>1.7 Site indication and designation / classification dates</h2>
           <table class="SDFtable WholeWidth">
             <tr>
-              <td width="50%" class="Bold">Date site classified as SPA:</td>
+              <td width="50%" class="Bold">Date site proposed as ASCI:</td>
               <td width="50%" class="DivisorTop MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/spaClassificationDate)">
+                  <xsl:when test="string(siteIdentification/asciProposalDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/spaClassificationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciProposalDate"/>
                     </xsl:call-template>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    No data
-                  </xsl:otherwise>
-                </xsl:choose>
-              </td>
-            </tr>
-            <tr>
-              <td width="50%" class="DivisorRight DivisorTop Bold">National legal reference of SPA designation</td>
-              <td class="DivisorTop MinimalHeight">
-                <xsl:choose>
-                  <xsl:when test="string(siteIdentification/spaLegalReference)">
-                    <xsl:value-of select="siteIdentification/spaLegalReference"/>
                   </xsl:when>
                   <xsl:otherwise>
                     No data
@@ -251,18 +231,34 @@
             </tr>
           </table>
         </xsl:when>
-      </xsl:choose>
+      </xsl:choose-->
 
       <xsl:choose>
-        <xsl:when test="string(siteIdentification/sciProposalDate) or string(siteIdentification/sciConfirmationDate) or string(siteIdentification/sacDesignationDate) or string(siteIdentification/sacLegalReference)">
+        <xsl:when test="string(siteIdentification/asciProposalDate) or string(siteIdentification/asciConfirmedCandidateDate) or string(siteIdentification/asciConfirmationDate) or string(siteIdentification/asciDesignationDate) or string(siteIdentification/asciLegalReference)">
           <table class="SDFtable WholeWidth">
-            <tr>
-              <td width="50%" class="Bold">Date site proposed as SCI:</td>
+           <tr>
+              <td width="50%" class="Bold">Date site proposed as ASCI:</td>
               <td width="50%" class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sciProposalDate)">
+                  <xsl:when test="string(siteIdentification/asciProposalDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sciProposalDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciProposalDate"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    No data
+                  </xsl:otherwise>
+                </xsl:choose>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="Bold">Date site confirmed as candidate ASCI:</td>
+              <td width="50%" class="MinimalHeight">
+                <xsl:choose>
+                  <xsl:when test="string(siteIdentification/asciConfirmedCandidateDate)">
+                    <xsl:call-template name="FormatYearMonth">
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciConfirmedCandidateDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -272,12 +268,12 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="Bold">Date site confirmed as SCI:</td>
+              <td width="50%" class="Bold">Date site confirmed as ASCI:</td>
               <td class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sciConfirmationDate)">
+                  <xsl:when test="string(siteIdentification/asciConfirmationDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sciConfirmationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciConfirmationDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -287,12 +283,12 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="Bold">Date site designated as SAC:</td>
+              <td width="50%" class="Bold">Date site designated as ASCI:</td>
               <td width="50%" class="MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sacDesignationDate)">
+                  <xsl:when test="string(siteIdentification/asciDesignationDate)">
                     <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sacDesignationDate"/>
+                      <xsl:with-param name="DateTime" select="siteIdentification/asciDesignationDate"/>
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:otherwise>
@@ -302,14 +298,11 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="DivisorRight Bold">National legal reference of SAC designation:</td>
+              <td width="50%" class="DivisorRight Bold">National legal reference of ASCI designation:</td>
               <td class="DivisorTop MinimalHeight">
                 <xsl:choose>
-                  <xsl:when test="string(siteIdentification/sacLegalReference)">
-                    <!--<xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/sacLegalReference"/>
-                    </xsl:call-template>-->
-                    <xsl:value-of select="siteIdentification/sacLegalReference"/>
+                  <xsl:when test="string(siteIdentification/asciLegalReference)">
+                    <xsl:value-of select="siteIdentification/asciLegalReference"/>
                   </xsl:when>
                   <xsl:otherwise>
                     No data
@@ -347,9 +340,9 @@
       <h1>2. SITE LOCATION</h1>
       <a href="#top" class="BackTopLink">Back to top</a>
 
+      <h2>2.1 Site-centre location [decimal degrees]:</h2>
       <xsl:choose>
         <xsl:when test="string(siteLocation/longitude) or string(siteLocation/latitude)">
-          <h2>2.1 Site-centre location [decimal degrees]:</h2>
           <table class="SDFtableNoBorder WholeWidth">
             <tr width="100%">
               <td width="50%">
@@ -379,17 +372,19 @@
         </xsl:when>
       </xsl:choose>
 
+      <table class="SDFtableNoBorder WholeWidth">
+        <tr>
+          <td>
+            <h2>2.2 Area [ha]:</h2>
+          </td>
+          <td>
+            <h2>2.3 Marine area [%]</h2>
+          </td>
+        </tr>
+    </table>
       <xsl:choose>
         <xsl:when test="string(siteLocation/area) or string(siteLocation/marineArea)">
           <table class="SDFtableNoBorder WholeWidth">
-            <tr>
-              <td>
-                <h2>2.2 Area [ha]:</h2>
-              </td>
-              <td>
-                <h2>2.3 Marine area [%]</h2>
-              </td>
-            </tr>
             <tr width="100%">
               <td width="50%">
                 <xsl:value-of select = "siteLocation/area"/>
@@ -402,14 +397,16 @@
         </xsl:when>
       </xsl:choose>
 
+      <table class="SDFtableNoBorder WholeWidth">
+        <tr>
+          <td>
+             <h2>2.4 Sitelength [km]:</h2>
+          </td>
+        </tr>
+      </table>
       <xsl:choose>
         <xsl:when test="string(siteLocation/siteLength)">
           <table class="SDFtableNoBorder WholeWidth">
-            <tr>
-              <td>
-                <h2>2.4 Sitelength [km]:</h2>
-              </td>
-            </tr>
             <tr width="100%">
               <td width="50%">
                 <xsl:value-of select = "siteLocation/siteLength"/>
@@ -420,9 +417,9 @@
       </xsl:choose>
 
 
+      <h2>2.5 Administrative region code and name</h2>
       <xsl:choose>
         <xsl:when test="string(siteLocation/adminRegions/region)">
-          <h2>2.5 Administrative region code and name</h2>
           <table class="SDFtableNoBorder WholeWidth">
             <tr>
               <td width="25%">
@@ -447,9 +444,9 @@
       </xsl:choose>
 
 
+      <h2>2.6 Biogeographical Region(s)</h2>
       <xsl:choose>
         <xsl:when test="string(siteLocation/biogeoRegions)">
-          <h2>2.6 Biogeographical Region(s)</h2>
           <xsl:variable name="vNodes" select="siteLocation/biogeoRegions"/>
           <xsl:variable name="vNumCols" select="3"/>
           <xsl:choose>
@@ -464,54 +461,6 @@
                         <xsl:value-of select = "code"/>
                       </td>
                       <td width="5%" align="left">(<xsl:value-of select = "percentage"/> %)
-                       <!-- <xsl:if test="code = 'alpine'" >
-                          Alpine (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'anatolian'" >
-                          Atlantic (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'arctic'" >
-                          Black Sea (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'atlantic'" >
-                          Boreal (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'mediterranean'" >
-                          Continental (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'blackSea'" >
-                          Macaronesia (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'boreal'" >
-                          Mediterranean (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'continental'" >
-                          Panonian (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'macaronesian'" >
-                          Steppic (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'pannonian'" >
-                          Steppic (...%)
-                        </xsl:if>
-                        <xsl:if test="code = 'steppic'" >
-                          Steppic (...%)
-                        </xsl:if>
-                        <xsl:if test="string(code) = 'marineAtlantic'">
-                          Marine Atlantic
-                        </xsl:if>
-                        <xsl:if test="string(code) = 'marineBaltic'">
-                          Marine Black Sea
-                        </xsl:if>
-                        <xsl:if test="string(code) = 'marineBlackSea'">
-                          Marine Baltic Sea
-                        </xsl:if>
-                        <xsl:if test="string(code) = 'marineMacaronesian'">
-                          Marine Mediterranean
-                        </xsl:if>
-                        <xsl:if test="string(code) = 'marineMediterranean'">
-                          Marine Macaronesian
-                        </xsl:if>-->
                       </td>
                       <td align="left"></td>
                     </xsl:for-each>
@@ -529,21 +478,17 @@
       <!-- **********************************************************************************************************************************
                                                     SARTING ECOLOGICAL INFORMATION PART
           ************************************************************************************************************************************-->
-      <xsl:choose>
-        <xsl:when test="string(ecologicalInformation)">
+      <h1>3. ECOLOGICAL INFORMATION</h1>
+      <!--  xsl:choose>
+        <xsl:when test="string(ecologicalInformation)"-->
           <a name="3">
             <span/>
           </a>
-          <h1>3. ECOLOGICAL INFORMATION</h1>
           <a href="#top" class="BackTopLink">Back to top</a>
-          <!--<p class="note">
-                  NOTE: Protected species are shown with red background.
-                </p>-->
 
-
+          <h2>3.1 Habitat types present on the site and assessment for them</h2>
           <xsl:choose>
             <xsl:when test="string(ecologicalInformation/habitatTypes/habitatType)">
-              <h2>3.1 Habitat types present on the site and assessment for them</h2>
               <table class="SDFtable3rd WholeWidth">
                 <tr>
                   <th colspan="6" class="MinimalHeight DivisorRight CenterText">
@@ -597,19 +542,11 @@
                       <td class="DivisorTop DivisorRight">
                         <xsl:value-of select = "code"/>
                         <xsl:variable name="habcode" select="code"/>
-                        <xsl:variable name="habcodeURL" select="concat('HabCodePopup.aspx?habcode=', $habcode)"/>
+                        <!--  TODO similar manual to n2k? -->
                         <xsl:variable name="apos">'</xsl:variable>
                         <xsl:variable name="apos2">http://natura2000.eea.europa.eu/Natura2000/</xsl:variable>
-                        <!--<img src="images/info.jpg" border="0" alt="info">
-                        <xsl:attribute name="onclick">
-                          <xsl:value-of select="concat('window.open(', $apos, $habcodeURL, $apos, ',', $apos, 'habpopup', $apos, ',', $apos, 'height=130,width=300,toolbar=no,scrollbars=yes', $apos, ')')"/>
-                        </xsl:attribute>
-                      </img>&#160; -->
                         <!-- In the following image, the path, to which the link points to has been changed in order to show the linked page from here ("http://natura..." added) -->
-                        <img src="images/info.jpg" border="0" alt="info">
-                          <xsl:attribute name="onclick">
-                            <xsl:value-of select="concat('window.open(', $apos, $apos2, $habcodeURL, $apos, ',', $apos, 'habpopup', $apos, ',', $apos, 'height=130,width=300,toolbar=no,scrollbars=yes', $apos, ')')" />
-                          </xsl:attribute>
+                        <img src="images/info.jpg" border="0" alt="info" onClick="window.open('https://wcd.coe.int/com.instranet.InstraServlet?command=com.instranet.CmdBlobGet&amp;InstranetImage=2335081&amp;SecMode=1&amp;DocId=2044598&amp;Usage=2')">
                         </img>&#160;
                       </td>
                       <td class="DivisorTop DivisorRight">
@@ -668,9 +605,9 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>3.2 Species referred to in Article 4 of Directive 2009/147/EC and listed in Annex II of Directive 92/43/EEC and site evaluation for them</h2>
           <xsl:choose>
             <xsl:when test="string(ecologicalInformation/species)">
-              <h2>3.2 Species referred to in Article 4 of Directive 2009/147/EC and listed in Annex II of Directive 92/43/EEC and site evaluation for them</h2>
               <!-- former "EcologicalInformation31" section -->
 
               <table class="SDFtable3rd WholeWidth">
@@ -837,10 +774,10 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>3.3 Other important species of flora and fauna (optional)</h2>
           <xsl:if test="string(ecologicalInformation/species/speciesPopulation/motivations/motivation)">
             <xsl:choose>
               <xsl:when test="string(ecologicalInformation/species)">
-                <h2>3.3 Other important species of flora and fauna (optional)</h2>
                 <table class="SDFtable3rd WholeWidth">
                   <tr>
                     <th colspan="5" class="MinimalHeight DivisorRight CenterText">
@@ -1014,16 +951,17 @@
               </xsl:when>
             </xsl:choose>
           </xsl:if>
-        </xsl:when>
-      </xsl:choose>
+        <!-- xsl:when>
+      </xsl:choose -->
       <!-- **********************************************************************************************************************************
                                                     ENDING ECOLOGICAL INFORMATION PART
           ************************************************************************************************************************************-->
       <!-- **********************************************************************************************************************************
                                                     SARTING SITE DESCRIPTION PART
           ************************************************************************************************************************************-->
-      <xsl:choose>
-        <xsl:when test="string(siteDescription) or string(otherSiteCharacteristics) or string(qualityAndImportance) or string(impacts) or string(ownership) or string(documentation)">
+      <h1>4. SITE DESCRIPTION</h1>
+      <!--  xsl:choose>
+        <xsl:when test="string(siteDescription) or string(otherSiteCharacteristics) or string(qualityAndImportance) or string(impacts) or string(ownership) or string(documentation)" -->
 
           <xsl:variable name="coverSum">
             <xsl:call-template name="coverSum">
@@ -1033,13 +971,11 @@
           <a name="4">
             <span/>
           </a>
-          <h1>4. SITE DESCRIPTION</h1>
           <a href="#top" class="BackTopLink">Back to top</a>
 
+          <h2>4.1 General site character</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription)">
-              <h2>4.1 General site character</h2>
-
               <table class="SDFtable WholeWidth">
                 <tr>
                   <td width="90%" class="">
@@ -1080,9 +1016,9 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>4.2 Quality and importance</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription/qualityAndImportance)">
-              <h2>4.2 Quality and importance</h2>
               <p class="Border">
                 <xsl:value-of select = "siteDescription/qualityAndImportance"/>
               </p>
@@ -1090,9 +1026,9 @@
           </xsl:choose>
 
 
+          <h2>4.3 Threats, pressures and activities with impacts on the site</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription/impacts)">
-              <h2>4.3 Threats, pressures and activities with impacts on the site</h2>
               <p>The most important impacts and activities with high effect on the site</p>
               <div class="WholeWidth">
                 <table class="HalfWidthTable">
@@ -1165,10 +1101,10 @@
           </xsl:choose>
 
 
+          <h2>4.4 Ownership (optional)</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription/ownership/ownershipPart)">
 
-              <h2>4.4 Ownership (optional)</h2>
               <table class="HalfWidthTable">
                 <tr>
                   <td colspan="2" class="DivisorRight">Type</td>
@@ -1229,9 +1165,9 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>4.5 Documentation</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription/documentation)">
-              <h2>4.5 Documentation</h2>
               <p class="Border WholeWidth">
                 <xsl:value-of select = "siteDescription/documentation/description"/>
               </p>
@@ -1253,30 +1189,26 @@
               </xsl:choose>
             </xsl:when>
           </xsl:choose>
-          <!-- <xsl:variable name="coverSum">
-              <xsl:call-template name="coverSum">
-                <xsl:with-param name="habitatList" select="/*/*/*/habitatClass"/>
-              </xsl:call-template>
-            </xsl:variable> -->
-        </xsl:when>
-      </xsl:choose>
+
+        <!--  /xsl:when>
+      </xsl:choose -->
       <!-- **********************************************************************************************************************************
                                                     ENDING SITE DESCRIPTION PART
           ************************************************************************************************************************************-->
       <!-- **********************************************************************************************************************************
                                                     SARTING SITE PROTECTION STATUS PART
           ************************************************************************************************************************************-->
-      <xsl:choose>
-        <xsl:when test="string(siteProtection/nationalDesignations) or string(siteProtection/relations) or string(siteProtection/siteDesignation)">
+      <!-- xsl:choose>
+        <xsl:when test="string(siteProtection/nationalDesignations) or string(siteProtection/relations) or string(siteProtection/siteDesignation)" -->
           <a name="5">
             <span/>
           </a>
           <h1>5. SITE PROTECTION STATUS (optional)</h1>
           <a href="#top" class="BackTopLink">Back to top</a>
 
+          <h2>5.1 Designation types at national and regional level:</h2>
           <xsl:choose>
             <xsl:when test="string(siteProtection/nationalDesignations)">
-              <h2>5.1 Designation types at national and regional level:</h2>
               <xsl:variable name="numNatDesigns" select="count(siteProtection/nationalDesignations/nationalDesignation)"></xsl:variable>
               <xsl:variable name="numRowsNatDesigns" select="$numNatDesigns div 3"></xsl:variable>
               <table class="SDFtableNoBorder WholeWidth">
@@ -1311,9 +1243,9 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>5.2 Relation of the described site with other sites:</h2>
           <xsl:choose>
             <xsl:when test="string(siteProtection/relations/nationalRelationships)">
-              <h2>5.2 Relation of the described site with other sites:</h2>
               <br />
               designated at national or regional level:
               <table class="SDFtableNoBorder WholeWidth">
@@ -1650,9 +1582,9 @@
             </xsl:when>
           </xsl:choose>
 
+          <h2>5.3 Site designation (optional)</h2>
           <xsl:choose>
             <xsl:when test="string(siteProtection/siteDesignationAdditional)">
-              <h2>5.3 Site designation (optional)</h2>
               <p class="Border WholeWidth">
                 <xsl:value-of select = "siteProtection/siteDesignationAdditional"/>
               </p>
@@ -1660,8 +1592,8 @@
             </xsl:when>
           </xsl:choose>
 
-        </xsl:when>
-      </xsl:choose>
+        <!-- /xsl:when>
+      </xsl:choose -->
       <!-- **********************************************************************************************************************************
                                                     ENDING SITE PROTECTION STATUS PART
           ************************************************************************************************************************************-->
@@ -1676,9 +1608,9 @@
           <h1>6. SITE MANAGEMENT</h1>
           <a href="#top" class="BackTopLink">Back to top</a>
 
+          <h2>6.1 Body(ies) responsible for the site management:</h2>
           <xsl:choose>
             <xsl:when test="string(siteManagement/managementBodies)">
-              <h2>6.1 Body(ies) responsible for the site management:</h2>
               <xsl:for-each select="siteManagement/managementBodies/managementBody">
                 <table class="SDFtable WholeWidth">
                   <tr>
@@ -1751,9 +1683,9 @@
             </table>
           </xsl:for-each>
 
+          <h2>6.3 Conservation measures (optional)</h2>
           <xsl:choose>
             <xsl:when test="string(siteManagement/conservationMeasures)">
-              <h2>6.3 Conservation measures (optional)</h2>
               <p class="Border WholeWidth">
                 <xsl:value-of select = "siteManagement/conservationMeasures"/>
               </p>
@@ -1767,12 +1699,12 @@
       <!-- **********************************************************************************************************************************
                                                     SARTING MAP OF SITES PART
           ************************************************************************************************************************************-->
+      <h1>7. MAP OF THE SITES</h1>
       <xsl:choose>
         <xsl:when test="string(map/pdfProvided) or string(map/mapReference) or string(map/InspireID)">
           <a name="7">
             <span/>
           </a>
-          <h1>7. MAP OF THE SITES</h1>
           <a href="#top" class="BackTopLink">Back to top</a>
           <div class="clearFloats"></div>
 

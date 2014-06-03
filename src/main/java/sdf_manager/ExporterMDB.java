@@ -43,7 +43,9 @@ import org.xml.sax.SAXException;
 import pojos.Site;
 import sdf_manager.util.ValidateSite;
 
-import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.Database.FileFormat;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
+import com.healthmarketscience.jackcess.util.ImportUtil;
 
 /**
  *
@@ -157,7 +159,8 @@ public class ExporterMDB implements Exporter {
     void createDatabase(String fileName) {
         try {
 
-            com.healthmarketscience.jackcess.Database db = Database.create(new File(fileName));
+            //com.healthmarketscience.jackcess.Database db = Database.create(new File(fileName));
+            com.healthmarketscience.jackcess.Database db = DatabaseBuilder.create(FileFormat.V2007, new File(fileName));
         } catch (Exception e) {
             log.error("Error createDatabase().:::" + e.getMessage());
             log("Failed to create MDB file.");
@@ -222,7 +225,8 @@ public class ExporterMDB implements Exporter {
             DatabaseMetaData dbm = conn.getMetaData();
             String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
             ResultSet rs = dbm.getTables(null, dbSchemaName, "%" , null);
-            com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
+            //com.healthmarketscience.jackcess.Database db = Database.open(new File(fileName));
+            com.healthmarketscience.jackcess.Database db = DatabaseBuilder.open(new File(fileName));
 
             while (rs.next()) {
                 String tableName = rs.getString("TABLE_NAME");
@@ -233,7 +237,8 @@ public class ExporterMDB implements Exporter {
 
                 log.info("Copying table: " + tableName);
                 ResultSet data = conn.createStatement().executeQuery("select * from " + tableName);
-                db.copyTable(tableName, data);
+                //db.copyTable(tableName, data);
+                ImportUtil.importResultSet(data, db, tableName);
                 log("Copied data to database from table: " + tableName);
                 log.info("Copied data to database from table: " + tableName);
             }

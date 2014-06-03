@@ -15,6 +15,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.SwingWorker;
 
@@ -302,8 +303,13 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel6.border.title"))); // NOI18N
         jPanel6.setName("jPanel6"); // NOI18N
 
-        cmbLang.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-             "ISO-8859-1", "ISO-8859-2", "UTF-8", "US-ASCII", "UTF-16BE", "UTF-16LE", "UTF-16" }));
+        DefaultComboBoxModel encodingModel = new javax.swing.DefaultComboBoxModel(new String[] {
+                "ISO-8859-1", "ISO-8859-2", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16", "cp866" });
+
+        encodingModel.setSelectedItem("UTF-8");
+
+        cmbLang.setModel(encodingModel);
+
         cmbLang.setName("cmbLang"); // NOI18N
 
         txtSiteCode.setText(resourceMap.getString("txtSiteCode.text")); // NOI18N

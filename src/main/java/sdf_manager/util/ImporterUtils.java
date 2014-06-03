@@ -1,5 +1,11 @@
 package sdf_manager.util;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -21,9 +27,11 @@ public final class ImporterUtils {
     }
 
     /**
-     * returns values of double values if field type is actually string in the db.
-     * format may be inserted with comma although it must be dot.
-     * @param str value expected to be double
+     * returns values of double values if field type is actually string in the db. format may be inserted with comma although it
+     * must be dot.
+     *
+     * @param str
+     *            value expected to be double
      * @return double value
      */
     public static Double fixAndGetDouble(String str) {
@@ -40,4 +48,40 @@ public final class ImporterUtils {
             return null;
         }
     }
+
+    /**
+     * Returns given String value in specified encoding.
+     * If UTF-8 the value is not changed
+     * @param resultStr Value of the field
+     * @param encoding
+     *            encoding, supported by Java
+     * @return String
+     */
+    public static String getString(String resultStr, String encoding) {
+        try {
+            if (!("UTF-8").equalsIgnoreCase(encoding)) {
+                if (StringUtils.isBlank(resultStr)) {
+                    return null;
+                } else {
+                    byte[] result = resultStr.getBytes();
+
+                    Charset charset = Charset.forName(encoding);
+                    CharsetDecoder decoder = charset.newDecoder();
+                    decoder.onMalformedInput(CodingErrorAction.REPLACE);
+                    //decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+decoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
+                    CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
+                    return cbuf.toString().trim();
+                }
+            } else {
+                return resultStr;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("Failed conveting value: " + resultStr + " to encoding " + encoding);
+            return null;
+        }
+    }
+
 }

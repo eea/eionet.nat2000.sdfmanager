@@ -117,7 +117,9 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     public SDFEditor(javax.swing.JFrame parent, String mode) {
         setResizable(false);
-        this.filterWindow = (SDFFilter) parent;
+        if (parent instanceof SDFEditor) {
+            this.filterWindow = (SDFFilter) parent;
+        }
         this.parent = parent;
         initComponents();
         this.addWindowListener(null);
@@ -1051,8 +1053,10 @@ public class SDFEditor extends javax.swing.JFrame {
             resp.getSites().add(site);
             site.setResp(resp);
             saveAndReloadSession();
-            this.filterWindow.clearFilterSelections();
-            this.filterWindow.applyFilters(HibernateUtil.getSessionFactory().openSession());
+            if (this.filterWindow != null) {
+                this.filterWindow.clearFilterSelections();
+                this.filterWindow.applyFilters(HibernateUtil.getSessionFactory().openSession());
+            }
             // this.parent.clearFilterSelections();
         } else {
             if (!respAddress) {

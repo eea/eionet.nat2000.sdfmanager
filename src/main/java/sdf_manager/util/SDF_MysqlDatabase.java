@@ -1317,13 +1317,18 @@ public class SDF_MysqlDatabase {
             LOGGER.info("Test if host is solved: ");
             InetSocketAddress endPoint = new InetSocketAddress(host, Integer.parseInt(port));
             if (endPoint.isUnresolved()) {
-                return "Host cannot be resolved.";
+                return "Host name " + host + " cannot be resolved. \n"
+                        + "Check if there is a tyop in the host name";
             }
             LOGGER.info("Test if port is open: host='" + "'; port='" + port + "'");
             socket.connect(endPoint, 1000);
 
         } catch (IOException ie) {
-            return "Mysql is not running or no access to " + host + ":" + port;
+            return "No access to specified host:port " + host + ":" + port + "\n"
+                    + "Potential reasons:\n"
+                    + "1. MySql is not running at the specified location. \n"
+                    + "2. Firewall is blocking access to the host:port. \n"
+                    + "3. There is a proxy configured with no bypassing exception to the specified host.";
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
@@ -1336,7 +1341,7 @@ public class SDF_MysqlDatabase {
             String url = "jdbc:mysql://" + host + ":" + port + "/?socketTimeout=2000&user=" + user + "&password=" + pwd;
             DriverManager.getConnection(url);
         } catch (ClassNotFoundException cnfe) {
-            return "Mysql database driver is not available.";
+            return "MySql database driver is not available.";
         } catch (CommunicationsException ce) {
             return "Mysql database is not available at " + host + ":" + port;
         } catch (SQLException sqle) {

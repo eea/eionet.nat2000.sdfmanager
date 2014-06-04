@@ -34,6 +34,8 @@ import javax.swing.UIManager;
 
 import org.apache.commons.lang.StringUtils;
 
+import sdf_manager.util.SDF_MysqlDatabase;
+
 /**
  * Dialog for entering common settings.
  *
@@ -109,7 +111,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
             @Override
             public void windowClosed(WindowEvent arg0) {
-                //TODO - find if there is a better way to do it without System.exit
+                // TODO - find if there is a better way to do it without System.exit
                 if (!btnSaveClicked) {
                     System.exit(0);
                 }
@@ -140,7 +142,8 @@ public class SettingsDialog extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+            private
+            void initComponents() {
 
         // setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -178,9 +181,9 @@ public class SettingsDialog extends javax.swing.JDialog {
                 String validationResult = validateForm();
                 if (StringUtils.isBlank(validationResult)) {
 
-                    // validationResult =
-                    // SDF_MysqlDatabase.testConnection(getTxtDatabaseHost().getText(), getTxtDatabasePort().getText(),
-                    // getTxtDatabaseUser().getText(), getTxtDatabasePassword().getText());
+                    validationResult =
+                            SDF_MysqlDatabase.testConnection(getTxtDatabaseHost().getText(), getTxtDatabasePort().getText(),
+                                    getTxtDatabaseUser().getText(), getTxtDatabasePassword().getText());
                     if (StringUtils.isBlank(validationResult)) {
                         closeDialog(event);
                     } else {

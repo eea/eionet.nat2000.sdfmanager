@@ -63,15 +63,20 @@ public final class ImporterUtils {
                 if (StringUtils.isBlank(resultStr)) {
                     return null;
                 } else {
-                    byte[] result = resultStr.getBytes();
+                    if ("Cyrillic (cp866)".equals(encoding)) {
+                       return convertUtfToSpecialCyrillic(resultStr);
+                    } else {
 
-                    Charset charset = Charset.forName(encoding);
-                    CharsetDecoder decoder = charset.newDecoder();
-                    decoder.onMalformedInput(CodingErrorAction.REPLACE);
-                    //decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-decoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
-                    CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
+                        byte[] result = resultStr.getBytes();
+
+                        Charset charset = Charset.forName(encoding);
+                        CharsetDecoder decoder = charset.newDecoder();
+                        decoder.onMalformedInput(CodingErrorAction.REPLACE);
+                        decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+
+                        CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
                     return cbuf.toString().trim();
+                    }
                 }
             } else {
                 return resultStr;
@@ -79,9 +84,53 @@ decoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("Failed conveting value: " + resultStr + " to encoding " + encoding);
+            LOGGER.error("Failed converting value: " + resultStr + " to encoding " + encoding);
             return null;
         }
+    }
+
+    /**
+     * Special conversion to handle emerald tools cyrillic encoding
+     * @param value value in utf-8
+     * @return value in cyrillic
+     * @throws Exception if fail in conversion
+     */
+    private static String convertUtfToSpecialCyrillic(String value) throws Exception {
+        byte[] skipBytes = value.getBytes();
+
+        byte[] other = new byte[skipBytes.length];
+        int j = 0, k = 0;
+        for (byte b : skipBytes) {
+            //TODO some configuration or find patterns, more symbols needed
+            if (b + 256 != 195) {
+                if (b + 256 == 182) {
+                    other[j] = (byte) 230;
+                } else if (b + 256 == 188) {
+                    other[j] = (byte) 236;
+                } else if (b + 256 == 178) {
+                    other[j] = (byte) 226;
+                } else if (b + 256 == 176) {
+                    other[j] = (byte) 224;
+                } else if (b + 256 == 183) {
+                    other[j] = (byte) 231;
+                } else if (b + 256 == 184) {
+                    other[j] = (byte) 232;
+                } else if (b + 256 == 185) {
+                    other[j] = (byte) 233;
+                } else if (b + 256 == 179) {
+                    other[j] = (byte) 227;
+                } else if (b + 256 == 177) {
+                    other[j] = (byte) 225;
+                } else if (b + 256 == 187) {
+                    other[j] = (byte) 235;
+                } else {
+                    other[j] = b;
+                }
+                j++;
+            }
+        }
+
+        return (new String(other, "cp866")).trim();
     }
 
 }

@@ -304,7 +304,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         jPanel6.setName("jPanel6"); // NOI18N
 
         DefaultComboBoxModel encodingModel = new javax.swing.DefaultComboBoxModel(new String[] {
-                "ISO-8859-1", "ISO-8859-2", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16", "cp866" });
+                "ISO-8859-1", "ISO-8859-2", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16", "Cyrillic (cp866)" });
 
         encodingModel.setSelectedItem("UTF-8");
 

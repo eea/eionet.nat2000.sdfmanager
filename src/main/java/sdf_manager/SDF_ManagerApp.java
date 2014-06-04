@@ -199,7 +199,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
         try {
             //init seed properties
-            Map<String, String> props = new HashMap<String, String>(15);
+            //Map<String, String> props = new HashMap<String, String>(15);
 
             String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
             mode = appMode;
@@ -216,46 +216,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             }
 
             if (StringUtils.isNotBlank(warnInstaller)) {
-            int reply = JOptionPane.showConfirmDialog(null, warnInstaller, "App Mode changed", JOptionPane.OK_CANCEL_OPTION);
-                if (reply == JOptionPane.CANCEL_OPTION) {
-                    exitApp();
+                int reply = JOptionPane.showConfirmDialog(null, warnInstaller, "App Mode changed", JOptionPane.OK_CANCEL_OPTION);
+                if (reply == JOptionPane.OK_OPTION) {
+                    savePropsAndLaunch(isEmeraldInstaller, dialog);
                 }
-            }
-
-            String seedPropsFileName = isEmeraldInstaller ? SEED_EMERALD_PROPERTIES_FILE : SEED_PROPERTIES_FILE;
-            Properties seedProps = PropertyUtils.readProperties(seedPropsFileName);
-
-            for (Object key : seedProps.keySet()) {
-                props.put((String)key, seedProps.getProperty((String)key));
-            }
-            String dbHost = dialog.getTxtDatabaseHost().getText();
-            String dbPort = dialog.getTxtDatabasePort().getText();
-
-            String dbUser = dialog.getTxtDatabaseUser().getText();
-            String dbPassword = dialog.getTxtDatabasePassword().getText();
-
-            props.put("db.host", dbHost);
-            props.put("db.port", dbPort);
-            props.put("db.user", dbUser);
-            props.put("db.password", dbPassword);
-            props.put("application.mode", appMode);
-
-            PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
-            log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
-
-
-            log.info("create database");
-            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-            String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
-            if (errorMesg != null) {
-                JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
-                        + "\n Please check and change the settings in the appearing dialog.", "DB Error",
-                        JOptionPane.ERROR_MESSAGE);
-                log.error("Error creating database: " + errorMesg);
             } else {
-                dialog.dispose();
-                log.info("running importTool");
-                launch(SDF_ManagerApp.class, args);
+                savePropsAndLaunch(isEmeraldInstaller, dialog);
             }
 
 
@@ -265,6 +231,51 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             log.error("Error::::" + e.getMessage());
             e.printStackTrace();
             dialog.dispose();
+        }
+    }
+
+    /**
+     * Saves props in properties file and launches the app.
+     * @param isEmeraldInstaller true if emerald installer
+     * @param dialog Settings dialog
+     * @throws Exception if action fails
+     */
+    private static void savePropsAndLaunch(boolean isEmeraldInstaller, SettingsDialog dialog) throws Exception {
+        Map<String, String> props = new HashMap<String, String>(15);
+        String seedPropsFileName = isEmeraldInstaller ? SEED_EMERALD_PROPERTIES_FILE : SEED_PROPERTIES_FILE;
+        Properties seedProps = PropertyUtils.readProperties(seedPropsFileName);
+
+        for (Object key : seedProps.keySet()) {
+            props.put((String)key, seedProps.getProperty((String)key));
+        }
+        String dbHost = dialog.getTxtDatabaseHost().getText();
+        String dbPort = dialog.getTxtDatabasePort().getText();
+
+        String dbUser = dialog.getTxtDatabaseUser().getText();
+        String dbPassword = dialog.getTxtDatabasePassword().getText();
+
+        props.put("db.host", dbHost);
+        props.put("db.port", dbPort);
+        props.put("db.user", dbUser);
+        props.put("db.password", dbPassword);
+        props.put("application.mode", mode);
+
+        PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
+        log.info("properties stored to " + LOCAL_PROPERTIES_FILE);
+
+
+        log.info("create database");
+        properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+        String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+        if (errorMesg != null) {
+            JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
+                    + "\n Please check and change the settings in the appearing dialog.", "DB Error",
+                    JOptionPane.ERROR_MESSAGE);
+            log.error("Error creating database: " + errorMesg);
+        } else {
+            dialog.dispose();
+            log.info("running importTool");
+            launch(SDF_ManagerApp.class, null);
         }
     }
     /**

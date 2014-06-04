@@ -53,17 +53,26 @@ public class SDF_MysqlDatabase {
     public static String createNaturaDB(Properties properties) throws Exception {
         Connection con = null;
         String msgError = null;
+        String host = properties.getProperty("db.host");
+        String port = properties.getProperty("db.port");
+        String user = properties.getProperty("db.user");
+        String pwd = properties.getProperty("db.password");
+
+        String connectionValidation = testConnection(host, port, user, pwd);
+
+        if (StringUtils.isNotBlank(connectionValidation)) {
+            return connectionValidation;
+        }
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             SDF_MysqlDatabase.LOGGER.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
                     + properties.getProperty("db.password") + "<==");
 
-            String dbUrl = "jdbc:mysql://" + properties.getProperty("db.host") + ":" + properties.getProperty("db.port") + "/";
+            String dbUrl = "jdbc:mysql://" + host + ":" + port + "/";
 
             SDF_MysqlDatabase.LOGGER.info("database connection URL: " + dbUrl);
-            con =
-                    (Connection) DriverManager.getConnection(dbUrl, properties.getProperty("db.user"),
-                            properties.getProperty("db.password"));
+            con = (Connection) DriverManager.getConnection(dbUrl, user, pwd);
             boolean schemaExists = createDatabaseSchema(con);
 
             boolean refTalesNeedUpdating = false;

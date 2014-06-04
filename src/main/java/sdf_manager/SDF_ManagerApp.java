@@ -163,6 +163,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                     settingsDialog = new SettingsDialog(null, true);
                     settingsDialog.setModal(true);
+                    settingsDialog.getRdbtnEmerald().setSelected(isEmeraldMode());
                     settingsDialog.setVisible(true);
 
                 } else {

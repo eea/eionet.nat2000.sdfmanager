@@ -10,11 +10,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -324,38 +319,47 @@ public class ImporterSiteMDB implements Importer {
       * @throws ClassNotFoundException
       * @throws SQLException
       */
-     private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
-         try {
-             if (accessVersion.equals("2003")) {
+    private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        try {
 
-                 /*open read-only*/
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+            Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+            conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
 
-                Connection conn = DriverManager.getConnection(db, "", "");
+//             if (accessVersion.equals("2003")) {
+//
+//             /*open read-only*/
+//             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//             String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+//
+//             Connection conn = DriverManager.getConnection(db, "", "");
+//
+//             return conn;
+//             } else {
+//             /*open read-only*/
+//             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//             //añadido , *.accdb) a la cadena db
+//             String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
+//             Connection conn = DriverManager.getConnection(db, "", "");
+//             return conn;
+//             }
 
-                return conn;
-             } else {
-                /*open read-only*/
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-                Connection conn = DriverManager.getConnection(db, "", "");
-                return conn;
-             }
-         } catch (ClassNotFoundException e) {
-             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
-         } catch (SQLException e) {
-             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
+            return conn;
+        } catch (ClassNotFoundException e) {
+            ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            return null;
+        } catch (SQLException e) {
+            ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            return null;
 
-         //} catch (IllA)
-         } catch (Exception e) {
-             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
-         }
-     }
+            // } catch (IllA)
+        } catch (Exception e) {
+            SDF_MysqlDatabase.closeQuietly(conn);
+            ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+            return null;
+        }
+    }
+
      /**
       *
       * @param conn
@@ -503,7 +507,11 @@ public class ImporterSiteMDB implements Importer {
       */
      String getString(ResultSet rs, String fieldName) {
          try {
-             if (!("UTF-8").equals(this.encoding)) {
+
+             String value = rs.getString(fieldName);
+             return ImporterUtils.getString(value, this.encoding);
+
+/*             if (!("UTF-8").equals(this.encoding)) {
 
                 byte[] result = rs.getBytes(fieldName);
                  if (result != null && result.length == 0) {
@@ -524,7 +532,7 @@ public class ImporterSiteMDB implements Importer {
              } else {
                  return rs.getString(fieldName);
              }
-
+*/
          } catch (Exception e) {
              log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
             ImporterSiteMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());

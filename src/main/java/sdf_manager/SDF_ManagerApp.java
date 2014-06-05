@@ -22,14 +22,15 @@ import org.jdesktop.application.SingleFrameApplication;
 
 import sdf_manager.util.PropertyUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
+import sdf_manager.util.SDF_Util;
 
 /**
  * The main class of the application.
  */
 public class SDF_ManagerApp extends SingleFrameApplication {
 
-    /** Static logger for this class. */
-    private static final Logger LOGGER = Logger.getLogger(SDF_ManagerApp.class.getName());
+    /** Static logger for this file. */
+    private final static Logger LOGGER = Logger.getLogger(SDF_ManagerApp.class.getName());
 
     /** Default URI for Natura2000 schema. */
     private static final String NATURA2000_SCHEMA_DEFAULT_URI = "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd";
@@ -50,11 +51,15 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static final String SEED_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "config" + File.separator
             + "seed_sdf.properties";
 
+    /** Full path to EMERALD local properties seed file. */
+    public static final String SEED_EMERALD_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "config"
+            + File.separator + "seed_emerald.properties";
+
     /** Full path to the possibly existing old DB properties file. */
     public static final String OLD_DB_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "lib" + File.separator
             + "sdf_database.properties";
 
-    /** Constant for application Natura 2000 mode. */
+    /** Constant for application Natura2000 mode. */
     public static final String NATURA_2000_MODE = "Natura2000";
 
     /** Constant for application EMERALD mode. */
@@ -66,14 +71,14 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /** The local properties as to be loaded from {@link #LOCAL_PROPERTIES_FILE}. */
     private static Properties properties;
 
+    /** Application running mode. Loaded from properties. One of {@link #EMERALD_MODE} or {@link #NATURA_2000_MODE} (default). */
+    private static String mode = NATURA_2000_MODE;
+
     /** URI of the underlying schema of dataflow. */
     private static String schemaUri;
 
     /** Local file of the underlying schema of dataflow. See {@link #getXMLSchemaLocalFile()} JavaDoc for more explanations. */
     private static File schemaLocalFile;
-
-    /** Application running mode. Loaded from properties. One of {@link #EMERALD_MODE} or {@link #NATURA_2000_MODE} (default). */
-    private static String mode = NATURA_2000_MODE;
 
     /**
      * At startup create and show the main frame of the application.
@@ -109,6 +114,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         String errorMesg = null;
         getApplication().getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         settingsDialog = null;
+
+        // user has chosen emerald in the installer
+        boolean isEmeraldInstaller = SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE);
+
         try {
             initializeLogger();
             LOGGER.info("Logger installed, java version: " + System.getProperty("java.version"));
@@ -117,6 +126,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                 // take Dbprops from old db props in lib folder
                 if (!propsFileExists()) {
+                    // assume if user is upgrading to an existing location it has to be natura2000 tool
+                    if (isEmeraldInstaller) {
+                        JOptionPane.showMessageDialog(null,
+                                "EMERALD tool cannot be installed in the location of existing Natura 2000 tool", "Startup error",
+                                JOptionPane.ERROR_MESSAGE);
+                        exitApp();
+                    }
                     LOGGER.info("No sdf.properties file, take Db props from the old props file.");
                     Map<String, String> props = new HashMap<String, String>(15);
 
@@ -127,7 +143,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                     props.put("db.user", oldDbProps.getProperty("user"));
                     props.put("db.password", oldDbProps.getProperty("password"));
 
-                    // default Natura 2000?
+                    // it is upgrade - n2k mode
                     props.put("application.mode", NATURA_2000_MODE);
 
                     LOGGER.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
@@ -142,8 +158,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 }
 
                 LOGGER.info("Launching...");
+
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
                 mode = properties.getProperty("application.mode");
+
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
 
                 if (errorMesg != null) {
@@ -154,6 +172,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                     settingsDialog = new SettingsDialog(null, true);
                     settingsDialog.setModal(true);
+                    settingsDialog.getRdbtnEmerald().setSelected(isEmeraldMode());
                     settingsDialog.setVisible(true);
 
                 } else {
@@ -164,6 +183,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             } else {
                 LOGGER.info("No sdf.properties file in the application root folder and no lib/sdf_database.properties.");
                 settingsDialog = new SettingsDialog(null, true);
+                if (isEmeraldInstaller) {
+                    settingsDialog.getRdbtnEmerald().setSelected(true);
+                }
                 settingsDialog.setModal(true);
                 settingsDialog.setVisible(true);
             }
@@ -172,7 +194,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             JOptionPane.showMessageDialog(null, "A general error has occurred." + errorMesg, "Dialog", JOptionPane.ERROR_MESSAGE);
             LOGGER.error("Error::::" + e.getMessage());
             e.printStackTrace();
-            System.exit(0);
+            exitApp();
         }
 
     }
@@ -187,43 +209,31 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
         try {
             // init seed properties
-            Map<String, String> props = new HashMap<String, String>(15);
-
-            Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
-            for (Object key : seedProps.keySet()) {
-                props.put((String) key, seedProps.getProperty((String) key));
-            }
-            String dbHost = dialog.getTxtDatabaseHost().getText();
-            String dbPort = dialog.getTxtDatabasePort().getText();
-
-            String dbUser = dialog.getTxtDatabaseUser().getText();
-            String dbPassword = dialog.getTxtDatabasePassword().getText();
+            // Map<String, String> props = new HashMap<String, String>(15);
 
             String appMode = dialog.getRdbtnNatura().isSelected() ? NATURA_2000_MODE : EMERALD_MODE;
-
-            props.put("db.host", dbHost);
-            props.put("db.port", dbPort);
-            props.put("db.user", dbUser);
-            props.put("db.password", dbPassword);
-            props.put("application.mode", appMode);
-
-            PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
-            LOGGER.info("properties stored to " + LOCAL_PROPERTIES_FILE);
-
             mode = appMode;
 
-            LOGGER.info("create database");
-            properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-            String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
-            if (errorMesg != null) {
-                JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
-                        + "\n Please check and change the settings in the appearing dialog.", "DB Error",
-                        JOptionPane.ERROR_MESSAGE);
-                LOGGER.error("Error creating database: " + errorMesg);
+            boolean isEmeraldInstaller = SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE);
+            // user has changed his mind compared to the selection in installer - confirm:
+            String warnInstaller = null;
+            if (isEmeraldMode() && !isEmeraldInstaller) {
+                warnInstaller =
+                        "You have chosen Natura2000 mode in the installer and EMERALD mode in  the settings screen. \n"
+                                + "Do you want to continue?";
+            } else if (!isEmeraldMode() && isEmeraldInstaller) {
+                warnInstaller =
+                        "You have chosen EMERALD mode in the installer and Natura2000 mode in the settings screen. \n"
+                                + "Do you want to continue?";
+            }
+
+            if (StringUtils.isNotBlank(warnInstaller)) {
+                int reply = JOptionPane.showConfirmDialog(null, warnInstaller, "App Mode changed", JOptionPane.OK_CANCEL_OPTION);
+                if (reply == JOptionPane.OK_OPTION) {
+                    savePropsAndLaunch(isEmeraldInstaller, dialog);
+                }
             } else {
-                dialog.dispose();
-                LOGGER.info("running importTool");
-                launch(SDF_ManagerApp.class, args);
+                savePropsAndLaunch(isEmeraldInstaller, dialog);
             }
 
         } catch (Exception e) {
@@ -232,6 +242,50 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             LOGGER.error("Error::::" + e.getMessage());
             e.printStackTrace();
             dialog.dispose();
+        }
+    }
+
+    /**
+     * Saves props in properties file and launches the app.
+     *
+     * @param isEmeraldInstaller true if emerald installer
+     * @param dialog Settings dialog
+     * @throws Exception if action fails
+     */
+    private static void savePropsAndLaunch(boolean isEmeraldInstaller, SettingsDialog dialog) throws Exception {
+        Map<String, String> props = new HashMap<String, String>(15);
+        String seedPropsFileName = isEmeraldInstaller ? SEED_EMERALD_PROPERTIES_FILE : SEED_PROPERTIES_FILE;
+        Properties seedProps = PropertyUtils.readProperties(seedPropsFileName);
+
+        for (Object key : seedProps.keySet()) {
+            props.put((String) key, seedProps.getProperty((String) key));
+        }
+        String dbHost = dialog.getTxtDatabaseHost().getText();
+        String dbPort = dialog.getTxtDatabasePort().getText();
+
+        String dbUser = dialog.getTxtDatabaseUser().getText();
+        String dbPassword = dialog.getTxtDatabasePassword().getText();
+
+        props.put("db.host", dbHost);
+        props.put("db.port", dbPort);
+        props.put("db.user", dbUser);
+        props.put("db.password", dbPassword);
+        props.put("application.mode", mode);
+
+        PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
+        LOGGER.info("properties stored to " + LOCAL_PROPERTIES_FILE);
+
+        LOGGER.info("create database");
+        properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
+        String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+        if (errorMesg != null) {
+            JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
+                    + "\n Please check and change the settings in the appearing dialog.", "DB Error", JOptionPane.ERROR_MESSAGE);
+            LOGGER.error("Error creating database: " + errorMesg);
+        } else {
+            dialog.dispose();
+            LOGGER.info("running importTool");
+            launch(SDF_ManagerApp.class, null);
         }
     }
 
@@ -284,7 +338,14 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      * @return mode indication
      */
     public static boolean isEmeraldMode() {
-        return EMERALD_MODE.equals(mode);
+        return mode.equals(EMERALD_MODE);
+    }
+
+    /**
+     * Close window and JRE.
+     */
+    private static void exitApp() {
+        System.exit(0);
     }
 
     /**

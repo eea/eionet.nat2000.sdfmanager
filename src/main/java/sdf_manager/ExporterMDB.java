@@ -46,7 +46,9 @@ import pojos.Site;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.ValidateSite;
 
-import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.Database.FileFormat;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
+import com.healthmarketscience.jackcess.util.ImportUtil;
 
 /**
  *
@@ -187,7 +189,7 @@ public class ExporterMDB implements Exporter {
 
         com.healthmarketscience.jackcess.Database database = null;
         try {
-            database = Database.create(new File(fileName));
+            database = DatabaseBuilder.create(FileFormat.V2007, new File(fileName));
             if (database != null) {
                 copyData(fileName, validationErrorsLogFile);
             } else {
@@ -210,20 +212,6 @@ public class ExporterMDB implements Exporter {
         }
 
         return true;
-    }
-
-    /**
-     *
-     * @param fileName
-     */
-    void createDatabase(String fileName) {
-        try {
-
-            com.healthmarketscience.jackcess.Database db = Database.create(new File(fileName));
-        } catch (Exception e) {
-            log.error("Error createDatabase().:::" + e.getMessage());
-            log("Failed to create MDB file.");
-        }
     }
 
     /**
@@ -305,7 +293,7 @@ public class ExporterMDB implements Exporter {
             DatabaseMetaData dbMetaData = conn.getMetaData();
 
             rsTables = dbMetaData.getTables(null, dbSchemaName, "%", null);
-            accessDb = Database.open(new File(fileName));
+            accessDb = DatabaseBuilder.open(new File(fileName));
 
             while (rsTables.next()) {
 
@@ -320,7 +308,7 @@ public class ExporterMDB implements Exporter {
                 stmt = conn.createStatement();
                 rsTableRows = stmt.executeQuery("select * from " + tableName);
 
-                accessDb.copyTable(tableName, rsTableRows);
+                ImportUtil.importResultSet(rsTableRows, accessDb, tableName);
 
                 SDF_MysqlDatabase.closeQuietly(rsTableRows);
 
@@ -464,6 +452,7 @@ public class ExporterMDB implements Exporter {
      * @param filename
      * @return
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public ArrayList createXMLFromDataBase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -474,6 +463,7 @@ public class ExporterMDB implements Exporter {
      * @param exportErrorMap
      * @return
      */
+    @SuppressWarnings("rawtypes")
     private File copyToLogExportFile(HashMap exportErrorMap) {
         File fileLog = null;
         try {
@@ -508,7 +498,6 @@ public class ExporterMDB implements Exporter {
             }
             logErrorFile.flush();
             logErrorFile.close();
-            // write("LOG file : exportLog" + formatDate + ".log");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(new JFrame(),
                     "Export process has failed.\nPlease check the sdfLog file for more details", "Dialog",

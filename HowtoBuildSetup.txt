@@ -1,5 +1,4 @@
-* Download and install launch4j from http://sourceforge.net/projects/launch4j/files/launch4j-3/3.4/
 * Download and install Inno Setup from http://www.jrsoftware.org/isdl.php#stable (NB! Be sure to install also the Inno Setup Preprocessor that the installer suggests)
+* Add the Inno Setup root path where iscc.exe resides to the win PATH variable
 * Copy a JRE to the project folder. NB! The JRE must be 32-bit!
-* Open Launch4j.xml with Launch4j and click on  the"Build wrapper" icon. SDFManager.exe is created in the project root folder
-* Open SDFManager.iss with InnoSetup Compiler and click on the "Run" icon. SDFManagerSetup.exe is created in the project root folder
+* mvn clean package creates two installers in the project root directory

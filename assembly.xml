@@ -19,7 +19,7 @@
                 <include>xsl/**</include>
                 <include>?DS_Store</include>
                 <include>log4j.properties</include>
-                <include>README</include>
+                <include>README.md</include>
                 <include>*.jar</include>
             </includes>
             <!-- Exclude the files that are only used for testing -->
@@ -28,6 +28,8 @@
             <excludes>
                 <exclude>lib/mysql-connector-mxj-*.jar</exclude>
                 <exclude>lib/junit-*.jar</exclude>
+                <exclude>*.exe</exclude>
+                <exclude>jre/**</exclude>
             </excludes>
         </fileSet>
         <!-- Include the SDFManager JAR -->

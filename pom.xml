@@ -1,19 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
-
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
+    <organization>
+        <name>European Environment Agency</name>
+    </organization>
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
     <version>4.0-SNAPSHOT</version>
-
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
-
+    <distributionManagement>
+            <repository>
+                <id>project-local</id>
+                <url>file:///${basedir}</url>
+            </repository>
+        </distributionManagement>
     <!-- Configuration of Maven repositories to be used. -->
-
     <repositories>
+
         <repository>
             <id>project-local</id>
             <name>project-local repository</name>
@@ -37,25 +42,27 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
+        <repository>
+            <id>project-local</id>
+            <name>project-local folder</name>
+            <layout>default</layout>
+            <url>file:///${basedir}</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
-
     <!-- Properties to be used below. -->
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.6</jdk.version>
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
         <liquibase.changeLogFile>${basedir}/target/classes/liquibase/db-master.xml</liquibase.changeLogFile>
     </properties>
-
     <!-- The build configuration. -->
-
     <build>
-
         <plugins>
-
-            <!--  Maven compiler plugin. -->
-
+            <!-- Maven compiler plugin. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -65,9 +72,7 @@
                     <target>${jdk.version}</target>
                 </configuration>
             </plugin>
-
             <!-- Maven JAR plugin. -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -83,9 +88,72 @@
                     <outputDirectory>${project.basedir}</outputDirectory>
                 </configuration>
             </plugin>
-
+            <!-- maven shade plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>shaded</shadedClassifierName>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>sdf_manager.SDF_ManagerApp</mainClass>
+                        </transformer>
+                    </transformers>
+                </configuration>
+            </plugin>
+            <!-- launch4J -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <id>l4j-create</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <dontWrapJar>false</dontWrapJar>
+                            <headerType>gui</headerType>
+                            <jar>SDFmanager-4.0-SNAPSHOT.jar</jar>
+                            <outfile>SDFManager.exe</outfile>
+                            <errTitle></errTitle>
+                            <cmdLine></cmdLine>
+                            <chdir>.</chdir>
+                            <priority>normal</priority>
+                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <supportUrl></supportUrl>
+                            <stayAlive>false</stayAlive>
+                            <manifest></manifest>
+                            <icon>${basedir}/sdfmanager.ico</icon>
+                            <jre>
+                                <path>./jre</path>
+                                <minVersion></minVersion>
+                                <maxVersion></maxVersion>
+                                <jdkPreference>jreOnly</jdkPreference>
+                            </jre>
+                            <splash>
+                                <file>./tripledev_logo.bmp</file>
+                                <waitForWindow>true</waitForWindow>
+                                <timeout>60</timeout>
+                                <timeoutErr>true</timeoutErr>
+                            </splash>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Maven dependency plugin. -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -103,9 +171,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--  Maven assembly plugin. -->
-
+            <!-- Maven assembly plugin. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -120,7 +186,7 @@
                 </configuration>
             </plugin>
 
-             <plugin>
+            <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>3.1.0</version>
@@ -144,12 +210,28 @@
                     </execution>
                 </executions>
             </plugin>
-
-
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                  <execution>
+                      <phase>install</phase>
+                      <id>build-setup</id>
+                      <goals>
+                        <goal>exec</goal>
+                      </goals>
+                      <configuration>
+                        <executable>iscc</executable>
+                        <arguments>
+                            <argument>${project.basedir}/SDFManager.iss</argument>
+                        </arguments>
+                      </configuration>
+                  </execution>
+                </executions>
+          </plugin>
         </plugins>
-
         <!-- Definition of resources. -->
-
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -170,19 +252,14 @@
                 </includes>
             </resource>
         </resources>
-
     </build>
-
-    <!-- Dependencies.  -->
-
+    <!-- Dependencies. -->
     <dependencies>
-
         <dependency>
-           <groupId>org.hibernate</groupId>
-           <artifactId>hibernate-core</artifactId>
-           <version>4.2.7.Final</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.2.7.Final</version>
         </dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -390,7 +467,7 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-mxj</artifactId>
             <version>5.0.12</version>
@@ -402,9 +479,12 @@
             <version>5.0.12</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-javafx</artifactId>
+            <version>4.2</version>
+        </dependency>
     </dependencies>
-
     <reporting>
         <plugins>
             <plugin>
@@ -433,5 +513,4 @@
             </plugin>
         </plugins>
     </reporting>
-
 </project>

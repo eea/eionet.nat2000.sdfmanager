@@ -262,4 +262,20 @@ public class SDF_Util {
 
      }
 
+     /**
+      * checks if file is present.
+      * @param fileName full file path
+      * @return true if file is present and can be read
+      */
+     public static boolean fileExists(String fileName) {
+         File file = new File(fileName);
+         return file.exists() && !file.isDirectory() && file.canRead();
+     }
+
+     public static boolean renameFile(String srcFileName, String destFileName) {
+         File f1 = new File(srcFileName);
+         File f2 = new File(destFileName);
+
+         return f1.renameTo(f2);
+     }
 }

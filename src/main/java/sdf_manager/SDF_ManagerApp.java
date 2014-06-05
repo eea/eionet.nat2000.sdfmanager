@@ -31,11 +31,11 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /** Static logger for this class. */
     private static final Logger LOGGER = Logger.getLogger(SDF_ManagerApp.class.getName());
 
-    /** */
+    /** Default URI for Natura2000 schema. */
     private static final String NATURA2000_SCHEMA_DEFAULT_URI = "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd";
 
-    /** */
-    private static final String EMERALD_SCHEMA_DEFAULT_URI = NATURA2000_SCHEMA_DEFAULT_URI;
+    /** Default URI for EMERALD schema. */
+    private static final String EMERALD_SCHEMA_DEFAULT_URI = "http://dd.eionet.europa.eu/schemas/emerald/sdf_v1.xsd";
 
     /** Current path of the application. */
     public static final String CURRENT_APPLICATION_PATH = (new File("")).getAbsolutePath();
@@ -68,6 +68,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
     /** URI of the underlying schema of dataflow. */
     private static String schemaUri;
+
+    /** Local file of the underlying schema of dataflow. See {@link #getXMLSchemaLocalFile()} JavaDoc for more explanations. */
+    private static File schemaLocalFile;
 
     /** Application running mode. Loaded from properties. One of {@link #EMERALD_MODE} or {@link #NATURA_2000_MODE} (default). */
     private static String mode = NATURA_2000_MODE;
@@ -292,6 +295,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static synchronized String getXMLSchemaURI() {
 
         if (schemaUri == null) {
+
             if (properties != null) {
 
                 boolean isEmerald = EMERALD_MODE.equals(mode);
@@ -305,5 +309,34 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         }
 
         return schemaUri;
+    }
+
+    /**
+     * Returns the file object of the XML Schema that should be used by the dataflow in the current mode (i.e. emerald/natura2000).
+     * This should be used if the URI returned by {@link #getXMLSchemaURI()} is malformed or broken.
+     *
+     * @return the file object
+     */
+    public static synchronized File getXMLSchemaLocalFile() {
+
+        if (schemaLocalFile == null) {
+
+            if (properties != null) {
+                boolean isEmerald = EMERALD_MODE.equals(mode);
+                String propName = isEmerald ? "emeraldSchemaFile" : "natura2000SchemaFile";
+                String fileRelPath = properties.getProperty(propName);
+                if (StringUtils.isNotBlank(fileRelPath)) {
+
+                    File file = new File(CURRENT_APPLICATION_PATH, fileRelPath);
+                    if (!file.exists() || !file.isFile()) {
+                        LOGGER.warn("Local schema file refers to unexisting path: " + file);
+                    } else {
+                        schemaLocalFile = file;
+                    }
+                }
+            }
+        }
+
+        return schemaLocalFile;
     }
 }

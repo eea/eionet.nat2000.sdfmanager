@@ -58,7 +58,7 @@ public class ExporterXMLStax implements Exporter {
     private String encoding;
     private FileWriter outFile;
     private PrintWriter out;
-    private ArrayList sitecodes = new ArrayList();
+    private ArrayList<String> sitecodes = new ArrayList<String>();
     private String logExportFileName;
     private FileWriter logErrorFile;
 
@@ -232,7 +232,7 @@ public class ExporterXMLStax implements Exporter {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
             String hql = "select site.siteCode from Site as site order by site.siteCode";
-            Iterator itrSites = session.createQuery(hql).iterate();
+            Iterator<?> itrSites = session.createQuery(hql).iterate();
             log("iterating...");
             while (itrSites.hasNext()) {
                 Object tuple = itrSites.next();
@@ -521,9 +521,19 @@ public class ExporterXMLStax implements Exporter {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         try {
+            File schemaFile = SDF_ManagerApp.getXMLSchemaLocalFile();
+            String schemaUrl = SDF_ManagerApp.getXMLSchemaURI();
+
+            boolean schemaUrlBroken = Util.isUrlBroken(schemaUrl, false);
+            if (schemaUrlBroken) {
+                ExporterXMLStax.log.info("Schema URL broken (" + schemaUrl + "), trying with local file: " + schemaFile);
+            }
+
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            URL schemaFile = new URL(SDF_ManagerApp.getXMLSchemaURI());
-            Schema schema = schemaFactory.newSchema(schemaFile);
+            Schema schema = schemaUrlBroken ? schemaFactory.newSchema(schemaFile) : schemaFactory.newSchema(new URL(schemaUrl));
+
+            ExporterXMLStax.log.info("Using this schema for validation: " + (schemaUrlBroken ? schemaFile : schemaUrl));
+
             Document doc = ExporterSiteXML.generateXML(session, this.sitecodes, schema);
             boolean xmlOK = ExporterSiteXML.writeXmlFile(doc, this.fileName);
 

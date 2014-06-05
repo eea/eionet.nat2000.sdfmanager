@@ -32,7 +32,7 @@
 														<xs:element name="address">
 															<xs:complexType>
 																<xs:sequence>
-																	<xs:element name="adminUnit" type="xs:string" minOccurs="1"/>
+																	<xs:element name="adminUnit" type="xs:string" minOccurs="0"/>
 																	<xs:element name="locatorDesignator" type="xs:string" minOccurs="0"/>
 																	<xs:element name="locatorName" type="xs:string" minOccurs="0"/>
 																	<xs:element name="addressArea" type="xs:string" minOccurs="0"/>
@@ -42,7 +42,7 @@
 																</xs:sequence>
 															</xs:complexType>
 														</xs:element>
-														<xs:element name="addressUnstructured"/>
+														<xs:element name="addressUnstructured" minOccurs="1"/>
 													</xs:choice>
 													<xs:element name="email" type="xs:string"/>
 												</xs:sequence>
@@ -139,7 +139,7 @@
 													<xs:element name="speciesPopulation" maxOccurs="unbounded">
 														<xs:complexType>
 															<xs:sequence>
-																<xs:element name="speciesGroup" type="specGroupType"/>
+																<xs:element name="speciesGroup" type="specGroupType" minOccurs="0"/>
 																<xs:element name="speciesCode" type="xs:string"/>
 																<xs:element name="scientificName" type="xs:string"/>
 																<!--To fix the issue: when user selects "D as population, the field:sensitiveInfo can be empty-->
@@ -430,7 +430,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="assessmentTypeABCD">
-		<xs:restriction base="xs:token">			
+		<xs:restriction base="xs:token">
 			<xs:enumeration value="A"/>
 			<xs:enumeration value="B"/>
 			<xs:enumeration value="C"/>

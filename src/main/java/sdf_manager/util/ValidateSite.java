@@ -46,11 +46,6 @@ public class ValidateSite {
         boolean isEmeraldMode = SDF_ManagerApp.isEmeraldMode();
         ArrayList<String> errorList = new ArrayList<String>();
 
-        // TODO check from Marc if there are indeed no validations actually needed in EMERALD mode.
-        if (isEmeraldMode) {
-            return errorList;
-        }
-
         try {
             Date siteCompDate = site.getSiteCompDate();
             if (siteCompDate == null) {
@@ -205,12 +200,15 @@ public class ValidateSite {
                     String speciesName = species.getSpeciesName();
                     Character speciesGroup = species.getSpeciesGroup();
 
-                    if (speciesGroup != null && !(("-").equals(speciesGroup.toString()))) {
-                        if ((speciesGroup.toString()).equals("B")) {
-                            birdsSPA = true;
+                    if (!isEmeraldMode) {
+                        // SPA-related stuff relevant only in non-Emerald mode.
+                        if (speciesGroup != null && !(("-").equals(speciesGroup.toString()))) {
+                            if ((speciesGroup.toString()).equals("B")) {
+                                birdsSPA = true;
+                            }
+                        } else {
+                            errorList.add("Group of the species. (Ecological Info - Species Type  section)\n");
                         }
-                    } else {
-                        errorList.add("Group of the species. (Ecological Info - Species Type  section)\n");
                     }
 
                     if (StringUtils.isBlank(speciesName)) {
@@ -280,9 +278,12 @@ public class ValidateSite {
                 errorList.add("Non habitats or species. (Ecological Info)\n");
             }
 
-            if ((("A").equals(siteType.toString())) || (("C").equals(siteType.toString()))) {
-                if (!birdsSPA) {
-                    errorList.add("No birds in SPA site. (Ecological Info)\n");
+            if (!isEmeraldMode) {
+                // SPA-related stuff relevant only in non-Emerald mode.
+                if ((("A").equals(siteType.toString())) || (("C").equals(siteType.toString()))) {
+                    if (!birdsSPA) {
+                        errorList.add("No birds in SPA site. (Ecological Info)\n");
+                    }
                 }
             }
 

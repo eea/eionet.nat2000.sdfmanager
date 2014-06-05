@@ -2302,7 +2302,6 @@ public class SDFEditor extends javax.swing.JFrame {
 
             while (itr.hasNext()) {
                 Species sp = ((Species) itr.next());
-                String speciesGroup = "";
 
                 String sensitive = "";
                 if (sp.getSpeciesSensitive() != null && sp.getSpeciesSensitive() == 1) {
@@ -2323,19 +2322,18 @@ public class SDFEditor extends javax.swing.JFrame {
                     minSize = sp.getSpeciesSizeMin().toString();
                 }
 
-                if (sp.getSpeciesGroup() != null && !(("").equals(sp.getSpeciesGroup().toString()))) {
-                    speciesGroup = TranslationCodeName.getGroupSpeciesByCode(sp.getSpeciesGroup().toString());
-                    // Object[] tuple = {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(),
-                    // minSize, maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(),
-                    // sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(), sp.getSpeciesGlobal()};
-                    Object[] tuple =
-                            {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(), minSize,
-                                    maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(),
-                                    sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(),
-                                    sp.getSpeciesGlobal()};
-                    model.insertRow(i++, tuple);
-                    modelSpecies.add(sp);
+                String speciesGroup = sp.getSpeciesGroup() == null ? null : sp.getSpeciesGroup().toString();
+                if (speciesGroup == null) {
+                    speciesGroup = StringUtils.EMPTY;
                 }
+                speciesGroup = TranslationCodeName.getGroupSpeciesByCode(speciesGroup);
+                Object[] tuple =
+                    {speciesGroup, sp.getSpeciesCode(), sp.getSpeciesName(), sensitive, np, sp.getSpeciesType(), minSize,
+                            maxSize, sp.getSpeciesUnit(), sp.getSpeciesCategory(), sp.getSpeciesDataQuality(),
+                            sp.getSpeciesPopulation(), sp.getSpeciesConservation(), sp.getSpeciesIsolation(),
+                            sp.getSpeciesGlobal()};
+                model.insertRow(i++, tuple);
+                modelSpecies.add(sp);
             }
         }
         this.tabSpecies.getSelectionModel().clearSelection();

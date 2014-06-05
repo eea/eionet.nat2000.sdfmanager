@@ -880,7 +880,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnResetFilter = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Filter Options");
+        setTitle("Manage SDFs");
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
 

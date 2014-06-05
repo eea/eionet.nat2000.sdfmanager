@@ -1,12 +1,10 @@
 package sdf_manager;
 
 import java.awt.Desktop;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -39,6 +37,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -53,7 +52,6 @@ public class ExporterXMLStax implements Exporter {
 
     private Logger logger;
     private String fileName;
-    private Writer writer;
     private int counter;
     private String encoding;
     private FileWriter outFile;
@@ -173,55 +171,9 @@ public class ExporterXMLStax implements Exporter {
         log("Creating requested XML document: " + fileName);
         log("Processing data...");
         this.loadSitecodes();
-        this.initWriter();
         boolean isOK = this.saveConfig();
 
         return isOK;
-    }
-
-    /**
-     *
-     */
-    void initWriter() {
-        try {
-            FileWriter fstream = new FileWriter(this.fileName);
-            this.writer = new BufferedWriter(fstream);
-            this.counter = 0;
-            // Close the output stream
-        } catch (Exception e) {
-            log("ERROR initWriter()" + e.getMessage());
-            ExporterXMLStax.log.error("An error has accurred in initWriter. Error Message :::" + e.getMessage());
-        }
-    }
-
-    /**
-     *
-     */
-    void finalizeWriter() {
-        try {
-            this.writer.close();
-        } catch (IOException e) {
-            log("ERROR finalizeWriter()");
-            ExporterXMLStax.log.error("ERROR finalizeWriter():::" + e.getMessage());
-
-        }
-    }
-
-    /**
-     *
-     */
-    void finalizeWriterError() {
-        try {
-
-            this.writer.close();
-            if ((new File(this.fileName)).exists()) {
-                (new File(this.fileName)).delete();
-            }
-        } catch (IOException e) {
-            log("ERROR finalizeWriter()" + e.getMessage());
-            ExporterXMLStax.log.error("ERROR finalizeWriterError():::" + e.getMessage());
-
-        }
     }
 
     /**
@@ -359,15 +311,6 @@ public class ExporterXMLStax implements Exporter {
         } else {
             return fmt((String) null, fieldName);
         }
-    }
-
-    /**
-     *
-     * @param literal
-     * @throws IOException
-     */
-    void writeXMLLiteral(String literal) throws IOException {
-        this.writer.write(literal);
     }
 
     /**
@@ -520,6 +463,7 @@ public class ExporterXMLStax implements Exporter {
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
         Session session = HibernateUtil.getSessionFactory().openSession();
 
+        FileInputStream writtenFileInputStream = null;
         try {
             File schemaFile = SDF_ManagerApp.getXMLSchemaLocalFile();
             String schemaUrl = SDF_ManagerApp.getXMLSchemaURI();
@@ -534,12 +478,14 @@ public class ExporterXMLStax implements Exporter {
 
             ExporterXMLStax.log.info("Using this schema for validation: " + (schemaUrlBroken ? schemaFile : schemaUrl));
 
+            String outputFilePath = this.fileName;
             Document doc = ExporterSiteXML.generateXML(session, this.sitecodes, schema);
-            boolean xmlOK = ExporterSiteXML.writeXmlFile(doc, this.fileName);
+            boolean xmlOK = ExporterSiteXML.writeXmlFile(doc, outputFilePath);
 
             if (xmlOK) {
 
-                Source xmlFile = new StreamSource(new File(this.fileName));
+                writtenFileInputStream = new FileInputStream(outputFilePath);
+                Source xmlFile = new StreamSource(writtenFileInputStream);
                 Validator validator = schema.newValidator();
                 SchemaValidatonErrorHandler errHandler = new SchemaValidatonErrorHandler();
                 validator.setErrorHandler(errHandler);
@@ -582,6 +528,7 @@ public class ExporterXMLStax implements Exporter {
 
         } finally {
             close(session);
+            IOUtils.closeQuietly(writtenFileInputStream);
         }
 
         return schemaValidationMessages.isEmpty();

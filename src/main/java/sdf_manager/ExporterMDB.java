@@ -185,8 +185,29 @@ public class ExporterMDB implements Exporter {
 
         File validationErrorsLogFile = this.validateSites();
 
-        this.createDatabase(fileName);
-        this.copyData(fileName, validationErrorsLogFile);
+        com.healthmarketscience.jackcess.Database database = null;
+        try {
+            database = Database.create(new File(fileName));
+            if (database != null) {
+                copyData(fileName, validationErrorsLogFile);
+            } else {
+                String msg = "The created MS Access database object is null!";
+                log.error(msg);
+                log(msg);
+            }
+        } catch (Exception e) {
+            String msg = "Error creating MS Access database at " + fileName;
+            log.error(msg, e);
+            log(msg);
+        } finally {
+            if (database != null) {
+                try {
+                    database.close();
+                } catch (IOException e) {
+                    // Ignore deliberately.
+                }
+            }
+        }
 
         return true;
     }

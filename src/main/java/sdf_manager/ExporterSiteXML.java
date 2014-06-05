@@ -2,6 +2,7 @@ package sdf_manager;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +40,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.w3c.dom.Document;
@@ -266,18 +268,27 @@ public class ExporterSiteXML implements Exporter {
      *
      * @return
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public ArrayList processDatabase() {
+
         Session session = HibernateUtil.getSessionFactory().openSession();
         final ArrayList xmlValidFields = new ArrayList();
         boolean xmlOK = false;
+
         try {
+            File schemaFile = SDF_ManagerApp.getXMLSchemaLocalFile();
+            String schemaUrl = SDF_ManagerApp.getXMLSchemaURI();
+
+            boolean schemaUrlBroken = Util.isUrlBroken(schemaUrl, false);
+            if (schemaUrlBroken) {
+                ExporterSiteXML.log.info("Schema URL broken (" + schemaUrl + "), trying with local file: " + schemaFile);
+            }
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            URL schemaFile = new URL(SDF_ManagerApp.getXMLSchemaURI());
+            Schema schema = schemaUrlBroken ? schemaFactory.newSchema(schemaFile) : schemaFactory.newSchema(new URL(schemaUrl));
 
-            ExporterSiteXML.log.info("Using this schema for validation: " + schemaFile);
+            ExporterSiteXML.log.info("Using this schema for validation: " + (schemaUrlBroken ? schemaFile : schemaUrl));
 
-            Schema schema = schemaFactory.newSchema(schemaFile);
             Document doc = ExporterSiteXML.generateXML(session, this.sitecodes, schema);
             xmlOK = writeXmlFile(doc, this.fileName);
 
@@ -525,18 +536,20 @@ public class ExporterSiteXML implements Exporter {
     /**
      *
      * @param doc
-     * @param filename
+     * @param filePath
      * @return
      */
-    public static Boolean writeXmlFile(Document doc, String filename) {
+    public static Boolean writeXmlFile(Document doc, String filePath) {
+
+        FileOutputStream outputStream = null;
         try {
             // Prepare the DOM document for writing
             Source domSource = new DOMSource(doc);
 
             // Prepare the output file
-            File file = new File(filename);
-            System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLL   " + filename);
-            Result streamResult = new StreamResult(file.toURI().getPath());
+            File file = new File(filePath);
+            outputStream = new FileOutputStream(file);
+            Result streamResult = new StreamResult(outputStream);
 
             // Write the DOM document to the file
             Transformer domTransformer = TransformerFactory.newInstance().newTransformer();
@@ -567,6 +580,8 @@ public class ExporterSiteXML implements Exporter {
             JOptionPane.showMessageDialog(new JFrame(), "Export process has failed.\n Please check sdfLog file for more details",
                     "Dialog", JOptionPane.ERROR_MESSAGE);
             return false;
+        } finally {
+            IOUtils.closeQuietly(outputStream);
         }
     }
 

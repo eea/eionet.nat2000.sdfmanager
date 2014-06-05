@@ -4438,7 +4438,9 @@ public class SDFEditor extends javax.swing.JFrame {
                         .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE).addContainerGap()));
 
-        jPanelOSpecies.addTab(resourceMap.getString("jPanel41.TabConstraints.tabTitle"), jPanel41); // NOI18N
+        //different for EMERALD
+        String speciesTabtitlePropName = "jPanel41.TabConstraints.tabTitle" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        jPanelOSpecies.addTab(resourceMap.getString(speciesTabtitlePropName), jPanel41); // NOI18N
 
         jPanel42.setName("jPanel42"); // NOI18N
 

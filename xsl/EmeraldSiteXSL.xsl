@@ -21,8 +21,9 @@
       <!-- This span is to avoid problems with the generated html. -->
 
       <p class="main_subtitle">
-        For Special Protection Areas (SPA), <br/>Proposed Sites for Community Importance (pSCI),<br/>
-        Sites of Community Importance (SCI) and <br/>for Special Areas of Conservation (SAC)
+        For proposed Emerald Sites (Areas of Special Conservation Interest, ASCI), <br/>
+        Candidate Emerald Sites and,<br/>
+        For Areas of Special Conservation Interest (ASCI = Emerald Sites)
       </p>
 
       <div class="siteData_title">
@@ -605,7 +606,7 @@
             </xsl:when>
           </xsl:choose>
 
-          <h2>3.2 Species referred to in Article 4 of Directive 2009/147/EC and listed in Annex II of Directive 92/43/EEC and site evaluation for them</h2>
+          <h2>3.2. Species listed in Resolution 6 and site evaluation for them</h2>
           <xsl:choose>
             <xsl:when test="string(ecologicalInformation/species)">
               <!-- former "EcologicalInformation31" section -->

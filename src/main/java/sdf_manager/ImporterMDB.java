@@ -9,13 +9,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -88,16 +82,6 @@ public class ImporterMDB implements Importer {
      * table file for N2K.
      */
     private static final String TABLE_FILE_NAME_N2K = "table_names.xml";
-
-    /**
-     * table file for EMERALD.
-     */
-    private static final String TABLE_FILE_NAME_EMERALD = "table_names_emerald.xml";
-
-    /**
-     * field mappings file for EMERALD.
-     */
-    private static final String FIELD_FILE_NAME_EMERALD = "field_maps_emerald.xml";
 
     /**
      * field mappings file for N2K.
@@ -295,8 +279,8 @@ public class ImporterMDB implements Importer {
             // java.util.Properties prop = new java.util.Properties();
             // prop.put("charSet", "UTF-8");
 
-            if (accessVersion.equals("2003")) {
-                /* open read-only */
+/*            if (accessVersion.equals("2003")) {
+                 open read-only
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 String db =
                         "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName
@@ -305,7 +289,7 @@ public class ImporterMDB implements Importer {
                 conn = DriverManager.getConnection(db, "", "");
 
             } else {
-                /* open read-only */
+                 open read-only
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
                 // añadido , *.accdb) a la cadena db
                 // String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
@@ -314,6 +298,9 @@ public class ImporterMDB implements Importer {
                                 + ";useUnicode=true;characterEncoding=UTF-8";
                 conn = DriverManager.getConnection(db, "", "");
             }
+*/
+            Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+            conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
 
         } catch (ClassNotFoundException e) {
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
@@ -322,6 +309,7 @@ public class ImporterMDB implements Importer {
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
             // e.printStackTrace();
         } catch (Exception e) {
+            SDF_MysqlDatabase.closeQuietly(conn);
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
             // e.printStackTrace();
         } finally {
@@ -635,33 +623,8 @@ public class ImporterMDB implements Importer {
      */
     private String getString(ResultSet rs, String fieldName) {
         try {
-            if (!("UTF-8").equals(this.encoding)) {
-                byte[] result = rs.getBytes(fieldName);
-                if (result != null && result.length == 0) {
-                    return null;
-                } // don't enter empty string in the database
-                else {
-                    if (result != null) {
-                        Charset charset = Charset.forName(this.encoding);
-                        CharsetDecoder decoder = charset.newDecoder();
-                        decoder.onMalformedInput(CodingErrorAction.REPLACE);
-                        decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-                        CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
-                        return cbuf.toString().trim();
-                    } else {
-                        return null;
-                    }
-                }
-            } else {
-
-                String tmp = rs.getString(fieldName);
-                if (fieldName == this.fields.get("sitename")) {
-                    PrintStream sysout = new PrintStream(System.out, true, "UTF-8");
-                    sysout.print(">>" + tmp);
-                }
-                return tmp;
-
-            }
+            String value = rs.getString(fieldName);
+            return ImporterUtils.getString(value, this.encoding);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -778,7 +741,8 @@ public class ImporterMDB implements Importer {
             Character tmpChar;
 
             while (rs.next()) {
-                tmpStr = getString(rs, this.fields.get("sitename"));
+                tmpStr = rs.getString(this.fields.get("sitename"));
+                tmpStr = ImporterUtils.getString(tmpStr, this.encoding);
 
                 ImporterMDB.log.info("tmpStr==>" + tmpStr + "<==");
                 if (tmpStr != null) {
@@ -1694,7 +1658,8 @@ public class ImporterMDB implements Importer {
 
             while (rs.next()) {
                 NationalDtype dType = new NationalDtype();
-                tmpStr = getString(rs, this.fields.get("national_designation_code"));
+                tmpStr = rs.getString(this.fields.get("national_designation_code"));
+                tmpStr = ImporterUtils.getString(tmpStr, this.encoding);
                 if (tmpStr != null) {
                     dType.setNationalDtypeCode(tmpStr);
                 }
@@ -1798,7 +1763,8 @@ public class ImporterMDB implements Importer {
             while (rs.next()) {
                 HabitatClass habitat = new HabitatClass();
 
-                tmpStr = getString(rs, this.fields.get("habitat_class_code"));
+                tmpStr = rs.getString(this.fields.get("habitat_class_code"));
+                tmpStr = ImporterUtils.getString(tmpStr, this.encoding);
                 if (tmpStr != null) {
                     habitat.setHabitatClassCode(tmpStr);
                 }

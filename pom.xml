@@ -10,22 +10,16 @@
     <version>4.0-SNAPSHOT</version>
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
-    <distributionManagement>
-            <repository>
-                <id>project-local</id>
-                <url>file:///${basedir}</url>
-            </repository>
-        </distributionManagement>
+
     <!-- Configuration of Maven repositories to be used. -->
     <repositories>
-
         <repository>
             <id>project-local</id>
             <name>project-local repository</name>
             <layout>default</layout>
             <url>file:///${basedir}/lib</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
@@ -41,15 +35,6 @@
             <name>Java.net Repository for Maven</name>
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
-        </repository>
-        <repository>
-            <id>project-local</id>
-            <name>project-local folder</name>
-            <layout>default</layout>
-            <url>file:///${basedir}</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
     </repositories>
     <!-- Properties to be used below. -->

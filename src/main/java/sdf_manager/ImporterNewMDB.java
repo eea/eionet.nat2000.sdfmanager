@@ -282,13 +282,13 @@ public class ImporterNewMDB implements Importer {
                 return conn;
             }
         } catch (ClassNotFoundException e) {
-            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            ImporterNewMDB.log.error("Error connecting to MS Access DB", e);
             return null;
         } catch (SQLException e) {
-            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            ImporterNewMDB.log.error("Error connecting to MS Access DB", e);
             return null;
         } catch (Exception e) {
-            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            ImporterNewMDB.log.error("Error connecting to MS Access DB", e);
             return null;
         }
     }

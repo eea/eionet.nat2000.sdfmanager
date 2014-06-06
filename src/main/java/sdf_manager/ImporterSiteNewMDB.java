@@ -3,11 +3,6 @@ package sdf_manager;
 import java.awt.Frame;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,6 +44,8 @@ import pojos.SiteOwnership;
 import pojos.SiteOwnershipId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.util.ImporterUtils;
+import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
 
@@ -237,23 +234,30 @@ public class ImporterSiteNewMDB implements Importer {
      * @throws SQLException
      */
     Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
+        Connection conn = null;
         try {
-             if (accessVersion.equals("2003")) {
-                 /*open read-only*/
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
 
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
-                Connection conn = DriverManager.getConnection(db, "", "");
-                return conn;
-             } else {
-                /*open read-only*/
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
-                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-                Connection conn = DriverManager.getConnection(db, "", "");
-                return conn;
-             }
+            Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+            conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
+
+//             if (accessVersion.equals("2003")) {
+//                 /*open read-only*/
+//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//                //añadido , *.accdb) a la cadena db
+//
+//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
+//                Connection conn = DriverManager.getConnection(db, "", "");
+//                return conn;
+//             } else {
+//                /*open read-only*/
+//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//                //añadido , *.accdb) a la cadena db
+//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
+//                Connection conn = DriverManager.getConnection(db, "", "");
+//                return conn;
+//             }
+
+            return conn;
          } catch (ClassNotFoundException e) {
              ImporterSiteNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
              return null;
@@ -262,6 +266,7 @@ public class ImporterSiteNewMDB implements Importer {
              return null;
          } catch (Exception e) {
              ImporterSiteNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
+             SDF_MysqlDatabase.closeQuietly(conn);
              return null;
          }
     }
@@ -1699,29 +1704,19 @@ public class ImporterSiteNewMDB implements Importer {
      */
     String getString(ResultSet rs, String fieldName) {
 
-         try {
-             byte[] result = rs.getBytes(fieldName);
-             if (result != null && result.length == 0) {
-                 return null;
-             } //don't enter empty string in the database
-             else {
-                 if (result != null) {
-                     Charset charset = Charset.forName(this.encoding);
-                     CharsetDecoder decoder = charset.newDecoder();
-                     decoder.onMalformedInput(CodingErrorAction.REPLACE);
-                     decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-                     CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
-                     return cbuf.toString().trim();
-                 } else {
-                     return null;
-                 }
-             }
-         } catch (Exception e) {
-             ImporterSiteNewMDB.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Error: " + e.getMessage());
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
-             return null;
-         }
-     }
+        try {
+            String value = rs.getString(fieldName);
+            return ImporterUtils.getString(value, this.encoding);
+
+        } catch (Exception e) {
+            ImporterSiteNewMDB.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Error: "
+                    + e.getMessage());
+            log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
+            // ////e.printStackTrace();
+            return null;
+        }
+
+    }
 
 
     /**

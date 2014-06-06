@@ -564,6 +564,31 @@ public class ImporterNewMDB implements Importer {
                     site.setSiteExplanations(tmpStr);
                 }
 
+                tmpDate = rs.getDate("SITE_ASCI_PROP_DATE");
+                if (tmpDate != null) {
+                    site.setSiteProposedAsciDate(tmpDate);
+                }
+
+                tmpDate = rs.getDate("SITE_ASCI_CONF_CAND_DATE");
+                if (tmpDate != null) {
+                    site.setSiteConfirmedCandidateAsciDate(tmpDate);
+                }
+
+                tmpDate = rs.getDate("SITE_ASCI_CONF_DATE");
+                if (tmpDate != null) {
+                    site.setSiteConfirmedAsciDate(tmpDate);
+                }
+
+                tmpDate = rs.getDate("SITE_ASCI_DESIG_DATE");
+                if (tmpDate != null) {
+                    site.setSiteDesignatedAsciDate(tmpDate);
+                }
+
+                tmpStr = getString(rs, "SITE_ASCI_LEGAL_REF");
+                if (tmpStr != null) {
+                    site.setSiteAsciLegalRef(tmpStr);
+                }
+
                 tmpInt = rs.getInt("RESP_ID");
                 if (tmpInt != 0) {
                     Resp resp = new Resp();

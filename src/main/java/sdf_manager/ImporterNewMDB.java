@@ -55,14 +55,13 @@ import pojos.Species;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
 
-
 /**
  *
  * @author anon
  */
 public class ImporterNewMDB implements Importer {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterNewMDB.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterNewMDB.class.getName());
 
     private Logger logger;
     private String encoding;
@@ -90,7 +89,7 @@ public class ImporterNewMDB implements Importer {
      *
      */
     void init() {
-        //this.tables = new HashMap();
+        // this.tables = new HashMap();
     }
 
     /**
@@ -126,7 +125,7 @@ public class ImporterNewMDB implements Importer {
             out = new PrintWriter(outFile);
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error::" + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         }
     }
 
@@ -139,7 +138,7 @@ public class ImporterNewMDB implements Importer {
             outFile.close();
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error::" + e.getMessage());
-           //////e.printStackTrace();
+            // ////e.printStackTrace();
         }
     }
 
@@ -192,60 +191,65 @@ public class ImporterNewMDB implements Importer {
         } finally {
             SDF_MysqlDatabase.closeQuietly(conn);
             if (importOk) {
-                javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog", JOptionPane.INFORMATION_MESSAGE);;
+                javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+                ;
             } else {
-                log("Import is stopped.There are some errors in import process.", 1);
-                javax.swing.JOptionPane.showMessageDialog(new Frame(), "There are some errors in import process.\n Please, check the SDF_Log file for more details", "Dialog", JOptionPane.ERROR_MESSAGE);;
+                String msg = "Import stopped: some errors were detected in the import process.";
+                log(msg, 1);
+                javax.swing.JOptionPane.showMessageDialog(new Frame(), msg +
+                        "\nPlease check the SDF_Log file for more details." +
+                        "\nIf you were unsure whether to import from Access 2003 or 2007, please try both options!", "Dialog",
+                        JOptionPane.ERROR_MESSAGE);
             }
 
         }
         return importOk;
     }
 
-
-     /**
-      *
-      * @param conn
-      */
-     private HashMap<String, ArrayList<String>> validateSites(ArrayList siteList) {
+    /**
+     *
+     * @param conn
+     */
+    private HashMap<String, ArrayList<String>> validateSites(ArrayList siteList) {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
         try {
             int j = 0;
             for (int i = 0; i < siteList.size(); i++) {
-               try {
-                   Site site = (Site) siteList.get(i);
-                   Transaction tx = session.beginTransaction();
-                   ImporterNewMDB.log.info("Validating site: " + site.getSiteCode());
-                   log("Validating site: " + site.getSiteCode(), 1);
+                try {
+                    Site site = (Site) siteList.get(i);
+                    Transaction tx = session.beginTransaction();
+                    ImporterNewMDB.log.info("Validating site: " + site.getSiteCode());
+                    log("Validating site: " + site.getSiteCode(), 1);
 
-                   boolean siteInDB = false;
-                   if (SDF_Util.validateSite(session, site.getSiteCode())) {
-                       siteInDB = true;
-                   }
-                   Set regionSiteList = site.getRegions();
-                   Iterator itr = regionSiteList.iterator();
-                   ArrayList<String> nutsNoOK = new ArrayList<String>();
-                   while (itr.hasNext()) {
-                       String nuts = (String) itr.next();
+                    boolean siteInDB = false;
+                    if (SDF_Util.validateSite(session, site.getSiteCode())) {
+                        siteInDB = true;
+                    }
+                    Set regionSiteList = site.getRegions();
+                    Iterator itr = regionSiteList.iterator();
+                    ArrayList<String> nutsNoOK = new ArrayList<String>();
+                    while (itr.hasNext()) {
+                        String nuts = (String) itr.next();
                         if (!isRegionLevel2(nuts)) {
                             nutsNoOK.add(nuts);
                         }
-                   }
-                   if (siteInDB) {
-                       siteHasHDB.put(site.getSiteCode(), nutsNoOK);
-                   }
-                   tx.commit();
-              } catch (Exception e) {
-                ImporterNewMDB.log.error("Error: " + e.getMessage());
-                break;
-              }
-              if (++j % 20 == 0) {
-                 session.flush();
-                 session.clear();
-             }
-          }
+                    }
+                    if (siteInDB) {
+                        siteHasHDB.put(site.getSiteCode(), nutsNoOK);
+                    }
+                    tx.commit();
+                } catch (Exception e) {
+                    ImporterNewMDB.log.error("Error: " + e.getMessage());
+                    break;
+                }
+                if (++j % 20 == 0) {
+                    session.flush();
+                    session.clear();
+                }
+            }
 
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error: " + e.getMessage());
@@ -255,7 +259,7 @@ public class ImporterNewMDB implements Importer {
         }
         return siteHasHDB;
 
-     }
+    }
 
     /**
      *
@@ -266,36 +270,28 @@ public class ImporterNewMDB implements Importer {
      */
     Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         try {
-             if (accessVersion.equals("2003")) {
-                 /*open read-only*/
+            if (accessVersion.equals("2003")) {
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
                 String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
                 Connection conn = DriverManager.getConnection(db, "", "");
                 return conn;
-             } else {
-                /*open read-only*/
+            } else {
                 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                //añadido , *.accdb) a la cadena db
                 String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
                 Connection conn = DriverManager.getConnection(db, "", "");
                 return conn;
-             }
-         } catch (ClassNotFoundException e) {
-             //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
-         } catch (SQLException e) {
-             //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
-         } catch (Exception e) {
-             //e.printStackTrace();
-             ImporterNewMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-             return null;
-         }
+            }
+        } catch (ClassNotFoundException e) {
+            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            return null;
+        } catch (SQLException e) {
+            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            return null;
+        } catch (Exception e) {
+            ImporterNewMDB.log.error("Error conecting to MS Access DB", e);
+            return null;
+        }
     }
-
 
     /**
      *
@@ -332,11 +328,11 @@ public class ImporterNewMDB implements Importer {
         Session session = null;
         Statement stmt = null;
 
-        //HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
+        // HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
         try {
             int j = 0;
             session = HibernateUtil.getSessionFactory().openSession();
-            //loadSpecies(conn, session);
+            // loadSpecies(conn, session);
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -369,7 +365,7 @@ public class ImporterNewMDB implements Importer {
                 } catch (Exception e) {
                     this.log.error("Failed processing site: " + sitecode + " .The error: " + e.getMessage());
                     log("failed processing site: " + sitecode, 1);
-                    //break;
+                    // break;
                 }
 
             }
@@ -385,27 +381,27 @@ public class ImporterNewMDB implements Importer {
          */
         if (notProcessedSiteCodesList != null && !notProcessedSiteCodesList.isEmpty()) {
 
-            ImporterNewMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
+            ImporterNewMDB.log
+                    .error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
             log("Error in validation.", 1);
-            //msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
+            // msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
 
             File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList, "OldDB");
-                if (fileLog != null) {
-                    Desktop desktop = null;
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                        try {
-                            Desktop.getDesktop().open(fileLog);
-                        } catch (Exception ex) {
-                            this.log.error("The error: " + ex.getMessage());
-                        }
+            if (fileLog != null) {
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                    try {
+                        Desktop.getDesktop().open(fileLog);
+                    } catch (Exception ex) {
+                        this.log.error("The error: " + ex.getMessage());
                     }
                 }
-          }
+            }
+        }
 
-          return processOK;
+        return processOK;
     }
-
 
     /**
      *
@@ -415,7 +411,9 @@ public class ImporterNewMDB implements Importer {
     private boolean processSites(Connection conn, String fileName) throws SQLException {
 
         boolean processOK = false;
-        Session session = new Configuration().configure().setProperty("hibernate.jdbc.batch_size", "20").setProperty("hibernate.cache.use_second_level_cache", "false").buildSessionFactory().openSession();
+        Session session =
+                new Configuration().configure().setProperty("hibernate.jdbc.batch_size", "20")
+                        .setProperty("hibernate.cache.use_second_level_cache", "false").buildSessionFactory().openSession();
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -423,7 +421,7 @@ public class ImporterNewMDB implements Importer {
             if (conn == null) {
                 conn = getConnection(fileName);
             }
-            if (conn !=  null) {
+            if (conn != null) {
                 String sql = "select site_code from site";
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(sql);
@@ -451,13 +449,12 @@ public class ImporterNewMDB implements Importer {
                         tx.commit();
                         processOK = true;
                     } catch (Exception e) {
-                        //e.printStackTrace();
+                        // e.printStackTrace();
                         ImporterNewMDB.log.error("Failed processing site: " + sitecode + " Error: " + e.getMessage());
                         log("Failed processing site: " + sitecode, 1);
                         processOK = false;
                         break;
                     }
-
 
                     if (++i % 20 == 0) {
                         session.flush();
@@ -475,14 +472,14 @@ public class ImporterNewMDB implements Importer {
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" SQL Error: " + e.getMessage());
             processOK = false;
-            //e.printStackTrace();
+            // e.printStackTrace();
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
             processOK = false;
-            //e.printStackTrace();
+            // e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
             if (!conn.isClosed()) {
                 conn.close();
             }
@@ -570,8 +567,7 @@ public class ImporterNewMDB implements Importer {
                 tmpInt = rs.getInt("RESP_ID");
                 if (tmpInt != 0) {
                     Resp resp = new Resp();
-                    //resp.setRespId(tmpInt);
-
+                    // resp.setRespId(tmpInt);
 
                     session.save(resp);
                     resp = getRespData(tmpInt, conn, resp, session);
@@ -624,7 +620,7 @@ public class ImporterNewMDB implements Importer {
                 tmpInt = rs.getInt("DOC_ID");
                 if (tmpInt != 0) {
                     Doc doc = new Doc();
-                    //doc.setDocId(tmpInt);
+                    // doc.setDocId(tmpInt);
                     session.save(doc);
                     doc = getDocData(tmpInt, conn, doc, session);
                     doc = getDocucumentLinks(tmpInt, conn, doc, session);
@@ -664,21 +660,23 @@ public class ImporterNewMDB implements Importer {
                 if (itSet != null) {
                     Iterator itReg = itSet.iterator();
                     while (itReg.hasNext()) {
-                        //String regionKey = (String) itReg.next();
+                        // String regionKey = (String) itReg.next();
                         SiteBiogeo regionKey = (SiteBiogeo) itReg.next();
 
-                        //int region_key = ((Integer) regionCodes.get(regionKey)).intValue();
+                        // int region_key = ((Integer) regionCodes.get(regionKey)).intValue();
 
-                        /*int region_key =loadBiogeoRegionId(regionKey);
-                        Biogeo biogeo = (Biogeo) session.load(Biogeo.class, region_key);
-
-                        SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
-                        //siteBiogeo.setId(id);
-                        SiteBiogeo siteBiogeo = new SiteBiogeo(id, biogeo, site);
-                        site.getSiteBiogeos().add(siteBiogeo);*/
+                        /*
+                         * int region_key =loadBiogeoRegionId(regionKey);
+                         * Biogeo biogeo = (Biogeo) session.load(Biogeo.class, region_key);
+                         *
+                         * SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
+                         * //siteBiogeo.setId(id);
+                         * SiteBiogeo siteBiogeo = new SiteBiogeo(id, biogeo, site);
+                         * site.getSiteBiogeos().add(siteBiogeo);
+                         */
                         site.getSiteBiogeos().add(regionKey);
-                    //session.save(siteBiogeo);
-//                 }
+                        // session.save(siteBiogeo);
+                        // }
                     }
 
                 }
@@ -687,14 +685,14 @@ public class ImporterNewMDB implements Importer {
             stmt.close();
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            ////e.printStackTrace();
+            // //e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            ////e.printStackTrace();
+            // //e.printStackTrace();
         } finally {
             stmt.close();
-            //rs.close();
+            // rs.close();
         }
 
     }
@@ -732,14 +730,13 @@ public class ImporterNewMDB implements Importer {
                 siteBiogeoSet.add(siteBiogeo);
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
             ImporterNewMDB.log.error("Error loading site biogeo data ::: Error Message:::" + e.getMessage());
         } finally {
             stmt.close();
         }
         return siteBiogeoSet;
     }
-
 
     /**
      *
@@ -750,7 +747,7 @@ public class ImporterNewMDB implements Importer {
      */
     private void processSpecies(Connection conn, Session session, Site site) throws SQLException {
 
-        /***All the species are in the same table**/
+        /*** All the species are in the same table **/
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -821,7 +818,7 @@ public class ImporterNewMDB implements Importer {
 
                 tmpStr = getString(rs, "SPECIES_DATA_QUALITY");
                 if (tmpStr != null) {
-                    //species.setSpeciesDataQuality(tmpStr.charAt(0));
+                    // species.setSpeciesDataQuality(tmpStr.charAt(0));
                     species.setSpeciesDataQuality(tmpStr);
                 }
 
@@ -850,15 +847,15 @@ public class ImporterNewMDB implements Importer {
 
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
 
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
 
     }
@@ -944,14 +941,14 @@ public class ImporterNewMDB implements Importer {
 
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
     }
 
@@ -1033,18 +1030,18 @@ public class ImporterNewMDB implements Importer {
 
                 habitat.setSite(site);
                 site.getHabitats().add(habitat);
-                //session.save(habitat);
+                // session.save(habitat);
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
     }
 
@@ -1084,18 +1081,18 @@ public class ImporterNewMDB implements Importer {
                 }
                 habitat.setSite(site);
                 site.getHabitatClasses().add(habitat);
-                //session.save(habitat);
+                // session.save(habitat);
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
 
     }
@@ -1122,7 +1119,7 @@ public class ImporterNewMDB implements Importer {
                 tmpStr = getString(rs, "region_code");
                 if (tmpStr != null) {
 
-                    /*just get NUT2 level*/
+                    /* just get NUT2 level */
                     if (tmpStr.length() > 4) {
                         tmpStr = tmpStr.substring(0, 4);
                     }
@@ -1132,7 +1129,8 @@ public class ImporterNewMDB implements Importer {
                         log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
                     } else {
                         try {
-                            Iterator itr = session.createQuery("from RefNuts as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
+                            Iterator itr =
+                                    session.createQuery("from RefNuts as rn where rn.refNutsCode like '" + tmpStr + "'").iterate();
 
                             if (itr.hasNext()) {
                                 RefNuts rn = (RefNuts) itr.next();
@@ -1147,26 +1145,27 @@ public class ImporterNewMDB implements Importer {
                                 log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);
                             }
                         } catch (Exception e) {
-                            ////e.printStackTrace();
-                            ImporterNewMDB.log.error("An error has occurred in import process. Region section::Error Message:::" + e.getMessage());
+                            // //e.printStackTrace();
+                            ImporterNewMDB.log.error("An error has occurred in import process. Region section::Error Message:::"
+                                    + e.getMessage());
                         }
                     }
                     region.setRegionCode(tmpStr);
                 }
                 region.setSite(site);
                 site.getRegions().add(region);
-                //session.save(region);
+                // session.save(region);
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
 
     }
@@ -1228,14 +1227,14 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
 
     }
@@ -1275,14 +1274,14 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
 
     }
@@ -1337,14 +1336,14 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            //rs.close();
+            // rs.close();
         }
 
     }
@@ -1382,21 +1381,20 @@ public class ImporterNewMDB implements Importer {
                     siteOwnerShip.setId(siteOwnerShipId);
                 }
 
-
                 siteOwnerShip.setSite(site);
                 site.getSiteOwnerships().add(siteOwnerShip);
                 session.save(siteOwnerShip);
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            //rs.close();
+            // rs.close();
         }
 
     }
@@ -1427,18 +1425,17 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
-           stmt.close();
-           //rs.close();
+            stmt.close();
+            // rs.close();
         }
 
         return doc;
-
 
     }
 
@@ -1472,7 +1469,6 @@ public class ImporterNewMDB implements Importer {
                 String respPostName = rs.getString("RESP_POSTNAME");
                 String respPostCode = rs.getString("RESP_POSTCODE");
                 String respThoughfare = rs.getString("RESP_THOROUGHFARE");
-
 
                 if (respName != null && !(("").equals(respName))) {
                     resp.setRespName(respName);
@@ -1508,18 +1504,17 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
-           stmt.close();
-           //rs.close();
+            stmt.close();
+            // rs.close();
         }
 
         return resp;
-
 
     }
 
@@ -1532,7 +1527,7 @@ public class ImporterNewMDB implements Importer {
      * @return
      * @throws SQLException
      */
-     private Map getMapData(int mapId, Connection conn, Map mapSite, Session session) throws SQLException {
+    private Map getMapData(int mapId, Connection conn, Map mapSite, Session session) throws SQLException {
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -1560,18 +1555,17 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
-           stmt.close();
-           //rs.close();
+            stmt.close();
+            // rs.close();
         }
 
         return mapSite;
-
 
     }
 
@@ -1608,18 +1602,17 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
-           stmt.close();
-           //rs.close();
+            stmt.close();
+            // rs.close();
         }
 
         return mgmt;
-
 
     }
 
@@ -1654,7 +1647,6 @@ public class ImporterNewMDB implements Importer {
                 String mgmtBodyPostName = rs.getString("MGMT_POSTNAME");
                 String mgmtBodyPostCode = rs.getString("MGMT_POSTCODE");
                 String mgmtBodyThorughfare = rs.getString("MGMT_THOROUGHFARE");
-
 
                 if (mgmtBodyOrg != null && !(("").equals(mgmtBodyOrg))) {
                     mgmtBody.setMgmtBodyOrg(mgmtBodyOrg);
@@ -1693,18 +1685,17 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
-           stmt.close();
-           //rs.close();
+            stmt.close();
+            // rs.close();
         }
 
         return mgmt;
-
 
     }
 
@@ -1745,14 +1736,14 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
         return mgmt;
     }
@@ -1789,20 +1780,18 @@ public class ImporterNewMDB implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         } finally {
             stmt.close();
-           // rs.close();
+            // rs.close();
         }
         return doc;
 
-
     }
-
 
     /**
      *
@@ -1812,33 +1801,31 @@ public class ImporterNewMDB implements Importer {
      */
     String getString(ResultSet rs, String fieldName) {
 
-         try {
-             byte[] result = rs.getBytes(fieldName);
-             if (result != null && result.length == 0) {
-                 return null;
-             } //don't enter empty string in the database
-             else {
-                 if (result != null) {
-                     Charset charset = Charset.forName(this.encoding);
-                     CharsetDecoder decoder = charset.newDecoder();
-                     decoder.onMalformedInput(CodingErrorAction.REPLACE);
-                     decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-                     CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
-                     return cbuf.toString().trim();
-                 } else {
-                     return null;
-                 }
-             }
-         } catch (Exception e) {
-             ImporterNewMDB.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Error: " + e.getMessage());
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
-             //////e.printStackTrace();
-             return null;
-         }
+        try {
+            byte[] result = rs.getBytes(fieldName);
+            if (result != null && result.length == 0) {
+                return null;
+            } // don't enter empty string in the database
+            else {
+                if (result != null) {
+                    Charset charset = Charset.forName(this.encoding);
+                    CharsetDecoder decoder = charset.newDecoder();
+                    decoder.onMalformedInput(CodingErrorAction.REPLACE);
+                    decoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+                    CharBuffer cbuf = decoder.decode(ByteBuffer.wrap(result));
+                    return cbuf.toString().trim();
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            ImporterNewMDB.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Error: "
+                    + e.getMessage());
+            log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
+            // ////e.printStackTrace();
+            return null;
+        }
     }
-
-
-
 
     /**
      *
@@ -1856,8 +1843,6 @@ public class ImporterNewMDB implements Importer {
         }
     }
 
-
-
     /**
      *
      * @param regionKey
@@ -1865,7 +1850,7 @@ public class ImporterNewMDB implements Importer {
      */
     private int loadBiogeoRegionId(String regionKey) {
         int biogeoId = 0;
-         try {
+        try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction tx = session.beginTransaction();
             String hql = "select bio.biogeoId from Biogeo as bio where bio.biogeoCode='" + regionKey + "'";
@@ -1880,11 +1865,10 @@ public class ImporterNewMDB implements Importer {
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
 
-            //////e.printStackTrace();
+            // ////e.printStackTrace();
         }
         return biogeoId;
     }
-
 
     /**
      *
@@ -1903,10 +1887,10 @@ public class ImporterNewMDB implements Importer {
         try {
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
-               nutsOK = true;
+                nutsOK = true;
             }
         } catch (Exception e) {
-            ////e.printStackTrace();
+            // //e.printStackTrace();
             ImporterNewMDB.log.error("Error loading Region Description:::" + e.getMessage());
 
         }

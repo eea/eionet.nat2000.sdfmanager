@@ -159,6 +159,7 @@ Source: "jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs creat
 Source: "lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 Source: "xsl\*"; DestDir: "{app}\xsl"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "xsd\*"; DestDir: "{app}\xsd"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
  
 [Icons]

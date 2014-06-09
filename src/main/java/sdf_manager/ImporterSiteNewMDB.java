@@ -342,44 +342,46 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                     site.setSiteExplanations(tmpStr);
                 }
 
-                String msg = "Processing: ASCI proposal date";
-                log(msg);
-                ImporterSiteNewMDB.log.info(msg);
-                tmpDate = rs.getDate("SITE_ASCI_PROP_DATE");
-                if (tmpDate != null) {
-                    site.setSiteProposedAsciDate(tmpDate);
-                }
+                if (SDF_ManagerApp.isEmeraldMode()) {
+                    String msg = "Processing: ASCI proposal date";
+                    log(msg);
+                    ImporterSiteNewMDB.log.info(msg);
+                    tmpDate = rs.getDate("SITE_ASCI_PROP_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteProposedAsciDate(tmpDate);
+                    }
 
-                msg = "Processing: ASCI candidate confirmation date";
-                log(msg);
-                ImporterSiteNewMDB.log.info(msg);
-                tmpDate = rs.getDate("SITE_ASCI_CONF_CAND_DATE");
-                if (tmpDate != null) {
-                    site.setSiteConfirmedCandidateAsciDate(tmpDate);
-                }
+                    msg = "Processing: ASCI candidate confirmation date";
+                    log(msg);
+                    ImporterSiteNewMDB.log.info(msg);
+                    tmpDate = rs.getDate("SITE_ASCI_CONF_CAND_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteConfirmedCandidateAsciDate(tmpDate);
+                    }
 
-                msg = "Processing: ASCI confirmation date";
-                log(msg);
-                ImporterSiteNewMDB.log.info(msg);
-                tmpDate = rs.getDate("SITE_ASCI_CONF_DATE");
-                if (tmpDate != null) {
-                    site.setSiteConfirmedAsciDate(tmpDate);
-                }
+                    msg = "Processing: ASCI confirmation date";
+                    log(msg);
+                    ImporterSiteNewMDB.log.info(msg);
+                    tmpDate = rs.getDate("SITE_ASCI_CONF_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteConfirmedAsciDate(tmpDate);
+                    }
 
-                msg = "Processing: ASCI designation date";
-                log(msg);
-                ImporterSiteNewMDB.log.info(msg);
-                tmpDate = rs.getDate("SITE_ASCI_DESIG_DATE");
-                if (tmpDate != null) {
-                    site.setSiteDesignatedAsciDate(tmpDate);
-                }
+                    msg = "Processing: ASCI designation date";
+                    log(msg);
+                    ImporterSiteNewMDB.log.info(msg);
+                    tmpDate = rs.getDate("SITE_ASCI_DESIG_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteDesignatedAsciDate(tmpDate);
+                    }
 
-                msg = "Processing: ASCI designation legal reference";
-                log(msg);
-                ImporterSiteNewMDB.log.info(msg);
-                tmpStr = getString(rs, "SITE_ASCI_LEGAL_REF");
-                if (tmpStr != null) {
-                    site.setSiteAsciLegalRef(tmpStr);
+                    msg = "Processing: ASCI designation legal reference";
+                    log(msg);
+                    ImporterSiteNewMDB.log.info(msg);
+                    tmpStr = getString(rs, "SITE_ASCI_LEGAL_REF");
+                    if (tmpStr != null) {
+                        site.setSiteAsciLegalRef(tmpStr);
+                    }
                 }
 
                 log("Processing: Respondent");

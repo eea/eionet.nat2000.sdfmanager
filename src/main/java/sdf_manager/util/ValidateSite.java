@@ -95,14 +95,14 @@ public class ValidateSite {
                     }
                 } else if (("B").equals(siteType.toString())) {
                     if (site.getSiteSciPropDate() == null) {
-                        errorList.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
+                        errorList.add("Date site proposed as SCI in Identification section (Dates tab)\n");
                     }
                 } else {
                     if (site.getSiteSpaDate() == null) {
                         errorList.add("Date site classificated as SPA in Identification section (Dates tab)\n");
                     }
                     if (site.getSiteSciPropDate() == null) {
-                        errorList.add("Date Site proposed as SCI in Identification section (Dates tab)\n");
+                        errorList.add("Date site proposed as SCI in Identification section (Dates tab)\n");
                     }
                 }
             } else {

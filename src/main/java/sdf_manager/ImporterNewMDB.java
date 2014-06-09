@@ -290,9 +290,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         processOK = true;
                     }
                 } catch (Exception e) {
-                    this.log.error("Failed processing site: " + sitecode + " .The error: " + e.getMessage());
-                    log("failed processing site: " + sitecode, true);
-                    // break;
+                    String msg = "Failed processing site: " + sitecode;
+                    this.log.error(msg, e);
+                    log(msg, true);
                 }
 
             }
@@ -491,29 +491,31 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                     site.setSiteExplanations(tmpStr);
                 }
 
-                tmpDate = rs.getDate("SITE_ASCI_PROP_DATE");
-                if (tmpDate != null) {
-                    site.setSiteProposedAsciDate(tmpDate);
-                }
+                if (SDF_ManagerApp.isEmeraldMode()) {
+                    tmpDate = rs.getDate("SITE_ASCI_PROP_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteProposedAsciDate(tmpDate);
+                    }
 
-                tmpDate = rs.getDate("SITE_ASCI_CONF_CAND_DATE");
-                if (tmpDate != null) {
-                    site.setSiteConfirmedCandidateAsciDate(tmpDate);
-                }
+                    tmpDate = rs.getDate("SITE_ASCI_CONF_CAND_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteConfirmedCandidateAsciDate(tmpDate);
+                    }
 
-                tmpDate = rs.getDate("SITE_ASCI_CONF_DATE");
-                if (tmpDate != null) {
-                    site.setSiteConfirmedAsciDate(tmpDate);
-                }
+                    tmpDate = rs.getDate("SITE_ASCI_CONF_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteConfirmedAsciDate(tmpDate);
+                    }
 
-                tmpDate = rs.getDate("SITE_ASCI_DESIG_DATE");
-                if (tmpDate != null) {
-                    site.setSiteDesignatedAsciDate(tmpDate);
-                }
+                    tmpDate = rs.getDate("SITE_ASCI_DESIG_DATE");
+                    if (tmpDate != null) {
+                        site.setSiteDesignatedAsciDate(tmpDate);
+                    }
 
-                tmpStr = getString(rs, "SITE_ASCI_LEGAL_REF");
-                if (tmpStr != null) {
-                    site.setSiteAsciLegalRef(tmpStr);
+                    tmpStr = getString(rs, "SITE_ASCI_LEGAL_REF");
+                    if (tmpStr != null) {
+                        site.setSiteAsciLegalRef(tmpStr);
+                    }
                 }
 
                 tmpInt = rs.getInt("RESP_ID");

@@ -54,11 +54,11 @@ import pojos.Species;
 import sdf_manager.util.SDF_Constants;
 import sdf_manager.util.SDF_Util;
 
-public class ImporterXMLStax implements Importer {
+public class ImporterXMLStax extends AbstractImporter implements Importer {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterXMLStax.class.getName());
-    private Logger logger;
-    private String encoding;
+    //private Logger logger;
+    //private String encoding;
     private String fileName;
     private FileWriter outFile;
     private PrintWriter out;
@@ -71,84 +71,10 @@ public class ImporterXMLStax implements Importer {
      * @param fileName
      */
     public ImporterXMLStax(Logger logger, String encoding, String logFile, String fileName) {
-        this.logger = logger;
-        this.encoding = encoding;
-        this.initLogFile(logFile);
-    }
+        super(logger, logFile);
+  }
 
-    /**
-     *
-     */
-    void init() {
-    }
 
-    /**
-     *
-     * @param msg
-     */
-    public void log(String msg) {
-        this.logger.log(msg);
-    }
-
-    /**
-     *
-     * @param msg
-     * @param priority
-     */
-    public void log(String msg, int priority) {
-        if (priority == 1) {
-            this.logger.log(msg);
-            logToFile(msg);
-        } else {
-            logToFile(msg);
-        }
-    }
-
-    /**
-     *
-     * @param fileName
-     */
-    @Override
-    public void initLogFile(String fileName) {
-        try {
-            outFile = new FileWriter(fileName);
-            out = new PrintWriter(outFile);
-        } catch (Exception e) {
-            ImporterXMLStax.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
-            // e.printStackTrace();
-        }
-    }
-
-    /**
-      *
-      */
-    public void closeLogFile() {
-        try {
-            out.close();
-            outFile.close();
-        } catch (Exception e) {
-            ImporterXMLStax.log.error("An error has occurred in closeLogFile. Error Message :::" + e.getMessage());
-            // e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @param msg
-     */
-    void logToFile(String msg) {
-        out.write(msg);
-        if (!msg.endsWith("\n")) {
-            out.write("\n");
-        }
-    }
-
-    /**
-      *
-      */
-    void flushFile() {
-        out.flush();
-    }
 
     /**
      *
@@ -184,16 +110,16 @@ public class ImporterXMLStax implements Importer {
             ImporterXMLStax.log.info("Init validate process");
             HashMap sitesDB = validateSites(session, siteList);
             ImporterXMLStax.log.info("Validation has finished");
-            log("Validation has finished.", 1);
+            log("Validation has finished.", true);
 
             if (sitesDB != null && (sitesDB.isEmpty())) {
                 ImporterXMLStax.log.info("Import process is starting");
-                log("Import process is starting.", 1);
+                log("Import process is starting.", true);
 
                 this.processDatabase(session, fileName);
             } else {
                 ImporterXMLStax.log.error("Error in validation");
-                log("Error in validation.", 1);
+                log("Error in validation.", true);
                 JOptionPane.showMessageDialog(new JFrame(),
                         "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -218,6 +144,7 @@ public class ImporterXMLStax implements Importer {
         } finally {
             session.clear();
             session.close();
+            closeLogFile();
         }
         return true;
     }
@@ -263,7 +190,7 @@ public class ImporterXMLStax implements Importer {
                     String sitecode = site.getSiteCode();
                     ImporterXMLStax.log.info("validating sites:::" + sitecode);
 
-                    log("validating site: " + sitecode, 1);
+                    log("validating site: " + sitecode, true);
                     boolean siteInDB = false;
                     if (SDF_Util.validateSite(session, sitecode)) {
                         siteInDB = true;
@@ -374,7 +301,7 @@ public class ImporterXMLStax implements Importer {
                             site.setSiteType(localData.charAt(0));
                         } else if (localName.equals("siteCode")) {
                             siteCode = localData;
-                            log("Processing site: " + localData, 1);
+                            log("Processing site: " + localData, true);
                             site.setSiteCode(localData);
                         } else if (localName.equals("siteName") && siteIdent != null) {
                             site.setSiteName(localData);

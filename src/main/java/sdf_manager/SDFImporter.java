@@ -536,14 +536,11 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                 javax.swing.JOptionPane.showMessageDialog(this, "Please select a file for import.");
                 return;
             }
-            String logFile;
-            if (dbFile.getParent().equals("")) {
-                logFile = "log.txt";
-            } else {
-                logFile = dbFile.getParent() + System.getProperty("file.separator") + "log.txt";
-            }
+            String logFile = dbFile.getParentFile().getAbsolutePath() + File.separator + "logs" + File.separator +  "Import_"
+                    + dbFile.getName() + ".txt";
+
             Importer importer = null;
-            String accessVersion = "2003";
+            //String accessVersion = "2003";
             if (this.radioXMl.isSelected()) {
                 if (!dbFile.getName().toLowerCase().endsWith("xml")) {
                     javax.swing.JOptionPane.showMessageDialog(this, "The file must be an XML file");

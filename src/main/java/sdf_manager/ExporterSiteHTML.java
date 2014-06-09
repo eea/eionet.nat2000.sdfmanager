@@ -95,8 +95,8 @@ public class ExporterSiteHTML implements Exporter {
     }
 
      /**
-      *
-      * @param msg
+      * Logs to the common SDFManager log file.
+      * @param msg text to log
       */
      public void log(String msg) {
          ExporterSiteHTML.log.info(msg);
@@ -117,8 +117,8 @@ public class ExporterSiteHTML implements Exporter {
      }
 
      /**
-      *
-      * @param msg
+      * Logs to special Site HTMl log file.
+      * @param msg text to log
       */
      private void logToFile(String msg) {
          out.write(msg);

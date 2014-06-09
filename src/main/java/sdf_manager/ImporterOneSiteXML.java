@@ -1,8 +1,6 @@
 package sdf_manager;
 
 import java.awt.Frame;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,14 +47,14 @@ import pojos.Species;
 import sdf_manager.util.SDF_Constants;
 import sdf_manager.util.SDF_Util;
 
-public class ImporterOneSiteXML implements Importer {
+public class ImporterOneSiteXML extends AbstractImporter implements Importer {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterOneSiteXML.class.getName());
-    private Logger logger;
-    private String encoding;
+    //private Logger logger;
+    //private String encoding;
     private String fileName;
-    private FileWriter outFile;
-    private PrintWriter out;
+    //private FileWriter outFile;
+    //private PrintWriter out;
     private String siteCode;
 
     /**
@@ -67,85 +65,8 @@ public class ImporterOneSiteXML implements Importer {
      * @param fileName
      */
     public ImporterOneSiteXML(Logger logger, String encoding, String logFile, String fileName, String siteCode) {
-        this.logger = logger;
-        this.encoding = encoding;
-        this.initLogFile(logFile);
+        super(logger, logFile);
         this.siteCode = siteCode;
-    }
-
-    /**
-     *
-     */
-    void init() {
-    }
-
-    /**
-     *
-     * @param msg
-     */
-    public void log(String msg) {
-        this.logger.log(msg);
-    }
-
-    /**
-     *
-     * @param msg
-     * @param priority
-     */
-    public void log(String msg, int priority) {
-        if (priority == 1) {
-            this.logger.log(msg);
-            logToFile(msg);
-        } else {
-            logToFile(msg);
-        }
-    }
-
-    /**
-     *
-     * @param fileName
-     */
-    @Override
-    public void initLogFile(String fileName) {
-        try {
-
-            outFile = new FileWriter(fileName);
-            out = new PrintWriter(outFile);
-        } catch (Exception e) {
-            ImporterOneSiteXML.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
-            // e.printStackTrace();
-        }
-    }
-
-    /**
-      *
-      */
-    public void closeLogFile() {
-        try {
-            out.close();
-            outFile.close();
-        } catch (Exception e) {
-            ImporterOneSiteXML.log.error("An error has occurred in closeLogFile. Error Message :::" + e.getMessage());
-            // e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @param msg
-     */
-    void logToFile(String msg) {
-        out.write(msg);
-        if (!msg.endsWith("\n")) {
-            out.write("\n");
-        }
-    }
-
-    /**
-      *
-      */
-    void flushFile() {
-        out.flush();
     }
 
     /**
@@ -160,14 +81,14 @@ public class ImporterOneSiteXML implements Importer {
             ImporterOneSiteXML.log.info("Init validate process");
             boolean sitesDB = validateSites(session);
             ImporterOneSiteXML.log.info("Validation has finished");
-            log("Validation has finished.", 1);
+            log("Validation has finished.", false);
             if (!sitesDB) {
                 ImporterOneSiteXML.log.info("Import process is starting");
-                log("Import process is starting.", 1);
+                log("Import process is starting.");
                 this.processDatabase(session, fileName);
             } else {
                 ImporterOneSiteXML.log.error("Error in validation");
-                log("Error in validation.", 1);
+                log("Error in validation.", true);
                 JOptionPane.showMessageDialog(new JFrame(),
                         "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -183,6 +104,8 @@ public class ImporterOneSiteXML implements Importer {
         } finally {
             session.clear();
             session.close();
+
+            closeLogFile();
         }
         return true;
     }
@@ -200,6 +123,7 @@ public class ImporterOneSiteXML implements Importer {
             session.flush();
             session.clear();
         } catch (Exception e) {
+            logToFile("Error validating Site:::" + e.getMessage());
             ImporterOneSiteXML.log.error("Error validating Site:::" + e.getMessage());
         }
         return siteInDB;
@@ -2295,6 +2219,11 @@ public class ImporterOneSiteXML implements Importer {
         }
         return importOK;
 
+    }
+
+    @Override
+    public void initLogFile(String fileName) {
+        //no need to init log file as it is not used
     }
 
 }

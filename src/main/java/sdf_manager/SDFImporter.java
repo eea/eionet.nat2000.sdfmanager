@@ -536,7 +536,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                 javax.swing.JOptionPane.showMessageDialog(this, "Please select a file for import.");
                 return;
             }
-            String logFile = dbFile.getParentFile().getAbsolutePath() + File.separator + "logs" + File.separator +  "Import_"
+            String logFile = SDF_ManagerApp.CURRENT_APPLICATION_PATH + File.separator + "logs" + File.separator +  "Import_"
                     + dbFile.getName() + ".txt";
 
             Importer importer = null;

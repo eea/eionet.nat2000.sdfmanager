@@ -257,10 +257,10 @@ public class ImporterXMLStax implements Importer {
             int j = 0;
 
             for (int i = 0; i < siteList.size(); i++) {
+                Transaction tx = session.beginTransaction();
                 try {
                     Site site = (Site) siteList.get(i);
                     String sitecode = site.getSiteCode();
-                    Transaction tx = session.beginTransaction();
                     ImporterXMLStax.log.info("validating sites:::" + sitecode);
 
                     log("validating site: " + sitecode, 1);
@@ -282,6 +282,7 @@ public class ImporterXMLStax implements Importer {
                     }
                     tx.commit();
                 } catch (Exception e) {
+                    tx.rollback();
                     break;
                 }
                 if (++j % 20 == 0) {
@@ -473,7 +474,7 @@ public class ImporterXMLStax implements Importer {
                         // ADMIN REGIONS
                         else if (localName.equals("region")) {
                             region = new Region();
-                            ImporterXMLStax.log.info("creamos el region");
+                            ImporterXMLStax.log.info("creating the region");
                         } else if (localName.equals("code") && region != null) {
                             region.setRegionCode(localData);
                         } else if (localName.equals("name") && region != null) {
@@ -1011,7 +1012,11 @@ public class ImporterXMLStax implements Importer {
         /* saving main site obj */
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(doc);
-        tr.commit();
+        try {
+            tr.commit();
+        } catch (Exception e) {
+            tr.rollback();
+        }
         session.flush();
 
     }

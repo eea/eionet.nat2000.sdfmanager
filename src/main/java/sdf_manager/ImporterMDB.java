@@ -74,7 +74,7 @@ import sdf_manager.util.SDF_Util;
  *
  * @author charbda
  */
-public class ImporterMDB implements Importer {
+public class ImporterMDB extends AbstractImporter implements Importer {
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterMDB.class.getName());
 
@@ -104,8 +104,8 @@ public class ImporterMDB implements Importer {
     private HashMap<String, String> fields;
     private String[] tableKeys = {"name", "used_name"};
     private String[] fieldKeys = {"reference", "oldname"};
-    private Logger logger;
-    private String encoding;
+//    private Logger logger;
+   private String encoding;
     private HashMap speciesByCode = new HashMap();
     private HashMap speciesByName = new HashMap();
     private FileWriter outFile;
@@ -123,11 +123,12 @@ public class ImporterMDB implements Importer {
      * @param accessVersion
      */
     public ImporterMDB(Logger logger, String encoding, String logFile, String accessVersion) {
-        this.logger = logger;
+        super(logger, logFile);
+//        this.logger = logger;
         this.encoding = encoding;
         this.accessVersion = accessVersion;
 
-        this.initLogFile(logFile);
+//        this.initLogFile(logFile);
         this.init();
     }
 
@@ -145,67 +146,70 @@ public class ImporterMDB implements Importer {
      *
      * @param msg
      */
-    public void log(String msg) {
-        this.logger.log(msg);
-    }
+//    @Override
+//    public void log(String msg) {
+//        this.logger.log(msg);
+//    }
 
     /**
      *
      * @param msg
      * @param priority
      */
-    public void log(String msg, int priority) {
-        if (priority == 1) {
-            this.logger.log(msg);
-            logToFile(msg);
-        } else {
-            logToFile(msg);
-        }
-    }
+//    public void log(String msg, int priority) {
+//        if (priority == 1) {
+//            this.logger.log(msg);
+//            logToFile(msg);
+//        } else {
+//            logToFile(msg);
+//        }
+//    }
 
     /**
      *
      * @param fileName
      */
-    @Override
-    public void initLogFile(String fileName) {
-        try {
-            outFile = new FileWriter(fileName);
-            out = new PrintWriter(outFile);
-        } catch (Exception e) {
-            ImporterMDB.log.error("ERROR::" + e.getMessage());
-        }
-    }
+//    @Override
+//    public void initLogFile(String fileName) {
+//        try {
+//            outFile = new FileWriter(fileName);
+//            out = new PrintWriter(outFile);
+//        } catch (Exception e) {
+//            ImporterMDB.log.error("ERROR::" + e.getMessage());
+//        }
+//    }
 
     /**
       *
       */
-    public void closeLogFile() {
-        try {
-            out.close();
-            outFile.close();
-        } catch (Exception e) {
-            ImporterMDB.log.error("ERROR::" + e.getMessage());
-        }
-    }
+//    @Override
+//    public void closeLogFile() {
+//        try {
+//            out.close();
+//            outFile.close();
+//        } catch (Exception e) {
+//            ImporterMDB.log.error("ERROR::" + e.getMessage());
+//        }
+//    }
 
     /**
      *
      * @param msg
      */
-    void logToFile(String msg) {
-        out.write(msg);
-        if (!msg.endsWith("\n")) {
-            out.write("\n");
-        }
-    }
+//    @Override
+//    void logToFile(String msg) {
+//        out.write(msg);
+//        if (!msg.endsWith("\n")) {
+//            out.write("\n");
+//        }
+//    }
 
     /**
       *
       */
-    void flushFile() {
-        out.flush();
-    }
+//    void flushFile() {
+//        out.flush();
+//    }
 
     /**
      *
@@ -233,7 +237,7 @@ public class ImporterMDB implements Importer {
             if (conn != null) {
 
                 if (!checkTables(conn)) {
-                    log("Failed to find all tables in the database. Please check the database schema and configuration files.", 1);
+                    log("Failed to find all tables in the database. Please check the database schema and configuration files.", true);
                     ImporterMDB.log
                             .error("Failed to find all tables in the database. Please check the database schema and configuration files");
                     msgValidError =
@@ -259,8 +263,9 @@ public class ImporterMDB implements Importer {
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError,
-                        "Dialog", JOptionPane.INFORMATION_MESSAGE);
+                        "Disalog", JOptionPane.INFORMATION_MESSAGE);
             }
+            closeLogFile();
         }
 
         return saveOK;
@@ -332,7 +337,7 @@ public class ImporterMDB implements Importer {
                 ResultSet rs = dbm.getTables(null, null, tmpStr, null);
                 if (!rs.next()) {
                     ImporterMDB.log.error("Could not find table: " + tmpStr);
-                    log("Could not find table: " + tmpStr, 1);
+                    log("Could not find table: " + tmpStr, true);
                     return false;
                 }
             }
@@ -426,12 +431,12 @@ public class ImporterMDB implements Importer {
                 try {
 
                     ImporterMDB.log.info("Validating site: " + sitecode);
-                    log("Validating site: " + sitecode, 1);
+                    log("Validating site: " + sitecode, true);
 
                     if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
                     } else {
-                        log("Processing: " + sitecode, 1);
+                        log("Processing: " + sitecode, true);
                         ImporterMDB.log.info("Processing: " + sitecode);
 
                         // BIOTOP
@@ -488,7 +493,7 @@ public class ImporterMDB implements Importer {
 
                 } catch (Exception e) {
                     ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
-                    log("Failed processing site: " + sitecode, 1);
+                    log("Failed processing site: " + sitecode, true);
                     break;
                 }
 
@@ -518,7 +523,7 @@ public class ImporterMDB implements Importer {
 
             ImporterMDB.log
                     .error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-            log("Error in validation.", 1);
+            log("Error in validation.", true);
             // msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
 
             File fileLog = SDF_Util.copyToLogImportFileList(notProcessedSiteCodesList, "OldDB");
@@ -567,7 +572,7 @@ public class ImporterMDB implements Importer {
                 try {
                     Transaction tx = session.beginTransaction();
                     ImporterMDB.log.info("Validating site: " + sitecode);
-                    log("Validating site: " + sitecode, 1);
+                    log("Validating site: " + sitecode, true);
 
                     if (SDF_Util.validateSite(session, sitecode)) {
                         siteCodeDB.add(sitecode);
@@ -576,7 +581,7 @@ public class ImporterMDB implements Importer {
 
                 } catch (Exception e) {
                     ImporterMDB.log.error("Failed processing site: " + sitecode + ". Error:::" + e.getMessage());
-                    log("Failed processing site: " + sitecode, 1);
+                    log("Failed processing site: " + sitecode, true);
                     break;
                 }
 
@@ -610,7 +615,7 @@ public class ImporterMDB implements Importer {
         } catch (Exception e) {
             // e.printStackTrace();
             ImporterMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
-            log("Failed extracting field: " + fieldName, 1);
+            log("Failed extracting field: " + fieldName, true);
             return null;
         }
     }
@@ -628,7 +633,7 @@ public class ImporterMDB implements Importer {
 
         } catch (Exception e) {
             e.printStackTrace();
-            log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
+            log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", false);
             ImporterMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::"
                     + e.getMessage());
             return null;
@@ -1214,7 +1219,7 @@ public class ImporterMDB implements Importer {
             species.setSpeciesDataQuality((String) tokens[4]);
         }
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString,
-                species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+                species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), false);
         ImporterMDB.log.info(String.format(
                 "\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", popString,
                 species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
@@ -1270,7 +1275,7 @@ public class ImporterMDB implements Importer {
         result[3] = tokens[3];
         result[4] = tokens[4];
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s", literal,
-                spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+                spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), false);
         return result;
     }
 
@@ -1844,7 +1849,7 @@ public class ImporterMDB implements Importer {
                     if (!SDF_ManagerApp.isEmeraldMode() && (tmpStr.equals("0") || tmpStr.equals("00"))) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
                         region.setRegionName("Marine");
-                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
+                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), false);
                     } else {
                         try {
                             String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
@@ -1862,7 +1867,7 @@ public class ImporterMDB implements Importer {
                                 }
                             } else {
                                 nutsList.add(tmpStr);
-                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);
+                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), false);
 
                             }
                         } catch (Exception e) {
@@ -2171,7 +2176,7 @@ public class ImporterMDB implements Importer {
             // Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             // parse using builder to get DOM representation of the XML file
-            log("Parsing: " + fileName, 1);
+            log("Parsing: " + fileName, false);
             dom = db.parse(fileName);
             return dom.getDocumentElement();
         } catch (ParserConfigurationException pce) {

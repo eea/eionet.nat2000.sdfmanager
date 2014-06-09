@@ -73,11 +73,10 @@ import sdf_manager.util.SDF_Util;
  *
  * @author charbda
  */
-public class ImporterSiteMDB implements Importer {
+public class ImporterSiteMDB extends AbstractImporter implements Importer {
 
      private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterSiteMDB.class .getName());
 
-     private String[] biotopFields = {""};
      private String table_file = "config" + System.getProperty("file.separator") + "table_names.xml";
 
      private String field_file = "config" + System.getProperty("file.separator") + "field_maps.xml";
@@ -87,7 +86,7 @@ public class ImporterSiteMDB implements Importer {
      private HashMap<String, String> fields;
      private String[] tableKeys = {"name", "used_name"};
      private String[] fieldKeys = {"reference", "oldname"};
-     private Logger logger;
+//     private Logger logger;
      private String encoding;
      private HashMap speciesByCode = new HashMap();
      private HashMap speciesByName = new HashMap();
@@ -108,11 +107,12 @@ public class ImporterSiteMDB implements Importer {
       * @param siteCode
       */
      public ImporterSiteMDB(Logger logger, String encoding, String logFile, String accessVersion, String siteCode) {
-         this.logger = logger;
+         super(logger, logFile);
+         //this.logger = logger;
          this.encoding = encoding;
          this.accessVersion = accessVersion;
          this.siteCode = siteCode;
-         this.initLogFile(logFile);
+         //this.initLogFile(logFile);
          this.init();
      }
 
@@ -130,71 +130,74 @@ public class ImporterSiteMDB implements Importer {
       *
       * @param msg
       */
-     public void log(String msg) {
-         this.logger.log(msg);
-     }
-
-     /**
-      *
-      * @param msg
-      * @param priority
-      */
-     public void log(String msg, int priority) {
-         if (priority == 1) {
-            this.logger.log(msg);
-            logToFile(msg);
-         } else {
-            logToFile(msg);
-         }
-     }
-
-
-     /**
-      *
-      * @param fileName
-      */
-     @Override
-    public void initLogFile(String fileName) {
-         try {
-            outFile = new FileWriter(fileName);
-            out = new PrintWriter(outFile);
-         } catch (Exception e) {
-            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
-         }
-     }
+//     @Override
+//    public void log(String msg) {
+//         this.logger.log(msg);
+//     }
+//
+//     /**
+//      *
+//      * @param msg
+//      * @param priority
+//      */
+//     public void log(String msg, int priority) {
+//         if (priority == 1) {
+//            this.logger.log(msg);
+//            logToFile(msg);
+//         } else {
+//            logToFile(msg);
+//         }
+//     }
 
 
-     /**
-      *
-      */
-     public void closeLogFile() {
-         try {
-             out.close();
-             outFile.close();
-         } catch (Exception e) {
-            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
-         }
-     }
-
-
-     /**
-      *
-      * @param msg
-      */
-     void logToFile(String msg) {
-         out.write(msg);
-         if (!msg.endsWith("\n")) {
-             out.write("\n");
-         }
-     }
+//     /**
+//      *
+//      * @param fileName
+//      */
+//     @Override
+//    public void initLogFile(String fileName) {
+//         try {
+//            outFile = new FileWriter(fileName);
+//            out = new PrintWriter(outFile);
+//         } catch (Exception e) {
+//            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
+//         }
+//     }
 
 
      /**
       *
       */
-     void flushFile() {
-         out.flush();
-     }
+//     @Override
+//    public void closeLogFile() {
+//         try {
+//             out.close();
+//             outFile.close();
+//         } catch (Exception e) {
+//            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
+//         }
+//     }
+//
+
+//     /**
+//      *
+//      * @param msg
+//      */
+//     @Override
+//    void logToFile(String msg) {
+//         out.write(msg);
+//         if (!msg.endsWith("\n")) {
+//             out.write("\n");
+//         }
+//     }
+
+
+//     /**
+//      *
+//      */
+//     void flushFile() {
+//         out.flush();
+//     }
 
      /**
       *
@@ -228,7 +231,7 @@ public class ImporterSiteMDB implements Importer {
             if (conn != null) {
 
                 if (!checkTables(conn)) {
-                    log("Failed to find all tables in the database. Please check the database schema and configuration files.", 1);
+                    log("Failed to find all tables in the database. Please check the database schema and configuration files.", true);
                     ImporterSiteMDB.log.error("Failed to find all tables in the database. Please check the database schema and configuration files");
                     msgValidError = "Failed to find all tables in the database. Please check the database schema and configuration files";
                     saveOK = false;
@@ -236,7 +239,7 @@ public class ImporterSiteMDB implements Importer {
 
                 }
                 if (!validateSite(conn, this.siteCode)) {
-                    log("The site code: " + this.siteCode + " is not in Data Base.", 1);
+                    log("The site code: " + this.siteCode + " is not in Data Base.", true);
                     ImporterSiteMDB.log.error("The site code: " + this.siteCode + " is not in Data Base.");
                     msgValidError = "The site code: " + this.siteCode + " is not in Data Base.";
                     saveOK = false;
@@ -246,21 +249,21 @@ public class ImporterSiteMDB implements Importer {
                 this.importDate = getImportDate();
 
                 ImporterSiteMDB.log.info("Validation has finished");
-                log("Validation has finished.", 1);
+                log("Validation has finished.", true);
 
                 session = HibernateUtil.getSessionFactory().openSession();
                 boolean siteInDB = validateSites(conn, session);
 
                 if (!siteInDB) {
                    ImporterSiteMDB.log.info("Import process is starting");
-                    log("Import process is starting.", 1);
+                    log("Import process is starting.", true);
 
                     saveOK =  processSites(conn, session);
 
                     if (this.nutsKO != null && !(this.nutsKO.isEmpty())) {
                         saveOK = false;
                         ImporterSiteMDB.log.error("Error in validation:. Error Message: The code of some regions are wrong. Please check the log file for details");
-                        log("Error in validation.", 1);
+                        log("Error in validation.", true);
                         msgValidError = "The code of some regions are wrong. Please check the log file for details";
 
                         File fileLog = SDF_Util.copyToLogImportFile(this.nutsKO, "OldDB");
@@ -276,7 +279,7 @@ public class ImporterSiteMDB implements Importer {
                 } else {
                     saveOK = false;
                     ImporterSiteMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
-                    log("Error in validation.", 1);
+                    log("Error in validation.", true);
                     msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
 
                     File fileLog = SDF_Util.copyToLogErrorSite(this.sitesDB, "OldDB");
@@ -308,6 +311,7 @@ public class ImporterSiteMDB implements Importer {
                 JOptionPane.showMessageDialog(new JFrame(), "There are some errors in import process.\n" + msgValidError,
                         "Dialog", JOptionPane.INFORMATION_MESSAGE);
             }
+            closeLogFile();
 
         }
      return saveOK;
@@ -376,7 +380,7 @@ public class ImporterSiteMDB implements Importer {
                 ResultSet rs = dbm.getTables(null, null, tmpStr , null);
                 if (!rs.next()) {
                    ImporterSiteMDB.log.error("Could not find table: " + tmpStr);
-                    log("Could not find table: " + tmpStr, 1);
+                    log("Could not find table: " + tmpStr, true);
                     return false;
                 }
             }
@@ -452,7 +456,7 @@ public class ImporterSiteMDB implements Importer {
             Site site = new Site();
             try {
                    Transaction tx = session.beginTransaction();
-                   log("processing: " + this.siteCode, 1);
+                   log("processing: " + this.siteCode, true);
                    site.setSiteCode(this.siteCode);
                    processBiotop(conn, session, site);
                    processSpecies(conn, session, site);
@@ -468,7 +472,7 @@ public class ImporterSiteMDB implements Importer {
             } catch (Exception e) {
                 processOK = false;
                ImporterSiteMDB.log.error("Failed processing site: " + this.siteCode + " .The error: " + e.getMessage());
-                log("failed processing site: " + this.siteCode, 1);
+                log("failed processing site: " + this.siteCode, true);
             }
 
            ImporterSiteMDB.log.info("Finishing import process.Closing connection to Data Base");
@@ -495,7 +499,7 @@ public class ImporterSiteMDB implements Importer {
              return rs.getDouble(fieldName);
          } catch (Exception e) {
              ImporterSiteMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
-             log("Failed extracting field: " + fieldName, 1);
+             log("Failed extracting field: " + fieldName, true);
              return null;
          }
      }
@@ -534,8 +538,9 @@ public class ImporterSiteMDB implements Importer {
              }
 */
          } catch (Exception e) {
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
-            ImporterSiteMDB.log.error("Failed extracting field: " + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
+             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", false);
+            ImporterSiteMDB.log.error("Failed extracting field: "
+                    + fieldName + ".The field could have an erroneous name.Error:::" + e.getMessage());
              return null;
          }
      }
@@ -1214,7 +1219,7 @@ public class ImporterSiteMDB implements Importer {
             species.setSpeciesDataQuality((String) tokens[4]);
         }
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+                popString, species.getSpeciesName(), tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), false);
     }
 
 
@@ -1266,7 +1271,7 @@ public class ImporterSiteMDB implements Importer {
         result[3] = tokens[3];
         result[4] = tokens[4];
         log(String.format("\tExtracting population (%s) for (%s): min=%s, max=%s, unit=%s, category=%s, quality=%s",
-                literal, spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), 2);
+                literal, spName, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]), false);
         return result;
     }
 
@@ -1812,7 +1817,7 @@ public class ImporterSiteMDB implements Importer {
                     if (tmpStr.equals("0") || tmpStr.equals("00")) {
                         tmpStr = site.getSiteCode().substring(0, 2) + "ZZ";
                         region.setRegionName("Marine");
-                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), 2);
+                        log(String.format("\tConverting marine region code (0 or 00) to NUTS code '%s'", tmpStr), false);
                     } else {
                         try {
                             String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
@@ -1828,7 +1833,7 @@ public class ImporterSiteMDB implements Importer {
                                 }
                             } else {
                                 nutsList.add(tmpStr);
-                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), 2);
+                                log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), false);
 
                             }
                         } catch (Exception e) {
@@ -2121,7 +2126,7 @@ public class ImporterSiteMDB implements Importer {
             //Using factory get an instance of document builder
             DocumentBuilder db = dbf.newDocumentBuilder();
             //parse using builder to get DOM representation of the XML file
-            log("Parsing: " + fileName, 1);
+            log("Parsing: " + fileName, true);
             dom = db.parse(fileName);
             return dom.getDocumentElement();
         } catch (ParserConfigurationException pce) {

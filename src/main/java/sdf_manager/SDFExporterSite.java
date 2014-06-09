@@ -159,12 +159,9 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
         String formatDate = sdf.format(cal.getTime());
-        String logFile;
-        if (dbFile.getParent().equals("")) {
-           logFile = "exportSiteLog_" + formatDate + ".log";
-        } else {
-           logFile = dbFile.getParent() + System.getProperty("file.separator") + "exportSiteLog_" + formatDate + ".log";
-        }
+        String logFile = SDF_ManagerApp.CURRENT_APPLICATION_PATH + File.separator + "logs" + File.separator
+                + "exportSiteLog_" + formatDate + ".log";
+
        Exporter exporter = null;
        exporter = new ExporterSiteXML(this, encoding, siteCode, logFile);
        ArrayList xmlFieldsList = exporter.createXMLFromDataBase(this.dirPath + System.getProperty("file.separator") + dbFile.getName());

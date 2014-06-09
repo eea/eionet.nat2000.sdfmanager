@@ -163,12 +163,6 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy_HHmm");
         String formatDate = sdf.format(cal.getTime());
-        String logFile;
-        if (dbFile.getParent().equals("")) {
-           logFile = "generatePDFSiteLog_" + formatDate + ".log";
-        } else {
-           logFile = dbFile.getParent() + System.getProperty("file.separator") + "exportSiteLog_" + formatDate + ".log";
-        }
 
        int rows = this.siteCodes.size();
        Boolean AllOK = true;

@@ -47,7 +47,7 @@ public class AbstractImporter {
      * Inits logger object.
      *
      * @param logger
-     *            Logger of parent object.
+     *            Logger of parent object that logs to the UI.
      * @param logFile
      *            special log file of the action
      */

@@ -201,7 +201,7 @@
                 <version>1.3</version>
                 <executions>
                   <execution>
-                      <phase>install_changeme</phase>
+                      <phase>install</phase>
                       <id>build-setup</id>
                       <goals>
                         <goal>exec</goal>

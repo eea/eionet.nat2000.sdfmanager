@@ -2066,7 +2066,8 @@ public final class SDFFilter extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "No site selected");
         } else {
             File dbFile = new File("");
-            ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + "\\logs\\SDF_HTMLSitelog.txt");
+            ExporterSiteHTML exportHTML = new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath()
+                    + File.separator + "logs" + File.separator +  "HTMLView_" + sitecode + ".txt");
             exportHTML.processDatabase("xsl/exportSite.html");
         }
 

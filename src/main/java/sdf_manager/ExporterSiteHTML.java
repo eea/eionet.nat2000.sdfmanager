@@ -1,7 +1,6 @@
 package sdf_manager;
 
 import java.awt.Desktop;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -35,6 +33,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.w3c.dom.Document;
@@ -70,46 +70,19 @@ import sdf_manager.util.XmlGenerationUtils;
  */
 public class ExporterSiteHTML implements Exporter {
 
-    private Logger logger;
+    /**
+     * Flag to indicate if there have been errors in export.
+     */
+    private boolean hasErrors = false;
+
     private String siteCode;
     private String fileName;
-    private Document docXML;
-    private Writer writer;
-    private int counter;
+    //private Writer writer;
     private ArrayList sitecodes = new ArrayList();
-    private String encoding;
-    private FileWriter outFile;
+    private File outFile;
+    private FileWriter outFileWriter;
     private PrintWriter out;
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterSiteHTML.class .getName());
-
-
-    /**
-     *
-     * @param logger
-     * @param siteCode
-     */
-    public ExporterSiteHTML(Logger logger, String siteCode) {
-        this.logger = logger;
-        SDF_Util.getProperties();
-        this.encoding = encoding;
-        this.siteCode = siteCode;
-        init();
-    }
-
-    /**
-     *
-     * @param logger
-     * @param siteCode
-     * @param logFile
-     */
-    public ExporterSiteHTML(Logger logger, String siteCode, String logFile) {
-        this.logger = logger;
-        SDF_Util.getProperties();
-        this.encoding = encoding;
-        this.siteCode = siteCode;
-        this.initLogFile(logFile);
-        init();
-    }
 
     /**
      *
@@ -117,38 +90,16 @@ public class ExporterSiteHTML implements Exporter {
      */
     public ExporterSiteHTML(String siteCode, String logFile) {
         this.siteCode = siteCode;
-        this.encoding = "UTF-8";
+        //this.encoding = "UTF-8";
         this.initLogFile(logFile);
     }
-
-    /**
-     *
-     */
-    void init() {
-    }
-
 
      /**
       *
       * @param msg
       */
      public void log(String msg) {
-         //this.logger.log(msg);
          ExporterSiteHTML.log.info(msg);
-     }
-
-     /**
-      *
-      * @param msg
-      * @param priority
-      */
-     public void log(String msg, int priority) {
-         if (priority == 1) {
-             ExporterSiteHTML.log.info(msg);
-            logToFile(msg);
-         } else {
-            logToFile(msg);
-         }
      }
 
      /**
@@ -157,20 +108,9 @@ public class ExporterSiteHTML implements Exporter {
       */
      public void initLogFile(String fileName) {
          try {
-            outFile = new FileWriter(fileName);
-            out = new PrintWriter(outFile);
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-     }
-
-     /**
-      *
-      */
-     public void closeLogFile() {
-         try {
-             out.close();
-             outFile.close();
+            outFile = new File(fileName);
+            outFileWriter = new FileWriter(outFile);
+            out = new PrintWriter(outFileWriter);
          } catch (Exception e) {
              e.printStackTrace();
          }
@@ -185,14 +125,7 @@ public class ExporterSiteHTML implements Exporter {
          if (!msg.endsWith("\n")) {
              out.write("\n");
          }
-     }
-
-
-     /**
-      *
-      */
-     private void flushFile() {
-         out.flush();
+         hasErrors = true;
      }
 
     /**
@@ -207,59 +140,33 @@ public class ExporterSiteHTML implements Exporter {
             SDF_Util.getProperties();
             this.fileName = fileName;
             this.loadSitecodes();
-            this.initWriter();
+
             this.processDatabase();
-            this.finalizeWriter();
 
         } catch (Exception e) {
             log("An error has occurred in processDatabase. Error Message:::" + e.getMessage() + "\n PLease check the log file for more details");
             //e.printStackTrace();
             ExporterSiteHTML.log.error("An error has occurred in processDatabase. Error Message:::" + e.getMessage());
             return false;
+        } finally {
+            IOUtils.closeQuietly(out);
+            //no need to have an empty logfile if no errors
+            if (!hasErrors) {
+                FileUtils.deleteQuietly(outFile);
+            }
         }
         return true;
     }
 
     /**
-     *
-     */
-    public void initWriter() {
-        try {
-            File file = new File(this.fileName);
-            FileWriter fstream = new FileWriter(file.getAbsolutePath());
-
-            this.writer = new BufferedWriter(fstream);
-            this.counter = 0;
-            //Close the output stream
-        } catch (Exception e) {
-            log("ERROR initWriter()" + e.getMessage());
-            //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in initwriter. Error Message:::" + e.getMessage());
-        }
-    }
-
-    /**
-     *
-     */
-    public void finalizeWriter() {
-        try {
-            this.writer.close();
-        } catch (IOException e) {
-            log("ERROR finalizeWriter()" + e.getMessage());
-            //e.printStackTrace();
-            ExporterSiteHTML.log.error("An error has occurred in finalizeWriter. Error Message:::" + e.getMessage());
-        }
-    }
-
-    /**
-     * Loads the data of the site
+     * Loads the data of the site.
      */
     public void loadSitecodes() {
         ExporterSiteHTML.log.info("Loading the data of the site:::" + siteCode);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
         try {
 
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
             String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode + "' order by site.siteCode";
 
             Iterator itrSites = session.createQuery(hql).iterate();
@@ -272,6 +179,7 @@ public class ExporterSiteHTML implements Exporter {
             tx.commit();
             session.close();
         } catch (Exception e) {
+            tx.rollback();
             log("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
             //e.printStackTrace();
             ExporterSiteHTML.log.error("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
@@ -292,7 +200,7 @@ public class ExporterSiteHTML implements Exporter {
              Session session = HibernateUtil.getSessionFactory().openSession();
              Iterator itrSites = this.sitecodes.iterator();
              int flush = 0;
-             log("Parsing sitecodes...", 1);
+             ExporterSiteHTML.log.info("Parsing sitecodes...");
 
              Document doc = docBuilder.newDocument();
              Element sdfs = doc.createElement("sdfs");
@@ -1023,15 +931,6 @@ public class ExporterSiteHTML implements Exporter {
 
     /**
      *
-     * @param literal
-     * @throws IOException
-     */
-    void writeXMLLiteral(String literal) throws IOException {
-        this.writer.write(literal);
-    }
-
-    /**
-     *
      * @param filename
      * @return
      */
@@ -1067,9 +966,10 @@ public class ExporterSiteHTML implements Exporter {
                  }
              }
          } catch (Exception e) {
-             log("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.", 2);
+             logToFile("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.");
              //e.printStackTrace();
-             ExporterSiteHTML.log.error("Failed extracting field: " + fieldName + ". The field could have an erroneous name. Please verify.");
+             ExporterSiteHTML.log.error("Failed extracting field: " + fieldName
+                     + ". The field could have an erroneous name. Please verify.");
              return null;
          }
      }

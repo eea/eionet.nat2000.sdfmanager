@@ -6813,7 +6813,8 @@ public class SDFEditor extends javax.swing.JFrame {
         // TODO add your handling code here:
         File dbFile = new File("");
         ExporterSiteHTML exportHTML =
-                new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator + "logs" + File.separator + "log.txt");
+                new ExporterSiteHTML(sitecode, dbFile.getAbsolutePath() + File.separator + "logs"
+                        + File.separator + "HTMLView_" + sitecode + ".txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
     } // GEN-LAST:event_jViewButtonActionPerformed

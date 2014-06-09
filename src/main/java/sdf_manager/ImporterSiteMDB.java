@@ -86,7 +86,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
      private HashMap<String, String> fields;
      private String[] tableKeys = {"name", "used_name"};
      private String[] fieldKeys = {"reference", "oldname"};
-//     private Logger logger;
      private String encoding;
      private HashMap speciesByCode = new HashMap();
      private HashMap speciesByName = new HashMap();
@@ -125,79 +124,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
          this.parse(this.table_file, this.tables, this.table_element, this.tableKeys);
          this.parse(this.field_file, this.fields, this.field_element, this.fieldKeys);
      }
-
-     /**
-      *
-      * @param msg
-      */
-//     @Override
-//    public void log(String msg) {
-//         this.logger.log(msg);
-//     }
-//
-//     /**
-//      *
-//      * @param msg
-//      * @param priority
-//      */
-//     public void log(String msg, int priority) {
-//         if (priority == 1) {
-//            this.logger.log(msg);
-//            logToFile(msg);
-//         } else {
-//            logToFile(msg);
-//         }
-//     }
-
-
-//     /**
-//      *
-//      * @param fileName
-//      */
-//     @Override
-//    public void initLogFile(String fileName) {
-//         try {
-//            outFile = new FileWriter(fileName);
-//            out = new PrintWriter(outFile);
-//         } catch (Exception e) {
-//            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
-//         }
-//     }
-
-
-     /**
-      *
-      */
-//     @Override
-//    public void closeLogFile() {
-//         try {
-//             out.close();
-//             outFile.close();
-//         } catch (Exception e) {
-//            ImporterSiteMDB.log.error("ERROR::" + e.getMessage());
-//         }
-//     }
-//
-
-//     /**
-//      *
-//      * @param msg
-//      */
-//     @Override
-//    void logToFile(String msg) {
-//         out.write(msg);
-//         if (!msg.endsWith("\n")) {
-//             out.write("\n");
-//         }
-//     }
-
-
-//     /**
-//      *
-//      */
-//     void flushFile() {
-//         out.flush();
-//     }
 
      /**
       *
@@ -329,24 +255,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
 
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
-
-//             if (accessVersion.equals("2003")) {
-//
-//             /*open read-only*/
-//             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//             String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
-//
-//             Connection conn = DriverManager.getConnection(db, "", "");
-//
-//             return conn;
-//             } else {
-//             /*open read-only*/
-//             Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//             //añadido , *.accdb) a la cadena db
-//             String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-//             Connection conn = DriverManager.getConnection(db, "", "");
-//             return conn;
-//             }
 
             return conn;
         } catch (ClassNotFoundException e) {

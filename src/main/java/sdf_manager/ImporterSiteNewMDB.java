@@ -58,7 +58,6 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterSiteNewMDB.class .getName());
 
     private String[] biotopFields = {""};
-    //private Logger logger;
     private String encoding;
     private HashMap speciesByCode = new HashMap();
     private HashMap speciesByName = new HashMap();
@@ -77,79 +76,10 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
      */
     public ImporterSiteNewMDB(Logger logger, String encoding, String logFile, String accessVersion, String sitecode) {
         super(logger, logFile);
-        //this.logger = logger;
         this.encoding = encoding;
         this.accessVersion = accessVersion;
         this.siteCode = sitecode;
-        //this.initLogFile(logFile);
     }
-
-
-//    /**
-//     *
-//     * @param msg
-//     */
-//    public void log(String msg) {
-//        this.logger.log(msg);
-//    }
-//
-//    /**
-//     *
-//     * @param msg
-//     * @param priority
-//     */
-//    public void log(String msg, int priority) {
-//        if (priority == 1) {
-//            this.logger.log(msg);
-//            logToFile(msg);
-//        } else {
-//            logToFile(msg);
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param fileName
-//     */
-//    @Override
-//    public void initLogFile(String fileName) {
-//        try {
-//            outFile = new FileWriter(fileName);
-//            out = new PrintWriter(outFile);
-//        } catch (Exception e) {
-//            ImporterSiteNewMDB.log.error("Error::" + e.getMessage());
-//        }
-//    }
-//
-//    /**
-//     *
-//     */
-//    public void closeLogFile() {
-//        try {
-//            out.close();
-//            outFile.close();
-//        } catch (Exception e) {
-//            ImporterSiteNewMDB.log.error("Error::" + e.getMessage());
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param msg
-//     */
-//    void logToFile(String msg) {
-//        out.write(msg);
-//        if (!msg.endsWith("\n")) {
-//            out.write("\n");
-//        }
-//    }
-//
-//    /**
-//     *
-//     */
-//    void flushFile() {
-//        out.flush();
-//    }
 
     /**
      *
@@ -232,23 +162,6 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
 
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
-
-//             if (accessVersion.equals("2003")) {
-//                 /*open read-only*/
-//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//                //añadido , *.accdb) a la cadena db
-//
-//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
-//                Connection conn = DriverManager.getConnection(db, "", "");
-//                return conn;
-//             } else {
-//                /*open read-only*/
-//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//                //añadido , *.accdb) a la cadena db
-//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-//                Connection conn = DriverManager.getConnection(db, "", "");
-//                return conn;
-//             }
 
             return conn;
          } catch (ClassNotFoundException e) {

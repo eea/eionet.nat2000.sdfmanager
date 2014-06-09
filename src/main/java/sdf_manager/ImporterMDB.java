@@ -281,29 +281,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
     private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         try {
-            // java.util.Properties prop = new java.util.Properties();
-            // prop.put("charSet", "UTF-8");
 
-/*            if (accessVersion.equals("2003")) {
-                 open read-only
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                String db =
-                        "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName
-                                + ";useUnicode=true;characterEncoding=UTF-8";
-                // String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
-                conn = DriverManager.getConnection(db, "", "");
-
-            } else {
-                 open read-only
-                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                // añadido , *.accdb) a la cadena db
-                // String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-                String db =
-                        "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName
-                                + ";useUnicode=true;characterEncoding=UTF-8";
-                conn = DriverManager.getConnection(db, "", "");
-            }
-*/
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
 

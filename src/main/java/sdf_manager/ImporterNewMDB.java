@@ -74,83 +74,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      */
     public ImporterNewMDB(Logger logger, String encoding, String logFile, String accessVersion) {
         super(logger, logFile);
-        //this.logger = logger;
         this.encoding = encoding;
         this.accessVersion = accessVersion;
-        //this.initLogFile(logFile);
     }
-
-
-//    /**
-//     *
-//     * @param msg
-//     */
-//    @Override
-//    public void log(String msg) {
-//        this.logger.log(msg);
-//    }
-//
-//    /**
-//     *
-//     * @param msg
-//     * @param priority
-//     */
-//    public void log(String msg, int priority) {
-//        if (priority == 1) {
-//            this.logger.log(msg);
-//            logToFile(msg);
-//        } else {
-//            logToFile(msg);
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param fileName
-//     */
-//    @Override
-//    public void initLogFile(String fileName) {
-//        try {
-//            outFile = new FileWriter(fileName);
-//            out = new PrintWriter(outFile);
-//        } catch (Exception e) {
-//            ImporterNewMDB.log.error("Error::" + e.getMessage());
-//            // ////e.printStackTrace();
-//        }
-//    }
-//
-//    /**
-//     *
-//     */
-//    @Override
-//    public void closeLogFile() {
-//        try {
-//            out.close();
-//            outFile.close();
-//        } catch (Exception e) {
-//            ImporterNewMDB.log.error("Error::" + e.getMessage());
-//            // ////e.printStackTrace();
-//        }
-//    }
-
-//    /**
-//     *
-//     * @param msg
-//     */
-//    @Override
-//    void logToFile(String msg) {
-//        out.write(msg);
-//        if (!msg.endsWith("\n")) {
-//            out.write("\n");
-//        }
-//    }
-
-//    /**
-//     *
-//     */
-//    void flushFile() {
-//        out.flush();
-//    }
 
     /**
      *

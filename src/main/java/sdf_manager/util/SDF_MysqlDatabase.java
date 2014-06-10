@@ -305,7 +305,7 @@ public class SDF_MysqlDatabase {
                 // create DB from scratch
             } else {
                 logD(dialog, "Create database tables...");
-                msgError = createMySQLDBTables(con, schemaFileName);
+                msgError = createMySQLDBTables(con, schemaFileName, dialog);
                 logD(dialog, "Populate lookup tables...");
                 String msgErrorPopulate = populateRefTables(con, dialog);
                 if (msgErrorPopulate != null) {
@@ -479,7 +479,7 @@ public class SDF_MysqlDatabase {
      * @return
      * @throws SQLException
      */
-    private static String createMySQLDBTables(Connection con, String schemaFileName) throws SQLException {
+    private static String createMySQLDBTables(Connection con, String schemaFileName, ProgressDialog dialog) throws SQLException {
         boolean mySQLDB = false;
         String msgErrorCreate = null;
         Statement st = null;
@@ -510,8 +510,11 @@ public class SDF_MysqlDatabase {
             BufferedReader br = new BufferedReader(in);
             String strLine;
             st2 = con.createStatement();
+            int counter = 1;
             // Read File Line By Line
             while ((strLine = br.readLine()) != null) {
+                logD(dialog, "Executing statement " + counter);
+                counter++;
                 st2.executeUpdate(strLine);
             }
             // Close the input stream
@@ -551,9 +554,7 @@ public class SDF_MysqlDatabase {
                 }
             };
             files = dir.listFiles(fileFilter);
-            if (files == null) {
-                // Either dir does not exist or is not a directory
-            } else {
+            if (files != null) {
                 Comparator<File> cmpFunc = new Comparator<File>() {
                     @Override
                     public int compare(File f1, File f2) {
@@ -565,6 +566,7 @@ public class SDF_MysqlDatabase {
 
                     // Get filename of file or directory
                     File filename = files[i];
+                    logD(dialog, "Loading " + filename.getName());
                     SDF_MysqlDatabase.LOGGER.debug("Loading: " + filename);
                     FileInputStream fsInsert = new FileInputStream(filename);
 

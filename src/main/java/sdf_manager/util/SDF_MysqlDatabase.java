@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import sdf_manager.ProgressDialog;
 import sdf_manager.SDF_ManagerApp;
 
 import com.mysql.jdbc.Connection;
@@ -47,10 +48,11 @@ public class SDF_MysqlDatabase {
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
-     *
+     * @param properties database properties
+     * @param dialog Progress dialog for user feedback
      * @return error message or empty string if database was created
      */
-    public static String createNaturaDB(Properties properties) throws Exception {
+    public static String createNaturaDB(Properties properties, ProgressDialog dialog) throws Exception {
         Connection con = null;
         String msgError = null;
         String host = properties.getProperty("db.host");
@@ -58,6 +60,7 @@ public class SDF_MysqlDatabase {
         String user = properties.getProperty("db.user");
         String pwd = properties.getProperty("db.password");
 
+        dialog.setLabel("Testing database connection...");
         String connectionValidation = testConnection(host, port, user, pwd);
 
         if (StringUtils.isNotBlank(connectionValidation)) {
@@ -73,7 +76,8 @@ public class SDF_MysqlDatabase {
 
             SDF_MysqlDatabase.LOGGER.info("database connection URL: " + dbUrl);
             con = (Connection) DriverManager.getConnection(dbUrl, user, pwd);
-            boolean schemaExists = createDatabaseSchema(con);
+            dialog.setLabel("Creating database schema...");
+            boolean schemaExists = createDatabaseSchema(con, dialog);
 
             boolean refTalesNeedUpdating = false;
             String schemaName = isEmeraldMode() ? "emerald" : "natura2000";
@@ -90,6 +94,7 @@ public class SDF_MysqlDatabase {
 
                     String schemaFileName = isEmeraldMode() ? "CreateEmeraldSchema.sql" : "CreateSDFSchema.sql";
                     SDF_MysqlDatabase.LOGGER.info("Recreate Schema " + schemaName);
+                    dialog.setLabel("Creating tables ...");
                     msgError = createMySQLDBSchema(con, schemaFileName);
 
                     refTalesNeedUpdating = true;
@@ -105,7 +110,8 @@ public class SDF_MysqlDatabase {
                             properties.getProperty("db.password"));
 
             if (refTalesNeedUpdating) {
-                msgError = populateRefTables(con);
+                dialog.setLabel("Populating lookup tables...");
+                msgError = populateRefTables(con, dialog);
 
                 if (StringUtils.isNotBlank(msgError)) {
                     // TODO change the design of returning error messages as method results
@@ -113,7 +119,8 @@ public class SDF_MysqlDatabase {
                 }
             }
 
-            return createOrUpdateDatabaseTables(con, schemaExists);
+            dialog.setLabel("Updating database tables...");
+            return createOrUpdateDatabaseTables(con, schemaExists, dialog);
         } catch (SQLException sqle) {
             return sqle.getMessage();
         } finally {
@@ -129,7 +136,7 @@ public class SDF_MysqlDatabase {
      * @return error message or empty string if everything fine
      * @throws Exception if creation fails
      */
-    public static boolean createDatabaseSchema(Connection con) throws Exception {
+    public static boolean createDatabaseSchema(Connection con, ProgressDialog dialog) throws Exception {
         String msgError = null;
 
         Statement stDBExist = null;
@@ -158,7 +165,7 @@ public class SDF_MysqlDatabase {
                 msgError = createMySQLDBSchema(con, schemaFileName);
 
                 // should be Natura2000 if reaching here
-                String msgErrorPopulate = populateRefTables(con);
+                String msgErrorPopulate = populateRefTables(con, dialog);
                 if (msgErrorPopulate != null) {
                     msgError = msgError + "\n" + msgErrorPopulate;
                 }
@@ -189,7 +196,7 @@ public class SDF_MysqlDatabase {
      * @return error message. if no errors empty string
      * @throws Exception if error happens in sql
      */
-    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists) throws Exception {
+    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists, ProgressDialog dialog) throws Exception {
 
         String msgError = null;
 
@@ -206,6 +213,7 @@ public class SDF_MysqlDatabase {
                 if (isRefBirdsUpdated(con, stDBExist)) {
                     SDF_MysqlDatabase.LOGGER.info(schemaName + " Schema DB already exists and ref birds table is OK");
                 } else {
+                    logD(dialog, "Create and populate birds lookup table...");
                     SDF_MysqlDatabase.LOGGER.info("Recreate Ref Birds table");
                     msgError = alterRefBirds(con);
                     msgError = populateRefBirds(con);
@@ -220,9 +228,10 @@ public class SDF_MysqlDatabase {
                 if (isRefTablesExist(con, stDBExist)) {
                     SDF_MysqlDatabase.LOGGER.info("Ref Tables are already updated");
                 } else {
+                    logD(dialog, "Create Refs tables...");
                     SDF_MysqlDatabase.LOGGER.info("Create Ref tables");
                     msgError = createRefTables(con);
-                    String msgErrorPopulate = populateRefTables(con);
+                    String msgErrorPopulate = populateRefTables(con, dialog);
                     if (msgErrorPopulate != null) {
                         msgError = msgError + "\n" + msgErrorPopulate;
                     }
@@ -234,6 +243,7 @@ public class SDF_MysqlDatabase {
                     SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
                     SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
+                    logD(dialog, "Release 3 updates...");
                     msgError = createReleaseDBUpdates(con);
                     String msgErrorPopulate = populateReleaseDBUpdates(con);
                     String msgErrorAlterHabitat = alterHabitatQual(con);
@@ -251,6 +261,7 @@ public class SDF_MysqlDatabase {
                 if (isSpecCroatiaExist(con, stDBExist)) {
                     SDF_MysqlDatabase.LOGGER.info("Ref Table species Croatia are already inserted");
                 } else {
+                    logD(dialog, "Insert species...");
                     SDF_MysqlDatabase.LOGGER.info("Inserting Ref species Croatia");
                     String msgErrorPopulateSpec = updateRefSpeciesCroatia(con);
                     if (msgErrorPopulateSpec != null) {
@@ -263,9 +274,10 @@ public class SDF_MysqlDatabase {
                     if (isEmeraldRefTablesExist(con, stDBExist)) {
                         SDF_MysqlDatabase.LOGGER.info("EMERALD Ref Tables are already updated");
                     } else {
+                        logD(dialog, "EMERALD ref tables...");
                         SDF_MysqlDatabase.LOGGER.info("Create EMERALD Ref tables");
                         msgError = createEMERALDRefTables(con);
-                        String msgErrorPopulate = populateEMERALDRefTables(con);
+                        String msgErrorPopulate = populateEMERALDRefTables(con, dialog);
                         if (msgErrorPopulate != null) {
                             msgError = msgError + "\n" + msgErrorPopulate;
                         }
@@ -283,6 +295,7 @@ public class SDF_MysqlDatabase {
                 // emerald
                 if (SDF_ManagerApp.isEmeraldMode() && !isEmeraldUpdatesdone(con)) {
                     SDF_MysqlDatabase.LOGGER.info("Emerald updates:");
+                    logD(dialog, "EMERALD updates...");
                     String msgErrorEmerald = doEmeraldUpdates(con);
                     if (msgErrorEmerald != null) {
                         msgError = msgError + "\n" + msgErrorEmerald;
@@ -291,19 +304,22 @@ public class SDF_MysqlDatabase {
 
                 // create DB from scratch
             } else {
+                logD(dialog, "Create database tables...");
                 msgError = createMySQLDBTables(con, schemaFileName);
-                String msgErrorPopulate = populateRefTables(con);
+                logD(dialog, "Populate lookup tables...");
+                String msgErrorPopulate = populateRefTables(con, dialog);
                 if (msgErrorPopulate != null) {
                     msgError = msgError + "\n" + msgErrorPopulate;
                 }
 
                 if (SDF_ManagerApp.isEmeraldMode()) {
+                    logD(dialog, "Create and populate EMERALD lookup tables...");
                     String msgErrorEmerald = createEMERALDRefTables(con);
                     if (msgErrorEmerald != null) {
                         msgError = msgError + "\n" + msgErrorEmerald;
                     }
 
-                    msgErrorEmerald = populateEMERALDRefTables(con);
+                    msgErrorEmerald = populateEMERALDRefTables(con, dialog);
                     if (msgErrorEmerald != null) {
                         msgError = msgError + "\n" + msgErrorEmerald;
                     }
@@ -313,6 +329,7 @@ public class SDF_MysqlDatabase {
                 if (isReleaseDBUpdatesExist(con, stDBExist)) {
                     SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
+                    logD(dialog, "Release 3 updates...");
                     SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
                     msgError = createReleaseDBUpdates(con);
                     String msgErrorPopulateRel = populateReleaseDBUpdates(con);
@@ -330,6 +347,7 @@ public class SDF_MysqlDatabase {
                 if (isSpecCroatiaExist(con, stDBExist)) {
                     SDF_MysqlDatabase.LOGGER.info("Ref Table species Croatia are already inserted");
                 } else {
+                    logD(dialog, "Species lookup...");
                     SDF_MysqlDatabase.LOGGER.info("Inserting Ref species Croatia");
                     String msgErrorPopulateSpec = updateRefSpeciesCroatia(con);
                     if (msgErrorPopulateSpec != null) {
@@ -911,12 +929,12 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String populateRefTables(Connection con) throws SQLException {
-        return populateRefTablesInFolder(con, "ref_tables");
+    private static String populateRefTables(Connection con, ProgressDialog dialog) throws SQLException {
+        return populateRefTablesInFolder(con, "ref_tables", dialog);
     }
 
-    private static String populateEMERALDRefTables(Connection con) throws SQLException {
-        return populateRefTablesInFolder(con, "ref_emerald");
+    private static String populateEMERALDRefTables(Connection con, ProgressDialog dialog) throws SQLException {
+        return populateRefTablesInFolder(con, "ref_emerald", dialog);
     }
 
     /**
@@ -926,7 +944,7 @@ public class SDF_MysqlDatabase {
      * @return error message
      * @throws SQLException
      */
-    private static String populateRefTablesInFolder(Connection con, String folderName) throws SQLException {
+    private static String populateRefTablesInFolder(Connection con, String folderName, ProgressDialog dialog) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         try {
@@ -952,6 +970,7 @@ public class SDF_MysqlDatabase {
 
                     // Get filename of file or directory
                     File filename = files[i];
+                    logD(dialog, "Populating " + filename.getName());
                     FileInputStream fsInsert = new FileInputStream(filename);
 
                     InputStreamReader inInsert = new InputStreamReader(fsInsert, "UTF-8");
@@ -1526,6 +1545,17 @@ public class SDF_MysqlDatabase {
             LOGGER.error("Failed creating ASCI date fields: " + e.toString());
         } finally {
             closeQuietly(stmt);
+        }
+    }
+
+    /**
+     * Logs status to progress dialog label.
+     * @param dlg dialog window
+     * @param msg message text
+     */
+    private static void logD(ProgressDialog dlg, String msg) {
+        if (dlg != null) {
+            dlg.setLabel(msg);
         }
     }
 }

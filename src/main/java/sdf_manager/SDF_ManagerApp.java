@@ -23,6 +23,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import sdf_manager.util.PropertyUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
+import sdf_manager.workers.CreateDatabaseWorker;
 
 /**
  * The main class of the application.
@@ -162,7 +163,8 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
                 mode = properties.getProperty("application.mode");
 
-                errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+                ProgressDialog progressDialog = new ProgressDialog(null, true);
+                errorMesg = SDF_MysqlDatabase.createNaturaDB(properties, progressDialog);
 
                 if (errorMesg != null) {
                     LOGGER.error("db Error: " + errorMesg);
@@ -277,7 +279,24 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
         LOGGER.info("create database");
         properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
-        String errorMesg = SDF_MysqlDatabase.createNaturaDB(properties);
+
+        CreateDatabaseWorker worker = new CreateDatabaseWorker();
+        ProgressDialog progressDialog = new ProgressDialog(null, true);
+//ProgressDialogAppOpen pdao = new ProgressDialogAppOpen(null, true);
+
+        progressDialog.setLabel("Performing query...");
+        progressDialog.setModal(false);
+        progressDialog.setVisible(false);
+        //progressDialog.repaint();
+//        progressDialog.setVisible(false);
+        worker.setDialog(progressDialog);
+        worker.setProps(properties);
+        worker.execute();
+        progressDialog.setModal(true);
+        progressDialog.setVisible(true);
+
+        String errorMesg = worker.get();
+                // SDF_MysqlDatabase.createNaturaDB(properties, progressDialog);
         if (errorMesg != null) {
             JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
                     + "\n Please check and change the settings in the appearing dialog.", "DB Error", JOptionPane.ERROR_MESSAGE);

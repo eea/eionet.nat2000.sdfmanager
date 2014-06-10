@@ -80,7 +80,7 @@ public class SDF_MysqlDatabaseTest {
         ResultSet rs = null;
         try {
             con = getDBConnection();
-            msgError = SDF_MysqlDatabase.createOrUpdateDatabaseTables(con, false);
+            msgError = SDF_MysqlDatabase.createOrUpdateDatabaseTables(con, false, null);
             assertEquals(null, msgError);
 
             // The SDF_MysqlDatabase.createNaturaDB closes the connection

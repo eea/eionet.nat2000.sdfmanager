@@ -118,7 +118,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
         // user has chosen emerald in the installer
         boolean isEmeraldInstaller = SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE);
-
+        ProgressDialog progressDialog = null;
         try {
             initializeLogger();
             LOGGER.info("Logger installed, java version: " + System.getProperty("java.version"));
@@ -163,7 +163,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 properties = PropertyUtils.readProperties(LOCAL_PROPERTIES_FILE);
                 mode = properties.getProperty("application.mode");
 
-                ProgressDialog progressDialog = new ProgressDialog(null, true);
+                progressDialog = new ProgressDialog(null, true);
                 errorMesg = SDF_MysqlDatabase.createNaturaDB(properties, progressDialog);
 
                 if (errorMesg != null) {
@@ -197,8 +197,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             LOGGER.error("Error::::" + e.getMessage());
             e.printStackTrace();
             exitApp();
+        } finally {
+            close(progressDialog);
         }
-
     }
 
     /**
@@ -282,13 +283,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
         CreateDatabaseWorker worker = new CreateDatabaseWorker();
         ProgressDialog progressDialog = new ProgressDialog(null, true);
-//ProgressDialogAppOpen pdao = new ProgressDialogAppOpen(null, true);
+        // ProgressDialogAppOpen pdao = new ProgressDialogAppOpen(null, true);
 
         progressDialog.setLabel("Performing query...");
         progressDialog.setModal(false);
         progressDialog.setVisible(false);
-        //progressDialog.repaint();
-//        progressDialog.setVisible(false);
+        // progressDialog.repaint();
+        // progressDialog.setVisible(false);
         worker.setDialog(progressDialog);
         worker.setProps(properties);
         worker.execute();
@@ -296,7 +297,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         progressDialog.setVisible(true);
 
         String errorMesg = worker.get();
-                // SDF_MysqlDatabase.createNaturaDB(properties, progressDialog);
+        // SDF_MysqlDatabase.createNaturaDB(properties, progressDialog);
         if (errorMesg != null) {
             JOptionPane.showMessageDialog(null, "An error has occurred when creating DB:" + errorMesg
                     + "\n Please check and change the settings in the appearing dialog.", "DB Error", JOptionPane.ERROR_MESSAGE);
@@ -418,5 +419,22 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         }
 
         return schemaLocalFile;
+    }
+
+    /**
+     * Convenience method for silently closing the given progress dialog.
+     *
+     * @param progressDialog The dialog to close.
+     */
+    private static void close(ProgressDialog progressDialog) {
+
+        if (progressDialog != null) {
+            try {
+                progressDialog.setVisible(false);
+                progressDialog.dispose();
+            } catch (Exception e) {
+                // Ignore deliberately.
+            }
+        }
     }
 }

@@ -269,11 +269,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
                 this.log.info("Validating site: " + sitecode);
                 log("Validating site: " + sitecode, true);
+                Transaction tx = null;
                 try {
                     if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
                     } else {
-                        Transaction tx = session.beginTransaction();
+                        tx = session.beginTransaction();
                         log("processing: " + sitecode, true);
                         site.setSiteCode(sitecode);
                         processSite(conn, session, site);
@@ -290,8 +291,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         processOK = true;
                     }
                 } catch (Exception e) {
+                    Util.rollback(tx);
                     String msg = "Failed processing site: " + sitecode;
-                    this.log.error(msg, e);
+                    ImporterNewMDB.log.error(msg, e);
                     log(msg, true);
                 }
 
@@ -359,8 +361,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                     Site site = new Site();
 
                     String sitecode = getString(rs, "SITE_CODE");
+                    Transaction tx = null;
                     try {
-                        Transaction tx = session.beginTransaction();
+                        tx = session.beginTransaction();
                         log("processing: " + sitecode, true);
                         site.setSiteCode(sitecode);
                         processSite(conn, session, site);
@@ -376,9 +379,10 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         tx.commit();
                         processOK = true;
                     } catch (Exception e) {
-                        // e.printStackTrace();
-                        ImporterNewMDB.log.error("Failed processing site: " + sitecode + " Error: " + e.getMessage());
-                        log("Failed processing site: " + sitecode, true);
+                        Util.rollback(tx);
+                        String msg = "Failed processing site: " + sitecode;
+                        ImporterNewMDB.log.error(msg, e);
+                        log(msg, true);
                         processOK = false;
                         break;
                     }

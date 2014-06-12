@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Transaction;
 
 /**
  * General utility methods class.
@@ -74,5 +75,20 @@ public class Util {
      */
     private static boolean isClientError(int httpResponseCode) {
         return httpResponseCode >= 400 && httpResponseCode <= 499;
+    }
+
+    /**
+     * Convenience method for quiet and null-safe rollback of Hibernate transaction.
+     *
+     * @param tx The transaction.
+     */
+    public static void rollback(Transaction tx) {
+        if (tx != null) {
+            try {
+                tx.rollback();
+            } catch (Exception e) {
+                // Ignore.
+            }
+        }
     }
 }

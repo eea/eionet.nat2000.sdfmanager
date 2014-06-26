@@ -282,6 +282,8 @@ public class SDF_MysqlDatabase {
                             msgError = msgError + "\n" + msgErrorPopulate;
                         }
                     }
+
+                    ensureEmeraldCodeLengths(con, schemaName);
                 }
 
                 if (!isDateTypeColumnsLongText(con, stDBUser)) {
@@ -1478,6 +1480,34 @@ public class SDF_MysqlDatabase {
     }
 
     /**
+     * Utility method that ensures valid lengths for various codes in EMERALD-specific database.
+     * To be called in EMERALD mode only!
+     *
+     * @param conn DB connection.
+     * @param schemaName DB schema name.
+     */
+    private static void ensureEmeraldCodeLengths(Connection conn, String schemaName) {
+
+        if (conn == null || StringUtils.isBlank(schemaName)) {
+            LOGGER.warn("Cannot check EMERALD code lengths: DB connetion or schema name is null/blank.");
+            return;
+        }
+
+        LOGGER.info("Ensuring valid lengths for various codes in database " + schemaName);
+
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.executeUpdate("ALTER TABLE habitat CHANGE COLUMN HABITAT_CODE HABITAT_CODE VARCHAR(9) NULL DEFAULT NULL");
+            stmt.executeUpdate("ALTER TABLE region CHANGE COLUMN REGION_CODE REGION_CODE VARCHAR(9) NULL DEFAULT NULL");
+        } catch (Exception e) {
+            LOGGER.error("Failure when ensuring valid lengths for various codes in EMERALD-specific database: " + e, e);
+        } finally {
+            closeQuietly(stmt);
+        }
+    }
+
+    /**
      * Utility method that ensures the ASCI date fields (specific to EMERALD mode) are present in sites table.
      *
      * @param conn SQL connection to use.
@@ -1544,7 +1574,7 @@ public class SDF_MysqlDatabase {
                 stmt.executeUpdate("ALTER TABLE site ADD COLUMN SITE_ASCI_LEGAL_REF LONGTEXT DEFAULT NULL");
             }
         } catch (Exception e) {
-            LOGGER.error("Failed creating ASCI date fields: " + e.toString());
+            LOGGER.error("Failed creating ASCI date fields: " + e, e);
         } finally {
             closeQuietly(stmt);
         }

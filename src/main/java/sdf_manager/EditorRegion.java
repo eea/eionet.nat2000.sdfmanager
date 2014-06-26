@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -25,7 +26,7 @@ public class EditorRegion extends javax.swing.JFrame {
     private boolean editing = false; //no cascaded actionPerformed
     private SDFEditor parent;
     private String siteCode;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorRegion.class .getName());
+    private final static org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(EditorRegion.class);
 
     /**
      *
@@ -53,7 +54,7 @@ public class EditorRegion extends javax.swing.JFrame {
     */
     private void loadRegions() {
         String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
-        EditorRegion.log.info("Loading the regions from the reference table " + tableName);
+        EditorRegion.LOGGER.info("Loading the regions from the reference table " + tableName);
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from " + tableName + " refN order by refN.refNutsCode";
         Query q = session.createQuery(hql);
@@ -98,7 +99,7 @@ public class EditorRegion extends javax.swing.JFrame {
     * @return
     */
    private boolean isNutExisting(String codeNut) {
-        EditorRegion.log.info("Checking if the region::" + codeNut + " exists for this site::" + this.siteCode);
+        EditorRegion.LOGGER.info("Checking if the region::" + codeNut + " exists for this site::" + this.siteCode);
         boolean nutExist = false;
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode + "'";
@@ -283,38 +284,70 @@ public class EditorRegion extends javax.swing.JFrame {
         }
     } //GEN-LAST:event_cmbNameItemStateChanged
 
+    /**
+     * Save administrative code of the location.
+     *
+     * @param evt Save event.
+     */
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
-        String code = (String) cmbCode.getSelectedItem();
-        String name;
 
-        /*we're working with a valid NUTS code */
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "select refN.refNutsDescription from RefNuts refN where refN.refNutsCode like '" + code + "'";
-        Query q = session.createQuery(hql);
-        name = (String) q.uniqueResult();
+        int maxNameLength = 128;
+        int maxCodeLength = SDF_ManagerApp.isEmeraldMode() ? 9 : 4;
 
-        if (code.equals("")) {
-            EditorRegion.log.error("No code found for NUTS region.");
-            javax.swing.JOptionPane.showMessageDialog(this, "No code found for NUTS region.");
-        } else if (!("").equals(code) && code.length() > 4) {
-            EditorRegion.log.error("Code is too long.(Maximum 4 characters).");
-            javax.swing.JOptionPane.showMessageDialog(this, "Code is too long. Please, insert a valid code (4 characters).");
-        } else if (name.equals("")) {
-            EditorRegion.log.error("No description found for NUTS region");
-            javax.swing.JOptionPane.showMessageDialog(this, "No description found for NUTS region.");
-        } else if (!("").equals(name) && name.length() > 128) {
-            EditorRegion.log.error("Name is too long (Maximum 128 characters).");
-            javax.swing.JOptionPane.showMessageDialog(this, "Name is too long. Please, insert a valid name (128 characters).");
-        } else if (isNutExisting(code)) {
-            EditorRegion.log.error("The region is already exist for thi site");
-            javax.swing.JOptionPane.showMessageDialog(this, "The region is already exist for thi site");
-        } else {
-            Region r = new Region();
-            r.setRegionCode(code);
-            r.setRegionName(name);
-            this.parent.addRegion(r);
-            javax.swing.JOptionPane.showMessageDialog(this, "Region Saved");
-            this.exit();
+        String code = cmbCode != null ? ((String) cmbCode.getSelectedItem()) : null;
+        if (StringUtils.isBlank(code)) {
+            String msg = "No code found for NUTS region!";
+            LOGGER.error(msg);
+            javax.swing.JOptionPane.showMessageDialog(this, msg);
+        } else if (code.length() > maxCodeLength) {
+            String msg = "Code is too long (max " + maxCodeLength + " characters allowed): " + code;
+            EditorRegion.LOGGER.error(msg);
+            javax.swing.JOptionPane.showMessageDialog(this, msg);
+        }
+
+        String name = null;
+        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
+        String hql = "select refN.refNutsDescription from " + tableName + " refN where refN.refNutsCode like '" + code + "'";
+
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Query query = session.createQuery(hql);
+            name = (String) query.uniqueResult();
+
+            if (StringUtils.isBlank(name)) {
+                String msg = "No description found for NUTS region: " + code;
+                LOGGER.error(msg);
+                javax.swing.JOptionPane.showMessageDialog(this, msg);
+            } else if (name.length() > maxNameLength) {
+                String msg = "Name is too long (max " + maxNameLength + " characters allowed): " + name;
+                LOGGER.error(msg);
+                javax.swing.JOptionPane.showMessageDialog(this, msg);
+            } else if (isNutExisting(code)) {
+                String msg = "Site already has this region specified: " + code;
+                LOGGER.error(msg);
+                javax.swing.JOptionPane.showMessageDialog(this, msg);
+            } else {
+                Region r = new Region();
+                r.setRegionCode(code);
+                r.setRegionName(name);
+                this.parent.addRegion(r);
+                javax.swing.JOptionPane.showMessageDialog(this, "Region saved!");
+                this.exit();
+            }
+        } catch (Exception e)  {
+            String msg = "Technical error when attempting to look up the region information: " + e.toString();
+            LOGGER.error(msg, e);
+            javax.swing.JOptionPane.showMessageDialog(this, msg);
+        }
+        finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (Exception e) {
+                    // Ignore session closing exceptions.
+                }
+            }
         }
     } //GEN-LAST:event_btnSaveActionPerformed
 

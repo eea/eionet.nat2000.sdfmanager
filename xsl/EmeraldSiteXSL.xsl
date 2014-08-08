@@ -1169,7 +1169,7 @@
           <h2>4.5 Documentation</h2>
           <xsl:choose>
             <xsl:when test="string(siteDescription/documentation)">
-              <p class="Border WholeWidth">
+              <p class="CyrFont Border WholeWidth">
                 <xsl:value-of select = "siteDescription/documentation/description"/>
               </p>
               <xsl:choose>

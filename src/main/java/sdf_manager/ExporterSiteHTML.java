@@ -39,6 +39,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import pojos.Biogeo;
@@ -63,6 +64,8 @@ import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.XmlGenerationUtils;
+
+import com.lowagie.text.pdf.BaseFont;
 
 /**
  *
@@ -191,7 +194,7 @@ public class ExporterSiteHTML implements Exporter {
      * @return
      */
     public Document processDatabase() {
-
+        OutputStream os = null;
         try {
              SDF_Util.getProperties();
              DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -639,21 +642,6 @@ public class ExporterSiteHTML implements Exporter {
                             addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAddressArea(), "addressArea") + "  "));
                             addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyLocatorName(), "locatorName") + "  "));
 
-                            // addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAdminUnit(), "adminUnit")));
-                            // addresElem.appendChild(doc.createElement("locatorDesignator")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyLocatorDesignator(), "locatorDesignator")));
-                            // addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyLocatorName(), "locatorName")));
-                            // addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAddressArea(), "addressArea")));
-                            // addresElem.appendChild(doc.createElement("postName")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyPostName(), "postName")));
-                            // addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyPostCode(), "postCode")));
-                            // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyThroughFare(), "thoroughfare")));
-
-                            // addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(resp.getRespAdminUnit(), "adminUnit")));
-                            // addresElem.appendChild(doc.createElement("locatorDesignator")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorDesig(), "locatorDesignator")));
-                            // addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorName(), "locatorName")));
-                            // addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespAddressArea(), "addressArea")));
-                            // addresElem.appendChild(doc.createElement("postName")).appendChild(doc.createTextNode(fmt(resp.getRespPostName(), "postName")));
-                            // addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(resp.getRespPostCode(), "postCode")));
-                            // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(resp.getRespThoroughFare(), "thoroughfare")));
                             bElem.appendChild(addresElem);
                         } else {
                             Element addresElem = doc.createElement("address");
@@ -740,15 +728,18 @@ public class ExporterSiteHTML implements Exporter {
             String pdfPath = new File("").getAbsolutePath() + File.separator + "xsl" + File.separator + this.siteCode + ".pdf";
             // File inputFile = new File(this.fileName);
             File inputFile = new File("xsl" + File.separator + this.siteCode + ".html");
-            OutputStream os = new FileOutputStream(new File(pdfPath));
+            os = new FileOutputStream(new File(pdfPath));
 
             ITextRenderer renderer = new ITextRenderer();
+
+            ITextFontResolver fontResolver=renderer.getFontResolver();
+            String rootFolder = System.getProperty("user.dir");
+            fontResolver.addFont(rootFolder + File.separator + "lib" + File.separator + "fonts"
+                    + File.separator + "arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
             renderer.setDocument(inputFile);
             renderer.layout();
             renderer.createPDF(os);
-
-            os.close();
 
             Desktop desktop = null;
             // Before more Desktop API is used, first check
@@ -779,6 +770,8 @@ public class ExporterSiteHTML implements Exporter {
             //e.printStackTrace();
             ExporterSiteHTML.log.error("A general exception has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
+        } finally {
+            IOUtils.closeQuietly(os);
         }
 
     }

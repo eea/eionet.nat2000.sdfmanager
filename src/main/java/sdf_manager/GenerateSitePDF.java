@@ -29,10 +29,12 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import pojos.Biogeo;
@@ -57,6 +59,8 @@ import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.XmlGenerationUtils;
+
+import com.lowagie.text.pdf.BaseFont;
 
 /**
  *
@@ -194,7 +198,7 @@ public class GenerateSitePDF implements Exporter {
      * @return
      */
     public Document processDatabase() {
-
+        OutputStream os = null;
         try {
              DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
              DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
@@ -627,24 +631,11 @@ public class GenerateSitePDF implements Exporter {
                             addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyLocatorName(), "locatorName") + "  "));
                             bElem.appendChild(addresElem);
 
-
-                            // addresElem.appendChild(doc.createElement("adminUnit")).appendChild(doc.createTextNode(fmt(resp.getRespAdminUnit(), "adminUnit")));
-                            // addresElem.appendChild(doc.createElement("locatorDesignator")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorDesig(), "locatorDesignator")));
-                            // addresElem.appendChild(doc.createElement("locatorName")).appendChild(doc.createTextNode(fmt(resp.getRespLocatorName(), "locatorName")));
-                            // addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(resp.getRespAddressArea(), "addressArea")));
-                            // addresElem.appendChild(doc.createElement("postName")).appendChild(doc.createTextNode(fmt(resp.getRespPostName(), "postName")));
-                            // addresElem.appendChild(doc.createElement("postCode")).appendChild(doc.createTextNode(fmt(resp.getRespPostCode(), "postCode")));
-                            // addresElem.appendChild(doc.createElement("thoroughfare")).appendChild(doc.createTextNode(fmt(resp.getRespThoroughFare(), "thoroughfare")));
-                            // bElem.appendChild(addresElem);
                         } else {
-                            //bElem.appendChild(doc.createElement("address")).appendChild(doc.createTextNode(fmt(resp.getRespAddress(), "respAddress")));
-
                             Element addresElem = doc.createElement("address");
                             addresElem.appendChild(doc.createElement("addressArea")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyAddress(), "addressArea")));
                             bElem.appendChild(addresElem);
-
                         }
-
 
                         bElem.appendChild(doc.createElement("email")).appendChild(doc.createTextNode(fmt(bodyObj.getMgmtBodyEmail(), "mgmtBodyMail")));
                         bodiesElem.appendChild(bElem);
@@ -701,16 +692,18 @@ public class GenerateSitePDF implements Exporter {
             Source source = new DOMSource(doc);
 
 
-            File file = new File(new File("").getAbsolutePath() + "\\xsl\\Site_" + this.siteCode + ".html");
+            File file = new File(new File("").getAbsolutePath() + File.separator + "xsl" + File.separator
+                    + "Site_" + this.siteCode + ".html");
             Result result = new StreamResult(file.toURI().getPath());
 
             TransformerFactory tFactory = TransformerFactory.newInstance();
             Source xsl;
-            //FIXME - use correct method
-            if (SDF_ManagerApp.getMode().equals(SDF_ManagerApp.EMERALD_MODE)) {
-                xsl = new StreamSource(new File("").getAbsolutePath() + "\\xsl\\EmeraldSiteXSL.xsl");
+            if (SDF_ManagerApp.isEmeraldMode()) {
+                xsl = new StreamSource(new File("").getAbsolutePath() + File.separator + "xsl" + File.separator
+                        + "EmeraldSiteXSL.xsl");
             } else {
-                xsl = new StreamSource(new File("").getAbsolutePath() + "\\xsl\\SiteXSL.xsl");
+                xsl = new StreamSource(new File("").getAbsolutePath() + File.separator + "xsl" + File.separator
+                        + "SiteXSL.xsl");
             }
 
             Templates template = tFactory.newTemplates(xsl);
@@ -725,15 +718,19 @@ public class GenerateSitePDF implements Exporter {
             transformer.transform(source, result);
             String pdfPath = this.filePath + "\\Site_" + this.siteCode + ".pdf";
 
-            OutputStream os = new FileOutputStream(new File(pdfPath));
+            os = new FileOutputStream(new File(pdfPath));
 
             ITextRenderer renderer = new ITextRenderer();
+
+            ITextFontResolver fontResolver=renderer.getFontResolver();
+            String rootFolder = System.getProperty("user.dir");
+            fontResolver.addFont(rootFolder + File.separator + "lib" + File.separator + "fonts"
+                    + File.separator + "arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
             renderer.setDocument(file);
             renderer.layout();
             renderer.createPDF(os);
 
-            os.close();
             return null;
         } catch (TransformerConfigurationException e) {
             //e.printStackTrace();
@@ -755,6 +752,8 @@ public class GenerateSitePDF implements Exporter {
             //e.printStackTrace();
             GenerateSitePDF.log.error("A general exception has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
+        } finally {
+            IOUtils.closeQuietly(os);
         }
 
     }
@@ -923,6 +922,4 @@ public class GenerateSitePDF implements Exporter {
     public ArrayList createXMLFromDataBase(String filename) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-
 }

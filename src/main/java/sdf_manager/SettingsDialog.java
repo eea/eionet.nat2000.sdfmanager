@@ -238,7 +238,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         versionLabel.setName("versionLabel");
         javax.swing.JLabel appVersionLabel = new javax.swing.JLabel();
 
-        appVersionLabel.setText(resourceMap.getString("appVersionLabel.text")); // NOI18N
+        appVersionLabel.setText(SDF_ManagerApp.getAppVersion()); // NOI18N
         appVersionLabel.setName("appVersionLabel");
 
         JTextPane txtpnThisIs = new JTextPane();

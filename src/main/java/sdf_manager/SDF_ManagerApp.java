@@ -4,8 +4,10 @@
 
 package sdf_manager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -82,6 +85,11 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     private static File schemaLocalFile;
 
     /**
+     * app version.
+     */
+    private static String APP_VERSION;
+
+    /**
      * At startup create and show the main frame of the application.
      */
     @Override
@@ -90,9 +98,8 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     }
 
     /**
-     * This method is to initialize the specified window by injecting resources.
-     * Windows shown in our application come fully initialized from the GUI
-     * builder, so this additional configuration is not needed.
+     * This method is to initialize the specified window by injecting resources. Windows shown in our application come fully
+     * initialized from the GUI builder, so this additional configuration is not needed.
      */
     @Override
     protected void configureWindow(java.awt.Window root) {
@@ -203,10 +210,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     }
 
     /**
-     * settings entered for the first time.
-     * they are stored and DB connection established.
+     * settings entered for the first time. they are stored and DB connection established.
      *
-     * @param dialog Settings dialog
+     * @param dialog
+     *            Settings dialog
      */
     public static void settingsEntered(SettingsDialog dialog, String[] args) {
 
@@ -251,9 +258,12 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /**
      * Saves props in properties file and launches the app.
      *
-     * @param isEmeraldInstaller true if emerald installer
-     * @param dialog Settings dialog
-     * @throws Exception if action fails
+     * @param isEmeraldInstaller
+     *            true if emerald installer
+     * @param dialog
+     *            Settings dialog
+     * @throws Exception
+     *             if action fails
      */
     private static void savePropsAndLaunch(boolean isEmeraldInstaller, SettingsDialog dialog) throws Exception {
         Map<String, String> props = new HashMap<String, String>(15);
@@ -424,7 +434,8 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /**
      * Convenience method for silently closing the given progress dialog.
      *
-     * @param progressDialog The dialog to close.
+     * @param progressDialog
+     *            The dialog to close.
      */
     private static void close(ProgressDialog progressDialog) {
 
@@ -436,5 +447,27 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                 // Ignore deliberately.
             }
         }
+    }
+
+    /**
+     * Application version to be shown.
+     * @return app ver
+     */
+    public static String getAppVersion() {
+        if (APP_VERSION == null) {
+            BufferedReader br = null;
+            try {
+                File file = new File("version.txt");
+                br = new BufferedReader(new FileReader(file));
+                String ver = br.readLine();
+
+                APP_VERSION = ver;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(br);
+            }
+        }
+        return APP_VERSION;
     }
 }

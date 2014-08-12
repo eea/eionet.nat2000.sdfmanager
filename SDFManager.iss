@@ -7,6 +7,11 @@
 #define MyAppURL "http://bd.eionet.europa.eu/activities/Natura_2000/index_html"
 #define MyAppExeName "SDFManager.exe"
 
+#define VerFile FileOpen("version.txt")
+#define AppVer FileRead(VerFile)
+#expr FileClose(VerFile)
+#undef VerFile
+
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -26,7 +31,7 @@ DefaultDirName=/{code:GetAppName}
 DefaultGroupName={code:GetAppName}
 AllowNoIcons=yes
 OutputDir=.\
-OutputBaseFilename=SDFManagerSetup
+OutputBaseFilename=SDFManagerSetup_{#AppVer}
 SetupIconFile=sdfmanager.ico
 Compression=lzma
 SolidCompression=yes
@@ -150,6 +155,7 @@ Source: "emeraude_logo.ico"; DestDir: "{app}";  Check: IsEmeraldMode
 Source: "natura2000_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "emeraude_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
+Source: "version.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsNatura2000Mode
 Source: "config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode
 Source: "config\*.xml"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs

@@ -88,7 +88,7 @@ public class ProgressDialogAppOpen extends javax.swing.JDialog {
         versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
         versionLabel.setName("versionLabel"); // NOI18N
 
-        appVersionLabel.setText(resourceMap.getString("appVersionLabel.text")); // NOI18N
+        appVersionLabel.setText(SDF_ManagerApp.getAppVersion()); // NOI18N
         appVersionLabel.setName("appVersionLabel"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

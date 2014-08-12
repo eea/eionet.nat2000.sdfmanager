@@ -238,7 +238,7 @@ public class SDF_ManagerView extends FrameView {
         jLabel4.setName("jLabel4"); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12));
-        jLabel5.setText(bundle.getString("SDF_ManagerView.jLabel5.text")); // NOI18N
+        jLabel5.setText(bundle.getString("SDF_ManagerView.jLabel5.text") + SDF_ManagerApp.getAppVersion()); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/bilbomatica_logo_126.jpg"))); // NOI18N

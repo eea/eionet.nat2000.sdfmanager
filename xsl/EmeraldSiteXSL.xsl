@@ -210,30 +210,7 @@
         </xsl:when>
       </xsl:choose>
 
-
-      <!-- xsl:choose>
-        <xsl:when test="string(siteIdentification/asciProposalDate)">
-          <h2>1.7 Site indication and designation / classification dates</h2>
-          <table class="SDFtable WholeWidth">
-            <tr>
-              <td width="50%" class="Bold">Date site proposed as ASCI:</td>
-              <td width="50%" class="DivisorTop MinimalHeight">
-                <xsl:choose>
-                  <xsl:when test="string(siteIdentification/asciProposalDate)">
-                    <xsl:call-template name="FormatYearMonth">
-                      <xsl:with-param name="DateTime" select="siteIdentification/asciProposalDate"/>
-                    </xsl:call-template>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    No data
-                  </xsl:otherwise>
-                </xsl:choose>
-              </td>
-            </tr>
-          </table>
-        </xsl:when>
-      </xsl:choose-->
-
+      <h2>1.7 Site indication and designation / classification dates</h2>
       <xsl:choose>
         <xsl:when test="string(siteIdentification/asciProposalDate) or string(siteIdentification/asciConfirmedCandidateDate) or string(siteIdentification/asciConfirmationDate) or string(siteIdentification/asciDesignationDate) or string(siteIdentification/asciLegalReference)">
           <table class="SDFtable WholeWidth">
@@ -254,7 +231,7 @@
             </tr>
 
             <tr>
-              <td width="50%" class="Bold">Date site confirmed as candidate ASCI:</td>
+              <td width="50%" class="Bold">Date site accepted as candidate ASCI:</td>
               <td width="50%" class="MinimalHeight">
                 <xsl:choose>
                   <xsl:when test="string(siteIdentification/asciConfirmedCandidateDate)">
@@ -269,7 +246,7 @@
               </td>
             </tr>
             <tr>
-              <td width="50%" class="Bold">Date site confirmed as ASCI:</td>
+              <td width="50%" class="Bold">Date site accepted as ASCI:</td>
               <td class="MinimalHeight">
                 <xsl:choose>
                   <xsl:when test="string(siteIdentification/asciConfirmationDate)">
@@ -493,7 +470,7 @@
               <table class="SDFtable3rd WholeWidth">
                 <tr>
                   <th colspan="6" class="MinimalHeight DivisorRight CenterText">
-                    Annex I Habitat types
+                   Resolution 4 Habitat types
                   </th>
                   <th colspan="4">
                     Site assessment
@@ -545,7 +522,7 @@
                         <xsl:variable name="habcode" select="code"/>
                         <!--  TODO similar manual to n2k? -->
                         <xsl:variable name="apos">'</xsl:variable>
-                        <xsl:variable name="apos2">http://natura2000.eea.europa.eu/Natura2000/</xsl:variable>
+                        <xsl:variable name="apos2">http://www.coe.int/t/dg4/cultureheritage/nature/econetworks/portal_en.asp</xsl:variable>
                         <!-- In the following image, the path, to which the link points to has been changed in order to show the linked page from here ("http://natura..." added) -->
                         <img src="images/info.jpg" border="0" alt="info" onClick="window.open('https://wcd.coe.int/com.instranet.InstraServlet?command=com.instranet.CmdBlobGet&amp;InstranetImage=2335081&amp;SecMode=1&amp;DocId=2044598&amp;Usage=2')">
                         </img>&#160;
@@ -763,7 +740,7 @@
                   <b>Type:</b> p = permanent, r = reproducing, c = concentration, w = wintering (for plant and non-migratory species use permanent)
                 </li>
                 <li>
-                  <b>Unit:</b> i = individuals, p = pairs or other units according to the Standard list of population units and codes in accordance with Article 12 and 17 reporting (see <a href="http://bd.eionet.europa.eu/activities/Natura_2000/reference_portal">reference portal</a>)
+                  <b>Unit:</b> i = individuals, p = pairs or other units according to the Standard list of population units and codes in accordance with Article 12 and 17 reporting (see <a href="http://www.coe.int/t/dg4/cultureheritage/nature/econetworks/portal_en.asp">reference portal</a>)
                 </li>
                 <li>
                   <b>Abundance categories (Cat.):</b> C = common, R = rare, V = very rare, P = present - to fill if data are deficient (DD) or in addition to population size information
@@ -930,7 +907,7 @@
                     <b>Group:</b> A = Amphibians, B = Birds, F = Fish, Fu = Fungi, I = Invertebrates, L = Lichens, M = Mammals, P = Plants, R = Reptiles
                   </li>
                   <li>
-                    <b>CODE:</b> for Birds, Annex IV and V species the code as provided in the reference portal should be used in addition to the scientific name
+                    <b>CODE:</b> for Appendix I, II and III species the code provided in the Emerald reference portal should be used, in addition to the scientific name
                   </li>
                   <li>
                     <b>S:</b> in case that the data on species are sensitive and therefore have to be blocked for any public access enter: yes
@@ -939,14 +916,14 @@
                     <b>NP:</b> in case that a species is no longer present in the site enter: x (optional)
                   </li>
                   <li>
-                    <b>Unit:</b> i = individuals, p = pairs or other units according to the standard list of population units and codes in accordance with Article 12 and 17 reporting, (see <a href="http://bd.eionet.europa.eu/activities/Natura_2000/reference_portal">reference portal</a>)
+                    <b>Unit:</b> i = individuals, p = pairs or other units according to the standard list of population units and codes in accordance with Article 12 and 17 reporting, (see <a href="http://www.coe.int/t/dg4/cultureheritage/nature/econetworks/portal_en.asp">reference portal</a>)
                   </li>
                   <li>
                     <b>Cat.:</b> Abundance categories: C = common, R = rare, V = very rare, P = present
                   </li>
                   <li>
                     <b>Motivation categories: </b>
-                    <b>IV, V:</b> Annex Species (Habitats Directive), <b>A:</b> National Red List data; <b>B:</b> Endemics; <b>C:</b> International Conventions; <b>D:</b> other reasons
+                    <b>I, II, III:</b> Appendix Species (Bern Convention), <b>A:</b> National Red List data; <b>B:</b> Endemics; <b>C:</b> International Conventions; <b>D:</b> other reasons
                   </li>
                 </ul>
               </xsl:when>

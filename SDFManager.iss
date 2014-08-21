@@ -156,6 +156,7 @@ Source: "natura2000_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "emeraude_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
 Source: "version.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SDFManager.l4j.ini"; DestDir: "{app}"; Flags: ignoreversion
 Source: "config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsNatura2000Mode
 Source: "config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode
 Source: "config\*.xml"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs

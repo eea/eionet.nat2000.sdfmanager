@@ -90,7 +90,7 @@ public final class ImporterUtils {
     }
 
     /**
-     * Special conversion to handle emerald tools cyrillic encoding
+     * Special conversion to handle emerald tools cyrillic encoding.
      * @param value value in utf-8
      * @return value in cyrillic
      * @throws Exception if fail in conversion
@@ -100,18 +100,32 @@ public final class ImporterUtils {
 
         byte[] other = new byte[skipBytes.length];
         int j = 0, k = 0;
+        //194 + x + 66?
+        byte lastByte = 0;
         for (byte b : skipBytes) {
-            if (b + 256 != 195) {
 
-                if (b + 256 >= 176 && b + 256 <= 199) {
+            if (b + 256 != 195 && b + 256 != 194) {
+                //Ukrainian special chars 194 + byte:
+                if (lastByte + 256 == 194) {
+                    if (b + 256 == 179) {
+                        other[j] = (byte)105;
+                    } else if (b + 256 == 191) {
+                        other[j] = (byte)245;
+                    } else if (b + 256 == 187) {
+                        other[j] = (byte)243;
+                    } else {
+                        other [j] = (byte) (b + 48);
+                    }
+                } else if (b + 256 >= 176 && b + 256 <= 199) {
                     other [j] = (byte) (b + 48);
                 } else {
                     other[j] = b;
                 }
                 j++;
             }
-        }
 
+            lastByte = b;
+        }
         return (new String(other, "cp866")).trim();
     }
 

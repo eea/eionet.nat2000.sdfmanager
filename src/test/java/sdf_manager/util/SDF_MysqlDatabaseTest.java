@@ -95,7 +95,7 @@ public class SDF_MysqlDatabaseTest {
             rs = st.executeQuery("SELECT COUNT(*) FROM ref_species");
             rs.next();
             num = rs.getInt(1);
-            assertEquals(2516 + 13, num);
+            assertEquals(2516 + 13 + 116, num);
 
             // Check how many NUTS codes are loaded
             // 299 from insert_ref_nuts.sql

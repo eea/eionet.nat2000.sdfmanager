@@ -19,6 +19,7 @@ public class RefSpecies implements java.io.Serializable {
      private String refSpeciesAnnexII;
      private String refSpeciesAnnexIV;
      private String refSpeciesAnnexV;
+     private String refSpeciesRes6;
 
 
 
@@ -148,6 +149,16 @@ public class RefSpecies implements java.io.Serializable {
      */
     public void setRefSpeciesAnnexV(String refSpeciesAnnexV) {
         this.refSpeciesAnnexV = refSpeciesAnnexV;
+    }
+
+
+    public String getRefSpeciesRes6() {
+        return refSpeciesRes6;
+    }
+
+
+    public void setRefSpeciesRes6(String refSpeciesRes6) {
+        this.refSpeciesRes6 = refSpeciesRes6;
     }
 
 }

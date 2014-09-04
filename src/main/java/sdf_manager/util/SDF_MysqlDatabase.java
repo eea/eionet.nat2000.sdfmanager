@@ -48,8 +48,11 @@ public class SDF_MysqlDatabase {
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.
-     * @param properties database properties
-     * @param dialog Progress dialog for user feedback
+     *
+     * @param properties
+     *            database properties
+     * @param dialog
+     *            Progress dialog for user feedback
      * @return error message or empty string if database was created
      */
     public static String createNaturaDB(Properties properties, ProgressDialog dialog) throws Exception {
@@ -132,9 +135,11 @@ public class SDF_MysqlDatabase {
      * checks and creates DB schema instance and user 'sa' for the application mode. no tables created also creates and populates
      * reference tables
      *
-     * @param con db connection (without schema specified)
+     * @param con
+     *            db connection (without schema specified)
      * @return error message or empty string if everything fine
-     * @throws Exception if creation fails
+     * @throws Exception
+     *             if creation fails
      */
     public static boolean createDatabaseSchema(Connection con, ProgressDialog dialog) throws Exception {
         String msgError = null;
@@ -189,14 +194,16 @@ public class SDF_MysqlDatabase {
     /**
      * Create the Natura2000 database or make upgrades in the tables.
      *
-     * @param con database connection
-     *            database connection
+     * @param con
+     *            database connection database connection
      * @param schemaExists
      *            if schema is existing previously or was created during this session
      * @return error message. if no errors empty string
-     * @throws Exception if error happens in sql
+     * @throws Exception
+     *             if error happens in sql
      */
-    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists, ProgressDialog dialog) throws Exception {
+    public static String createOrUpdateDatabaseTables(Connection con, boolean schemaExists, ProgressDialog dialog)
+            throws Exception {
 
         String msgError = null;
 
@@ -239,18 +246,18 @@ public class SDF_MysqlDatabase {
 
                 // Sept 2013. Version 3. Create ReleaseDBUpdates.
 
-                if (isReleaseDBUpdatesExist(con, stDBExist)) {
+                if (isReleaseDBUpdatesExist(con, "3")) {
                     SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
                     SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
                     logD(dialog, "Release 3 updates...");
                     msgError = createReleaseDBUpdates(con);
-                    String msgErrorPopulate = populateReleaseDBUpdates(con);
+                    String msgErrorPopulate = populateReleaseDBUpdates(con, "3", "1");
                     String msgErrorAlterHabitat = alterHabitatQual(con);
                     String msgErrorAlterDataQual = insertRefDataQual(con);
                     String msgErrorUpdateRefHabitats = updateRefHabitats(con);
                     // tabla ref species
-                    String msgErrorUpdateVersion3Done = updateVersion3Done(con);
+                    String msgErrorUpdateVersion3Done = updateVersionDone(con, "3");
                     if (msgErrorPopulate != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null
                             || msgErrorUpdateRefHabitats != null || msgErrorUpdateVersion3Done != null) {
                         msgError =
@@ -328,17 +335,17 @@ public class SDF_MysqlDatabase {
                 }
 
                 // Sept 2013. Version 3. Create ReleaseDBUpdates.
-                if (isReleaseDBUpdatesExist(con, stDBExist)) {
+                if (isReleaseDBUpdatesExist(con, "3")) {
                     SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates exists");
                 } else {
                     logD(dialog, "Release 3 updates...");
                     SDF_MysqlDatabase.LOGGER.info("Create ReleaseDBUpdates");
                     msgError = createReleaseDBUpdates(con);
-                    String msgErrorPopulateRel = populateReleaseDBUpdates(con);
+                    String msgErrorPopulateRel = populateReleaseDBUpdates(con, "3", "1");
                     String msgErrorAlterHabitat = alterHabitatQual(con);
                     String msgErrorAlterDataQual = insertRefDataQual(con);
                     String msgErrorUpdateRefHabitats = updateRefHabitats(con);
-                    String msgErrorUpdateVersion3Done = updateVersion3Done(con);
+                    String msgErrorUpdateVersion3Done = updateVersionDone(con, "3");
                     if (msgErrorPopulateRel != null || msgErrorAlterHabitat != null || msgErrorAlterDataQual != null
                             || msgErrorUpdateRefHabitats != null || msgErrorUpdateVersion3Done != null) {
                         msgError =
@@ -356,10 +363,21 @@ public class SDF_MysqlDatabase {
                         msgError = msgError + "\n" + msgErrorPopulateSpec;
                     }
                 }
+
             }
 
             // Ensure that ASCI date fields (specific to EMERALD mode) are present in sites table.
             ensureSiteAsciDateFieldsPresent(con, schemaName);
+
+            // release 4.2 updates
+            if (!isReleaseDBUpdatesExist(con, "4.2")) {
+            //if (!isRelease42UpdatesPresent(con, schemaName)) {
+                logD(dialog, "Performing release 4.2 updates");
+                String msgErrorPopulateRel = populateReleaseDBUpdates(con, "4.2", "2");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.2", dialog);
+                logD(dialog, "Release 4.2 updates done");
+                updateVersionDone(con, "4.2");
+            }
 
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
@@ -392,8 +410,8 @@ public class SDF_MysqlDatabase {
      * Method to validate the datatype of columns. Validates if SITE_EXPLANATIONS,SITE_SAC_LEGAL_REF,SITE_SPA_LEGAL_REF of the
      * table: site in DB are longtext instead of varchar(512).
      *
-     * @param con database connection
-     *            connection
+     * @param con
+     *            database connection connection
      * @param st
      * @return
      * @throws SQLException
@@ -431,8 +449,8 @@ public class SDF_MysqlDatabase {
     /**
      * Creates schema for natura2000 or emerald.
      *
-     * @param con database connection
-     *            connection
+     * @param con
+     *            database connection connection
      * @param schemaFileName
      *            file of sql script
      * @return error msg
@@ -476,7 +494,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @param schemaFileName
      * @return
      * @throws SQLException
@@ -612,7 +631,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @return
      * @throws SQLException
      */
@@ -651,7 +671,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @param st
      * @return
      */
@@ -675,7 +696,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @param st
      * @return
      */
@@ -697,7 +719,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @param st
      * @return
      */
@@ -720,7 +743,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @return
      * @throws SQLException
      */
@@ -766,7 +790,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @return
      * @throws SQLException
      */
@@ -810,7 +835,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @return
      * @throws SQLException
      */
@@ -840,7 +866,8 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
+     * @param con
+     *            database connection
      * @param st
      * @return
      */
@@ -863,8 +890,8 @@ public class SDF_MysqlDatabase {
     /**
      * checks if emerald ref tables data is entered.
      *
-     * @param con database connection
-     *            connection
+     * @param con
+     *            database connection connection
      * @param st
      *            statement
      * @return boolean
@@ -895,8 +922,8 @@ public class SDF_MysqlDatabase {
     /**
      * executes all SQLs in the script.
      *
-     * @param con database connection
-     *            connection
+     * @param con
+     *            database connection connection
      * @param script
      *            file
      * @return
@@ -943,8 +970,10 @@ public class SDF_MysqlDatabase {
 
     /**
      *
-     * @param con database connection
-     * @param folderName folder where reference tables sqls reside
+     * @param con
+     *            database connection
+     * @param folderName
+     *            folder where reference tables sqls reside
      * @return error message
      * @throws SQLException
      */
@@ -1012,11 +1041,12 @@ public class SDF_MysqlDatabase {
      *
      * Sept 201. Version 3
      */
-    private static boolean isReleaseDBUpdatesExist(Connection con, Statement st) {
+    private static boolean isReleaseDBUpdatesExist(Connection con, String ver) {
         boolean tableExists = false;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
+        Statement st = null;
         try {
-            String sql = "select * from " + schemaName + ".releasedbupdates";
+            String sql = "select * from " + schemaName + ".releasedbupdates where ver = '" + ver + "'";
             st = con.createStatement();
             st.executeQuery(sql);
             tableExists = true;
@@ -1024,6 +1054,7 @@ public class SDF_MysqlDatabase {
             tableExists = false;
             SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
         } finally {
+            closeQuietly(st);
             return tableExists;
         }
     }
@@ -1064,19 +1095,19 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String populateReleaseDBUpdates(Connection con) throws SQLException {
+    private static String populateReleaseDBUpdates(Connection con, String version, String releaseId) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         try {
             SDF_MysqlDatabase.LOGGER.info("populate ReleaseDBUpdates....");
             st = con.createStatement();
-            st.executeUpdate("insert ignore into " + schemaName + ".ReleaseDBUpdates values(1,'3','Version3','N')");
+            st.executeUpdate("insert ignore into " + schemaName + ".ReleaseDBUpdates values(" + releaseId + ",'" + version + "','Version" + version + "' ,'N')");
         } catch (SQLException e) {
-            msgErrorCreate = "insert_ReleaseDBUpdates_version3:An error has been produced in database";
+            msgErrorCreate = "insert_ReleaseDBUpdates_version :An error has been produced in database ver=" + version;
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } catch (Exception e) {
-            msgErrorCreate = "insert_ReleaseDBUpdates_version3:A general error has been produced";
+            msgErrorCreate = "insert_ReleaseDBUpdates_version:A general error has been produced ver=" + version;
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
         } finally {
             if (st != null) {
@@ -1187,15 +1218,15 @@ public class SDF_MysqlDatabase {
 
     }
 
-    private static String updateVersion3Done(Connection con) throws SQLException {
+    private static String updateVersionDone(Connection con, String ver) throws SQLException {
         String msgErrorCreate = null;
         Statement st = null;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
         try {
-            SDF_MysqlDatabase.LOGGER.info("Updating UpdateVersion3Done ...");
+            SDF_MysqlDatabase.LOGGER.info("Updating UpdateVersion Done ... ver " + ver);
             st = con.createStatement();
-            st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = 3");
+            st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = " + ver);
         } catch (SQLException e) {
             msgErrorCreate = "UpdateVersion3Done: An error has been produced in database";
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
@@ -1239,8 +1270,8 @@ public class SDF_MysqlDatabase {
     /**
      * checks if db strucure updates for emerald mode are done.
      *
-     * @param con database connection
-     *            db connection
+     * @param con
+     *            database connection db connection
      * @return true if updates already exist
      */
     private static boolean isEmeraldUpdatesdone(Connection con) {
@@ -1349,15 +1380,13 @@ public class SDF_MysqlDatabase {
             LOGGER.info("Test if host is solved: ");
             InetSocketAddress endPoint = new InetSocketAddress(host, Integer.parseInt(port));
             if (endPoint.isUnresolved()) {
-                return "Host name " + host + " cannot be resolved. \n"
-                        + "Check if there is a tyop in the host name";
+                return "Host name " + host + " cannot be resolved. \n" + "Check if there is a tyop in the host name";
             }
             LOGGER.info("Test if port is open: host='" + "'; port='" + port + "'");
             socket.connect(endPoint, 1000);
 
         } catch (IOException ie) {
-            return "No access to specified host:port " + host + ":" + port + "\n"
-                    + "Potential reasons:\n"
+            return "No access to specified host:port " + host + ":" + port + "\n" + "Potential reasons:\n"
                     + "1. MySql is not running at the specified location. \n"
                     + "2. Firewall is blocking access to the host:port. \n"
                     + "3. There is a proxy configured with no bypassing exception to the specified host.";
@@ -1387,9 +1416,11 @@ public class SDF_MysqlDatabase {
     /**
      * updates for emerald schema.
      *
-     * @param con db connection
+     * @param con
+     *            db connection
      * @return error string or null if no errors
-     * @throws SQLException if sQL fails
+     * @throws SQLException
+     *             if sQL fails
      */
     private static String doEmeraldUpdates(Connection con) throws SQLException {
         String msgErrorCreate = null;
@@ -1452,7 +1483,8 @@ public class SDF_MysqlDatabase {
     /**
      * Utility method for closing SQL result set.
      *
-     * @param rs The result set.
+     * @param rs
+     *            The result set.
      */
     public static void closeQuietly(ResultSet rs) {
         if (rs != null) {
@@ -1467,7 +1499,8 @@ public class SDF_MysqlDatabase {
     /**
      * Utility method for closing SQL statement.
      *
-     * @param stmt The statement.
+     * @param stmt
+     *            The statement.
      */
     public static void closeQuietly(Statement stmt) {
         if (stmt != null) {
@@ -1480,11 +1513,12 @@ public class SDF_MysqlDatabase {
     }
 
     /**
-     * Utility method that ensures valid lengths for various codes in EMERALD-specific database.
-     * To be called in EMERALD mode only!
+     * Utility method that ensures valid lengths for various codes in EMERALD-specific database. To be called in EMERALD mode only!
      *
-     * @param conn DB connection.
-     * @param schemaName DB schema name.
+     * @param conn
+     *            DB connection.
+     * @param schemaName
+     *            DB schema name.
      */
     private static void ensureEmeraldCodeLengths(Connection conn, String schemaName) {
 
@@ -1510,8 +1544,10 @@ public class SDF_MysqlDatabase {
     /**
      * Utility method that ensures the ASCI date fields (specific to EMERALD mode) are present in sites table.
      *
-     * @param conn SQL connection to use.
-     * @param schemaName Schema (i.e. database) name where the sites table is expected to be present.
+     * @param conn
+     *            SQL connection to use.
+     * @param schemaName
+     *            Schema (i.e. database) name where the sites table is expected to be present.
      */
     private static void ensureSiteAsciDateFieldsPresent(Connection conn, String schemaName) {
 
@@ -1582,12 +1618,48 @@ public class SDF_MysqlDatabase {
 
     /**
      * Logs status to progress dialog label.
-     * @param dlg dialog window
-     * @param msg message text
+     *
+     * @param dlg
+     *            dialog window
+     * @param msg
+     *            message text
      */
     private static void logD(ProgressDialog dlg, String msg) {
         if (dlg != null) {
             dlg.setLabel(msg);
         }
+    }
+
+    private static boolean isRelease42UpdatesPresent(Connection conn, String schemaName) {
+
+        if (conn == null || StringUtils.isBlank(schemaName)) {
+            LOGGER.warn("Cannot check existence of ver 4.2 updates : DB connetion or schema name is null/blank.");
+            return false;
+        }
+
+        String tableName = "ref_species";
+        LOGGER.info("Checking existence of RES 6 date fields in table \"" + tableName + "\" in database " + schemaName);
+
+        HashSet<String> existingColumns = new HashSet<String>();
+        ResultSet rs = null;
+        try {
+            DatabaseMetaData dbMetaData = conn.getMetaData();
+            if (dbMetaData != null) {
+
+                rs = dbMetaData.getColumns(null, schemaName, tableName, null);
+                while (rs.next()) {
+                    String colName = rs.getString(4);
+                    if (colName != null) {
+                        existingColumns.add(colName.toUpperCase());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed querying columns of \"" + schemaName + "." + tableName + "\": ", e);
+        } finally {
+            closeQuietly(rs);
+        }
+
+        return existingColumns.contains("REF_SPECIES_RES_6");
     }
 }

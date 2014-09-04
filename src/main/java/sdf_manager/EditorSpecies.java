@@ -144,10 +144,20 @@ public class EditorSpecies extends javax.swing.JFrame {
        loadSpeciesName(s.getSpeciesCode());
        String hql;
        if (group != null && ("B").equals(group)) {
-           hql = "select count(*) from RefBirds refBirds where refBirds.refBirdsCode like '" + code  + "'";
+           hql = "select count(*) from RefBirds where refBirdsCode like '" + code  + "' ";
        } else {
-           hql = "select count(*) from RefSpecies refSp where refSp.refSpeciesCode like '" + code + "'";
+           hql = "select count(*) from RefSpecies where refSpeciesCode like '" + code + "' ";
        }
+
+       //both tables have res6 field with same name in EMERALD:
+       if (SDF_ManagerApp.isEmeraldMode()) {
+           hql += " and refSpeciesRes6 = '1'";
+       }
+       //TODO - isn't it a bug that annex ii species are not filtered in n2k mode?
+       //should be something like:
+       // } else {hql += "refSpeciesAnnexII = 1"}
+       // for species and also for birds
+
 
        Query q = session.createQuery(hql);
        Long count = (Long) q.uniqueResult();
@@ -742,7 +752,8 @@ public class EditorSpecies extends javax.swing.JFrame {
         jLabel12.setName("jLabel12"); // NOI18N
 
         jLabel4.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        String jLabel4Prop = "jLabel4.text" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        jLabel4.setText(resourceMap.getString(jLabel4Prop)); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 
         chkSensitive.setText(resourceMap.getString("chkSensitive.text")); // NOI18N

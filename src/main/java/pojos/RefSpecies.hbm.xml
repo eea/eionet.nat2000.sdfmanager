@@ -31,6 +31,9 @@
     <property name="refSpeciesAnnexV" type="string">
       <column length="1" name="REF_SPECIES_ANNEX_V"/>
     </property>
+    <property name="refSpeciesRes6" type="string">
+      <column length="1" name="REF_SPECIES_RES_6"/>
+    </property>
     <property name="refSpeciesGroup" type="java.lang.Character">
       <column length="1" name="REF_SPECIES_GROUP"/>
     </property>

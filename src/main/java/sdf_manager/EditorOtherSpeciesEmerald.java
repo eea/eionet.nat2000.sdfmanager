@@ -79,12 +79,12 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame {
        }
 
        if (groupSpecies.equals("B")) {
-           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds where refBirds.refBirdsAnnexi='0' order by refBirds.refBirdsName";
+           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds where refBirds.refSpeciesRes6='0' order by refBirds.refBirdsName";
        } else {
 
            hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName,refSp.refSpeciesAltName,refSp.refSpeciesHdName";
            hql += " from RefSpecies refSp";
-           hql += " where refSp.refSpeciesGroup like '" + groupSpecies + "' and refSp.refSpeciesAnnexII ='0'";
+           hql += " where refSp.refSpeciesGroup like '" + groupSpecies + "' and refSp.refSpeciesRes6 ='0'";
            if (speciesCode == null) {
                hql += " and refSp.refSpeciesCodeNew='0'";
            }

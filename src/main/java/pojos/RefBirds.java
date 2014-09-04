@@ -12,6 +12,7 @@ public class RefBirds implements java.io.Serializable {
      private int refBirdsId;
      private String refBirdsCode;
      private String refBirdsName;
+     private Short refSpeciesRes6;
      private Short refBirdsAnnexi;
      private Short refBirdsAnnexiipa;
      private Short refBirdsAnnexiipb;
@@ -122,6 +123,18 @@ public class RefBirds implements java.io.Serializable {
     public void setRefAltBirdsName(String refAltBirdsName) {
         this.refAltBirdsName = refAltBirdsName;
     }
+
+
+    public Short getRefSpeciesRes6() {
+        return refSpeciesRes6;
+    }
+
+
+    public void setRefSpeciesRes6(Short refSpeciesRes6) {
+        this.refSpeciesRes6 = refSpeciesRes6;
+    }
+
+
 }
 
 

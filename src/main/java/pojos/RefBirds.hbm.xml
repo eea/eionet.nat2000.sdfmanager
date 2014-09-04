@@ -13,6 +13,9 @@
     <property name="refBirdsName" type="string">
       <column length="128" name="REF_BIRDS_NAME"/>
     </property>
+    <property name="refSpeciesRes6" type="java.lang.Short">
+      <column name="REF_SPECIES_RES_6"/>
+    </property>
     <property name="refBirdsAnnexi" type="java.lang.Short">
       <column name="REF_BIRDS_ANNEXI"/>
     </property>

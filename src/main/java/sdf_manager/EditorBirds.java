@@ -620,7 +620,8 @@ public class EditorBirds extends javax.swing.JFrame {
         jLabel1.setName("jLabel1"); // NOI18N
 
         jLabel4.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
-        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        String jLabel4Prop = "jLabel4.text" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        jLabel4.setText(resourceMap.getString(jLabel4Prop)); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
 
         chkSensitive.setText(resourceMap.getString("chkSensitive.text")); // NOI18N

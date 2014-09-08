@@ -618,15 +618,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     void populateOSpecies(Session session) {
         try {
-            String hql = "select distinct sp.otherSpeciesName from OtherSpecies as sp order by sp.otherSpeciesName";
-            Query q = session.createQuery(hql);
-            Iterator itr = q.iterate();
-            TreeSet hash = new TreeSet();
-            filterOSpecies.addItem("-"); // blank item first
-            while (itr.hasNext()) {
-                String otherSpeciesName = (String) itr.next();
-                filterOSpecies.addItem(otherSpeciesName);
-            }
+            populateOSpeciesByGroup(session, null);
 
             String hqlGroup = "select distinct sp.otherSpeciesGroup from OtherSpecies as sp order by sp.otherSpeciesGroup";
             Query qGroup = session.createQuery(hqlGroup);
@@ -642,6 +634,33 @@ public final class SDFFilter extends javax.swing.JFrame {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     *
+     * @param session
+     */
+    private void populateOSpeciesByGroup(Session session, String speciesGroupCode) {
+
+        boolean isGroupBlank = StringUtils.isBlank(speciesGroupCode) || "-".equals(speciesGroupCode);
+
+        String hql = "select distinct sp.otherSpeciesName from OtherSpecies as sp";
+        if (!isGroupBlank) {
+            hql = hql + " where sp.otherSpeciesGroup='" + speciesGroupCode + "'";
+        }
+        hql = hql + " order by sp.otherSpeciesName";
+
+        Query q = session.createQuery(hql);
+        Iterator itr = q.iterate();
+
+        filterOSpecies.removeAllItems();
+        filterOSpecies.addItem("-");
+        while (itr.hasNext()) {
+            String otherSpeciesName = (String) itr.next();
+            filterOSpecies.addItem(otherSpeciesName);
+        }
+
+        filterOSpecies.repaint();
     }
 
     /**
@@ -864,6 +883,12 @@ public final class SDFFilter extends javax.swing.JFrame {
             }
         });
         filterOSpeciesGroup = new javax.swing.JComboBox();
+        filterOSpeciesGroup.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                filterOSpeciesGroupChanged(e);
+            }
+        });
         filterSensitive = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         pnlHabitats = new javax.swing.JPanel();
@@ -2116,6 +2141,20 @@ public final class SDFFilter extends javax.swing.JFrame {
             String speciesGrpName = itemEvent.getItem().toString();
             String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
             populateSpeciesByGroup(session, speciesGroupCode);
+        }
+    }
+
+    /**
+     *
+     */
+    private void filterOSpeciesGroupChanged(ItemEvent itemEvent) {
+
+        if (itemEvent.getStateChange() == 1 && isInitDone) {
+
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            String speciesGrpName = itemEvent.getItem().toString();
+            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
+            populateOSpeciesByGroup(session, speciesGroupCode);
         }
     }
 

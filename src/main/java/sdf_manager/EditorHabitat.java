@@ -74,8 +74,9 @@ public class EditorHabitat extends javax.swing.JFrame {
 
 
         String qualityName = getQualityNameByQualityCode(h.getHabitatDataQuality());
-        if (qualityName != null && qualityName != "")
+        if (qualityName != null && qualityName != "") {
             this.cmbQuality.setSelectedItem(qualityName);
+        }
         this.cmbCons.setSelectedItem(ConversionTools.charToString(h.getHabitatConservation()));
         this.cmbGlob.setSelectedItem(ConversionTools.charToString(h.getHabitatGlobal()));
         this.cmbRelSur.setSelectedItem(ConversionTools.charToString(h.getHabitatRelativeSurface()));
@@ -342,7 +343,8 @@ public class EditorHabitat extends javax.swing.JFrame {
 
         jPanel2.setName("jPanel2"); // NOI18N
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel3.border.title"))); // NOI18N
+        String panelBorderTitleProperty = "jPanel3.border.title" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString(panelBorderTitleProperty))); // NOI18N
         jPanel3.setName("jPanel3"); // NOI18N
 
         jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N

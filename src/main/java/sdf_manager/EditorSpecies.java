@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -181,7 +182,9 @@ public class EditorSpecies extends javax.swing.JFrame {
 
        if (s.getSpeciesType() != null) {
            String popTypeName = getPopulationTypeNameByCode(s.getSpeciesType().toString());
-           if (popTypeName != null) this.cmbType.setSelectedItem(popTypeName);
+           if (popTypeName != null) {
+            this.cmbType.setSelectedItem(popTypeName);
+        }
        } else {
            this.cmbType.setSelectedIndex(0);
        }
@@ -195,7 +198,9 @@ public class EditorSpecies extends javax.swing.JFrame {
 
        if (s.getSpeciesUnit() != null) {
           String popTypeName = getUnitTypeNameByCode(s.getSpeciesUnit().toString());
-          if (popTypeName != null) this.cmbUnit.setSelectedItem(popTypeName);
+          if (popTypeName != null) {
+            this.cmbUnit.setSelectedItem(popTypeName);
+        }
        } else {
            this.cmbUnit.setSelectedIndex(0);
        }
@@ -203,7 +208,9 @@ public class EditorSpecies extends javax.swing.JFrame {
        if (s.getSpeciesCategory() != null) {
            String categoryCode = ConversionTools.charToString(s.getSpeciesCategory()).toUpperCase();
            String categoryName = getCategoryNameByCode(categoryCode);
-           if (categoryName != null) this.cmbCategory.setSelectedItem(categoryName);
+           if (categoryName != null) {
+            this.cmbCategory.setSelectedItem(categoryName);
+        }
        } else {
            this.cmbCategory.setSelectedIndex(0);
        }
@@ -211,14 +218,18 @@ public class EditorSpecies extends javax.swing.JFrame {
        if (s.getSpeciesDataQuality() != null) {
            String qualityCode = s.getSpeciesDataQuality();
            String qualityName = getQualityNameByQualityCode(qualityCode);
-           if (qualityName != null) this.cmbQuality.setSelectedItem(qualityName);
+           if (qualityName != null) {
+            this.cmbQuality.setSelectedItem(qualityName);
+        }
        } else {
            this.cmbQuality.setSelectedIndex(0);
        }
 
         if (s.getSpeciesPopulation() != null) {
             String tmpstring = ConversionTools.charToString(s.getSpeciesPopulation());
-            if (tmpstring != null) this.cmbPopulation.setSelectedItem(tmpstring);
+            if (tmpstring != null) {
+                this.cmbPopulation.setSelectedItem(tmpstring);
+            }
         }
         if (s.getSpeciesConservation() != null) {
             this.cmbConservation.setSelectedItem(ConversionTools.charToString(s.getSpeciesConservation()));
@@ -248,12 +259,10 @@ public class EditorSpecies extends javax.swing.JFrame {
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpName);
        }
        EditorSpecies.log.info("groupSpecies: " + groupSpecies);
-       if (!groupSpecies.equals("B")) {
+       if (!groupSpecies.equals("B") && StringUtils.isNotBlank(speciesCode)) {
+
            hql = "select distinct refSp.refSpeciesAltName, refSp.refSpeciesHdName, refSp.refSpeciesAnnexII, refSp.refSpeciesCode";
-           hql += " from RefSpecies refSp";
-           if (speciesCode != null && !(("").equals(speciesCode))) {
-               hql += " where refSp.refSpeciesCode ='" + speciesCode + "'";
-           }
+           hql += " from RefSpecies refSp where refSp.refSpeciesCode ='" + speciesCode + "'";
 
            Query q = session.createQuery(hql);
            Iterator itr = q.iterate();
@@ -783,7 +792,8 @@ public class EditorSpecies extends javax.swing.JFrame {
         txAltSpeciesName.setText(resourceMap.getString("txAltSpeciesName.text")); // NOI18N
         txAltSpeciesName.setName("txAltSpeciesName"); // NOI18N
 
-        lbHdSpeciesName.setText(resourceMap.getString("lbHdSpeciesName.text")); // NOI18N
+        String lbHdSpeciesNameTextProperty = "lbHdSpeciesName.text" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        lbHdSpeciesName.setText(resourceMap.getString(lbHdSpeciesNameTextProperty)); // NOI18N
         lbHdSpeciesName.setName("lbHdSpeciesName"); // NOI18N
 
         txHdSpeciesName.setEditable(false);

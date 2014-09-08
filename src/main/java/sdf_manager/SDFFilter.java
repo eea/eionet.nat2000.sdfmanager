@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -114,6 +117,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     private Criteria criteria;
     private final static Logger log = Logger.getLogger(SDFFilter.class.getName());
     int numReg = 0;
+    private boolean isInitDone = false;
 
     /**
      * application mode.
@@ -141,6 +145,8 @@ public final class SDFFilter extends javax.swing.JFrame {
         worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);
+
+        isInitDone = true;
     }
 
     /**
@@ -559,15 +565,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     void populateSpecies(Session session) {
         try {
-            String hql = "select distinct sp.speciesName from Species as sp order by sp.speciesName";
-            Query q = session.createQuery(hql);
-            Iterator itr = q.iterate();
-            filterSpecies.addItem("-"); // blank item first
-
-            while (itr.hasNext()) {
-                String speciesName = (String) itr.next();
-                filterSpecies.addItem(speciesName);
-            }
+            populateSpeciesByGroup(session, null);
 
             String hqlGroup = "select distinct sp.speciesGroup from Species as sp order by sp.speciesGroup";
             Query qGroup = session.createQuery(hqlGroup);
@@ -585,6 +583,33 @@ public final class SDFFilter extends javax.swing.JFrame {
             log.error(e.getMessage());
             // e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     * @param session
+     */
+    private void populateSpeciesByGroup(Session session, String speciesGroupCode) {
+
+        boolean isGroupBlank = StringUtils.isBlank(speciesGroupCode) || "-".equals(speciesGroupCode);
+
+        String hql = "select distinct sp.speciesName from Species as sp";
+        if (!isGroupBlank) {
+            hql = hql + " where sp.speciesGroup='" + speciesGroupCode + "'";
+        }
+        hql = hql + " order by sp.speciesName";
+
+        Query q = session.createQuery(hql);
+        Iterator itr = q.iterate();
+
+        filterSpecies.removeAllItems();
+        filterSpecies.addItem("-"); // blank item first
+        while (itr.hasNext()) {
+            String speciesName = (String) itr.next();
+            filterSpecies.addItem(speciesName);
+        }
+
+        filterSpecies.repaint();
     }
 
     /**
@@ -832,6 +857,12 @@ public final class SDFFilter extends javax.swing.JFrame {
         filterOSpecies = new javax.swing.JComboBox();
         labSpecies2 = new javax.swing.JLabel();
         filterSpeciesGroup = new javax.swing.JComboBox();
+        filterSpeciesGroup.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                filterSpeciesGroupChanged(evt);
+            }
+        });
         filterOSpeciesGroup = new javax.swing.JComboBox();
         filterSensitive = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
@@ -2072,6 +2103,31 @@ public final class SDFFilter extends javax.swing.JFrame {
         }
 
     } // GEN-LAST:event_btnViewActionPerformed
+
+    /**
+     *
+     * @param itemEvent
+     */
+    private void filterSpeciesGroupChanged(ItemEvent itemEvent) {
+
+        if (itemEvent.getStateChange() == 1 && isInitDone) {
+
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            String speciesGrpName = itemEvent.getItem().toString();
+            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
+            populateSpeciesByGroup(session, speciesGroupCode);
+        }
+    }
+
+    /**
+     *
+     */
+    private String getSpeciesGroupCodeByName(Session session, String speciesGrpName) {
+
+        String hql = "select distinct refSpeciesGroupCode from RefSpeciesGroup where refSpeciesGroupName='" + speciesGrpName + "'";
+        Query q = session.createQuery(hql);
+        return (String) q.uniqueResult();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApplyFilter;

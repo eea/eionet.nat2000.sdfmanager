@@ -4328,7 +4328,8 @@ public class SDFEditor extends javax.swing.JFrame {
 
         jPanel41.setName("jPanel41"); // NOI18N
 
-        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel16.border.title"))); // NOI18N
+        String propertyName = "jPanel16.border.title" + (SDF_ManagerApp.isEmeraldMode() ? ".emerald" : "");
+        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString(propertyName))); // NOI18N
         jPanel16.setName("jPanel16"); // NOI18N
 
         jScrollPane9.setName("jScrollPane9"); // NOI18N

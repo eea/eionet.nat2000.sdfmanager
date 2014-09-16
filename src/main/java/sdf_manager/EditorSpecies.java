@@ -77,12 +77,21 @@ public class EditorSpecies extends javax.swing.JFrame {
            groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
        }
        if (groupSpecies.equals("B")) {
-           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds order by refBirds.refBirdsName";
+           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds";
+           if (SDF_ManagerApp.isEmeraldMode()) {
+               hql += " where refBirds.refSpeciesRes6='1'";
+           }
+           hql += " order by refBirds.refBirdsName";
        } else {
 
            hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName";
            hql += " from RefSpecies refSp";
-           hql += " where refSp.refSpeciesGroup like '" + groupSpecies + "' and refSp.refSpeciesAnnexII ='1'";
+           hql += " where refSp.refSpeciesGroup like '" + groupSpecies;
+           if (SDF_ManagerApp.isEmeraldMode()) {
+               hql += "' and refSp.refSpeciesRes6 ='1'";
+           } else {
+               hql += "' and refSp.refSpeciesAnnexII ='1'";
+           }
            if (speciesCode == null) {
                hql += " and refSp.refSpeciesCodeNew='0'";
            }

@@ -379,6 +379,21 @@ public class SDF_MysqlDatabase {
                 updateVersionDone(con, "4.2");
             }
 
+            // release 4.2.1 updates
+            if (!isReleaseDBUpdatesExist(con, "4.2.1")) {
+            //if (!isRelease42UpdatesPresent(con, schemaName)) {
+                logD(dialog, "Performing release 4.2.1 updates");
+                //ver no field needs altering BEFORE updates
+                Statement st = con.createStatement();
+                st.executeUpdate("ALTER TABLE `releasedbupdates` CHANGE COLUMN `RELEASE_NUMBER` `RELEASE_NUMBER` VARCHAR(12) NOT NULL");
+                st.close();
+
+                String msgErrorPopulateRel = populateReleaseDBUpdates(con, "4.2.1", "3");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.2.1", dialog);
+                logD(dialog, "Release 4.2.1 updates done");
+                updateVersionDone(con, "4.2.1");
+            }
+
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
             SDF_MysqlDatabase.LOGGER.error("Error in Data Base:::" + s.getMessage());
@@ -1226,7 +1241,8 @@ public class SDF_MysqlDatabase {
         try {
             SDF_MysqlDatabase.LOGGER.info("Updating UpdateVersion Done ... ver " + ver);
             st = con.createStatement();
-            st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = " + ver);
+            st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = '"
+                    + ver + "'");
         } catch (SQLException e) {
             msgErrorCreate = "UpdateVersion3Done: An error has been produced in database";
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());

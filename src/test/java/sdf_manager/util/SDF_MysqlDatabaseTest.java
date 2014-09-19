@@ -92,10 +92,13 @@ public class SDF_MysqlDatabaseTest {
             st = con.createStatement();
             // Check how many species are in the database
             // 2516 from insert_ref_species.sql and 13 from Update_RefSpecies_version3.sql
+            // 13 from Update_RefSpecies_version3.sql
+            // 116 from ver 4.2 update: updates/4.2/update_species_42.sql
+            // -1 from ver 4.2.1 update: updates/4.2.1/update_species_421.sql
             rs = st.executeQuery("SELECT COUNT(*) FROM ref_species");
             rs.next();
             num = rs.getInt(1);
-            //sum of different release updates
+            //ref_species count is sum of updates from different releases of the tool, see above
             assertEquals(2516 + 13 + 116 - 1, num);
 
             // Check how many NUTS codes are loaded

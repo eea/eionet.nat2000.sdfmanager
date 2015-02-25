@@ -230,7 +230,7 @@ public class ExporterXMLStax implements Exporter {
             return "";
         } else {
             // return getString(src);
-            return src;
+            return ConversionTools.replaceBadSymbols(src);
         }
     }
 

@@ -802,7 +802,7 @@ public class GenerateSitePDF implements Exporter {
         if (src == null) {
             return "";
         } else {
-            return src;
+            return ConversionTools.replaceBadSymbols(src);
         }
     }
 

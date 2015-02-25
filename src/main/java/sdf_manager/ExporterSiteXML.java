@@ -380,7 +380,7 @@ public class ExporterSiteXML implements Exporter {
             return "";
         } else {
             // return getString(src);
-            return src;
+            return ConversionTools.replaceBadSymbols(src);
         }
     }
 
@@ -681,7 +681,8 @@ public class ExporterSiteXML implements Exporter {
 
         Element sdfs = doc.createElement("sdfs");
         sdfs.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        sdfs.setAttribute("xsi:noNamespaceSchemaLocation", "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd");
+        String schemaUri = SDF_ManagerApp.getXMLSchemaURI();
+        sdfs.setAttribute("xsi:noNamespaceSchemaLocation", schemaUri);
 
         doc.appendChild(sdfs);
 

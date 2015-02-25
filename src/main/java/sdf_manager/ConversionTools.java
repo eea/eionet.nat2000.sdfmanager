@@ -381,4 +381,13 @@ public class ConversionTools {
             return 0;
         }
     }
+
+    /**
+     * excludes invalid xml symbols.
+     * @param subjectStr
+     * @return
+     */
+    public static String replaceBadSymbols(String subjectStr) {
+        return subjectStr.replaceAll("[\\x00-\\x1F]", "");
+    }
 }

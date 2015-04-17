@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+  <session-factory>
+
+    <!-- <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property> -->
+    <!-- <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property> -->
+    <!--
+    <property name="hibernate.connection.url">jdbc:mysql://localhost/SDF_Natur2000</property>
+    -->
+
+
+    <!--
+    <property name="hibernate.connection.url">jdbc:mysql://89.0.2.86/natura2000?autoReconnect=true</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">root</property>-->
+    <property name="hibernate.connection.pool_size">1000</property>
+    <property name="hibernate.connection.characterEncoding">utf8</property>
+    <property name="hibernate.connection.charSet">utf8</property>
+    <property name="hibernate.connection.useUnicode">true</property>
+    <property name="hibernate.show_sql">false</property>
+
+
+    <!--<property name="current_session_context_class">thread</property>-->
+    <!-- Disable the second-level cache  -->
+    <property name="hibernate.default_batch_fetch_size">16</property>
+    <!-- Echo all executed SQL to stdout -->
+    <!--<property name="show_sql">true</property>-->
+    <!--<property name="hibernate.show_sql">true</property>-->
+    <!--<property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
+    <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>-->
+
+    <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+    <property name="c3p0.preferredTestQuery">SELECT 1</property>
+    <property name="c3p0.testConnectionOnCheckout">true</property>
+    <mapping resource="pojos/Site.hbm.xml"/>
+    <mapping resource="pojos/RefSpecies.hbm.xml"/>
+    <mapping resource="pojos/Map.hbm.xml"/>
+    <mapping resource="pojos/SiteOwnership.hbm.xml"/>
+    <mapping resource="pojos/Resp.hbm.xml"/>
+    <mapping resource="pojos/Impact.hbm.xml"/>
+    <mapping resource="pojos/Region.hbm.xml"/>
+    <mapping resource="pojos/HabitatClass.hbm.xml"/>
+    <mapping resource="pojos/Doc.hbm.xml"/>
+    <mapping resource="pojos/RefNuts.hbm.xml"/>
+    <mapping resource="pojos/RefHabitats.hbm.xml"/>
+    <mapping resource="pojos/RefHabClasses.hbm.xml"/>
+    <mapping resource="pojos/Biogeo.hbm.xml"/>
+    <mapping resource="pojos/Species.hbm.xml"/>
+    <mapping resource="pojos/RefDesignations.hbm.xml"/>
+    <mapping resource="pojos/Mgmt.hbm.xml"/>
+    <mapping resource="pojos/SiteBiogeo.hbm.xml"/>
+    <mapping resource="pojos/SiteRelation.hbm.xml"/>
+    <mapping resource="pojos/RefBirds.hbm.xml"/>
+    <mapping resource="pojos/Habitat.hbm.xml"/>
+    <mapping resource="pojos/Ownership.hbm.xml"/>
+    <mapping resource="pojos/DocLink.hbm.xml"/>
+    <mapping resource="pojos/MgmtPlan.hbm.xml"/>
+    <mapping resource="pojos/MgmtBody.hbm.xml"/>
+    <mapping resource="pojos/NationalDtype.hbm.xml"/>
+    <mapping resource="pojos/OtherSpecies.hbm.xml"/>
+    <mapping resource="pojos/RefImpacts.hbm.xml"/>
+    <mapping resource="pojos/RefConventions.hbm.xml"/>
+    <mapping resource="pojos/Country.hbm.xml"/>
+    <mapping resource="pojos/RefQuality.hbm.xml"/>
+    <mapping resource="pojos/RefPopulation.hbm.xml"/>
+    <mapping resource="pojos/RefUnit.hbm.xml"/>
+    <mapping resource="pojos/RefCategory.hbm.xml"/>
+    <mapping resource="pojos/RefSpeciesGroup.hbm.xml"/>
+    <mapping resource="pojos/RefImpactRank.hbm.xml"/>
+    <mapping resource="pojos/RefImpactPollution.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

@@ -1,2 +1,0 @@
-insert ignore into ref_habitats values(232,'32A0',0,'Tufa cascades of karstic rivers of the Dinaric Alps',null, null, null, null, null, null, null);
-insert ignore into ref_habitats values(233,'6540',0,'Sub-Mediterranean grasslands of the Molinio-Hordeion secalini',null, null, null, null, null, null, null);

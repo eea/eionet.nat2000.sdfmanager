@@ -1,1 +1,0 @@
-insert ignore into ref_data_quality values(5,'Data Deficient','DD','H');

@@ -85,14 +85,14 @@
         <xsl:choose>
           <xsl:when test="string(siteProtection/nationalDesignations) or string(siteProtection/relations) or string(siteProtection/siteDesignationAdditional)">
             <li>
-              <a href="#5">5. SITE PROTECTION STATUS</a>
+              <a href="#5">5. SITE PROTECTION STATUS AND RELATION WITH CORINE BIOTOPES</a>
             </li>
           </xsl:when>
         </xsl:choose>
         <xsl:choose>
           <xsl:when test="string(siteManagement/managementBodies) or string(siteManagement/managementPlans) or string(siteManagement/conservationMeasures)">
             <li>
-              <a href="#6">6. SITE MANAGEMENT</a>
+              <a href="#6">6. IMPACTS AND ACTIVITIES IN AND AROUND THE SITE</a>
             </li>
           </xsl:when>
         </xsl:choose>

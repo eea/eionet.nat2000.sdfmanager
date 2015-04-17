@@ -1,0 +1,90 @@
+<project name="SDF_Manager" default="dist" basedir="." xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="bin"/>
+  <property name="dist"  location="."/>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}">
+         <classpath>
+      <fileset dir="lib">
+        <include name="**/*.jar"/>
+      </fileset>
+      <pathelement location="classes"/>
+      <dirset dir="${build}">
+        <include name="**/classes"/>
+      </dirset>
+    </classpath>
+    </javac>
+  </target>
+
+  
+  
+  <target name="dist" depends="compile" 
+        description="generate the distribution" >
+
+    <copy todir="${build}/sdf_manager/images">
+      <fileset dir="src/sdf_manager/images"/>
+    </copy>        
+    <copy todir="${build}/sdf_manager/resources">
+      <fileset dir="src/sdf_manager/resources"/>
+    </copy>                  
+    <copy todir="${build}/resources">
+      <fileset dir="src/resources"/>
+    </copy>                  
+
+    <copy todir="${build}/pojos">
+      <fileset dir="src/pojos" includes="**/*.xml"/>
+    </copy>                  
+
+    <copy todir="${build}">
+      <fileset dir="src" includes="**/*.xml"/>
+    </copy>                  
+
+    <copy todir="${build}">
+      <fileset dir="src/sdf_manager" includes="**/*.form"/>
+    </copy>                
+
+    <copy todir="${build}/sdf_manager">
+      <fileset dir="src/sdf_manager" includes="**/*.properties"/>
+    </copy>                
+    
+    <copy todir="${build}/META-INF">
+      <fileset dir="src/META-INF"/>
+    </copy>                  
+
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist}/SDF_Manager.jar" basedir="${build}">
+    <manifest>
+      <attribute name="Main-Class" value="sdf_manager.SDF_ManagerApp" />
+      <attribute name="Class-Path" value="lib/appframework-1.0.3.jar lib/swing-worker-1.1.jar lib/antlr-2.7.6.jar lib/asm.jar lib/asm-attrs.jar lib/cglib-2.1.3.jar lib/commons-collections-2.1.1.jar lib/commons-logging-1.1.jar lib/dom4j-1.6.1.jar lib/ehcache-1.2.3.jar lib/jdbc2_0-stdext.jar lib/jta.jar lib/hibernate3.jar lib/hibernate-tools.jar lib/hibernate-annotations.jar lib/hibernate-commons-annotations.jar lib/hibernate-entitymanager.jar lib/javassist.jar lib/ejb3-persistence.jar lib/antlr-2.7.6.jar lib/appframework-1.0.3.jar lib/asm.jar lib/asm-attrs.jar lib/cglib-2.1.3.jar lib/commons-collections-2.1.1.jar lib/commons-lang-2.5.jar lib/commons-lang-2.5-javadoc.jar lib/commons-logging-1.1.jar lib/xmlbeans-2.3.0.jar lib/dom4j-1.6.1.jar lib/ehcache-1.2.3.jar lib/ejb3-persistence.jar lib/hibernate3.jar lib/hibernate-annotations.jar lib/hibernate-commons-annotations.jar lib/hibernate-entitymanager.jar lib/hibernate-tools.jar lib/hsqldb.jar lib/javassist.jar lib/jdbc2_0-stdext.jar lib/jta.jar lib/swing-worker-1.1.jar lib/log4j-1.2.13.jar lib/poi-3.7-20101029.jar lib/poi-examples-3.7-20101029.jar lib/poi-ooxml-3.7-20101029.jar lib/poi-ooxml-schemas-3.7-20101029.jar lib/poi-scratchpad-3.7-20101029.jar lib/geronimo-stax-api_1.0_spec-1.0.jar lib/xalan.jar lib/xml-apis.jar lib/xercesImpl.jar lib/mysql-connector-java-5.1.6-bin.jar lib/core-renderer-minimal.jar lib/core-renderer.jar lib/iText-2.0.8.jar lib/jackcess-1.2.6.jar"/>
+      </manifest>
+
+    </jar>
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+  </target>
+<target name="package" depends="dist">
+    <zip destfile="${dist}/SDF_Manager.zip">
+    <zipfileset dir="config" prefix="config"/>
+    <zipfileset dir="database" prefix="database"/>
+    <zipfileset src="SDF_Manager.jar"/>
+    
+  </zip>
+  </target>
+</project>

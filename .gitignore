@@ -13,3 +13,4 @@ sdf.properties
 /.classpath
 /jre/*
 /*.exe
+/bin

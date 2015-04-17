@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.DocLink" table="doc_link">
+    <id name="docLinkId" type="int">
+      <column name="DOC_LINK_ID"/>
+      <generator class="increment"/>
+    </id>
+    <many-to-one class="pojos.Doc" fetch="select" name="doc">
+      <column name="DOC_ID"/>
+    </many-to-one>
+    <property name="docLinkUrl" type="string">
+      <column length="256" name="DOC_LINK_URL"/>
+    </property>
+  </class>
+</hibernate-mapping>

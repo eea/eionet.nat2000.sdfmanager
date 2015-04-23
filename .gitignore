@@ -1,8 +1,7 @@
-/*.sh
-/bin
+/SDF_Manager.jar
 /.project
 /.classpath
-/.settings
-/*.iml
 /*.bat
 /.idea
+logs/sdfLog.log
+bin/

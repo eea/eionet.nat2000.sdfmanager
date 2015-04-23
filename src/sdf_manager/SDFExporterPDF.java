@@ -167,7 +167,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
           this.exit();
           return;
        }      
-       
+                   
     }
 
 

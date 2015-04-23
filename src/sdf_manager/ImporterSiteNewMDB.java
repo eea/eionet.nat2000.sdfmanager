@@ -1037,18 +1037,25 @@ public class ImporterSiteNewMDB implements Importer {
                 SiteRelation relation = new SiteRelation();
 
                 tmpStr = getString(rs,"site_relation_code");
-
                 if (tmpStr != null) {
                     relation.setSiteRelationCode(tmpStr);
                     log("      Processing: Relation:::"+relation.getSiteRelationCode());
                     ImporterSiteNewMDB.log.info("Processing: Relation:::"+relation.getSiteRelationCode());
-                    if (tmpStr.toUpperCase().startsWith("IN")) {
-                        relation.setSiteRelationScope('I');
-                    } else {
-                        relation.setSiteRelationScope('N');
-                    }
+                   // if (tmpStr.toUpperCase().startsWith("IN")) {
+                   //     relation.setSiteRelationScope('I');
+                   // } else {
+                   //     relation.setSiteRelationScope('N');
+                   // }
                 }
-
+                
+                tmpStr = getString(rs,"site_relation_scope");
+                if (tmpStr!=null && tmpStr.toUpperCase().startsWith("I")) {
+                	 relation.setSiteRelationScope('I');
+                } else {
+                    relation.setSiteRelationScope('N');
+                }
+                
+                
                 tmpStr = getString(rs,"site_relation_sitename");
                 if (tmpStr != null) {
                     relation.setSiteRelationSitename(tmpStr);

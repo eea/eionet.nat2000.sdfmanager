@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.Resp" table="resp">
+    <id name="respId" type="int">
+      <column name="RESP_ID"/>
+      <generator class="increment"/>
+    </id>
+    <property name="respName" type="string">
+      <column length="1024" name="RESP_NAME"/>
+    </property>
+    <property name="respAddress" type="string">
+      <column length="2048" name="RESP_ADDRESS"/>
+    </property>
+    <property name="respEmail" type="string">
+      <column length="256" name="RESP_EMAIL"/>
+    </property>
+    <property name="respAdminUnit" type="string">
+      <column length="256" name="RESP_ADMINUNIT"/>
+    </property>
+    <property name="respLocatorDesig" type="string">
+      <column length="256" name="RESP_LOCATORDESIGNATOR"/>
+    </property>
+    <property name="respLocatorName" type="string">
+      <column length="256" name="RESP_LOCATORNAME"/>
+    </property>
+    <property name="respAddressArea" type="string">
+      <column length="256" name="RESP_ADDRESSAREA"/>
+    </property>
+    <property name="respPostName" type="string">
+      <column length="256" name="RESP_POSTNAME"/>
+    </property>
+    <property name="respPostCode" type="string">
+      <column length="256" name="RESP_POSTCODE"/>
+    </property>
+    <property name="respThoroughFare" type="string">
+      <column length="256" name="RESP_THOROUGHFARE"/>
+    </property>
+    <set inverse="true" name="sites">
+      <key>
+        <column name="RESP_ID"/>
+      </key>
+      <one-to-many class="pojos.Site"/>
+    </set>
+  </class>
+</hibernate-mapping>

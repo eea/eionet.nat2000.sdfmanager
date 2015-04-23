@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 01-f?vr.-2011 13:10:20 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.Site" table="site">
+    <id name="siteCode" type="string">
+      <column length="9" name="SITE_CODE"/>
+      <generator class="assigned"/>
+    </id>
+    <many-to-one cascade="all" class="pojos.Map" fetch="select" name="map">
+      <column name="MAP_ID"/>
+    </many-to-one>
+    <many-to-one cascade="all" class="pojos.Doc" fetch="select" name="doc">
+      <column name="DOC_ID"/>
+    </many-to-one>
+    <many-to-one cascade="all" class="pojos.Mgmt" fetch="select" name="mgmt">
+      <column name="MGMT_ID"/>
+    </many-to-one>
+    <many-to-one cascade="all" class="pojos.Resp" fetch="select" name="resp">
+      <column name="RESP_ID"/>
+    </many-to-one>
+    <property name="siteType" type="java.lang.Character">
+      <column length="1" name="SITE_TYPE"/>
+    </property>
+    <property name="siteName" type="string">
+      <column length="256" name="SITE_NAME"/>
+    </property>
+    <property name="siteCompDate" type="date">
+      <column length="10" name="SITE_COMP_DATE"/>
+    </property>
+    <property name="siteUpdateDate" type="date">
+      <column length="10" name="SITE_UPDATE_DATE"/>
+    </property>
+    <property name="siteSpaDate" type="date">
+      <column length="10" name="SITE_SPA_DATE"/>
+    </property>
+    <property name="siteSpaLegalRef" type="string">
+      <column length="512" name="SITE_SPA_LEGAL_REF"/>
+    </property>
+    <property name="siteSciPropDate" type="date">
+      <column length="10" name="SITE_SCI_PROP_DATE"/>
+    </property>
+    <property name="siteSciConfDate" type="date">
+      <column length="10" name="SITE_SCI_CONF_DATE"/>
+    </property>
+    <property name="siteSacDate" type="date">
+      <column length="10" name="SITE_SAC_DATE"/>
+    </property>
+    <property name="siteSacLegalRef" type="string">
+      <column length="512" name="SITE_SAC_LEGAL_REF"/>
+    </property>
+    <property name="siteExplanations" type="string">
+      <column length="512" name="SITE_EXPLANATIONS"/>
+    </property>
+    <property name="siteLongitude" type="java.lang.Double">
+      <column name="SITE_LONGITUDE" precision="64" scale="0"/>
+    </property>
+    <property name="siteLatitude" type="java.lang.Double">
+      <column name="SITE_LATITUDE" precision="64" scale="0"/>
+    </property>
+    <property name="siteArea" type="java.lang.Double">
+      <column name="SITE_AREA" precision="64" scale="0"/>
+    </property>
+    <property name="siteMarineArea" type="java.lang.Double">
+      <column name="SITE_MARINE_AREA" precision="64" scale="0"/>
+    </property>
+    <property name="siteLength" type="java.lang.Double">
+      <column name="SITE_LENGTH" precision="64" scale="0"/>
+    </property>
+    <property name="siteCharacteristics" type="string">
+      <column length="4092" name="SITE_CHARACTERISTICS"/>
+    </property>
+    <property name="siteQuality" type="string">
+      <column length="4092" name="SITE_QUALITY"/>
+    </property>
+    <property name="siteDesignation" type="string">
+      <column length="4092" name="SITE_DESIGNATION"/>
+    </property>
+    <set cascade="all-delete-orphan" inverse="true" name="habitatClasses">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.HabitatClass"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="specieses" order-by="lower(species_name) asc">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.Species"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="habitats" order-by="upper(habitat_code) asc">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.Habitat"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="siteRelations">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.SiteRelation"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="siteOwnerships">
+      <key>
+        <column length="9" name="SITE_CODE" not-null="true"/>
+      </key>
+      <one-to-many class="pojos.SiteOwnership"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="nationalDtypes">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.NationalDtype"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="regions">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.Region"/>
+      <!--<filter name="regionFilter"
+            condition="REGION_CODE = :region"/>-->
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="otherSpecieses" order-by="lower(other_species_name) asc">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.OtherSpecies"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="siteBiogeos">
+      <key>
+        <column length="9" name="SITE_CODE" not-null="true"/>
+      </key>
+      <one-to-many class="pojos.SiteBiogeo"/>
+    </set>
+    <set cascade="all-delete-orphan" inverse="true" name="impacts">
+      <key>
+        <column length="9" name="SITE_CODE"/>
+      </key>
+      <one-to-many class="pojos.Impact"/>
+    </set>
+    <property name="siteDateCreation" type="date">
+      <column length="20" name="DATE_CREATION"/>
+    </property>
+    <property name="siteDateDeletion" type="date">
+      <column length="20" name="DATE_DELETION"/>
+    </property>
+    <property name="siteDateUpdate" type="date">
+      <column length="20" name="DATE_UPDATE"/>
+    </property>
+    <!--<filter name="sitecodeFilter" condition="SITE_CODE like :sitecode"/>-->
+  </class>
+  <!--<filter-def name="sitecodeFilter">
+    <filter-param name="sitecode" type="string"/>
+  </filter-def>
+<filter-def name="regionFilter">
+    <filter-param name="region" type="string"/>
+</filter-def> -->
+</hibernate-mapping>

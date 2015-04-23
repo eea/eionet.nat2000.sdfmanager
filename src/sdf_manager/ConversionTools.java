@@ -75,13 +75,13 @@ public class ConversionTools {
     * @return
     */
    public static boolean checkInt(String s) {
-        try {
-            Integer.parseInt(s);
+        try {            
+            Integer.parseInt(s);            
             return true;
         }
         catch (Exception e) {
             return false;
-        }
+        }        
     }
 
    /**
@@ -105,7 +105,7 @@ public class ConversionTools {
      * @return
      */
     public static String convertDateToString(Date date) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");        
         return fmt.format(date);
     }
 
@@ -118,7 +118,7 @@ public class ConversionTools {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM");
         try {
             return fmt.parse(str);
-        } catch (ParseException ex) {
+        } catch (ParseException ex) {            
             ConversionTools.log.error("Couldn't parse date: " + str);
             return null;
         }
@@ -156,14 +156,14 @@ public class ConversionTools {
      * @param sdate
      * @return
      */
-    public static Date convertToDate(String sdate) {
+    public static Date convertToDate(String sdate) {        
          if (sdate == null){
              return null;
          }
          if (!checkDateStringFormat(sdate)){
              return null;
          }
-
+       
          String month = sdate.substring(5, 7);
          String year = sdate.substring(0, 4);
          int imonth = converToInt(month);
@@ -404,8 +404,4 @@ public class ConversionTools {
             return 0;
         }
     }
-    public static String replaceBadSymbols(String subjectStr) {
-        return subjectStr.replaceAll("[\\x00-\\x1F]", "");
-    }
-
 }

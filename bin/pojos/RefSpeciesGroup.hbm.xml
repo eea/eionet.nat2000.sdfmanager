@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Created by charbda 20/04/2011 -->
+<hibernate-mapping>
+  <class catalog="natura2000" name="pojos.RefSpeciesGroup" table="ref_species_group">
+    <id name="refSpeciesGroupId" type="int">
+      <column name="GROUP_ID"/>
+      <generator class="increment"/>
+    </id>
+    <property name="refSpeciesGroupName" type="string">
+      <column length="256" name="GROUP_NAME"/>
+    </property>
+    <property name="refSpeciesGroupCode" type="string">
+      <column length="2" name="GROUP_CODE"/>
+    </property>
+    <property name="refSpeciesGroupSpecies" type="string">
+      <column length="1" name="GROUP_SPECIES"/>
+    </property>
+  </class>
+</hibernate-mapping>

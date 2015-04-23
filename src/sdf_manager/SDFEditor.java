@@ -37,12 +37,13 @@ import pojos.*;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.TranslationCodeName;
 import sdf_manager.util.ValidateSite;
+import java.awt.Font;
 
 public class SDFEditor extends javax.swing.JFrame {
 
     /** Creates new form SDFEditor */
     private ArrayList modelRegions = new ArrayList();
-    private ArrayList modelBioregions = new ArrayList();
+    private ArrayList modelBioregions = new ArrayList();        
     private ArrayList modelBirds = new ArrayList();
     private ArrayList modelHabitats = new ArrayList();
     private ArrayList modelSpecies = new ArrayList();
@@ -2398,6 +2399,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel43 = new javax.swing.JLabel();
         jScrollPane25 = new javax.swing.JScrollPane();
         txtSiteName = new javax.swing.JTextArea();
+        txtSiteName.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel44 = new javax.swing.JLabel();
         txtCompDate = new javax.swing.JTextField();
         jLabel45 = new javax.swing.JLabel();
@@ -2412,6 +2414,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel48 = new javax.swing.JLabel();
         jScrollPane26 = new javax.swing.JScrollPane();
         txtRespAddr = new javax.swing.JTextArea();
+        txtRespAddr.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jPanel28 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -2422,20 +2425,28 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtRespAdminUnit = new javax.swing.JTextArea();
+        txtRespAdminUnit.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane6 = new javax.swing.JScrollPane();
         txtRespThoroughFare = new javax.swing.JTextArea();
+        txtRespThoroughFare.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane7 = new javax.swing.JScrollPane();
         txtRespLocatorDesignator = new javax.swing.JTextArea();
+        txtRespLocatorDesignator.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane13 = new javax.swing.JScrollPane();
         txtRespAddressArea = new javax.swing.JTextArea();
+        txtRespAddressArea.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane21 = new javax.swing.JScrollPane();
         txtRespPostCode = new javax.swing.JTextArea();
+        txtRespPostCode.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane22 = new javax.swing.JScrollPane();
         txtRespPostName = new javax.swing.JTextArea();
+        txtRespPostName.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane36 = new javax.swing.JScrollPane();
         txtRespLocatorName = new javax.swing.JTextArea();
+        txtRespLocatorName.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane35 = new javax.swing.JScrollPane();
         txtRespName = new javax.swing.JTextArea();
+        txtRespName.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane37 = new javax.swing.JScrollPane();
         txtRespEmail = new javax.swing.JTextArea();
         jLabel61 = new javax.swing.JLabel();
@@ -2449,6 +2460,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel54 = new javax.swing.JLabel();
         jScrollPane27 = new javax.swing.JScrollPane();
         txtSacExpl = new javax.swing.JTextArea();
+        txtSacExpl.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         txtDateSpa = new javax.swing.JTextField();
         txtDatePropSci = new javax.swing.JTextField();
         txtDateConfSci = new javax.swing.JTextField();
@@ -2456,6 +2468,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel55 = new javax.swing.JLabel();
         jScrollPane33 = new javax.swing.JScrollPane();
         txtSpaRef = new javax.swing.JTextArea();
+        txtSpaRef.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jSeparator1 = new javax.swing.JSeparator();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -2463,6 +2476,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jScrollPane28 = new javax.swing.JScrollPane();
         txtSacRef = new javax.swing.JTextArea();
+        txtSacRef.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jPanel2 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
@@ -2521,10 +2535,12 @@ public class SDFEditor extends javax.swing.JFrame {
         jPanel18 = new javax.swing.JPanel();
         jScrollPane12 = new javax.swing.JScrollPane();
         txtQuality = new javax.swing.JTextArea();
+        txtQuality.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel29 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane11 = new javax.swing.JScrollPane();
         txtSiteCharacter = new javax.swing.JTextArea();
+        txtSiteCharacter.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel21 = new javax.swing.JLabel();
         btnAddHabitatClass = new javax.swing.JButton();
         btnDelHabitatClass = new javax.swing.JButton();
@@ -2553,6 +2569,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jPanel24 = new javax.swing.JPanel();
         jScrollPane18 = new javax.swing.JScrollPane();
         txtDocumentation = new javax.swing.JTextArea();
+        txtDocumentation.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jScrollPane17 = new javax.swing.JScrollPane();
         lstLinks = new javax.swing.JList();
         jLabel23 = new javax.swing.JLabel();
@@ -2598,6 +2615,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jPanel52 = new javax.swing.JPanel();
         jScrollPane32 = new javax.swing.JScrollPane();
         txtDesignation = new javax.swing.JTextArea();
+        txtDesignation.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel38 = new javax.swing.JLabel();
         jPanel23 = new javax.swing.JPanel();
         jPanel30 = new javax.swing.JPanel();
@@ -2620,6 +2638,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jPanel33 = new javax.swing.JPanel();
         jScrollPane24 = new javax.swing.JScrollPane();
         txtConservationMeasures = new javax.swing.JTextArea();
+        txtConservationMeasures.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel56 = new javax.swing.JLabel();
         jPanel31 = new javax.swing.JPanel();
         jPanel34 = new javax.swing.JPanel();
@@ -2632,6 +2651,7 @@ public class SDFEditor extends javax.swing.JFrame {
         jPanel20 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtMapRef = new javax.swing.JTextArea();
+        txtMapRef.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
         jLabel59 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();

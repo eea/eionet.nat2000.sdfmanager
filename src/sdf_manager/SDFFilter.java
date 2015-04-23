@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -33,6 +34,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Order;
 import pojos.Site;
 import sdf_manager.util.TranslationCodeName;
+import javax.swing.JButton;
+import java.awt.Insets;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+import java.awt.Font;
 
 /**
  *
@@ -112,7 +120,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      */
     public SDFFilter() {
-        initComponents();
+        initComponents();        
         this.addWindowListener(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -610,6 +618,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
             }
             tabDisplaySites.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tabDisplaySites.setFont(new Font("Arial Unicode MS", Font.PLAIN, 13));
             TableColumn col = tabDisplaySites.getColumnModel().getColumn(0);
             col.setPreferredWidth(75);
             col = tabDisplaySites.getColumnModel().getColumn(1);
@@ -742,7 +751,9 @@ public final class SDFFilter extends javax.swing.JFrame {
         btnView = new javax.swing.JButton();
         btnNew = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();  
+        btnGeneratePdfs = new javax.swing.JButton();  
+        btnGenerateAllPdfs = new javax.swing.JButton();
         btnDeleteAll = new javax.swing.JButton();
         btnDuplicate = new javax.swing.JButton();
         pnlDisplaySites = new javax.swing.JPanel();
@@ -1130,39 +1141,65 @@ public final class SDFFilter extends javax.swing.JFrame {
                 btnDuplicateActionPerformed(evt);
             }
         });
+        
+        
+        btnGeneratePdfs.setText("Pdf");       
+        btnGeneratePdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N        
+        btnGeneratePdfs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGeneratePDFsActionPerformed(evt);
+            }
+        });
+                                             
+        btnGenerateAllPdfs.setText("Pdf All");
+        btnGenerateAllPdfs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/pdf.png"))); // NOI18N
+        btnGenerateAllPdfs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateAllPDFsActionPerformed(evt);
+            }
+        });
+        
+        
+        
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnView, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(btnDuplicate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(btnDeleteAll, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(btnNew, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
-                .addContainerGap())
+        	jPanel9Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel9Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(jPanel9Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(btnView, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+        				.addComponent(btnDuplicate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        				.addComponent(btnEdit, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+        				.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+        				.addComponent(btnDeleteAll, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+        				.addComponent(btnNew, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+        				.addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE))
+        			.addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDuplicate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnEdit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDeleteAll)
-                .addContainerGap(154, Short.MAX_VALUE))
+        	jPanel9Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel9Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(btnView, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnNew)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnDuplicate)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnEdit)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnDelete)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(btnDeleteAll)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(btnGeneratePdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(btnGenerateAllPdfs, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(82, Short.MAX_VALUE))
         );
+        jPanel9.setLayout(jPanel9Layout);
 
         pnlDisplaySites.setBorder(javax.swing.BorderFactory.createTitledBorder("SDF"));
 
@@ -1419,8 +1456,6 @@ public final class SDFFilter extends javax.swing.JFrame {
         }
 
 
-
-
         javax.swing.JOptionPane.showMessageDialog(this, "Deletion all the sites has finished properly");
         tabDisplaySites.repaint();
         this.txtNumberSites.setText(getNumberOfSites(session));
@@ -1432,6 +1467,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param evt
      */
+    
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
         int[] row = tabDisplaySites.getSelectedRows();
@@ -1479,6 +1515,102 @@ public final class SDFFilter extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnDeleteActionPerformed
+    
+    
+    /**
+    *
+    * @param evt
+    */
+   
+   private void btnGeneratePDFsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFs
+
+	   
+	   ArrayList<String> siteCodes = new ArrayList<String>();
+	   
+       int[] row = tabDisplaySites.getSelectedRows();
+       if (row == null) {
+           javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
+       }else if(row != null && row.length ==0){
+           javax.swing.JOptionPane.showMessageDialog(this, "Please, select site(s) from the list");
+       }
+       else {
+           /*int answer = javax.swing.JOptionPane.showOptionDialog(
+                this,
+               "This operation can take a long time. Do you want to continue?",
+               "Pdf Generation",
+               javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE,
+                null,
+                null,
+                null
+                );
+           if (answer == javax.swing.JOptionPane.YES_OPTION) {
+           */        	           	           	               
+               for(int i=0; i<row.length;i++){
+                  
+                   String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
+                   siteCodes.add(sitecode);                  
+                                      
+               }
+               new SDFExporterSelPDF(siteCodes).setVisible(true);
+               
+               
+               this.tabDisplaySites.repaint();
+           //}
+               
+       }
+
+   }//GEN-LAST:event_btnGeneratePDFsActionPerformed
+    
+    
+   /**
+   *
+   * @param evt
+   */
+  
+  private void btnGenerateAllPDFsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateAllPDFs
+
+     ArrayList<String> siteCodes = new ArrayList<String>();
+	   
+      
+      int row = this.tabDisplaySites.getRowCount();
+      
+     
+      int answer = javax.swing.JOptionPane.showOptionDialog(
+         this,
+         "This operation will generate all sites and could take a long time. Do you want to continue?",
+         "Pdf Generation",
+         javax.swing.JOptionPane.YES_NO_OPTION,
+         javax.swing.JOptionPane.WARNING_MESSAGE,
+         null,
+         null,
+         null
+        );
+       if (answer == javax.swing.JOptionPane.YES_OPTION) {
+       	           	           	               
+              for(int i=0; i<row;i++){
+                 
+                  String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(i, 1);
+                  siteCodes.add(sitecode);                                                     
+
+              }
+              new SDFExporterSelPDF(siteCodes).setVisible(true);
+              
+              
+              this.tabDisplaySites.repaint();
+
+          }
+      //}
+
+  }//GEN-LAST:event_btnGenerateAllPDFs
+   
+    
+    
+    
+    
+    
+    
+    
     /**
      *
      * @param evt
@@ -1504,6 +1636,8 @@ public final class SDFFilter extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApplyFilter;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnGeneratePdfs;
+    private javax.swing.JButton btnGenerateAllPdfs;    
     private javax.swing.JButton btnDeleteAll;
     private javax.swing.JButton btnDuplicate;
     private javax.swing.JButton btnEdit;

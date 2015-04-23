@@ -79,12 +79,4 @@
     <!-- Delete the ${build} and ${dist} directory trees -->
     <delete dir="${build}"/>
   </target>
-<target name="package" depends="dist">
-    <zip destfile="${dist}/SDF_Manager.zip">
-    <zipfileset dir="config" prefix="config"/>
-    <zipfileset dir="database" prefix="database"/>
-    <zipfileset src="SDF_Manager.jar"/>
-    
-  </zip>
-  </target>
 </project>

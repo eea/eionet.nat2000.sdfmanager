@@ -1,5 +1,6 @@
 package sdf_manager;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Iterator;
@@ -11,21 +12,25 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import pojos.OtherSpecies;
+import sdf_manager.forms.IEditorOtherSpecies;
 import sdf_manager.forms.ValidationResultsView;
 import sdf_manager.util.SDF_Util;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
 /**
- *
+ * 
  * @author charbda
+ * @author George Sofianos
  */
-public class EditorOtherSpecies extends javax.swing.JFrame {
+public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOtherSpecies {
 
     /** Creates new form EditorRegions. */
     private SDFEditor parent;
@@ -507,6 +512,30 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         cmbGroup = new javax.swing.JComboBox();
         jLabel12 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
+        txtName.setForeground(Color.BLACK);
+        txtName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {				
+        		if (txtName.getBackground().equals(Color.GREEN)) {
+        			txtName.setBackground(null);
+        		}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) { 
+        		if (txtName.getBackground().equals(Color.GREEN)) {
+        			txtName.setBackground(null);
+        		}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {				
+        		if (txtName.getBackground().equals(Color.GREEN)) {
+        			txtName.setBackground(null);
+        		}
+			}
+		});
         jLabel4 = new javax.swing.JLabel();
         chkSensitive = new javax.swing.JCheckBox();
         chkNP = new javax.swing.JCheckBox();
@@ -919,7 +948,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         					.addComponent(jLabel3)))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addGap(129))
+        			.addGap(10))
         );
         getContentPane().setLayout(layout);
 
@@ -1067,9 +1096,10 @@ public class EditorOtherSpecies extends javax.swing.JFrame {
         txtName.setEditable(true);
         txtName.setEnabled(true);
     }
-    
-    public void setTxtName(String name) {
+    @Override
+    public void setValidatedTxtName(String name) {
     	this.txtName.setText(name); 
+    	this.txtName.setBackground(Color.GREEN);
     }
 
 

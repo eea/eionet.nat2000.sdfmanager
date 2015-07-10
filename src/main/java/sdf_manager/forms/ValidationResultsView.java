@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -36,7 +39,7 @@ import sdf_manager.validators.SpeciesValidator;
 
 
 /**
-*
+* Worker class for calling CDM webservice
 * @author George Sofianos
 */
 class ValidateWorker extends SwingWorker<Boolean, Void> {
@@ -52,14 +55,11 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
        try {    	
            SpeciesValidator validator = new SpeciesValidator();
            if (method.equals("accepted")){
-        	   this.results = validator.doQueryAccepted(queryName);
+        	   this.results = validator.doQueryAccepted(queryNames);
            }
            else if (method.equals("fuzzy")) {
         	   this.results = validator.doQueryFuzzy(queryName);
-           } else if (method.equals("accepted_list")) {
-        	   this.results = validator.doQueryAcceptedList(queryNames);
-           }
-                       
+           }                       
        } catch (IOException ex) {
            Logger.getLogger(ValidateWorker.class.getName()).log(Level.SEVERE, null, ex);
        } catch (URISyntaxException ex) {
@@ -109,11 +109,11 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
 @SuppressWarnings("serial")
 public class ValidationResultsView extends javax.swing.JFrame {
 	
-	private EditorOtherSpecies parent;
+	private IEditorOtherSpecies parent;
 	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidationResultsView.class .getName());	
 	private JTable tableResults;	
 	
-	public ValidationResultsView(EditorOtherSpecies parent, String name) {		
+	public ValidationResultsView(IEditorOtherSpecies parent, String name) {		
 		this();		
 		this.parent = parent;
 		populateValidationResultsTable(name);
@@ -142,6 +142,11 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		});
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exit();
+			}
+		});
 		
 		JLabel lblTableHeader = new JLabel("Select the corect species name to save:");
 		lblTableHeader.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -150,49 +155,47 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		lblNaturalogo.setIcon(new ImageIcon(ValidationResultsView.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addComponent(lblNaturalogo)
+					.addContainerGap(440, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(53, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(55)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTableHeader)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblNaturalogo)
-							.addGap(18)
+							.addComponent(btnSave)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnCancel))
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addComponent(lblTableHeader)
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
 							.addComponent(lblValidationResultsHeader)))
-					.addContainerGap(94, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(409, Short.MAX_VALUE)
-					.addComponent(btnSave)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnCancel)
-					.addGap(97))
+					.addGap(96))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblValidationResultsHeader)
-						.addComponent(lblNaturalogo))
-					.addGap(42)
-					.addComponent(lblTableHeader)
+					.addComponent(lblNaturalogo)
 					.addGap(18)
+					.addComponent(lblValidationResultsHeader)
+					.addGap(21)
+					.addComponent(lblTableHeader)
+					.addGap(27)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnSave)
 						.addComponent(btnCancel))
-					.addContainerGap(94, Short.MAX_VALUE))
+					.addContainerGap(66, Short.MAX_VALUE))
 		);
 		
 		tableResults = new JTable();
 		tableResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableResults.addMouseListener(new MouseAdapter() {
+		tableResults.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 1) {
+			public void valueChanged(ListSelectionEvent e) {
+				if (tableResults.getSelectedRow() > -1) {
 					int row = tableResults.getSelectedRow();
 					int column = 0;
 					for (int i = 0; i < tableResults.getRowCount(); i++) {
@@ -200,8 +203,9 @@ public class ValidationResultsView extends javax.swing.JFrame {
 					}
 					tableResults.setValueAt(true, row, column);
 				}
+				
 			}
-		});
+		});		
 		tableResults.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null},
@@ -259,7 +263,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
         dlg.setVisible(false);
         worker.setDialog(dlg);        
         worker.setMethod("accepted");
-        worker.setQueryName(name);
+        worker.setQueryNames(Arrays.asList(name));
         worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);    
@@ -291,7 +295,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
                     dlg.setModal(false);
                     dlg.setVisible(false);
                     worker.setDialog(dlg);        
-                    worker.setMethod("accepted_list");
+                    worker.setMethod("accepted");
                     worker.setQueryNames(queryNames);
                     worker.execute();
                     dlg.setModal(true);
@@ -319,8 +323,13 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		if (tableResults.getSelectedRow() != -1) {
 			int row = tableResults.getSelectedRow();
 			String selectedSpeciesName = (String) tableResults.getValueAt(row, 1);			
-			parent.setTxtName(selectedSpeciesName);
+			parent.setValidatedTxtName(selectedSpeciesName);
+			exit();
 		}
+	}
+	
+	private void exit() {
+		this.dispose();
 	}
 	
    /**

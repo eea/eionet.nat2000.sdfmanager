@@ -153,7 +153,17 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                     // it is upgrade - n2k mode
                     props.put("application.mode", NATURA_2000_MODE);
-
+                    
+                    // add default CDM webservice properties
+                    props.put("cdm.connection.protocol", "http");
+                    props.put("cdm.connection.timeout", "60");
+                    props.put("cdm.connection.host", "api.cybertaxonomy.org");
+                    props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
+                    props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
+                    props.put("cdm.fuzzy.accuracy", "0.6");
+                    props.put("cdm.fuzzy.hits", "10");
+                    props.put("cdm.fuzzy.type", "name");
+                    
                     LOGGER.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
                     Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
                     for (Object key : seedProps.keySet()) {
@@ -284,7 +294,17 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         props.put("db.user", dbUser);
         props.put("db.password", dbPassword);
         props.put("application.mode", mode);
-
+        
+        // add default CDM webservice properties
+        props.put("cdm.connection.protocol", "http");
+        props.put("cdm.connection.timeout", "60");
+        props.put("cdm.connection.host", "api.cybertaxonomy.org");
+        props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
+        props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
+        props.put("cdm.fuzzy.accuracy", "0.6");
+        props.put("cdm.fuzzy.hits", "10");
+        props.put("cdm.fuzzy.type", "name");
+        
         PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
         LOGGER.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 

@@ -3,7 +3,7 @@ package sdf_manager.validators;
 import java.math.BigDecimal;
 
 /**
- *
+ * Represents a row in swing JTable for fuzzy webservice
  * @author George Sofianos
  */
 public class FuzzyValidatorTableRow implements IValidatorResultsRow {

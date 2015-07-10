@@ -4,17 +4,15 @@ package sdf_manager.validators;
  *
  * @author George Sofianos
  */
-public class AcceptedValidatorTableRow {
+public class AcceptedValidatorTableRow implements IValidatorResultsRow {
     private String acceptedName;
     private String kingdom;
-    private String family;
-    private String score;
+    private String family;    
 
-    public AcceptedValidatorTableRow(String acceptedName, String kingdom, String family, String score) {
+    public AcceptedValidatorTableRow(String acceptedName, String kingdom, String family) {
         this.acceptedName = acceptedName;
         this.kingdom = kingdom;
-        this.family = family;
-        this.score = score;
+        this.family = family;        
     }
 
     public String getAcceptedName() {
@@ -40,13 +38,5 @@ public class AcceptedValidatorTableRow {
     public void setFamily(String family) {
         this.family = family;
     }
-
-    public String getScore() {
-        return score;
-    }
-
-    public void setScore(String score) {
-        this.score = score;
-    }        
-  
+    
 }

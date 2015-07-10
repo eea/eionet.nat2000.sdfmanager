@@ -74,10 +74,10 @@ public class GsonAcceptedInstance {
   public int responseSize() {
     return response.size();
   }
-  public List<AcceptedValidatorTableRow> getResponses() {
-      List results = new ArrayList<AcceptedValidatorTableRow>();
+  public List<IValidatorResultsRow> getResponses() {
+      List<IValidatorResultsRow> results = new ArrayList<IValidatorResultsRow>();
       for (responseImpl im : response) {
-          AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family,null);
+          AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family);
           results.add(i);
       }
       return results;

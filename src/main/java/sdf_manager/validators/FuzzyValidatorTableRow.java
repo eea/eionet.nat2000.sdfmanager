@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  *
  * @author George Sofianos
  */
-public class FuzzyValidatorTableRow {
+public class FuzzyValidatorTableRow implements IValidatorResultsRow {
     private String name;
     private String title;    
     private BigDecimal score;

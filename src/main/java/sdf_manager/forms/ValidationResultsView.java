@@ -31,6 +31,7 @@ import sdf_manager.EditorOtherSpecies;
 import sdf_manager.ProgressDialog;
 import sdf_manager.validators.AcceptedValidatorTableRow;
 import sdf_manager.validators.FuzzyValidatorTableRow;
+import sdf_manager.validators.IValidatorResultsRow;
 import sdf_manager.validators.SpeciesValidator;
 
 
@@ -44,7 +45,7 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
    private String method;
    private String queryName;
    private List<String> queryNames;
-   private List<?> results;
+   private List<IValidatorResultsRow> results;
    
    @Override
    public Boolean doInBackground() {
@@ -56,7 +57,7 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
            else if (method.equals("fuzzy")) {
         	   this.results = validator.doQueryFuzzy(queryName);
            } else if (method.equals("accepted_list")) {
-        	  // this.results = validator.doQueryAcceptedList(queryNames);
+        	   this.results = validator.doQueryAcceptedList(queryNames);
            }
                        
        } catch (IOException ex) {
@@ -83,11 +84,11 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
        this.queryName = queryName;
    }
    
-   public void setQueryNames(List queryNames) {
+   public void setQueryNames(List<String> queryNames) {
        this.queryNames = queryNames;
    }
 
-   public List getResults() {
+   public List<IValidatorResultsRow> getResults() {
        return (results != null) ? results : null;
    }
    
@@ -105,6 +106,7 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
  * @author George Sofianos
  *
  */
+@SuppressWarnings("serial")
 public class ValidationResultsView extends javax.swing.JFrame {
 	
 	private EditorOtherSpecies parent;
@@ -238,7 +240,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		}
 	}
 	
-	private void addValitadionResultsTable(List results) {
+	private void addValitadionResultsTable(List<IValidatorResultsRow> results) {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
         //add results to table
         for (Object val : results) {
@@ -248,6 +250,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	}
 	
 	private void populateValidationResultsTable(String name) {
+		log.info("Checking for accepted species..");
 		clearValidationResultsTable();
 		ValidateWorker worker = new ValidateWorker();
         final ProgressDialog dlg = new ProgressDialog(this, true);
@@ -275,8 +278,8 @@ public class ValidationResultsView extends javax.swing.JFrame {
             dlg.setVisible(true); 
             // if fuzzy species results are not empty, get valid species results for each result.
             if (worker.getResults() != null && !worker.getResults().isEmpty()) {
-            	List results = worker.getResults();
-            	List<String> queryNames = new ArrayList();
+            	List<IValidatorResultsRow> results = worker.getResults();
+            	List<String> queryNames = new ArrayList<String>();
             	for (int i = 0; i < results.size(); i++) {
             		FuzzyValidatorTableRow row = (FuzzyValidatorTableRow) results.get(i); 
             		queryNames.add(row.getName());

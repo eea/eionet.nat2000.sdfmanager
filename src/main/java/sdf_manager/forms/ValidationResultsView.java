@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +34,10 @@ import javax.swing.table.DefaultTableModel;
 
 import sdf_manager.EditorOtherSpecies;
 import sdf_manager.ProgressDialog;
+import sdf_manager.util.PropertyUtils;
 import sdf_manager.validators.AcceptedValidatorTableRow;
 import sdf_manager.validators.FuzzyValidatorTableRow;
-import sdf_manager.validators.IValidatorResultsRow;
+import sdf_manager.validators.ValidatorResultsRow;
 import sdf_manager.validators.SpeciesValidator;
 
 
@@ -48,23 +51,18 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
    private String method;
    private String queryName;
    private List<String> queryNames;
-   private List<IValidatorResultsRow> results;
+   private List<ValidatorResultsRow> results;
    
    @Override
-   public Boolean doInBackground() {
-       try {    	
-           SpeciesValidator validator = new SpeciesValidator();
-           if (method.equals("accepted")){
-        	   this.results = validator.doQueryAccepted(queryNames);
-           }
-           else if (method.equals("fuzzy")) {
-        	   this.results = validator.doQueryFuzzy(queryName);
-           }                       
-       } catch (IOException ex) {
-           Logger.getLogger(ValidateWorker.class.getName()).log(Level.SEVERE, null, ex);
-       } catch (URISyntaxException ex) {
-           Logger.getLogger(ValidateWorker.class.getName()).log(Level.SEVERE, null, ex);
+   public Boolean doInBackground() throws Exception {
+	   Properties props = PropertyUtils.readProperties("sdf.properties");
+       SpeciesValidator validator = new SpeciesValidator(props);
+       if (method.equals("accepted")){
+    	   this.results = validator.doQueryAccepted(queryNames);
        }
+       else if (method.equals("fuzzy")) {
+    	   this.results = validator.doQueryFuzzy(queryName);
+       }                       
        return true;
    }
 
@@ -88,7 +86,7 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
        this.queryNames = queryNames;
    }
 
-   public List<IValidatorResultsRow> getResults() {
+   public List<ValidatorResultsRow> getResults() {
        return (results != null) ? results : null;
    }
    
@@ -244,7 +242,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		}
 	}
 	
-	private void addValitadionResultsTable(List<IValidatorResultsRow> results) {
+	private void addValitadionResultsTable(List<ValidatorResultsRow> results) {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
         //add results to table
         for (Object val : results) {
@@ -258,7 +256,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		clearValidationResultsTable();
 		ValidateWorker worker = new ValidateWorker();
         final ProgressDialog dlg = new ProgressDialog(this, true);
-        dlg.setLabel("Checking accepted species name...");
+        dlg.setLabel("Checking for accepted species name...");
         dlg.setModal(false);
         dlg.setVisible(false);
         worker.setDialog(dlg);        
@@ -267,8 +265,20 @@ public class ValidationResultsView extends javax.swing.JFrame {
         worker.execute();
         dlg.setModal(true);
         dlg.setVisible(true);    
+        try {
+        	worker.get();
+        } catch(ExecutionException ex) {
+        	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
+        	log.error("Error while searching for accepted species.." + ex);
+        	return;
+        } catch(InterruptedException ex) {
+        	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
+        	log.error("Error while searching for accepted species.." + ex);
+        	return;
+        }
         // if valid species results are empty, try fuzzy search.
         if (worker.getResults() == null || worker.getResults().isEmpty()) {
+        	log.info("Checking for fuzzy results..");
         	clearValidationResultsTable();
         	worker = new ValidateWorker();                    
             dlg.setLabel("Checking fuzzy species name...");
@@ -280,9 +290,21 @@ public class ValidationResultsView extends javax.swing.JFrame {
             worker.execute();
             dlg.setModal(true);
             dlg.setVisible(true); 
+            try {
+            	worker.get();            	
+            } catch (ExecutionException ex) {
+            	javax.swing.JOptionPane.showMessageDialog(this, "Error while fuzzy searching for species");
+            	log.error("Error while fuzzy searching for species.." + ex);
+            	return;
+            } catch (InterruptedException ex) {            	
+            	javax.swing.JOptionPane.showMessageDialog(this, "Error while fuzzy searching for species");
+            	log.error("Error while fuzzy searching for species.." + ex);
+            	return;
+            }            
             // if fuzzy species results are not empty, get valid species results for each result.
             if (worker.getResults() != null && !worker.getResults().isEmpty()) {
-            	List<IValidatorResultsRow> results = worker.getResults();
+            	log.info("Fuzzy results found, will check for accepted species..");
+            	List<ValidatorResultsRow> results = worker.getResults();
             	List<String> queryNames = new ArrayList<String>();
             	for (int i = 0; i < results.size(); i++) {
             		FuzzyValidatorTableRow row = (FuzzyValidatorTableRow) results.get(i); 
@@ -297,23 +319,38 @@ public class ValidationResultsView extends javax.swing.JFrame {
                     worker.setDialog(dlg);        
                     worker.setMethod("accepted");
                     worker.setQueryNames(queryNames);
-                    worker.execute();
+                    worker.execute();                    
                     dlg.setModal(true);
-                    dlg.setVisible(true);   
-                    if (worker.getResults() != null && !worker.getResults().isEmpty()) {
-                    	addValitadionResultsTable(worker.getResults());
-                    }
-                    // if accepted species results are empty
-                    else {
-                    	javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");
-                    }
+                    dlg.setVisible(true);
+                    try {
+                    	worker.get();
+                    	if (worker.getResults() != null && !worker.getResults().isEmpty()) {
+                    		log.info("Accepted species found, adding..");
+                        	addValitadionResultsTable(worker.getResults());
+                        }
+                        // if accepted species results are empty - should not happen 
+                        else {
+                        	log.info("No accepted or fuzzy results found");
+                        	javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");
+                        }
+                    } catch (ExecutionException ex) {
+                    	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
+                    	log.error("Error while searching for accepted species.." + ex);
+                    	return;
+                    } catch (InterruptedException ex) {
+                    	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
+                    	log.error("Error while searching for accepted species.." + ex);
+                    	return;
+                    }                    
             	}
         	// if fuzzy species results are empty
             } else {
-              javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");  
+            	log.info("No accepted or fuzzy results found");
+            	javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");  
             }
         }
         else {
+        	log.info("Accepted species found, adding..");
         	addValitadionResultsTable(worker.getResults());
         }
 	}

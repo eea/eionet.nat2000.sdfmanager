@@ -36,7 +36,7 @@ public class SpeciesValidatorTest {
 		myJsonResult = IOUtils.toString(inputStream);		
 		when(testClass.getJsonResponse(isA(URIBuilder.class))).thenReturn(myJsonResult);
 		when(testClass.doQueryFuzzy("Anything")).thenCallRealMethod();
-		List<IValidatorResultsRow> testList = testClass.doQueryFuzzy("Anything");
+		List<ValidatorResultsRow> testList = testClass.doQueryFuzzy("Anything");
 		assertEquals("Test", 3, testList.size());		
 	}
 
@@ -51,7 +51,7 @@ public class SpeciesValidatorTest {
 		when(testClass.getJsonResponse(isA(URIBuilder.class))).thenReturn(myJsonResult);
 		when(testClass.doQueryAccepted(Matchers.anyListOf(String.class))).thenCallRealMethod();
 		List<String> names = Arrays.asList("Anything", "Anything2");
-		List<IValidatorResultsRow> testList = testClass.doQueryAccepted(names);
+		List<ValidatorResultsRow> testList = testClass.doQueryAccepted(names);
 		assertEquals("Test", 1, testList.size());	
 	}
 

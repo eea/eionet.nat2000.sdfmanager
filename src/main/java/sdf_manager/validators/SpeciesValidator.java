@@ -110,7 +110,7 @@ public class SpeciesValidator {
      * @throws IOException - If http connection fails
      * @throws URISyntaxException - when there is a wrong uri
      */
-    public List<IValidatorResultsRow> doQueryFuzzy(String name) throws IOException, URISyntaxException {
+    public List<ValidatorResultsRow> doQueryFuzzy(String name) throws IOException, URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
         uriBuilder.setHost(NAME_CATALOG_URL);
@@ -143,7 +143,7 @@ public class SpeciesValidator {
      * @throws IOException - If http connection fails
      * @throws URISyntaxException - when there is a wrong uri
      */
-    public List<IValidatorResultsRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
+    public List<ValidatorResultsRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
         uriBuilder.setHost(NAME_CATALOG_URL);
@@ -172,7 +172,7 @@ public class SpeciesValidator {
         if (hasOnlyErrors) { 
         	return null; 
       	}
-        List<IValidatorResultsRow> rows = new ArrayList<IValidatorResultsRow>(); 
+        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>(); 
         for (GsonAcceptedInstance in : resultJsonList) {
         	if (in.responseSize() > 0) {      
                 rows.addAll(in.getResponses());

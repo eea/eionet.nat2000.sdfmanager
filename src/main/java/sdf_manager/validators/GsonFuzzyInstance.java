@@ -56,8 +56,8 @@ public class GsonFuzzyInstance {
   public boolean hasError() {
     return this.errorMessage != null? true: false;
   }
-  public List<IValidatorResultsRow> getResponses() {
-      List<IValidatorResultsRow> results = new ArrayList<IValidatorResultsRow>();
+  public List<ValidatorResultsRow> getResponses() {
+      List<ValidatorResultsRow> results = new ArrayList<ValidatorResultsRow>();
       for (responseImpl im : response) {
           FuzzyValidatorTableRow i = new FuzzyValidatorTableRow(im.name,im.title,im.score);
           results.add(i);

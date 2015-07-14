@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * Represents a row in swing JTable for fuzzy webservice
  * @author George Sofianos
  */
-public class FuzzyValidatorTableRow implements IValidatorResultsRow {
+public class FuzzyValidatorTableRow implements ValidatorResultsRow {
     private String name;
     private String title;    
     private BigDecimal score;

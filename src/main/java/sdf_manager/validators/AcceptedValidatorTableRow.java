@@ -4,7 +4,7 @@ package sdf_manager.validators;
  *
  * @author George Sofianos
  */
-public class AcceptedValidatorTableRow implements IValidatorResultsRow {
+public class AcceptedValidatorTableRow implements ValidatorResultsRow {
     private String acceptedName;
     private String kingdom;
     private String family;    

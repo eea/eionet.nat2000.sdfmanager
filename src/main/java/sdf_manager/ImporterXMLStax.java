@@ -51,6 +51,7 @@ import pojos.SiteOwnership;
 import pojos.SiteOwnershipId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.importers.ImporterTools;
 import sdf_manager.util.SDF_Constants;
 import sdf_manager.util.SDF_Util;
 
@@ -307,30 +308,30 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             site.setSiteName(localData);
                         } else if (localName.equals("compilationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteCompDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteCompDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("updateDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteUpdateDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteUpdateDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("spaClassificationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteSpaDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteSpaDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("spaLegalReference")) {
                             site.setSiteSpaLegalRef(localData);
                         } else if (localName.equals("sciProposalDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteSciPropDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteSciPropDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("sciConfirmationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteSciConfDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteSciConfDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("sacDesignationDate")) {
                             ImporterXMLStax.log.info("************localData==>" + localData + "<==");
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteSacDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteSacDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                             ImporterXMLStax.log.info("************site.getSiteSacDate()==>" + site.getSiteSacDate() + "<==");
                         } else if (localName.equals("sacLegalReference")) {
@@ -339,19 +340,19 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             site.setSiteExplanations(localData);
                         } else if (localName.equals("asciProposalDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteProposedAsciDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteProposedAsciDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("asciCandidateConfirmationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteConfirmedCandidateAsciDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteConfirmedCandidateAsciDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("asciConfirmationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteConfirmedAsciDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteConfirmedAsciDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("asciDesignationDate")) {
                             if (!(SDF_Constants.NULL_DATE).equals(localData)) {
-                                site.setSiteDesignatedAsciDate(ConversionTools.convertStringToDate(localData));
+                                site.setSiteDesignatedAsciDate(ImporterTools.parseXmlDate(siteCode, localName, localData));
                             }
                         } else if (localName.equals("asciDesignationLegalReference")) {
                             site.setSiteAsciLegalRef(localData);
@@ -758,7 +759,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             saveAndReloadSession(session, mgmtPlan);
                             mgmt.getMgmtPlans().add(mgmtPlan);
                             mgmtPlan = null;
-                            ImporterXMLStax.log.info("add el managementPlan class al mgmt y lo ponemos a null");
+                            ImporterXMLStax.log.info("Add managementPlan class to mgmt and set it to null");
                         } else if (localName.equals("conservationMeasures") && mgmt != null) {
                             mgmt.setMgmtConservMeasures(localData);
                         } else if (localName.equals("siteManagement_end")) {
@@ -790,7 +791,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             log("Saving in DB:::" + site.getSiteCode());
                             saveAndReloadSession(session, site);
                             session.flush();
-                            ImporterXMLStax.log.info("saving el site");
+                            ImporterXMLStax.log.info("Saving site");
                             site = null;
                         }
                     }
@@ -805,7 +806,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog",
                     JOptionPane.INFORMATION_MESSAGE);
             ;
-        } catch (Exception ex) {
+        }  catch (Exception ex) {
             ex.printStackTrace();
             log("It's been produced an error in the Import Process");
             ImporterXMLStax.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());

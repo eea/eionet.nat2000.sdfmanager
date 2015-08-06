@@ -743,21 +743,13 @@ public class SDFEditor extends javax.swing.JFrame {
         }
         Double marineArea = ConversionTools.stringToDoubleN(this.txtMarineArea.getText());
         Double length = ConversionTools.stringToDoubleN(this.txtLength.getText());
-        if (longitude != null) {
-            this.site.setSiteLongitude(longitude);
-        }
-        if (latitude != null) {
-            this.site.setSiteLatitude(latitude);
-        }
-        if (area != null) {
-            this.site.setSiteArea(area);
-        }
-        if (marineArea != null) {
-            this.site.setSiteMarineArea(marineArea);
-        }
-        if (length != null) {
-            this.site.setSiteLength(length);
-        }
+        
+        this.site.setSiteLongitude(longitude);       
+        this.site.setSiteLatitude(latitude);              
+        this.site.setSiteArea(area);               
+        this.site.setSiteMarineArea(marineArea);               
+        this.site.setSiteLength(length);
+        
         return msgErrorSpatial;
     }
 

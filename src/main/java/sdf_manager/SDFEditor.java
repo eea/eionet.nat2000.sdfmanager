@@ -561,7 +561,7 @@ public class SDFEditor extends javax.swing.JFrame {
     /**
      *
      */
-    private void save() {
+    private void save() {    
         String msgError = "";
         // printSiteFields();
         SDFEditor.logger.info("Saving the Site");
@@ -597,6 +597,13 @@ public class SDFEditor extends javax.swing.JFrame {
 
         msgError += this.saveRespondent();
         msgError += this.saveDates();
+        
+        if (differentFields(this.site.getSiteSpaLegalRef(), this.txtSpaRef.getText())) {
+        	this.site.setSiteSpaLegalRef(fmt(this.txtSpaRef.getText()));
+        } else {
+        	this.site.setSiteSpaLegalRef(this.txtSpaRef.getText());
+        }
+        
         msgError += this.saveSpatial();
 
         if (differentFields(this.site.getSiteCharacteristics(), this.txtSiteCharacter.getText())) {
@@ -736,21 +743,13 @@ public class SDFEditor extends javax.swing.JFrame {
         }
         Double marineArea = ConversionTools.stringToDoubleN(this.txtMarineArea.getText());
         Double length = ConversionTools.stringToDoubleN(this.txtLength.getText());
-        if (longitude != null) {
-            this.site.setSiteLongitude(longitude);
-        }
-        if (latitude != null) {
-            this.site.setSiteLatitude(latitude);
-        }
-        if (area != null) {
-            this.site.setSiteArea(area);
-        }
-        if (marineArea != null) {
-            this.site.setSiteMarineArea(marineArea);
-        }
-        if (length != null) {
-            this.site.setSiteLength(length);
-        }
+        
+        this.site.setSiteLongitude(longitude);       
+        this.site.setSiteLatitude(latitude);              
+        this.site.setSiteArea(area);               
+        this.site.setSiteMarineArea(marineArea);               
+        this.site.setSiteLength(length);
+        
         return msgErrorSpatial;
     }
 
@@ -845,11 +844,8 @@ public class SDFEditor extends javax.swing.JFrame {
         String sanitizedLabel = StringUtils.isBlank(label) ? "unknown" : StringUtils.strip(label, ": ");
 
         Date dateValue = null;
-        if (StringUtils.isBlank(txtValue)) {
-            if (isMandatory) {
-                throw new ValidationException("Value for this field is required: " + sanitizedLabel);
-            }
-        } else {
+        // if value is mandatory but empty do nothing, this comment is being kept for legacy reasons    	
+        if (!StringUtils.isBlank(txtValue)) {        	
             dateValue = ConversionTools.convertToDate(txtValue);
             if (dateValue == null) {
                 String msg = "Inavlid value for this field: " + sanitizedLabel;

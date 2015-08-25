@@ -65,6 +65,7 @@ import pojos.SiteBiogeo;
 import pojos.SiteBiogeoId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.importers.ImporterTools;
 import sdf_manager.util.ImporterUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
@@ -736,16 +737,16 @@ public class ImporterMDB extends AbstractImporter implements Importer {
                 if (tmpChar != null) {
                     site.setSiteType(getType(tmpChar));
                 }
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("compilation_date")));
+                tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("compilation_date")), site.getSiteCode(), "compilation_date");
                 if (tmpDate != null) {
                     site.setSiteCompDate(tmpDate);
                 }
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("update_date")));
+                tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("update_date")), site.getSiteCode(), "update_date");
                 if (tmpDate != null) {
                     site.setSiteUpdateDate(tmpDate);
                 }
 
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_prop_date")));
+                tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sci_prop_date")), site.getSiteCode(), "sci_prop_date");
                 if (tmpDate != null) {
                     if (!SDF_ManagerApp.isEmeraldMode()) {
                         site.setSiteSciPropDate(tmpDate);
@@ -753,7 +754,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
                         site.setSiteProposedAsciDate(tmpDate);
                     }
                 }
-                tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_conf_date")));
+                tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sci_conf_date")), site.getSiteCode(), "sci_conf_date");
                 if (tmpDate != null) {
                     if (!SDF_ManagerApp.isEmeraldMode()) {
                         site.setSiteSciConfDate(tmpDate);
@@ -764,12 +765,12 @@ public class ImporterMDB extends AbstractImporter implements Importer {
 
                 // EMERALD does not have SAC and SPA dates.
                 if (!SDF_ManagerApp.isEmeraldMode()) {
-                    tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
+                    tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("spa_date")), site.getSiteCode(), "spa_date");
                     if (tmpDate != null) {
                         site.setSiteSpaDate(tmpDate);
                     }
 
-                    tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
+                    tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sac_date")), site.getSiteCode(), "sac_date");
                     if (tmpDate != null) {
                         site.setSiteSacDate(tmpDate);
                     }

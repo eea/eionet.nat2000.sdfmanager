@@ -64,6 +64,7 @@ import pojos.SiteBiogeo;
 import pojos.SiteBiogeoId;
 import pojos.SiteRelation;
 import pojos.Species;
+import sdf_manager.importers.ImporterTools;
 import sdf_manager.util.ImporterUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
@@ -593,21 +594,21 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
 
                  log("Processing Compilation Date");
                  ImporterSiteMDB.log.info("Processing Compilation Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("compilation_date")));
+                 tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("compilation_date")), site.getSiteCode(), "compilation_date");
                  if (tmpDate != null) {
                      site.setSiteCompDate(tmpDate);
                  }
 
                  log("Processing Update Date");
                  ImporterSiteMDB.log.info("Processing Update Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("update_date")));
+                 tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("update_date")), site.getSiteCode(), "update_date");
                  if (tmpDate != null) {
                      site.setSiteUpdateDate(tmpDate);
                  }
 
                  log("Processing SCI Proposal Date");
                  ImporterSiteMDB.log.info("Processing SCI Proposal Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_prop_date")));
+                 tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sci_prop_date")), site.getSiteCode(), "sci_prop_date");
                  if (tmpDate != null) {
                      if (!SDF_ManagerApp.isEmeraldMode()) {
                          site.setSiteSciPropDate(tmpDate);
@@ -618,7 +619,7 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
 
                  log("Processing SCI Confirmed Date");
                  ImporterSiteMDB.log.info("Processing SCI Confirmed Date");
-                 tmpDate = this.convertToDate(getString(rs, this.fields.get("sci_conf_date")));
+                 tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sci_conf_date")), site.getSiteCode(), "sci_conf_date");
                  if (tmpDate != null) {
                      if (!SDF_ManagerApp.isEmeraldMode()) {
                          site.setSiteSciConfDate(tmpDate);
@@ -630,14 +631,14 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
                  if (!SDF_ManagerApp.isEmeraldMode()) {
                      log("Processing SPA Classified Date");
                      ImporterSiteMDB.log.info("Processing SPA Classified Date");
-                     tmpDate = this.convertToDate(getString(rs, this.fields.get("spa_date")));
+                     tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("spa_date")), site.getSiteCode(), "spa_date");
                      if (tmpDate != null) {
                          site.setSiteSpaDate(tmpDate);
                      }
 
                      log("Processing SAC Date");
                      ImporterSiteMDB.log.info("Processing SAC Date");
-                     tmpDate = this.convertToDate(getString(rs, this.fields.get("sac_date")));
+                     tmpDate = ImporterTools.parseMdbDate(getString(rs, this.fields.get("sac_date")), site.getSiteCode(), "sac_date");
                      if (tmpDate != null) {
                          site.setSiteSacDate(tmpDate);
                      }
@@ -1946,30 +1947,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
         }
      }
 
-     /**
-      *
-      * @param sdate
-      * @return
-      */
-     Date convertToDate(String sdate) {
-         if (sdate == null || (("").equals(sdate))) {
-             return null;
-         }
-         if (sdate.length() < 6) {
-             ImporterSiteMDB.log.error("\tDate doesn't match size: " + sdate);
-             return null;
-         }
-
-         String month = sdate.substring(4, 6);
-         String year = sdate.substring(0, 4);
-         int imonth = this.converToInt(month);
-         int iyear = this.converToInt(year);
-         Date d = new Date();
-         Calendar cal = GregorianCalendar.getInstance();
-         cal.set(iyear, imonth - 1, 1);
-         d = cal.getTime();
-         return d;
-     }
      /**
       *
       * @param num

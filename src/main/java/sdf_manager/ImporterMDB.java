@@ -2065,31 +2065,6 @@ public class ImporterMDB extends AbstractImporter implements Importer {
 
     /**
      *
-     * @param sdate
-     * @return
-     */
-    Date convertToDate(String sDate) {
-        if (sDate == null || (("").equals(sDate))) {
-            return null;
-        }
-        if (sDate.length() < 6) {
-            ImporterMDB.log.error("\tDate doesn't match size: " + sDate);
-            return null;
-        }
-
-        String month = sDate.substring(4, 6);
-        String year = sDate.substring(0, 4);
-        int imonth = this.converToInt(month);
-        int iyear = this.converToInt(year);
-        Date d = new Date();
-        Calendar cal = GregorianCalendar.getInstance();
-        cal.set(iyear, imonth - 1, 1);
-        d = cal.getTime();
-        return d;
-    }
-
-    /**
-     *
      * @param num
      * @return
      */

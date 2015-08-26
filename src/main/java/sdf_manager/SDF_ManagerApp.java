@@ -455,18 +455,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
      */
     public static String getAppVersion() {
         if (APP_VERSION == null) {
-            BufferedReader br = null;
-            try {
-                File file = new File("version.txt");
-                br = new BufferedReader(new FileReader(file));
-                String ver = br.readLine();
-
-                APP_VERSION = ver;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(br);
-            }
+        	Package p = SDF_ManagerApp.class.getPackage();
+        	String version = p.getImplementationVersion();
+            APP_VERSION = version;                  
         }
         return APP_VERSION;
     }

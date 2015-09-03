@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-v4_0_0.xsd">
     <organization>
         <name>European Environment Agency</name>
     </organization>
@@ -7,9 +6,13 @@
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
-    <version>4.0-SNAPSHOT</version>
+    <version>4.2.3-SNAPSHOT</version>
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
+    <scm>
+    	<developerConnection>scm:git:https://github.com/eea/eionet.nat2000.sdfmanager.git</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
 
     <!-- Configuration of Maven repositories to be used. -->
     <repositories>
@@ -68,6 +71,7 @@
                             <addClasspath>true</addClasspath>
                             <mainClass>sdf_manager.SDF_ManagerApp</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
                     <outputDirectory>${project.basedir}</outputDirectory>
@@ -96,6 +100,18 @@
                     </transformers>
                 </configuration>
             </plugin>
+            <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-release-plugin</artifactId>
+		        <version>2.5.2</version>
+		        <configuration>
+		          <tagNameFormat>v@{project.version}</tagNameFormat>
+		          <checkModificationExcludes>
+				    <checkModificationExclude>pom.xml</checkModificationExclude>
+				    <checkModificationExclude>src/test/java/sdf_manager/OdbcTest.java</checkModificationExclude>
+				  </checkModificationExcludes>
+   		       </configuration>
+		    </plugin>
             <!-- launch4J -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -111,21 +127,21 @@
                         <configuration>
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>SDFmanager-4.0-SNAPSHOT.jar</jar>
+                            <jar>SDFmanager-${project.version}.jar</jar>
                             <outfile>SDFManager.exe</outfile>
-                            <errTitle></errTitle>
-                            <cmdLine></cmdLine>
+                            <errTitle />
+                            <cmdLine />
                             <chdir>.</chdir>
                             <priority>normal</priority>
                             <downloadUrl>http://java.com/download</downloadUrl>
-                            <supportUrl></supportUrl>
+                            <supportUrl />
                             <stayAlive>false</stayAlive>
-                            <manifest></manifest>
+                            <manifest />
                             <icon>${basedir}/sdfmanager.ico</icon>
                             <jre>
                                 <path>./jre</path>
-                                <minVersion></minVersion>
-                                <maxVersion></maxVersion>
+                                <minVersion />
+                                <maxVersion />
                                 <jdkPreference>jreOnly</jdkPreference>
                             </jre>
                             <splash>
@@ -472,12 +488,6 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <version>2.0.28-beta</version>
-		    <scope>test</scope>
-		</dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-mxj</artifactId>

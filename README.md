@@ -10,7 +10,6 @@ For running the software, you will need the following software components instal
 * A 32-bit version of Java Runtime Environment (JRE) 6 or 7
 * MySQL database server 5.0 or 5.1. It must be running and there must be at least an empty database named "natura2000".
 
-
 Building
 ========
 

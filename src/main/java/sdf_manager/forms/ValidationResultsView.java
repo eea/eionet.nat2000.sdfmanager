@@ -189,7 +189,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		
 		tableResults = new JTable();
 		tableResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableResults.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		/*tableResults.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -203,18 +203,18 @@ public class ValidationResultsView extends javax.swing.JFrame {
 				}
 				
 			}
-		});		
+		});	*/	
 		tableResults.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null},
 				{null, null, null, null},
 			},
 			new String[] {
-				"Select", "Name", "Kingdom", "Family"
+				"Name", "Kingdom", "Family", "Accepted name"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Boolean.class, String.class, String.class, String.class
+				String.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -226,6 +226,10 @@ public class ValidationResultsView extends javax.swing.JFrame {
 				return columnEditables[column];
 			}
 		});
+		tableResults.getColumnModel().getColumn(0).setPreferredWidth(166);
+		tableResults.getColumnModel().getColumn(1).setPreferredWidth(87);
+		tableResults.getColumnModel().getColumn(2).setPreferredWidth(97);
+		tableResults.getColumnModel().getColumn(3).setPreferredWidth(96);
 		scrollPane.setViewportView(tableResults);
 		getContentPane().setLayout(groupLayout);
 	}
@@ -245,9 +249,8 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	private void addValitadionResultsTable(List<ValidatorResultsRow> results) {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
         //add results to table
-        for (Object val : results) {
-            AcceptedValidatorTableRow row = (AcceptedValidatorTableRow) val;
-            model.addRow(new Object[]{false, row.getAcceptedName(),row.getKingdom(),row.getFamily()});
+        for (ValidatorResultsRow val : results) {            
+            model.addRow(val.tableData());
         }   
 	}
 	
@@ -309,6 +312,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
             	for (int i = 0; i < results.size(); i++) {
             		FuzzyValidatorTableRow row = (FuzzyValidatorTableRow) results.get(i); 
             		queryNames.add(row.getName());
+            		addValitadionResultsTable(results);
             	}
             	if (queryNames != null && !queryNames.isEmpty()) {
             		worker = new ValidateWorker();
@@ -330,8 +334,8 @@ public class ValidationResultsView extends javax.swing.JFrame {
                         }
                         // if accepted species results are empty - should not happen 
                         else {
-                        	log.info("No accepted or fuzzy results found");
-                        	javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");
+                        	log.info("No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
+                        	javax.swing.JOptionPane.showMessageDialog(this, "No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
                         }
                     } catch (ExecutionException ex) {
                     	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
@@ -345,8 +349,8 @@ public class ValidationResultsView extends javax.swing.JFrame {
             	}
         	// if fuzzy species results are empty
             } else {
-            	log.info("No accepted or fuzzy results found");
-            	javax.swing.JOptionPane.showMessageDialog(this, "No accepted or fuzzy results found");  
+            	log.info("No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
+            	javax.swing.JOptionPane.showMessageDialog(this, "No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");  
             }
         }
         else {

@@ -23,6 +23,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 
 /**
@@ -45,6 +46,8 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
      * @param parent
      */
     public EditorOtherSpecies(SDFEditor parent) {
+    	setResizable(false);
+    	getContentPane().setPreferredSize(new Dimension(800, 650));
         this.parent = parent;
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -628,7 +631,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         });
         chkFT = new javax.swing.JCheckBox();
         
-                chkFT.setText(resourceMap.getString("chkFT.text")); // NOI18N
+                chkFT.setText("The species is not listed above (free-text)"); // NOI18N
                 chkFT.setName("chkFT"); // NOI18N
                 chkFT.addItemListener(new java.awt.event.ItemListener() {
                     @Override
@@ -657,51 +660,58 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         		.addGroup(jPanel2Layout.createSequentialGroup()
         			.addContainerGap()
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(chkSensitive)
-        				.addComponent(chkNP)
+        				.addComponent(chkFT)
         				.addGroup(jPanel2Layout.createSequentialGroup()
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(jLabel4)
         						.addComponent(jLabel12)
+        						.addComponent(jLabel4)
         						.addGroup(jPanel2Layout.createSequentialGroup()
         							.addGap(19)
-        							.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-        						.addComponent(chkFT))
-        					.addGap(18)
+        							.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+        					.addPreferredGap(ComponentPlacement.RELATED)
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
         						.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         						.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addComponent(chkSensitive)
+        					.addGap(45)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(chkNP)
         						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addComponent(txtName, GroupLayout.PREFERRED_SIZE, 216, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(txtName, GroupLayout.PREFERRED_SIZE, 361, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
         							.addComponent(btnValidate)))))
-        			.addContainerGap(192, Short.MAX_VALUE))
+        			.addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel2Layout.createSequentialGroup()
-        			.addGap(15)
+        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addGap(15)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(jLabel12)
+        						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addGap(53)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(jLabel4)
+        						.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel12)
-        				.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        				.addComponent(jLabel1)
+        				.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addComponent(chkFT)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel4)
-        				.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(jLabel1))
-        			.addGap(18)
-        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(chkFT)
         				.addComponent(btnValidate))
-        			.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-        			.addComponent(chkSensitive)
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(chkNP)
+        			.addPreferredGap(ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(chkSensitive)
+        				.addComponent(chkNP))
         			.addContainerGap())
         );
         jPanel2.setLayout(jPanel2Layout);
@@ -888,33 +898,34 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1Layout.setHorizontalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        		.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
-        				.addGroup(jPanel1Layout.createSequentialGroup()
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(jPanel2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+        				.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
         					.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-        					.addGap(6)
+        					.addGap(4)
         					.addComponent(btnCancel))
-        				.addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        				.addGroup(jPanel1Layout.createSequentialGroup()
-        					.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-        					.addGap(18)
-        					.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        					.addComponent(jPanel3, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)))
         			.addGap(21))
         );
         jPanel1Layout.setVerticalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
-        			.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        			.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
+        			.addGap(40)
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(jPanel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
-        				.addComponent(jPanel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        				.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(btnSave)
         				.addComponent(btnCancel))
-        			.addGap(21))
+        			.addGap(24))
         );
         jPanel1.setLayout(jPanel1Layout);
 
@@ -929,14 +940,15 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         layout.setHorizontalGroup(
         	layout.createParallelGroup(Alignment.TRAILING)
         		.addGroup(layout.createSequentialGroup()
-        			.addComponent(jLabel5)
-        			.addGap(89)
-        			.addComponent(jLabel3)
-        			.addContainerGap(388, Short.MAX_VALUE))
-        		.addGroup(layout.createSequentialGroup()
-        			.addContainerGap(14, Short.MAX_VALUE)
-        			.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap())
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addComponent(jLabel5)
+        					.addGap(89)
+        					.addComponent(jLabel3))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(14)
+        					.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, 500)))
+        			.addGap(346))
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.TRAILING)
@@ -947,13 +959,13 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         					.addGap(24)
         					.addComponent(jLabel3)))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addGap(10))
+        			.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, 538, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap())
         );
         getContentPane().setLayout(layout);
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
     private void chkFTItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_chkFTItemStateChanged
         if (this.chkFT.isSelected()) {
@@ -970,11 +982,11 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
             this.cmbName.setEnabled(true);
             this.cmbCode.setEnabled(true);
         }
-    } //GEN-LAST:event_chkFTItemStateChanged
+    }    
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this .exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
     private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1) {
@@ -983,7 +995,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
 
         }
 
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
     private void cmbNameItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbNameItemStateChanged
         if (evt.getStateChange() == 1) {
@@ -991,13 +1003,13 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
             this.cmbCode.setSelectedIndex(row);
         }
 
-    } //GEN-LAST:event_cmbNameItemStateChanged
+    }
 
     private void cmbGroupItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbGroupItemStateChanged
         if (evt.getStateChange() == 1 && !this.init) {
             loadSpecieses(null);
         }
-    } //GEN-LAST:event_cmbGroupItemStateChanged
+    }
 
     /**
      * Checks if the param is a number.
@@ -1072,19 +1084,19 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
             javax.swing.JOptionPane.showMessageDialog(this, "Species saved.");
             this.exit();
         }
-    } //GEN-LAST:event_btnSaveActionPerformed
+    } 
 
     private void cmbGroupActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_cmbGroupActionPerformed
         // TODO add your handling code here:
-    } //GEN-LAST:event_cmbGroupActionPerformed
+    } 
 
     private void chkMotivationAnnexIVActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_chkMotivationAnnexIVActionPerformed
         // TODO add your handling code here:
-    } //GEN-LAST:event_chkMotivationAnnexIVActionPerformed
+    } 
 
     private void chkFTActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_chkFTActionPerformed
         // TODO add your handling code here:
-    } //GEN-LAST:event_chkFTActionPerformed
+    } 
 
     public void enableCombos() {
         cmbGroup.setEnabled(true);

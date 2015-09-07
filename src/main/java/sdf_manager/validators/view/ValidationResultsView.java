@@ -1,20 +1,14 @@
-package sdf_manager.forms;
+package sdf_manager.validators.view;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,22 +17,21 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
-import sdf_manager.EditorOtherSpecies;
 import sdf_manager.ProgressDialog;
+import sdf_manager.forms.IEditorOtherSpecies;
 import sdf_manager.util.PropertyUtils;
-import sdf_manager.validators.AcceptedValidatorTableRow;
-import sdf_manager.validators.FuzzyValidatorTableRow;
-import sdf_manager.validators.ValidatorResultsRow;
+import sdf_manager.validators.AcceptedNamePair;
 import sdf_manager.validators.SpeciesValidator;
+import sdf_manager.validators.ValidatorResultsRow;
+import sdf_manager.validators.model.FuzzyResult;
 
 
 /**
@@ -51,17 +44,18 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
    private String method;
    private String queryName;
    private List<String> queryNames;
-   private List<ValidatorResultsRow> results;
+   private List<ValidatorResultsRow> acceptedResults;
+   private List<FuzzyResult> fuzzyResults;
    
    @Override
    public Boolean doInBackground() throws Exception {
 	   Properties props = PropertyUtils.readProperties("sdf.properties");
        SpeciesValidator validator = new SpeciesValidator(props);
        if (method.equals("accepted")){
-    	   this.results = validator.doQueryAccepted(queryNames);
+    	   this.acceptedResults = validator.doQueryAccepted(queryNames);
        }
        else if (method.equals("fuzzy")) {
-    	   this.results = validator.doQueryFuzzy(queryName);
+    	   this.fuzzyResults = validator.doQueryFuzzy(queryName);
        }                       
        return true;
    }
@@ -86,8 +80,11 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
        this.queryNames = queryNames;
    }
 
-   public List<ValidatorResultsRow> getResults() {
-       return (results != null) ? results : null;
+   public List<ValidatorResultsRow> getAcceptedResults() {
+       return (acceptedResults != null) ? acceptedResults : null;
+   }
+   public List<FuzzyResult> getFuzzyResults() {
+       return (fuzzyResults != null) ? fuzzyResults : null;
    }
    
    @Override
@@ -214,7 +211,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class
+				String.class, String.class, String.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -250,7 +247,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
         //add results to table
         for (ValidatorResultsRow val : results) {            
-            model.addRow(val.tableData());
+            model.addRow(val.getRow());
         }   
 	}
 	
@@ -280,7 +277,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
         	return;
         }
         // if valid species results are empty, try fuzzy search.
-        if (worker.getResults() == null || worker.getResults().isEmpty()) {
+        if (worker.getAcceptedResults() == null || worker.getAcceptedResults().isEmpty()) {
         	log.info("Checking for fuzzy results..");
         	clearValidationResultsTable();
         	worker = new ValidateWorker();                    
@@ -305,14 +302,13 @@ public class ValidationResultsView extends javax.swing.JFrame {
             	return;
             }            
             // if fuzzy species results are not empty, get valid species results for each result.
-            if (worker.getResults() != null && !worker.getResults().isEmpty()) {
+            if (worker.getFuzzyResults() != null && !worker.getFuzzyResults().isEmpty()) {
             	log.info("Fuzzy results found, will check for accepted species..");
-            	List<ValidatorResultsRow> results = worker.getResults();
+            	List<FuzzyResult> results = worker.getFuzzyResults();
             	List<String> queryNames = new ArrayList<String>();
             	for (int i = 0; i < results.size(); i++) {
-            		FuzzyValidatorTableRow row = (FuzzyValidatorTableRow) results.get(i); 
-            		queryNames.add(row.getName());
-            		addValitadionResultsTable(results);
+            		FuzzyResult row = results.get(i); 
+            		queryNames.add(row.getName());            		
             	}
             	if (queryNames != null && !queryNames.isEmpty()) {
             		worker = new ValidateWorker();
@@ -328,9 +324,9 @@ public class ValidationResultsView extends javax.swing.JFrame {
                     dlg.setVisible(true);
                     try {
                     	worker.get();
-                    	if (worker.getResults() != null && !worker.getResults().isEmpty()) {
+                    	if (worker.getAcceptedResults() != null && !worker.getAcceptedResults().isEmpty()) {
                     		log.info("Accepted species found, adding..");
-                        	addValitadionResultsTable(worker.getResults());
+                        	addValitadionResultsTable(worker.getAcceptedResults());
                         }
                         // if accepted species results are empty - should not happen 
                         else {
@@ -350,22 +346,45 @@ public class ValidationResultsView extends javax.swing.JFrame {
         	// if fuzzy species results are empty
             } else {
             	log.info("No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
-            	javax.swing.JOptionPane.showMessageDialog(this, "No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");  
+            	javax.swing.JOptionPane.showMessageDialog(this, "<html><body width='300'><h2>Validation Results</h2><p>No results could be found for the name entered. Please "
+            			+ "make sure you have spelled the name correctly before saving.</p></body></html>", null, JOptionPane.WARNING_MESSAGE);            	            	
+        		exit();            	
             }
         }
         else {
         	log.info("Accepted species found, adding..");
-        	addValitadionResultsTable(worker.getResults());
+        	addValitadionResultsTable(worker.getAcceptedResults());
         }
 	}
 	
-	
+	/**
+	 * Returns the selected species name to the parent frame.
+	 * 
+	 */
 	private void saveSelectedSpeciesName() {
 		if (tableResults.getSelectedRow() != -1) {
 			int row = tableResults.getSelectedRow();
-			String selectedSpeciesName = (String) tableResults.getValueAt(row, 1);			
-			parent.setValidatedTxtName(selectedSpeciesName);
-			exit();
+			String selectedSpecies = (String) tableResults.getValueAt(row, 0);
+			AcceptedNamePair acceptedNamePair = (AcceptedNamePair) tableResults.getValueAt(row, 3);			
+			if (acceptedNamePair.isAccepted()) {
+				parent.setValidatedTxtName(selectedSpecies);
+				exit();
+			} else {
+				String message = "<html><body width='300'><h2>Notice</h2><p>The species name you selected (" + selectedSpecies + ") is a synonym "
+								 + "to the accepted species name, would you like to save the accepted name instead?</p>"
+								 + "<br><br>"
+								 + "<p>Accepted name: " + acceptedNamePair.getAcceptedName() + "</p>"
+								 + "<br><br></body></html>";
+								
+				int answer = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (answer == JOptionPane.YES_OPTION) {
+					parent.setValidatedTxtName(acceptedNamePair.getAcceptedName());	
+					exit();
+				}
+				else if (answer == JOptionPane.NO_OPTION) {
+					//parent.setValidatedTxtName(selectedSpecies);
+				}
+			}			
 		}
 	}
 	

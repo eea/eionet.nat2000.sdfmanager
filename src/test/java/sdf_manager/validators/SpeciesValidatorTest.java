@@ -15,6 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
+import sdf_manager.validators.model.FuzzyResult;
+
 
 public class SpeciesValidatorTest {
 
@@ -36,7 +38,7 @@ public class SpeciesValidatorTest {
 		myJsonResult = IOUtils.toString(inputStream);		
 		when(testClass.getJsonResponse(isA(URIBuilder.class))).thenReturn(myJsonResult);
 		when(testClass.doQueryFuzzy("Anything")).thenCallRealMethod();
-		List<ValidatorResultsRow> testList = testClass.doQueryFuzzy("Anything");
+		List<FuzzyResult> testList = testClass.doQueryFuzzy("Anything");
 		assertEquals("Test", 3, testList.size());		
 	}
 

@@ -19,8 +19,9 @@ import org.hibernate.Session;
 
 import pojos.OtherSpecies;
 import sdf_manager.forms.IEditorOtherSpecies;
-import sdf_manager.forms.ValidationResultsView;
 import sdf_manager.util.SDF_Util;
+import sdf_manager.validators.view.ValidationResultsView;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

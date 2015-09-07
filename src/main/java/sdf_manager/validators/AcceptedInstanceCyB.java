@@ -4,11 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Class for a JSON representation of accepted species data.
  * @author George Sofianos
  */
-public class GsonAcceptedInstance {  
+public class AcceptedInstanceCyB implements AcceptedInstance {  
   @SerializedName("errorMessage")
   private String errorMessage;
   @SerializedName("request")
@@ -19,7 +20,10 @@ public class GsonAcceptedInstance {
 
     public request(String query) {
       this.query = query;
-    }               
+    }
+    public String getQuery() {
+      return this.query;
+    }
    }
   
    @SerializedName("response")
@@ -67,7 +71,7 @@ public class GsonAcceptedInstance {
         this.rank = rank;
       }  
    }
-  public GsonAcceptedInstance(request request, List<responseImpl> response) {
+  public AcceptedInstanceCyB(request request, List<responseImpl> response) {
     this.request = request;
     this.response = response;
   }
@@ -75,9 +79,15 @@ public class GsonAcceptedInstance {
     return response.size();
   }
   public List<ValidatorResultsRow> getResponses() {
+	  String query = request.getQuery();
+	  //boolean queryEqualsAccepted = true;
       List<ValidatorResultsRow> results = new ArrayList<ValidatorResultsRow>();
       for (responseImpl im : response) {
-          AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family);
+    	  if (!im.acceptedName.equalsIgnoreCase(query)) {
+    		  AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(query, im.classification.Kingdom, im.classification.Family, new AcceptedNamePair(false, im.acceptedName));
+    		  results.add(i);
+    	  }
+          AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family, new AcceptedNamePair(true, im.acceptedName));
           results.add(i);
       }
       return results;

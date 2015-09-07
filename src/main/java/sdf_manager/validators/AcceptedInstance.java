@@ -1,10 +1,10 @@
 package sdf_manager.validators;
 
 /**
- * 
+ * Accepted GSON Instance
  * @author George Sofianos
  *
  */
-public interface ValidatorResultsRow {
-	Object[] getRow();
+public interface AcceptedInstance {
+
 }

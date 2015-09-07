@@ -160,7 +160,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                     props.put("cdm.connection.host", "api.cybertaxonomy.org");
                     props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
                     props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
-                    props.put("cdm.fuzzy.accuracy", "0.6");
+                    props.put("cdm.fuzzy.accuracy", "0.8");
                     props.put("cdm.fuzzy.hits", "10");
                     props.put("cdm.fuzzy.type", "name");
                     
@@ -301,7 +301,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         props.put("cdm.connection.host", "api.cybertaxonomy.org");
         props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
         props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
-        props.put("cdm.fuzzy.accuracy", "0.6");
+        props.put("cdm.fuzzy.accuracy", "0.8");
         props.put("cdm.fuzzy.hits", "10");
         props.put("cdm.fuzzy.type", "name");
         

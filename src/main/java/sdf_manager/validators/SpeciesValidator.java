@@ -1,12 +1,5 @@
 package sdf_manager.validators;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import sdf_manager.util.PropertyUtils;
-
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
@@ -33,6 +26,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import sdf_manager.validators.model.FuzzyResult;
 
 /**
  * Handles the accepted species cybertaxonomy webservice
@@ -110,7 +110,7 @@ public class SpeciesValidator {
      * @throws IOException - If http connection fails
      * @throws URISyntaxException - when there is a wrong uri
      */
-    public List<ValidatorResultsRow> doQueryFuzzy(String name) throws IOException, URISyntaxException {
+    public List<FuzzyResult> doQueryFuzzy(String name) throws IOException, URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
         uriBuilder.setHost(NAME_CATALOG_URL);
@@ -130,8 +130,7 @@ public class SpeciesValidator {
         
         if (jsonObject.responseSize() > 0) {
             return jsonObject.getResponses();
-        }
-        else {
+        } else {
           return null;
         }
     } 
@@ -150,20 +149,20 @@ public class SpeciesValidator {
         uriBuilder.setPath(ACCEPTED_JSON_PATH);        
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
         for (int i = 0; i < names.size(); i++) {
-        	NameValuePair a = new BasicNameValuePair("query", names.get(i).toLowerCase()); 
+        	NameValuePair a = new BasicNameValuePair("query", names.get(i)); 
         	parameters.add(a);
         }
         uriBuilder.setParameters(parameters);
         String responseJsonString = getJsonResponse(uriBuilder);
        
-        List<GsonAcceptedInstance> resultJsonList;
+        List<AcceptedInstanceCyB> resultJsonList;
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();        
         JsonArray array = parser.parse(responseJsonString).getAsJsonArray();            
-        resultJsonList = Arrays.asList(gson.fromJson(array, GsonAcceptedInstance[].class));                                                                                            
+        resultJsonList = Arrays.asList(gson.fromJson(array, AcceptedInstanceCyB[].class));                                                                                            
         
         boolean hasOnlyErrors = true;
-        for (GsonAcceptedInstance in : resultJsonList) {
+        for (AcceptedInstanceCyB in : resultJsonList) {
         	if (!in.hasError()) {
                 hasOnlyErrors = false;
                 break;
@@ -173,7 +172,7 @@ public class SpeciesValidator {
         	return null; 
       	}
         List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>(); 
-        for (GsonAcceptedInstance in : resultJsonList) {
+        for (AcceptedInstanceCyB in : resultJsonList) {
         	if (in.responseSize() > 0) {      
                 rows.addAll(in.getResponses());
             } 

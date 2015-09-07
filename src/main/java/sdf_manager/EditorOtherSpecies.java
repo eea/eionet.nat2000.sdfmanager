@@ -13,8 +13,9 @@ import org.hibernate.Session;
 
 import pojos.OtherSpecies;
 import sdf_manager.forms.IEditorOtherSpecies;
-import sdf_manager.forms.ValidationResultsView;
 import sdf_manager.util.SDF_Util;
+import sdf_manager.validators.view.ValidationResultsView;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;

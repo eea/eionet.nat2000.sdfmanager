@@ -1,6 +1,9 @@
 package sdf_manager.validators;
 
 import com.google.gson.annotations.SerializedName;
+
+import sdf_manager.validators.model.FuzzyResult;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,17 +54,22 @@ public class GsonFuzzyInstance {
    }
  
   public int responseSize() {
-    return response.size();
+	  if (response == null) {
+		  return -1;
+	  } else {
+		  return response.size();
+	  }
+	  
   }
   public boolean hasError() {
     return this.errorMessage != null? true: false;
   }
-  public List<ValidatorResultsRow> getResponses() {
-      List<ValidatorResultsRow> results = new ArrayList<ValidatorResultsRow>();
+  public List<FuzzyResult> getResponses() {
+	  List<FuzzyResult> results = new ArrayList<FuzzyResult>();
       for (responseImpl im : response) {
-          FuzzyValidatorTableRow i = new FuzzyValidatorTableRow(im.name,im.title,im.score);
-          results.add(i);
+          FuzzyResult result = new FuzzyResult(im.name, im.title, im.score);
+          results.add(result);
       }
-      return results;
+      return results;     	  
   }
 }

@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,10 +110,9 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidationResultsView.class .getName());	
 	private JTable tableResults;	
 	
-	public ValidationResultsView(IEditorOtherSpecies parent, String name) {		
+	public ValidationResultsView(IEditorOtherSpecies parent) {		
 		this();		
-		this.parent = parent;
-		populateValidationResultsTable(name);
+		this.parent = parent;		
 	}
 	public ValidationResultsView() {
 		initComponents();		
@@ -237,22 +237,43 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	 */
 	private void clearValidationResultsTable() {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel();
-		//clear table rows
 		int rowCount = model.getRowCount();
 		for (int i = rowCount - 1;i >=0; i--) {
 			model.removeRow(i);
 		}
 	}
-	
+	/**
+	 * Adds search results to UI table
+	 * @param results
+	 */
 	private void addValitadionResultsTable(List<ValidatorResultsRow> results) {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
-        //add results to table
         for (ValidatorResultsRow val : results) {            
             model.addRow(val.getRow());
         }   
 	}
-	
-	private void populateValidationResultsTable(String name) {
+	/**
+	 * Handles Exception and shows a dialog with the cause of the error. It also logs the error to the default logger.
+	 * @param ex
+	 */
+	private void handleConnectionExceptions(Throwable ex) {
+		Throwable cause = ex.getCause();
+    	if (cause == null) {
+    		return;
+    	}
+    	if (cause instanceof java.net.SocketException || cause instanceof InterruptedIOException) {
+    		String message = "<html><body width='300'><h2>Connection error</h2><p>The validation web services could not be contacted."
+    				+ " Please make sure you have a wroking internet connection and try again.</p><br><p>" + cause.getMessage() + "</p></body></html>";
+        	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
+    	}        	        	
+    	log.error("Error while searching for accepted species.." + ex);
+    	exit();
+	}
+	/**
+	 * Contacts webservices and populates UI table with species data.
+	 * @param name
+	 */
+	public void populateValidationResultsTable(String name) {
 		log.info("Checking for accepted species..");
 		clearValidationResultsTable();
 		ValidateWorker worker = new ValidateWorker();
@@ -269,20 +290,16 @@ public class ValidationResultsView extends javax.swing.JFrame {
         try {
         	worker.get();
         } catch(ExecutionException ex) {
-        	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
-        	log.error("Error while searching for accepted species.." + ex);
-        	return;
+        	handleConnectionExceptions(ex);
         } catch(InterruptedException ex) {
-        	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
-        	log.error("Error while searching for accepted species.." + ex);
-        	return;
+        	handleConnectionExceptions(ex);
         }
         // if valid species results are empty, try fuzzy search.
         if (worker.getAcceptedResults() == null || worker.getAcceptedResults().isEmpty()) {
-        	log.info("Checking for fuzzy results..");
+        	log.info("Fuzzy search for accepted species in progress..");
         	clearValidationResultsTable();
         	worker = new ValidateWorker();                    
-            dlg.setLabel("Checking fuzzy species name...");
+            dlg.setLabel("Fuzzy search for accepted species in progress..");
             dlg.setModal(false);
             dlg.setVisible(false);
             worker.setDialog(dlg);            
@@ -294,17 +311,13 @@ public class ValidationResultsView extends javax.swing.JFrame {
             try {
             	worker.get();            	
             } catch (ExecutionException ex) {
-            	javax.swing.JOptionPane.showMessageDialog(this, "Error while fuzzy searching for species");
-            	log.error("Error while fuzzy searching for species.." + ex);
-            	return;
+            	handleConnectionExceptions(ex);
             } catch (InterruptedException ex) {            	
-            	javax.swing.JOptionPane.showMessageDialog(this, "Error while fuzzy searching for species");
-            	log.error("Error while fuzzy searching for species.." + ex);
-            	return;
+            	handleConnectionExceptions(ex);
             }            
             // if fuzzy species results are not empty, get valid species results for each result.
             if (worker.getFuzzyResults() != null && !worker.getFuzzyResults().isEmpty()) {
-            	log.info("Fuzzy results found, will check for accepted species..");
+            	log.info("Fuzzy search returned some results, checking for accepted species..");
             	List<FuzzyResult> results = worker.getFuzzyResults();
             	List<String> queryNames = new ArrayList<String>();
             	for (int i = 0; i < results.size(); i++) {
@@ -326,34 +339,36 @@ public class ValidationResultsView extends javax.swing.JFrame {
                     try {
                     	worker.get();
                     	if (worker.getAcceptedResults() != null && !worker.getAcceptedResults().isEmpty()) {
-                    		log.info("Accepted species found, adding..");
+                    		log.info("Accepted species search returned some results, adding to table..");
                         	addValitadionResultsTable(worker.getAcceptedResults());
                         }
-                        // if accepted species results are empty - should not happen 
+                        // if accepted species results are empty - this should indicate a difference in the two databases 
                         else {
-                        	log.info("No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
-                        	javax.swing.JOptionPane.showMessageDialog(this, "No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
+                        	log.info("Fuzzy search returned some results, but the accepted species search returned none.");
+                        	String message = "<html><body width='300'><h2>Error</h2><p>No results could be found for the name entered."
+                        			+ " Please make sure you have spelled the name correctly before saving.</p></body></html>";
+                        	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
+                        	exit();
                         }
                     } catch (ExecutionException ex) {
-                    	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
-                    	log.error("Error while searching for accepted species.." + ex);
-                    	return;
+                    	handleConnectionExceptions(ex);
                     } catch (InterruptedException ex) {
-                    	javax.swing.JOptionPane.showMessageDialog(this, "Error while searching for accepted species");
-                    	log.error("Error while searching for accepted species.." + ex);
-                    	return;
+                    	handleConnectionExceptions(ex);
                     }                    
             	}
         	// if fuzzy species results are empty
             } else {
             	log.info("No results could be found for the name entered. Please make sure you have spelled the name correctly before saving.");
-            	javax.swing.JOptionPane.showMessageDialog(this, "<html><body width='300'><h2>Validation Results</h2><p>No results could be found for the name entered. Please "
-            			+ "make sure you have spelled the name correctly before saving.</p></body></html>", null, JOptionPane.WARNING_MESSAGE);            	            	
+            	String message = "<html><body width='300'><h2>Validation Results</h2>"
+            			+ "<p>No results could be found for the name entered. Please "
+            			+ "make sure you have spelled the name correctly before saving."
+            			+ "</p></body></html>";
+            	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);            	
         		exit();            	
             }
         }
         else {
-        	log.info("Accepted species found, adding..");
+        	log.info("Accepted species search returned some results, adding..");
         	addValitadionResultsTable(worker.getAcceptedResults());
         }
 	}
@@ -383,7 +398,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {
-					//parent.setValidatedTxtName(selectedSpecies);
+					exit();
 				}
 			}			
 		}

@@ -1056,9 +1056,10 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         }        
         else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
         	String queryName = this.txtName.getText();
-    		ValidationResultsView val = new ValidationResultsView(this, queryName);
+    		ValidationResultsView val = new ValidationResultsView(this);
     		val.setState(NORMAL);
     		val.setVisible(true);
+    		val.populateValidationResultsTable(queryName);
         }       
 	}    
 

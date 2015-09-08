@@ -163,6 +163,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
                     props.put("cdm.fuzzy.accuracy", "0.8");
                     props.put("cdm.fuzzy.hits", "10");
                     props.put("cdm.fuzzy.type", "name");
+                    // add default CoL webservice properties
+                    props.put("col.connection.timeout", "60");
+                    props.put("col.connection.host", "www.catalogueoflife.org");
+                    props.put("col.json.accepted", "/annual-checklist/2015/webservice");
+                    
+                    
+                    
                     
                     LOGGER.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
                     Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
@@ -304,6 +311,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         props.put("cdm.fuzzy.accuracy", "0.8");
         props.put("cdm.fuzzy.hits", "10");
         props.put("cdm.fuzzy.type", "name");
+     // add default CoL webservice properties
+        props.put("col.connection.timeout", "60");
+        props.put("col.connection.host", "www.catalogueoflife.org");
+        props.put("col.json.accepted", "/annual-checklist/2015/webservice");
         
         PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
         LOGGER.info("properties stored to " + LOCAL_PROPERTIES_FILE);

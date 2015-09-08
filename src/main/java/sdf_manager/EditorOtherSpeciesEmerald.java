@@ -637,7 +637,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         });
         chkFT = new javax.swing.JCheckBox();
         
-                chkFT.setText(resourceMap.getString("chkFT.text")); // NOI18N
+                chkFT.setText("The species is not listed above (free-text)"); // NOI18N
                 chkFT.setName("chkFT"); // NOI18N
                 chkFT.addItemListener(new java.awt.event.ItemListener() {
                     @Override
@@ -665,26 +665,29 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         		.addGroup(jPanel2Layout.createSequentialGroup()
         			.addContainerGap()
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(chkSensitive)
-        				.addComponent(chkNP)
+        				.addComponent(chkFT)
         				.addGroup(jPanel2Layout.createSequentialGroup()
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(jLabel4)
-        						.addComponent(jLabel12)
         						.addGroup(jPanel2Layout.createSequentialGroup()
         							.addGap(19)
         							.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-        						.addComponent(chkFT))
-        					.addGap(18)
+        						.addComponent(jLabel4)
+        						.addComponent(jLabel12))
+        					.addPreferredGap(ComponentPlacement.RELATED)
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
         						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         						.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addComponent(chkSensitive)
+        					.addGap(35)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
         						.addGroup(jPanel2Layout.createSequentialGroup()
         							.addComponent(txtName, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(btnValidate)))))
-        			.addContainerGap(138, Short.MAX_VALUE))
+        							.addComponent(btnValidate))
+        						.addComponent(chkNP))))
+        			.addContainerGap(179, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.LEADING)
@@ -699,17 +702,18 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         				.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(jLabel1))
+        				.addComponent(jLabel1)
+        				.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addGap(18)
+        			.addComponent(chkFT)
+        			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(chkFT)
         				.addComponent(btnValidate))
-        			.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-        			.addComponent(chkSensitive)
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(chkNP)
+        			.addGap(27)
+        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(chkNP)
+        				.addComponent(chkSensitive))
         			.addContainerGap())
         );
         jPanel2.setLayout(jPanel2Layout);
@@ -905,34 +909,38 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
+        				.addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
         				.addGroup(jPanel1Layout.createSequentialGroup()
-        					.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING)
-        						.addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
         						.addGroup(jPanel1Layout.createSequentialGroup()
-        							.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         							.addGap(18)
-        							.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        					.addGap(21))
-        				.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-        					.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-        					.addGap(6)
-        					.addComponent(btnCancel)
-        					.addGap(29))))
+        							.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.RELATED))
+        						.addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(btnCancel)
+        							.addGap(9)))))
+        			.addGap(21))
         );
         jPanel1Layout.setVerticalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addComponent(jPanel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
-        				.addComponent(jPanel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        				.addComponent(jPanel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(btnSave)
-        				.addComponent(btnCancel))
-        			.addGap(16))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(jPanel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(jPanel1Layout.createSequentialGroup()
+        					.addComponent(jPanel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        					.addGap(7)
+        					.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(btnSave)
+        						.addComponent(btnCancel))))
+        			.addContainerGap())
         );
         jPanel1.setLayout(jPanel1Layout);
 
@@ -997,9 +1005,10 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         }        
         else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
         	String queryName = this.txtName.getText();
-    		ValidationResultsView val = new ValidationResultsView(this, queryName);
+    		ValidationResultsView val = new ValidationResultsView(this);
     		val.setState(NORMAL);
     		val.setVisible(true);
+    		val.populateValidationResultsTable(queryName);
         }       
     }
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed

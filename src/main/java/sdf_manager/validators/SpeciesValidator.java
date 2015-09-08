@@ -151,35 +151,33 @@ public class SpeciesValidator {
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
         uriBuilder.setHost(COL_HOST_URL);
-        uriBuilder.setPath(COL_ACCEPTED_JSON_PATH);        
+        uriBuilder.setPath(COL_ACCEPTED_JSON_PATH);  
+        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>();
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-        for (int i = 0; i < names.size(); i++) {
-        	NameValuePair a = new BasicNameValuePair("name", names.get(i)); 
-        	parameters.add(a);
-        }
-        parameters.add(new BasicNameValuePair("format", "json"));
-        parameters.add(new BasicNameValuePair("response", "full"));
-        uriBuilder.setParameters(parameters);
-        String responseJsonString = getJsonResponse(uriBuilder);
-               
-        Gson gson = new Gson();
-        JsonParser parser = new JsonParser();   
-        JsonElement parsedJson = parser.parse(responseJsonString);
-    	JsonObject object = parsedJson.getAsJsonObject();            
-    	AcceptedInstanceCoL result = gson.fromJson(object, AcceptedInstanceCoL.class);                                                                                            
-        if (result.hasError()) {
-        	log.error(result.getError());
-        	return null;
-        } else {        	
-	        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>(); 
-	        if (result.responseSize() > 0) {	        		        	    
+        for (int i = 0; i < names.size(); i++) {    	
+	    	NameValuePair name = new BasicNameValuePair("name", names.get(i));
+	    	parameters.clear();
+	    	parameters.add(name);        
+	        parameters.add(new BasicNameValuePair("format", "json"));
+	        parameters.add(new BasicNameValuePair("response", "full"));
+	        uriBuilder.setParameters(parameters);
+	        String responseJsonString = getJsonResponse(uriBuilder);
+   
+	        Gson gson = new Gson();
+	        JsonParser parser = new JsonParser();   
+	        JsonElement parsedJson = parser.parse(responseJsonString);
+	    	JsonObject object = parsedJson.getAsJsonObject();            
+	    	AcceptedInstanceCoL result = gson.fromJson(object, AcceptedInstanceCoL.class);                                                                                            
+	        if (result.hasError()) {
+	        	log.info(result.getError());	        	
+	        } else if (result.responseSize() > 0) {	        		        	    
                 rows.addAll(result.getResponses());
             } 	        
-	        if (rows != null && !rows.isEmpty()) { 
-	        	return rows;
-	        } else {
-	        	return null;
-	        }
     	}
+        if (rows != null && !rows.isEmpty()) { 
+        	return rows;
+        } else {
+        	return null;
+        }        
     }
 }

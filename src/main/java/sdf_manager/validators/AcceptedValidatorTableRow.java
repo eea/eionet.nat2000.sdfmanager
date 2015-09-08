@@ -5,27 +5,29 @@ package sdf_manager.validators;
  * @author George Sofianos
  */
 public class AcceptedValidatorTableRow implements ValidatorResultsRow {
-    private String name;
+    private NameIdPair nameId;
     private String kingdom;
     private String family;
-    private AcceptedNamePair acceptedNamePair;
+    private AcceptedNameTriple acceptedNameTriple;
 
-    public AcceptedValidatorTableRow(String name, String kingdom, String family, AcceptedNamePair acceptedNamePair) {
-        this.name = name;
+    public AcceptedValidatorTableRow(NameIdPair nameId, String kingdom, String family, AcceptedNameTriple acceptedNameTriple) {
+        this.nameId = nameId;
         this.kingdom = kingdom;
         this.family = family;        
-        this.acceptedNamePair = acceptedNamePair;
+        this.acceptedNameTriple = acceptedNameTriple;
     }
+    
+    public NameIdPair getNameId() {
+		return nameId;
+	}
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setNameId(NameIdPair nameId) {
+		this.nameId = nameId;
+	}
 
-    public String getKingdom() {
+
+	public String getKingdom() {
         return kingdom;
     }
 
@@ -43,7 +45,7 @@ public class AcceptedValidatorTableRow implements ValidatorResultsRow {
 	
 	@Override
 	public Object[] getRow() { 
-		return new Object[] {this.name, this.kingdom, this.family, this.acceptedNamePair};
+		return new Object[] {this.nameId, this.kingdom, this.family, this.acceptedNameTriple};
 	}
     
 }

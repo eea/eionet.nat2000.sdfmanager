@@ -84,11 +84,11 @@ public class AcceptedInstanceCyB implements AcceptedInstance {
       List<ValidatorResultsRow> results = new ArrayList<ValidatorResultsRow>();
       for (responseImpl im : response) {
     	  if (!im.acceptedName.equalsIgnoreCase(query)) {
-    		  AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(query, im.classification.Kingdom, im.classification.Family, new AcceptedNamePair(false, im.acceptedName));
-    		  results.add(i);
+    		  //AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(query, im.classification.Kingdom, im.classification.Family, new AcceptedNamePair(false, im.acceptedName));
+    		 // results.add(i);
     	  }
-          AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family, new AcceptedNamePair(true, im.acceptedName));
-          results.add(i);
+          //AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(im.acceptedName,im.classification.Kingdom,im.classification.Family, new AcceptedNamePair(true, im.acceptedName));
+          //results.add(i);
       }
       return results;
   }

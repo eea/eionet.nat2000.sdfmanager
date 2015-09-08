@@ -28,7 +28,8 @@ import javax.swing.table.DefaultTableModel;
 import sdf_manager.ProgressDialog;
 import sdf_manager.forms.IEditorOtherSpecies;
 import sdf_manager.util.PropertyUtils;
-import sdf_manager.validators.AcceptedNamePair;
+import sdf_manager.validators.AcceptedNameTriple;
+import sdf_manager.validators.NameIdPair;
 import sdf_manager.validators.SpeciesValidator;
 import sdf_manager.validators.ValidatorResultsRow;
 import sdf_manager.validators.model.FuzzyResult;
@@ -364,21 +365,21 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	private void saveSelectedSpeciesName() {
 		if (tableResults.getSelectedRow() != -1) {
 			int row = tableResults.getSelectedRow();
-			String selectedSpecies = (String) tableResults.getValueAt(row, 0);
-			AcceptedNamePair acceptedNamePair = (AcceptedNamePair) tableResults.getValueAt(row, 3);			
-			if (acceptedNamePair.isAccepted()) {
-				parent.setValidatedTxtName(selectedSpecies);
+			NameIdPair selectedSpecies = (NameIdPair) tableResults.getValueAt(row, 0);			
+			AcceptedNameTriple acceptedNameTriple = (AcceptedNameTriple) tableResults.getValueAt(row, 3);			
+			if (acceptedNameTriple.isAccepted()) {
+				parent.setValidatedTxtName(selectedSpecies.getName() + " (CoL-ID: " + selectedSpecies.getId() + ")");
 				exit();
 			} else {
 				String message = "<html><body width='300'><h2>Notice</h2><p>The species name you selected (" + selectedSpecies + ") is a synonym "
 								 + "to the accepted species name, would you like to save the accepted name instead?</p>"
 								 + "<br><br>"
-								 + "<p>Accepted name: " + acceptedNamePair.getAcceptedName() + "</p>"
+								 + "<p>Accepted name: " + acceptedNameTriple.getAcceptedName() + "</p>"
 								 + "<br><br></body></html>";
 								
 				int answer = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (answer == JOptionPane.YES_OPTION) {
-					parent.setValidatedTxtName(acceptedNamePair.getAcceptedName());	
+					parent.setValidatedTxtName(acceptedNameTriple.getAcceptedName() + " (CoL-ID:" + acceptedNameTriple.getAcceptedId() + ")");	
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {

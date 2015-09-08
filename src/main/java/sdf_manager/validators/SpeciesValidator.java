@@ -30,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import sdf_manager.validators.model.FuzzyResult;
@@ -41,6 +42,8 @@ import sdf_manager.validators.model.FuzzyResult;
 public class SpeciesValidator {
     private String QUERY_PROTOCOL = null;
     private String NAME_CATALOG_URL = null;
+    private String COL_HOST_URL = null;
+    private String COL_ACCEPTED_JSON_PATH = null;
     private String ACCEPTED_JSON_PATH = null;
     private String FUZZY_JSON_PATH = null;  
     private String FUZZY_SEARCH_ACCURACY = null;
@@ -60,6 +63,8 @@ public class SpeciesValidator {
 		FUZZY_SEARCH_ACCURACY = props.getProperty("cdm.fuzzy.accuracy");
 		FUZZY_SEARCH_TYPE = props.getProperty("cdm.fuzzy.type");
 		FUZZY_SEARCH_HITS = props.getProperty("cdm.fuzzy.hits");
+		COL_HOST_URL = props.getProperty("col.connection.host");
+		COL_ACCEPTED_JSON_PATH = props.getProperty("col.json.accepted");
 		CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("cdm.connection.timeout")) * 1000; //time in milisecs		
     }
     
@@ -145,43 +150,36 @@ public class SpeciesValidator {
     public List<ValidatorResultsRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
-        uriBuilder.setHost(NAME_CATALOG_URL);
-        uriBuilder.setPath(ACCEPTED_JSON_PATH);        
+        uriBuilder.setHost(COL_HOST_URL);
+        uriBuilder.setPath(COL_ACCEPTED_JSON_PATH);        
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
         for (int i = 0; i < names.size(); i++) {
-        	NameValuePair a = new BasicNameValuePair("query", names.get(i)); 
+        	NameValuePair a = new BasicNameValuePair("name", names.get(i)); 
         	parameters.add(a);
         }
+        parameters.add(new BasicNameValuePair("format", "json"));
+        parameters.add(new BasicNameValuePair("response", "full"));
         uriBuilder.setParameters(parameters);
         String responseJsonString = getJsonResponse(uriBuilder);
-       
-        List<AcceptedInstanceCyB> resultJsonList;
+               
         Gson gson = new Gson();
-        JsonParser parser = new JsonParser();        
-        JsonArray array = parser.parse(responseJsonString).getAsJsonArray();            
-        resultJsonList = Arrays.asList(gson.fromJson(array, AcceptedInstanceCyB[].class));                                                                                            
-        
-        boolean hasOnlyErrors = true;
-        for (AcceptedInstanceCyB in : resultJsonList) {
-        	if (!in.hasError()) {
-                hasOnlyErrors = false;
-                break;
-            }
-        }
-        if (hasOnlyErrors) { 
-        	return null; 
-      	}
-        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>(); 
-        for (AcceptedInstanceCyB in : resultJsonList) {
-        	if (in.responseSize() > 0) {      
-                rows.addAll(in.getResponses());
-            } 
-        }
-        if (rows != null && !rows.isEmpty()) { 
-        	return rows;
-        } else {
+        JsonParser parser = new JsonParser();   
+        JsonElement parsedJson = parser.parse(responseJsonString);
+    	JsonObject object = parsedJson.getAsJsonObject();            
+    	AcceptedInstanceCoL result = gson.fromJson(object, AcceptedInstanceCoL.class);                                                                                            
+        if (result.hasError()) {
+        	log.error(result.getError());
         	return null;
-        }
-        
+        } else {        	
+	        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>(); 
+	        if (result.responseSize() > 0) {	        		        	    
+                rows.addAll(result.getResponses());
+            } 	        
+	        if (rows != null && !rows.isEmpty()) { 
+	        	return rows;
+	        } else {
+	        	return null;
+	        }
+    	}
     }
 }

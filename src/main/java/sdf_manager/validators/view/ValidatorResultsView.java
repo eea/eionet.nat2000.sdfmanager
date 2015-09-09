@@ -8,14 +8,12 @@ import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,80 +21,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
 import sdf_manager.ProgressDialog;
 import sdf_manager.forms.IEditorOtherSpecies;
-import sdf_manager.util.PropertyUtils;
 import sdf_manager.validators.AcceptedNameTriple;
 import sdf_manager.validators.NameIdPair;
-import sdf_manager.validators.SpeciesValidator;
-import sdf_manager.validators.ValidatorResultsRow;
 import sdf_manager.validators.model.FuzzyResult;
-
-
-/**
-* Worker class for calling CDM webservice
-* @author George Sofianos
-*/
-class ValidateWorker extends SwingWorker<Boolean, Void> {
-   private JDialog dlg;    
-   private ValidationResultsView resultsView;
-   private String method;
-   private String queryName;
-   private List<String> queryNames;
-   private List<ValidatorResultsRow> acceptedResults;
-   private List<FuzzyResult> fuzzyResults;
-   
-   @Override
-   public Boolean doInBackground() throws Exception {
-	   Properties props = PropertyUtils.readProperties("sdf.properties");
-       SpeciesValidator validator = new SpeciesValidator(props);
-       if (method.equals("accepted")){
-    	   this.acceptedResults = validator.doQueryAccepted(queryNames);
-       }
-       else if (method.equals("fuzzy")) {
-    	   this.fuzzyResults = validator.doQueryFuzzy(queryName);
-       }                       
-       return true;
-   }
-
-   /**
-    *
-    * @param dlg
-    */
-   public void setDialog(JDialog dlg) {
-       this.dlg = dlg;
-   }
-
-   public void setMethod(String method) {
-       this.method = method;
-   }
-
-   public void setQueryName(String queryName) {
-       this.queryName = queryName;
-   }
-   
-   public void setQueryNames(List<String> queryNames) {
-       this.queryNames = queryNames;
-   }
-
-   public List<ValidatorResultsRow> getAcceptedResults() {
-       return (acceptedResults != null) ? acceptedResults : null;
-   }
-   public List<FuzzyResult> getFuzzyResults() {
-       return (fuzzyResults != null) ? fuzzyResults : null;
-   }
-   
-   @Override
-   public void done() {
-       dlg.setVisible(false);
-       dlg.dispose();
-   }
-}
-
-
+import sdf_manager.validators.model.ValidatorRow;
+import sdf_manager.validators.model.ValidatorTableRow;
+import sdf_manager.validators.workers.ValidatorWorker;
 
 /**
  * Displays results for species validation webservice
@@ -104,17 +38,17 @@ class ValidateWorker extends SwingWorker<Boolean, Void> {
  *
  */
 @SuppressWarnings("serial")
-public class ValidationResultsView extends javax.swing.JFrame {
+public class ValidatorResultsView extends javax.swing.JFrame {
 	
 	private IEditorOtherSpecies parent;
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidationResultsView.class .getName());	
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidatorResultsView.class .getName());	
 	private JTable tableResults;	
 	
-	public ValidationResultsView(IEditorOtherSpecies parent) {		
+	public ValidatorResultsView(IEditorOtherSpecies parent) {		
 		this();		
 		this.parent = parent;		
 	}
-	public ValidationResultsView() {
+	public ValidatorResultsView() {
 		initComponents();		
 		pack();
 		centerScreen();
@@ -148,7 +82,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 		lblTableHeader.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JLabel lblNaturalogo = new JLabel("");
-		lblNaturalogo.setIcon(new ImageIcon(ValidationResultsView.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));
+		lblNaturalogo.setIcon(new ImageIcon(ValidatorResultsView.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -246,9 +180,9 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	 * Adds search results to UI table
 	 * @param results
 	 */
-	private void addValitadionResultsTable(List<ValidatorResultsRow> results) {
+	private void addValidatorResultsTable(List<ValidatorTableRow> results) {
 		DefaultTableModel model = (DefaultTableModel) tableResults.getModel(); 
-        for (ValidatorResultsRow val : results) {            
+        for (ValidatorRow val : results) {            
             model.addRow(val.getRow());
         }   
 	}
@@ -276,7 +210,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
 	public void populateValidationResultsTable(String name) {
 		log.info("Checking for accepted species..");
 		clearValidationResultsTable();
-		ValidateWorker worker = new ValidateWorker();
+		ValidatorWorker worker = new ValidatorWorker();
         final ProgressDialog dlg = new ProgressDialog(this, true);
         dlg.setLabel("Checking for accepted species name...");
         dlg.setModal(false);
@@ -298,7 +232,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
         if (worker.getAcceptedResults() == null || worker.getAcceptedResults().isEmpty()) {
         	log.info("Fuzzy search for accepted species in progress..");
         	clearValidationResultsTable();
-        	worker = new ValidateWorker();                    
+        	worker = new ValidatorWorker();                    
             dlg.setLabel("Fuzzy search for accepted species in progress..");
             dlg.setModal(false);
             dlg.setVisible(false);
@@ -325,7 +259,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
             		queryNames.add(row.getName());            		
             	}
             	if (queryNames != null && !queryNames.isEmpty()) {
-            		worker = new ValidateWorker();
+            		worker = new ValidatorWorker();
                     //final ProgressDialog dlg = new ProgressDialog(this, true);
                     dlg.setLabel("Checking accepted species names...");
                     dlg.setModal(false);
@@ -340,7 +274,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
                     	worker.get();
                     	if (worker.getAcceptedResults() != null && !worker.getAcceptedResults().isEmpty()) {
                     		log.info("Accepted species search returned some results, adding to table..");
-                        	addValitadionResultsTable(worker.getAcceptedResults());
+                        	addValidatorResultsTable(worker.getAcceptedResults());
                         }
                         // if accepted species results are empty - this should indicate a difference in the two databases 
                         else {
@@ -369,7 +303,7 @@ public class ValidationResultsView extends javax.swing.JFrame {
         }
         else {
         	log.info("Accepted species search returned some results, adding..");
-        	addValitadionResultsTable(worker.getAcceptedResults());
+        	addValidatorResultsTable(worker.getAcceptedResults());
         }
 	}
 	
@@ -398,12 +332,17 @@ public class ValidationResultsView extends javax.swing.JFrame {
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {
+					parent.setValidatedTxtName(selectedSpecies.getName());
 					exit();
 				}
 			}			
 		}
 	}
 	
+	/**
+	 * Disposes validator results frame
+	 * 
+	 */
 	private void exit() {
 		this.dispose();
 	}

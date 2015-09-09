@@ -1,4 +1,4 @@
-package sdf_manager.validators;
+package sdf_manager.validators.json;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Class for a JSON representation of fuzzy species data.
  * @author George Sofianos
  */
-public class GsonFuzzyInstance {  
+public class FuzzyInstanceCyB {  
   
   @SerializedName("errorMessage")
   private String errorMessage;

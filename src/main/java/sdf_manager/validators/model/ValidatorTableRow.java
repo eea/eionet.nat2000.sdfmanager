@@ -1,16 +1,19 @@
-package sdf_manager.validators;
+package sdf_manager.validators.model;
+
+import sdf_manager.validators.AcceptedNameTriple;
+import sdf_manager.validators.NameIdPair;
 
 /**
- *
+ * Represents a swing table row object
  * @author George Sofianos
  */
-public class AcceptedValidatorTableRow implements ValidatorResultsRow {
+public class ValidatorTableRow implements ValidatorRow {
     private NameIdPair nameId;
     private String kingdom;
     private String family;
     private AcceptedNameTriple acceptedNameTriple;
 
-    public AcceptedValidatorTableRow(NameIdPair nameId, String kingdom, String family, AcceptedNameTriple acceptedNameTriple) {
+    public ValidatorTableRow(NameIdPair nameId, String kingdom, String family, AcceptedNameTriple acceptedNameTriple) {
         this.nameId = nameId;
         this.kingdom = kingdom;
         this.family = family;        

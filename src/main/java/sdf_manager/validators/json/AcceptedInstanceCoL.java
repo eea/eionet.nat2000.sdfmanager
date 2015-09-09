@@ -1,9 +1,13 @@
-package sdf_manager.validators;
+package sdf_manager.validators.json;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+
+import sdf_manager.validators.AcceptedNameTriple;
+import sdf_manager.validators.NameIdPair;
+import sdf_manager.validators.model.ValidatorTableRow;
 
 public class AcceptedInstanceCoL implements AcceptedInstance {
 	@SerializedName("error_message")
@@ -124,8 +128,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		}
 	}
 	
-	public List<ValidatorResultsRow> getResponses() {
-		List<ValidatorResultsRow> list = new ArrayList<ValidatorResultsRow>();
+	public List<ValidatorTableRow> getResponses() {
+		List<ValidatorTableRow> list = new ArrayList<ValidatorTableRow>();
 		for (Result result : results) {
 			if (result.getRank().equalsIgnoreCase(Result.SPECIES)) {
 				List<Result.Classification> classificationList = new ArrayList<Result.Classification>();
@@ -152,11 +156,11 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 						}
 						if (kingdom != null && family != null) break;
 					}
-					AcceptedValidatorTableRow row = new AcceptedValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(false, acceptedId, acceptedName));
+					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(false, acceptedId, acceptedName));
 					list.add(row);
 					
 					nameId = new NameIdPair(acceptedNameObj.getId(), acceptedNameObj.getName());					
-					row = new AcceptedValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, acceptedId, acceptedName));
+					row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, acceptedId, acceptedName));
 					list.add(row);
 				} else {				
 					classificationList = result.getClassification();
@@ -168,7 +172,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 						}
 						if (kingdom != null && family != null) break;
 					}
-					AcceptedValidatorTableRow row = new AcceptedValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, id, name));
+					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, id, name));
 					list.add(row);
 				}
 			}

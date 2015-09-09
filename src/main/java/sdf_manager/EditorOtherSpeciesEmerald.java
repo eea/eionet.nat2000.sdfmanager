@@ -11,6 +11,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -20,7 +21,7 @@ import org.hibernate.Session;
 import pojos.OtherSpecies;
 import sdf_manager.forms.IEditorOtherSpecies;
 import sdf_manager.util.SDF_Util;
-import sdf_manager.validators.view.ValidationResultsView;
+import sdf_manager.validators.view.ValidatorResultsView;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -1005,7 +1006,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         }        
         else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
         	String queryName = this.txtName.getText();
-    		ValidationResultsView val = new ValidationResultsView(this);
+        	ValidatorResultsView val = new ValidatorResultsView(this);
     		val.setState(NORMAL);
     		val.setVisible(true);
     		val.populateValidationResultsTable(queryName);
@@ -1113,7 +1114,6 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     @Override
     public void setValidatedTxtName(String name) {
     	this.txtName.setText(name); 
-    	this.txtName.setBackground(Color.GREEN);
     }
     
     public void enableCombos() {

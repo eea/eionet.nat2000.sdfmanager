@@ -1,4 +1,4 @@
-package sdf_manager.validators;
+package sdf_manager.validators.json;
 
 /**
  * Accepted GSON Instance

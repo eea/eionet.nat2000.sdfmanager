@@ -1,4 +1,4 @@
-package sdf_manager.validators;
+package sdf_manager.validators.dao;
 
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,32 +32,35 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import sdf_manager.validators.json.AcceptedInstanceCoL;
+import sdf_manager.validators.json.FuzzyInstanceCyB;
 import sdf_manager.validators.model.FuzzyResult;
+import sdf_manager.validators.model.ValidatorTableRow;
 
 /**
  * Handles the accepted species cybertaxonomy webservice
  * @author George Sofianos
  */
-public class SpeciesValidator {
+public class SpeciesValidatorDao implements ValidatorDao {
     private String QUERY_PROTOCOL = null;
     private String NAME_CATALOG_URL = null;
     private String COL_HOST_URL = null;
     private String COL_ACCEPTED_JSON_PATH = null;
-    private String ACCEPTED_JSON_PATH = null;
+    private String CDM_ACCEPTED_JSON_PATH = null;
     private String FUZZY_JSON_PATH = null;  
     private String FUZZY_SEARCH_ACCURACY = null;
     private String FUZZY_SEARCH_HITS = null;
     private String FUZZY_SEARCH_TYPE = null;
     private int CONNECTION_TIMEOUT = 0;    
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SpeciesValidator.class .getName());
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SpeciesValidatorDao.class .getName());
     
     /**
      * Constructor from Properties
      */
-    public SpeciesValidator(Properties props) {    	
+    public SpeciesValidatorDao(Properties props) {    	
 		QUERY_PROTOCOL = props.getProperty("cdm.connection.protocol");
 		NAME_CATALOG_URL = props.getProperty("cdm.connection.host");
-		ACCEPTED_JSON_PATH = props.getProperty("cdm.json.accepted");
+		CDM_ACCEPTED_JSON_PATH = props.getProperty("cdm.json.accepted");
 		FUZZY_JSON_PATH = props.getProperty("cdm.json.fuzzy");
 		FUZZY_SEARCH_ACCURACY = props.getProperty("cdm.fuzzy.accuracy");
 		FUZZY_SEARCH_TYPE = props.getProperty("cdm.fuzzy.type");
@@ -126,12 +128,12 @@ public class SpeciesValidator {
         uriBuilder.setParameter("type", FUZZY_SEARCH_TYPE);        
         
         String responseJsonString = getJsonResponse(uriBuilder);
-        GsonFuzzyInstance jsonObject;
+        FuzzyInstanceCyB jsonObject;
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();        
         JsonArray array = parser.parse(responseJsonString).getAsJsonArray();
         JsonElement responseJson = array.get(0);
-        jsonObject = gson.fromJson(responseJson, GsonFuzzyInstance.class);  
+        jsonObject = gson.fromJson(responseJson, FuzzyInstanceCyB.class);  
         
         if (jsonObject.responseSize() > 0) {
             return jsonObject.getResponses();
@@ -147,12 +149,12 @@ public class SpeciesValidator {
      * @throws IOException - If http connection fails
      * @throws URISyntaxException - when there is a wrong uri
      */
-    public List<ValidatorResultsRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
+    public List<ValidatorTableRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(QUERY_PROTOCOL);
         uriBuilder.setHost(COL_HOST_URL);
         uriBuilder.setPath(COL_ACCEPTED_JSON_PATH);  
-        List<ValidatorResultsRow> rows = new ArrayList<ValidatorResultsRow>();
+        List<ValidatorTableRow> rows = new ArrayList<ValidatorTableRow>();
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
         for (int i = 0; i < names.size(); i++) {    	
 	    	NameValuePair name = new BasicNameValuePair("name", names.get(i));

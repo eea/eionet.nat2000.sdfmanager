@@ -1,12 +1,16 @@
 package sdf_manager;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -14,11 +18,14 @@ import org.hibernate.Session;
 import pojos.OtherSpecies;
 import sdf_manager.forms.IEditorOtherSpecies;
 import sdf_manager.util.SDF_Util;
-import sdf_manager.validators.view.ValidationResultsView;
+import sdf_manager.validators.view.ValidatorResultsView;
 
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JButton;
@@ -1051,12 +1058,12 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
     
     private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {               	
 		if (this.txtName.getText() != null && !("").equals(this.txtName.getText()) && this.txtName.getText().length() > 128) {
-            EditorOtherSpecies.log.error("The name of the other species is too long, more than 256 characters.");
-            javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).");
+            EditorOtherSpecies.log.error("The name of the other species is too long, more than 128 characters.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).", null, JOptionPane.WARNING_MESSAGE);
         }        
         else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
         	String queryName = this.txtName.getText();
-    		ValidationResultsView val = new ValidationResultsView(this);
+        	ValidatorResultsView val = new ValidatorResultsView(this);
     		val.setState(NORMAL);
     		val.setVisible(true);
     		val.populateValidationResultsTable(queryName);
@@ -1112,8 +1119,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
     }
     @Override
     public void setValidatedTxtName(String name) {
-    	this.txtName.setText(name); 
-    	this.txtName.setBackground(Color.GREEN);
+    	this.txtName.setText(name);
     }
 
 

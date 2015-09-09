@@ -1,6 +1,9 @@
-package sdf_manager.validators;
+package sdf_manager.validators.json;
 
 import com.google.gson.annotations.SerializedName;
+
+import sdf_manager.validators.model.ValidatorTableRow;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,10 +81,10 @@ public class AcceptedInstanceCyB implements AcceptedInstance {
   public int responseSize() {
     return response.size();
   }
-  public List<ValidatorResultsRow> getResponses() {
+  public List<ValidatorTableRow> getResponses() {
 	  String query = request.getQuery();
 	  //boolean queryEqualsAccepted = true;
-      List<ValidatorResultsRow> results = new ArrayList<ValidatorResultsRow>();
+      List<ValidatorTableRow> results = new ArrayList<ValidatorTableRow>();
       for (responseImpl im : response) {
     	  if (!im.acceptedName.equalsIgnoreCase(query)) {
     		  //AcceptedValidatorTableRow i = new AcceptedValidatorTableRow(query, im.classification.Kingdom, im.classification.Family, new AcceptedNamePair(false, im.acceptedName));

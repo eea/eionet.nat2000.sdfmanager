@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import sdf_manager.validators.AcceptedNameTriple;
 import sdf_manager.validators.NameIdPair;
+import sdf_manager.validators.dao.ValidatorDaoException;
 import sdf_manager.validators.model.ValidatorTableRow;
 
 public class AcceptedInstanceCoL implements AcceptedInstance {
@@ -23,6 +24,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		private final static String KINGDOM = "Kingdom";
 		private final static String FAMILY = "Family";
 		private final static String SYNONYM = "synonym";
+		private final static String COMMON = "common name";
 		@SerializedName("id")
 		private String id;
 		@SerializedName("name")
@@ -59,11 +61,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			public List<Classification> getClassification() {
 				return classification;
 			}
-			public AcceptedName(String id, String name, String rank, String nameStatus) {				
-				this.id = id;
-				this.name = name;
-				this.rank = rank;
-				this.nameStatus = nameStatus;				
+			public AcceptedName() {
+	        	// no-args constructor
 			}					
 		}
 		@SerializedName("classification")
@@ -78,11 +77,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			@SerializedName("name_html")
 			private String name_html;
 			
-			public Classification(String id, String name, String rank, String name_html) {
-				this.id = id;
-				this.name = name;
-				this.rank = rank;
-				this.name_html = name_html;
+			public Classification() {
+	        	// no-args constructor
 			}
 
 			public String getId() {
@@ -102,11 +98,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			}
 			
 		}
-		public Result(String id, String name, String rank, String nameStatus) {
-			this.id = id;
-			this.name = name;
-			this.rank = rank;
-			this.nameStatus = nameStatus;
+		public Result() {
+        	// no-args constructor
 		}
 		public String getId() {
 			return id;
@@ -128,10 +121,12 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		}
 	}
 	
-	public List<ValidatorTableRow> getResponses() {
+	public List<ValidatorTableRow> getResponses() throws ValidatorDaoException {
 		List<ValidatorTableRow> list = new ArrayList<ValidatorTableRow>();
-		for (Result result : results) {
-			if (result.getRank().equalsIgnoreCase(Result.SPECIES)) {
+		for (Result result : results) {			
+			if (result.getRank() == null && result.getNameStatus() == null) {
+				throw new ValidatorDaoException("JSON response has wrong formatting.");								
+			} else if ((result.getRank() == null && result.getNameStatus().equalsIgnoreCase(Result.COMMON)) || result.getRank().equalsIgnoreCase(Result.SPECIES)) {
 				List<Result.Classification> classificationList = new ArrayList<Result.Classification>();
 				String id = result.getId();
 				String name = result.getName();
@@ -141,7 +136,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 				String family = null;	
 				String acceptedName = null;
 				String acceptedId = null;
-				if (status.equalsIgnoreCase(Result.SYNONYM)) {
+				if (status.equalsIgnoreCase(Result.SYNONYM) || status.equalsIgnoreCase(Result.COMMON)) {
+					// Result is a synonym or a common name.
 					Result.AcceptedName acceptedNameObj = result.getAcceptedName();
 					if (acceptedNameObj.getRank().equalsIgnoreCase(Result.SPECIES)) {
 						acceptedName = acceptedNameObj.getName();
@@ -155,14 +151,16 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 							family = classification.getName();
 						}
 						if (kingdom != null && family != null) break;
-					}
+					}					
 					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(false, acceptedId, acceptedName));
-					list.add(row);
-					
+					if (status.equalsIgnoreCase(Result.SYNONYM)) {
+						list.add(row);
+					}				
 					nameId = new NameIdPair(acceptedNameObj.getId(), acceptedNameObj.getName());					
 					row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, acceptedId, acceptedName));
 					list.add(row);
-				} else {				
+				} else {			
+					// the result is an accepted species
 					classificationList = result.getClassification();
 					for (Result.Classification classification : classificationList) {
 						if (classification.getRank().equalsIgnoreCase(Result.KINGDOM)) {
@@ -192,7 +190,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		return null;
 	}
 	public AcceptedInstanceCoL() {
-		// TODO Auto-generated constructor stub
+    	// no-args constructor
 	}
 
 }

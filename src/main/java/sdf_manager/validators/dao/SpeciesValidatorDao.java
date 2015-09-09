@@ -42,8 +42,9 @@ import sdf_manager.validators.model.ValidatorTableRow;
  * @author George Sofianos
  */
 public class SpeciesValidatorDao implements ValidatorDao {
-    private String QUERY_PROTOCOL = null;
-    private String NAME_CATALOG_URL = null;
+    private String CDM_QUERY_PROTOCOL = null;
+    private String COL_QUERY_PROTOCOL = null;
+    private String CDM_HOST_URL = null;
     private String COL_HOST_URL = null;
     private String COL_ACCEPTED_JSON_PATH = null;
     private String CDM_ACCEPTED_JSON_PATH = null;
@@ -58,13 +59,14 @@ public class SpeciesValidatorDao implements ValidatorDao {
      * Constructor from Properties
      */
     public SpeciesValidatorDao(Properties props) {    	
-		QUERY_PROTOCOL = props.getProperty("cdm.connection.protocol");
-		NAME_CATALOG_URL = props.getProperty("cdm.connection.host");
+    	CDM_QUERY_PROTOCOL = props.getProperty("cdm.connection.protocol");
+		CDM_HOST_URL = props.getProperty("cdm.connection.host");
 		CDM_ACCEPTED_JSON_PATH = props.getProperty("cdm.json.accepted");
 		FUZZY_JSON_PATH = props.getProperty("cdm.json.fuzzy");
 		FUZZY_SEARCH_ACCURACY = props.getProperty("cdm.fuzzy.accuracy");
 		FUZZY_SEARCH_TYPE = props.getProperty("cdm.fuzzy.type");
 		FUZZY_SEARCH_HITS = props.getProperty("cdm.fuzzy.hits");
+		COL_QUERY_PROTOCOL = props.getProperty("col.connection.protocol");
 		COL_HOST_URL = props.getProperty("col.connection.host");
 		COL_ACCEPTED_JSON_PATH = props.getProperty("col.json.accepted");
 		CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("cdm.connection.timeout")) * 1000; //time in milisecs		
@@ -119,8 +121,8 @@ public class SpeciesValidatorDao implements ValidatorDao {
      */
     public List<FuzzyResult> doQueryFuzzy(String name) throws IOException, URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setScheme(QUERY_PROTOCOL);
-        uriBuilder.setHost(NAME_CATALOG_URL);
+        uriBuilder.setScheme(CDM_QUERY_PROTOCOL);
+        uriBuilder.setHost(CDM_HOST_URL);
         uriBuilder.setPath(FUZZY_JSON_PATH);
         uriBuilder.setParameter("query", name.toLowerCase());
         uriBuilder.setParameter("accuracy", FUZZY_SEARCH_ACCURACY);
@@ -148,10 +150,11 @@ public class SpeciesValidatorDao implements ValidatorDao {
      * @return a list of results of an accepted species query
      * @throws IOException - If http connection fails
      * @throws URISyntaxException - when there is a wrong uri
+     * @throws ValidatorDaoException 
      */
-    public List<ValidatorTableRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException {     
+    public List<ValidatorTableRow> doQueryAccepted(List<String> names) throws IOException, URISyntaxException, ValidatorDaoException {     
         URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setScheme(QUERY_PROTOCOL);
+        uriBuilder.setScheme(COL_QUERY_PROTOCOL);
         uriBuilder.setHost(COL_HOST_URL);
         uriBuilder.setPath(COL_ACCEPTED_JSON_PATH);  
         List<ValidatorTableRow> rows = new ArrayList<ValidatorTableRow>();

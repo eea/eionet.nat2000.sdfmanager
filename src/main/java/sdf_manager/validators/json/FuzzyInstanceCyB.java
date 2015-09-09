@@ -17,15 +17,18 @@ public class FuzzyInstanceCyB {
   @SerializedName("errorMessage")
   private String errorMessage;
   @SerializedName("request")
-  private request request;
-  static class request {
+  private Request request;
+  static class Request {
     @SerializedName("query")
-    private String query;           
+    private String query;   
+    public Request() {
+    	// no-args constructor
+    }
    }
   
    @SerializedName("response")
-   private List<responseImpl> response;
-   static class responseImpl {
+   private List<Response> responses;
+   static class Response {
       @SerializedName("acceptedTaxonUuids")
       private List<String> acceptedTaxonUuids;
       @SerializedName("name")
@@ -39,37 +42,42 @@ public class FuzzyInstanceCyB {
       @SerializedName("title")
       private String title;      
 
-    public String getName() {
-      return name;
-    }
-
-    public BigDecimal getScore() {
-      return score;
-    }
-
-    public String getTitle() {
-      return title;
-    }
+      public Response() {
+      	// no-args constructor
+      }
+	  public String getName() {
+		  return name;
+	  }
+	
+	  public BigDecimal getScore() {
+		  return score;
+	  }
+	
+	  public String getTitle() {
+		  return title;
+	  }
       
    }
- 
-  public int responseSize() {
-	  if (response == null) {
-		  return -1;
-	  } else {
-		  return response.size();
-	  }
-	  
-  }
-  public boolean hasError() {
-    return this.errorMessage != null? true: false;
-  }
-  public List<FuzzyResult> getResponses() {
-	  List<FuzzyResult> results = new ArrayList<FuzzyResult>();
-      for (responseImpl im : response) {
-          FuzzyResult result = new FuzzyResult(im.name, im.title, im.score);
-          results.add(result);
-      }
-      return results;     	  
-  }
+    
+   	public FuzzyInstanceCyB() {
+    	// no-args constructor
+   	}
+   	public int responseSize() {
+   		if (responses == null) {
+   			return -1;
+   		} else {
+   			return responses.size();
+   		}	  
+   	}
+	public boolean hasError() {
+		return this.errorMessage != null? true: false;
+	}
+	public List<FuzzyResult> getResponses() {
+		List<FuzzyResult> results = new ArrayList<FuzzyResult>();
+		for (Response response : responses) {
+			FuzzyResult result = new FuzzyResult(response.name, response.title, response.score);
+			results.add(result);
+		}
+		return results;     	  
+	}
 }

@@ -1,4 +1,4 @@
-package sdf_manager.validators;
+package sdf_manager.validators.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
@@ -15,17 +15,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 
+import sdf_manager.validators.dao.SpeciesValidatorDao;
 import sdf_manager.validators.model.FuzzyResult;
+import sdf_manager.validators.model.ValidatorTableRow;
 
 
 public class SpeciesValidatorTest {
 
-	private SpeciesValidator testClass;
+	private SpeciesValidatorDao testClass;
 	private String myJsonResult;
 	
 	@Before
 	public void setUp() throws Exception {
-		 testClass = mock(SpeciesValidator.class);		 		 		  
+		 testClass = mock(SpeciesValidatorDao.class);		 		 		  
 	}
 
 	/**
@@ -52,9 +54,9 @@ public class SpeciesValidatorTest {
 		myJsonResult = IOUtils.toString(inputStream);		
 		when(testClass.getJsonResponse(isA(URIBuilder.class))).thenReturn(myJsonResult);
 		when(testClass.doQueryAccepted(Matchers.anyListOf(String.class))).thenCallRealMethod();
-		List<String> names = Arrays.asList("Anything", "Anything2");
-		List<ValidatorResultsRow> testList = testClass.doQueryAccepted(names);
-		assertEquals("Test", 1, testList.size());	
+		List<String> names = Arrays.asList("Anything");
+		List<ValidatorTableRow> testList = testClass.doQueryAccepted(names);
+		assertEquals("Test", 2, testList.size());	
 	}
 
 }

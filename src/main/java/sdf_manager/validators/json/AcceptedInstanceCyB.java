@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Class for a JSON representation of accepted species data.
  * @author George Sofianos
+ * 
  */
 public class AcceptedInstanceCyB implements AcceptedInstance {  
   @SerializedName("errorMessage")
@@ -54,24 +55,14 @@ public class AcceptedInstanceCyB implements AcceptedInstance {
         @SerializedName("Species")
         private String Species;
 
-        public classification(String Kingdom, String Phylum, String Class, String Order, String Family, String Genus, String Species) {
-          this.Kingdom = Kingdom;
-          this.Phylum = Phylum;
-          this.Class = Class;
-          this.Order = Order;
-          this.Family = Family;
-          this.Genus = Genus;
-          this.Species = Species;
+        public classification() {
+        	// no-args constructor
         }        
       }      
       @SerializedName("rank")
       private String rank;
 
-      public responseImpl(String acceptedName, String authorship, classification classification, String rank) {
-        this.acceptedName = acceptedName;
-        this.authorship = authorship;
-        this.classification = classification;
-        this.rank = rank;
+      public responseImpl() {
       }  
    }
   public AcceptedInstanceCyB(request request, List<responseImpl> response) {

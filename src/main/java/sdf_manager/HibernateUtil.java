@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
  * Hibernate Utility class with a convenient method to get Session Factory object.
@@ -20,6 +23,7 @@ public class HibernateUtil {
      *
      */
     private static final SessionFactory sessionFactory;
+    private static final ServiceRegistry serviceRegistry;
 
     /**
      *
@@ -32,19 +36,19 @@ public class HibernateUtil {
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
             String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
 
-            AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
-            annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-            annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("db.host")
+        	Configuration config = new Configuration();          	
+            config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+            config.setProperty("hibernate.hikari.dataSourceClassName", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+            config.setProperty("hibernate.hikari.dataSource.url", "jdbc:mysql://" + properties.getProperty("db.host")
                     + ":" +  properties.getProperty("db.port")
                     + "/" + dbSchemaName + "?autoReconnect=true");
-            annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("db.user"));
-            annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("db.password"));
-            annotationConfig.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
-
-
-            //sessionFactory = annotationConfig.configure().buildSessionFactory();
-            sessionFactory = annotationConfig.configure().buildSessionFactory();
+            config.setProperty("hibernate.hikari.dataSource.user", properties.getProperty("db.user"));
+            config.setProperty("hibernate.hikari.dataSource.password", properties.getProperty("db.password"));            
+            config.setProperty("hibernate.connection.release_mode", "after_transaction");
+            config.configure();
+            
+            serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties()).build();
+            sessionFactory = config.buildSessionFactory(serviceRegistry);
 
         } catch (Throwable ex) {
             // Log the exception.

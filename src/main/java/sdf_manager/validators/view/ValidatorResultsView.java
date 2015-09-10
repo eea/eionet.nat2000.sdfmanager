@@ -80,49 +80,46 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 			}
 		});
 		
-		JLabel lblTableHeader = new JLabel("Select the corect species name to save:");
+		JLabel lblTableHeader = new JLabel("Select the correct species name to save:");
 		lblTableHeader.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lblNaturalogo = new JLabel("");		
+		JLabel lblNaturalogo = new JLabel(new ImageIcon(ValidatorResultsView.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));		
 		if (SDF_ManagerApp.isEmeraldMode()) {			
 			lblNaturalogo.setIcon(new ImageIcon(ValidatorResultsView.class.getResource("/sdf_manager/images/emeraude_logo_smaller.png")));
-		} else {
-			lblNaturalogo.setIcon(new ImageIcon(ValidatorResultsView.class.getResource("/sdf_manager/images/n2k_logo_smaller.jpg")));
 		}
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(413, Short.MAX_VALUE)
+					.addComponent(btnSave)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnCancel)
+					.addGap(93))
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addComponent(lblNaturalogo)
-					.addContainerGap(440, Short.MAX_VALUE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(53, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnSave)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnCancel))
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-							.addComponent(lblTableHeader)
-							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblValidationResultsHeader)))
-					.addGap(96))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblTableHeader)
+						.addComponent(lblValidationResultsHeader))
+					.addContainerGap(73, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(lblNaturalogo)
-					.addGap(18)
-					.addComponent(lblValidationResultsHeader)
-					.addGap(21)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblValidationResultsHeader)
+						.addComponent(lblNaturalogo))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblTableHeader)
-					.addGap(27)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 224, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnSave)
 						.addComponent(btnCancel))
-					.addContainerGap(66, Short.MAX_VALUE))
+					.addContainerGap(68, Short.MAX_VALUE))
 		);
 		
 		tableResults = new JTable();
@@ -165,6 +162,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 			}
 		});
 		tableResults.getColumnModel().getColumn(0).setPreferredWidth(166);
+		tableResults.getColumnModel().getColumn(0).setCellRenderer(new HtmlTableCellRenderer());
 		tableResults.getColumnModel().getColumn(1).setPreferredWidth(87);
 		tableResults.getColumnModel().getColumn(2).setPreferredWidth(97);
 		tableResults.getColumnModel().getColumn(3).setPreferredWidth(96);
@@ -331,7 +329,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {
-					parent.setValidatedTxtName(selectedSpecies.getName());
+					parent.setValidatedTxtName(selectedSpecies.getName() + " (CoL-ID:" + selectedSpecies.getId() + ")");
 					exit();
 				}
 			}			

@@ -33,6 +33,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		private String rank;
 		@SerializedName("name_status")
 		private String nameStatus;
+		@SerializedName("name_html")
+		private String nameHtml;
 		@SerializedName("accepted_name")
 		private AcceptedName acceptedName;
 		static class AcceptedName {
@@ -44,6 +46,8 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			private String rank;
 			@SerializedName("name_status")
 			private String nameStatus;
+			@SerializedName("name_html")
+			private String nameHtml;
 			@SerializedName("classification")
 			private List<Classification> classification;
 			public String getId() {
@@ -57,6 +61,9 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			}
 			public String getNameStatus() {
 				return nameStatus;
+			}			
+			public String getNameHtml() {
+				return nameHtml;
 			}
 			public List<Classification> getClassification() {
 				return classification;
@@ -74,8 +81,6 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			private String name;
 			@SerializedName("rank")
 			private String rank;
-			@SerializedName("name_html")
-			private String name_html;
 			
 			public Classification() {
 	        	// no-args constructor
@@ -91,10 +96,6 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 
 			public String getRank() {
 				return rank;
-			}
-
-			public String getName_html() {
-				return name_html;
 			}
 			
 		}
@@ -112,6 +113,9 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		}
 		public String getNameStatus() {
 			return nameStatus;
+		}		
+		public String getNameHtml() {
+			return nameHtml;
 		}
 		public List<Classification> getClassification() {
 			return classification;
@@ -129,7 +133,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 			} else if ((result.getRank() == null && result.getNameStatus().equalsIgnoreCase(Result.COMMON)) || result.getRank().equalsIgnoreCase(Result.SPECIES)) {
 				List<Result.Classification> classificationList = new ArrayList<Result.Classification>();
 				String id = result.getId();
-				String name = result.getName();
+				String name = result.getNameHtml();
 				NameIdPair nameId = new NameIdPair(id, name);
 				String status = result.getNameStatus();		
 				String kingdom = null;
@@ -140,7 +144,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 					// Result is a synonym or a common name.
 					Result.AcceptedName acceptedNameObj = result.getAcceptedName();
 					if (acceptedNameObj.getRank().equalsIgnoreCase(Result.SPECIES)) {
-						acceptedName = acceptedNameObj.getName();
+						acceptedName = acceptedNameObj.getNameHtml();
 						acceptedId = acceptedNameObj.getId();
 					}
 					classificationList = acceptedNameObj.getClassification();
@@ -156,7 +160,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 					if (status.equalsIgnoreCase(Result.SYNONYM)) {
 						list.add(row);
 					}				
-					nameId = new NameIdPair(acceptedNameObj.getId(), acceptedNameObj.getName());					
+					nameId = new NameIdPair(acceptedNameObj.getId(), acceptedNameObj.getNameHtml());					
 					row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, acceptedId, acceptedName));
 					list.add(row);
 				} else {			

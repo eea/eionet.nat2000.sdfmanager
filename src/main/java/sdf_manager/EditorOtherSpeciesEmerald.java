@@ -14,6 +14,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -26,6 +27,9 @@ import sdf_manager.validators.view.ValidatorResultsView;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextPane;
+import javax.swing.JLabel;
+import java.awt.SystemColor;
 
 
 /**
@@ -39,6 +43,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     private boolean init = true;
     private boolean editing = false;
     private int index = -1;
+    private String acceptedName;
 
     private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorOtherSpeciesEmerald.class .getName());
 
@@ -172,6 +177,9 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
        if (count == 0) {
            EditorOtherSpeciesEmerald.log.info("no match, using Free-text");
            this.txtName.setText(name);
+           if (name.contains("CoL-ID")) {        	           	  
+        	   setValidatedTxtName(name);
+           }   
            this.chkFT.setSelected(true);
 
        }
@@ -253,7 +261,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
 
         s.setOtherSpeciesName(((String) this.cmbName.getSelectedItem()));
         if (s.getOtherSpeciesName().equals("")) {
-            s.setOtherSpeciesName(this.txtName.getText());
+            s.setOtherSpeciesName(this.acceptedName);
         }
         s.setOtherSpeciesSensitive(ConversionTools.boolToSmall(this.chkSensitive.isSelected()));
         s.setOtherSpeciesNp(ConversionTools.boolToSmall(this.chkNP.isSelected()));
@@ -519,30 +527,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         jLabel1 = new javax.swing.JLabel();
         cmbGroup = new javax.swing.JComboBox();
         jLabel12 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
-        txtName.setForeground(Color.BLACK);
-        txtName.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				if (txtName.getBackground().equals(Color.GREEN)) {
-        			txtName.setBackground(null);
-        		}				
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
+        txtName = new javax.swing.JTextField();               
         jLabel4 = new javax.swing.JLabel();
         chkSensitive = new javax.swing.JCheckBox();
         chkNP = new javax.swing.JCheckBox();
@@ -613,9 +598,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
 
         jLabel12.setIcon(resourceMap.getIcon("jLabel4.icon")); // NOI18N
         jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
-        jLabel12.setName("jLabel12"); // NOI18N
-
-        txtName.setEditable(false);
+        jLabel12.setName("jLabel12");
         txtName.setText(resourceMap.getString("txtName.text")); // NOI18N
         txtName.setName("txtName"); // NOI18N
 
@@ -659,41 +642,65 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         		btnValidateActionPerformed(e);
         	}
         });
-
+        
+        txtPane = new JTextPane();
+        txtPane.setBackground(SystemColor.control);
+        txtPane.setEnabled(false);
+        txtPane.setContentType("text/html");
+        txtPane.setEditable(false);        
+        txtName.setForeground(Color.BLACK);
+        txtName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				updateSpeciesNames();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				updateSpeciesNames();				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				updateSpeciesNames();
+			}
+		});
+        
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2Layout.setHorizontalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel2Layout.createSequentialGroup()
         			.addContainerGap()
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(jPanel2Layout.createSequentialGroup()
-        					.addComponent(chkSensitive)
-        					.addGap(35)
-        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.TRAILING)
-        						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
-        							.addPreferredGap(ComponentPlacement.UNRELATED)
-        							.addComponent(btnValidate)
-        							.addGap(41))
-        						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addComponent(chkNP)
-        							.addContainerGap(415, Short.MAX_VALUE))))
+        				.addComponent(chkFT)
         				.addGroup(jPanel2Layout.createSequentialGroup()
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(chkFT)
         						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        								.addGroup(jPanel2Layout.createSequentialGroup()
-        									.addGap(19)
-        									.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-        								.addComponent(jLabel4)
-        								.addComponent(jLabel12))
+        							.addGap(19)
+        							.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+        						.addComponent(jLabel4)
+        						.addComponent(jLabel12))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addGap(9)
+        					.addComponent(chkSensitive)
+        					.addGap(35)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(chkNP)
+        						.addGroup(jPanel2Layout.createSequentialGroup()
+        							.addComponent(txtName, GroupLayout.PREFERRED_SIZE, 342, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        								.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        								.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
-        								.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))))
-        					.addContainerGap(236, Short.MAX_VALUE))))
+        							.addComponent(btnValidate)))))
+        			.addGap(98))
+        		.addGroup(jPanel2Layout.createSequentialGroup()
+        			.addGap(60)
+        			.addComponent(txtPane, GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+        			.addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.LEADING)
@@ -716,7 +723,9 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(btnValidate))
-        			.addGap(27)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(txtPane, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(chkNP)
         				.addComponent(chkSensitive))
@@ -1005,12 +1014,13 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     } //GEN-LAST:event_chkFTItemStateChanged
     
     private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {
-    	if (this.txtName.getText() != null && !("").equals(this.txtName.getText()) && this.txtName.getText().length() > 128) {
+    	String queryName = null;
+    	queryName = this.txtName.getText();    	
+    	if (queryName != null && !("").equals(queryName) && queryName.length() > 128) {
             EditorOtherSpeciesEmerald.log.error("The name of the other species is too long, more than 256 characters.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).");
         }        
-        else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
-        	String queryName = this.txtName.getText();
+        else if (queryName != null && !queryName.isEmpty()) {         	
         	ValidatorResultsView val = new ValidatorResultsView(this);
     		val.setState(NORMAL);
     		val.setVisible(true);
@@ -1019,7 +1029,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     }
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this .exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
     private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1) {
@@ -1080,10 +1090,18 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         return sizeOK;
 
     }
+    /**
+     * Updates the temp variable for saving species name
+     */
+    private void updateSpeciesNames() {			
+		txtPane.setText("");
+		txtPane.setEnabled(false);
+		acceptedName = txtName.getText();
+    }
+    
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
-
-        if (this.txtName.getText() != null && !("").equals(this.txtName.getText()) && this.txtName.getText().length() > 128) {
+        if (this.acceptedName != null && !("").equals(this.acceptedName) && this.acceptedName.length() > 128) {
            EditorOtherSpeciesEmerald.log.error("The name of the other species is too long, more than 256 characters.");
            javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).");
         } else if (this.cmbGroup.getSelectedItem().equals("-")) {
@@ -1104,7 +1122,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
             javax.swing.JOptionPane.showMessageDialog(this, "Species saved.");
             this.exit();
         }
-    } //GEN-LAST:event_btnSaveActionPerformed
+    }
 
     private void cmbGroupActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_cmbGroupActionPerformed
         // TODO add your handling code here:
@@ -1118,7 +1136,9 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
 
     @Override
     public void setValidatedTxtName(String name) {
-    	this.txtName.setText(name); 
+    	this.acceptedName = name;
+    	this.txtPane.setText(name);
+    	this.txtPane.setEnabled(true);    	
     }
     
     public void enableCombos() {
@@ -1132,9 +1152,6 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
         txtName.setEnabled(true);
     }
 
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -1174,4 +1191,5 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     private javax.swing.JTextField txtMinimum;
     private javax.swing.JTextField txtName;
     private JCheckBox chkMotivationAnnexIII;
+    private JTextPane txtPane;
 }

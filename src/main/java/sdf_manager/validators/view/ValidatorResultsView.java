@@ -89,21 +89,21 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 		}
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(413, Short.MAX_VALUE)
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(575, Short.MAX_VALUE)
 					.addComponent(btnSave)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnCancel)
-					.addGap(93))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addContainerGap())
+				.addGroup(groupLayout.createSequentialGroup()
 					.addComponent(lblNaturalogo)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 485, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblTableHeader)
-						.addComponent(lblValidationResultsHeader))
-					.addContainerGap(73, Short.MAX_VALUE))
+						.addComponent(lblValidationResultsHeader)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 627, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -115,10 +115,10 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 					.addComponent(lblTableHeader)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 224, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnSave)
-						.addComponent(btnCancel))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnCancel)
+						.addComponent(btnSave))
 					.addContainerGap(68, Short.MAX_VALUE))
 		);
 		
@@ -161,11 +161,11 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 				return columnEditables[column];
 			}
 		});
-		tableResults.getColumnModel().getColumn(0).setPreferredWidth(166);
+		tableResults.getColumnModel().getColumn(0).setPreferredWidth(200);
 		tableResults.getColumnModel().getColumn(0).setCellRenderer(new HtmlTableCellRenderer());
 		tableResults.getColumnModel().getColumn(1).setPreferredWidth(87);
 		tableResults.getColumnModel().getColumn(2).setPreferredWidth(97);
-		tableResults.getColumnModel().getColumn(3).setPreferredWidth(96);
+		tableResults.getColumnModel().getColumn(3).setPreferredWidth(76);
 		scrollPane.setViewportView(tableResults);
 		getContentPane().setLayout(groupLayout);
 	}

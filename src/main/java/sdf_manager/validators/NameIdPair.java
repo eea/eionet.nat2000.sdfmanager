@@ -1,5 +1,8 @@
 package sdf_manager.validators;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class NameIdPair {
 	
 	String id;
@@ -34,6 +37,22 @@ public class NameIdPair {
 	@Override
 	public String toString() {
 		return this.name; 				
-	}	
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof NameIdPair)) return false;
+		NameIdPair temp = (NameIdPair) obj;
+		return new EqualsBuilder().
+			append(name, temp.getName()).
+			append(id, temp.getId()).isEquals();		
+	}
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).
+				append(name).
+				append(id).toHashCode();
+	}
+	
+	
 
 }

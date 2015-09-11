@@ -1,5 +1,7 @@
 package sdf_manager.validators.model;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 import sdf_manager.validators.AcceptedNameTriple;
 import sdf_manager.validators.NameIdPair;
 
@@ -50,5 +52,14 @@ public class ValidatorTableRow implements ValidatorRow {
 	public Object[] getRow() { 
 		return new Object[] {this.nameId, this.kingdom, this.family, this.acceptedNameTriple};
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ValidatorTableRow)) return false;
+		ValidatorTableRow temp = (ValidatorTableRow) obj;		
+		return new EqualsBuilder().
+				append(nameId, temp.getNameId()).isEquals();					
+	}
+	
     
 }

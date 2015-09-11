@@ -158,11 +158,15 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 					}					
 					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(false, acceptedId, acceptedName));
 					if (status.equalsIgnoreCase(Result.SYNONYM)) {
-						list.add(row);
+						if (!list.contains(row)) {
+							list.add(row);	
+						}					
 					}				
 					nameId = new NameIdPair(acceptedNameObj.getId(), acceptedNameObj.getNameHtml());					
 					row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, acceptedId, acceptedName));
-					list.add(row);
+					if (!list.contains(row)) {
+						list.add(row);
+					}					
 				} else {			
 					// the result is an accepted species
 					classificationList = result.getClassification();
@@ -175,7 +179,9 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 						if (kingdom != null && family != null) break;
 					}
 					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(true, id, name));
-					list.add(row);
+					if (!list.contains(row)) { 
+						list.add(row);
+					}
 				}
 			}
 		}

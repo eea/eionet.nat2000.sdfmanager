@@ -256,6 +256,28 @@
     </build>
     <!-- Dependencies. -->
     <dependencies>
+    	<!-- Logging -->
+	    <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+        <dependency>
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-log4j12</artifactId>
+		  <version>1.7.12</version>		  
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.logging.log4j</groupId>
+		  <artifactId>log4j-api</artifactId>
+		  <version>2.3</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.logging.log4j</groupId>
+		  <artifactId>log4j-core</artifactId>
+		  <version>2.3</version>
+		</dependency>		 
+		<!-- Database connectivity -->		          
         <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -265,17 +287,23 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-hikaricp</artifactId>
 			<version>4.3.11.Final</version>
-		</dependency>		       	
+		</dependency>			 
 	    <dependency>
         	<groupId>com.zaxxer</groupId>
         	<artifactId>HikariCP</artifactId>
         	<version>2.4.1</version>
     	</dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+  	    <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.36</version>
         </dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.20.0-GA</version>
+		</dependency>
+    	<!-- MS Access connectivity -->
         <dependency>
             <groupId>com.healthmarketscience.jackcess</groupId>
             <artifactId>jackcess</artifactId>
@@ -311,21 +339,17 @@
             <artifactId>serializer</artifactId>
             <version>2.7.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-        </dependency>
+
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>swing-worker</artifactId>
             <version>1.1</version>
         </dependency>
-        <dependency>
+       <!--  <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging-api</artifactId>
             <version>1.1</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -372,11 +396,6 @@
             <version>2.0.8</version>
         </dependency>
         <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.4.GA</version>
-        </dependency>
-        <dependency>
             <groupId>javax.sql</groupId>
             <artifactId>jdbc-stdext</artifactId>
             <version>2.0</version>
@@ -391,11 +410,7 @@
             <artifactId>lucene-core</artifactId>
             <version>2.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.18</version>
-        </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -476,11 +491,13 @@
 			<artifactId>miglayout-swing</artifactId>
 			<version>4.2</version>
 		</dependency>
+		<!-- JSON parsing -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
         </dependency>
+        <!-- Http connectivity -->
         <dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpclient</artifactId>

@@ -69,7 +69,6 @@ import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.TranslationCodeName;
 import sdf_manager.util.ValidateSite;
-import sdf_manager.validators.view.HtmlTableCellRenderer;
 
 public class SDFEditor extends javax.swing.JFrame {
 
@@ -4351,7 +4350,7 @@ public class SDFEditor extends javax.swing.JFrame {
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }
-        });        
+        });
         tabSpecies.setName("tabSpecies"); // NOI18N
         tabSpecies.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane9.setViewportView(tabSpecies);
@@ -4501,7 +4500,6 @@ public class SDFEditor extends javax.swing.JFrame {
         tabOtherSpecies.setName("tabOtherSpecies"); // NOI18N
         tabOtherSpecies.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane10.setViewportView(tabOtherSpecies);
-        tabOtherSpecies.getColumnModel().getColumn(2).setCellRenderer(new HtmlTableCellRenderer());
 
         boolean isEmerald = SDF_ManagerApp.isEmeraldMode();
         int colCount = isEmerald ? 16 : 15;

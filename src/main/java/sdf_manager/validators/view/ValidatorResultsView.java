@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import sdf_manager.ProgressDialog;
 import sdf_manager.SDF_ManagerApp;
 import sdf_manager.forms.IEditorOtherSpecies;
+import sdf_manager.util.FontsUtil;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.validators.AcceptedNameTriple;
 import sdf_manager.validators.NameIdPair;
@@ -33,6 +34,7 @@ import sdf_manager.validators.model.FuzzyResult;
 import sdf_manager.validators.model.ValidatorRow;
 import sdf_manager.validators.model.ValidatorTableRow;
 import sdf_manager.validators.workers.ValidatorWorker;
+import javax.swing.UIManager;
 
 /**
  * Displays results for species validation webservice
@@ -123,7 +125,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 		);
 		
 		tableResults = new JTable();
-		tableResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableResults.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		/*tableResults.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
@@ -138,7 +140,8 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 				}
 				
 			}
-		});	*/	
+		});	*/
+		//tableResults.setFont(FontsUtil.getFont(FontsUtil.openSansItalic, 12));
 		tableResults.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null},
@@ -162,7 +165,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 			}
 		});
 		tableResults.getColumnModel().getColumn(0).setPreferredWidth(200);
-		tableResults.getColumnModel().getColumn(0).setCellRenderer(new HtmlTableCellRenderer());
+		tableResults.getColumnModel().getColumn(0).setCellRenderer(new HtmlTableCellRenderer());		
 		tableResults.getColumnModel().getColumn(1).setPreferredWidth(87);
 		tableResults.getColumnModel().getColumn(2).setPreferredWidth(97);
 		tableResults.getColumnModel().getColumn(3).setPreferredWidth(76);
@@ -314,7 +317,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 			NameIdPair selectedSpecies = (NameIdPair) tableResults.getValueAt(row, 0);			
 			AcceptedNameTriple acceptedNameTriple = (AcceptedNameTriple) tableResults.getValueAt(row, 3);			
 			if (acceptedNameTriple.isAccepted()) {
-				parent.setValidatedTxtName(selectedSpecies.getName() + " (CoL-ID: " + selectedSpecies.getId() + ")");
+				parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID: " + selectedSpecies.getId() + "]"));
 				exit();
 			} else {
 				String message = "<html><body width='300'><h2>Notice</h2><p>The species name you selected (" + selectedSpecies + ") is a synonym "
@@ -325,15 +328,24 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 								
 				int answer = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (answer == JOptionPane.YES_OPTION) {
-					parent.setValidatedTxtName(acceptedNameTriple.getAcceptedName() + " (CoL-ID:" + acceptedNameTriple.getAcceptedId() + ")");	
+					parent.setValidatedTxtName(stripHtml(acceptedNameTriple.getAcceptedName() + " [CoL-ID:" + acceptedNameTriple.getAcceptedId() + "]"));	
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {
-					parent.setValidatedTxtName(selectedSpecies.getName() + " (CoL-ID:" + selectedSpecies.getId() + ")");
+					parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID:" + selectedSpecies.getId() + "]"));
 					exit();
 				}
 			}			
 		}
+	}
+	/**
+	 * Removes html tags from string
+	 * @param name
+	 * @return html stripped name
+	 */
+	private String stripHtml(String name) {
+		String stripped = name.replaceAll("\\<[^>]*>","");
+		return stripped;
 	}
 	
 	/**

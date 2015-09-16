@@ -671,31 +671,26 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         				.addGroup(jPanel2Layout.createSequentialGroup()
         					.addComponent(chkSensitive)
         					.addGap(45)
-        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.TRAILING)
-        						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-        							.addGap(18)
-        							.addComponent(btnValidate)
-        							.addGap(36))
-        						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addComponent(chkNP)
-        							.addContainerGap(454, Short.MAX_VALUE))))
+        					.addComponent(chkNP))
+        				.addComponent(chkFT)
         				.addGroup(jPanel2Layout.createSequentialGroup()
         					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(chkFT)
+        						.addComponent(jLabel12)
+        						.addComponent(jLabel4)
         						.addGroup(jPanel2Layout.createSequentialGroup()
-        							.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        								.addComponent(jLabel12)
-        								.addComponent(jLabel4)
-        								.addGroup(jPanel2Layout.createSequentialGroup()
-        									.addGap(19)
-        									.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
-        								.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-        								.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
-        								.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-        					.addContainerGap(285, Short.MAX_VALUE))))
+        							.addGap(19)
+        							.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(cmbCode, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbName, GroupLayout.PREFERRED_SIZE, 281, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cmbGroup, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        				.addGroup(Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        					.addGap(21)
+        					.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(btnValidate)))
+        			.addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.LEADING)
@@ -721,7 +716,7 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         				.addComponent(btnValidate))
-        			.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(chkSensitive)
         				.addComponent(chkNP))
@@ -1066,6 +1061,10 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
             EditorOtherSpecies.log.error("The name of the other species is too long, more than 128 characters.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, provide a valid name (128 characters).", null, JOptionPane.WARNING_MESSAGE);
         }        
+    	else if (this.txtName.getText() != null &&  this.txtName.getText().contains("[CoL-ID")) {
+    		String message = "<html><body><p>Please remove ID, author from the text field and try again</body></html>";
+    		javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
+    	}
         else if (this.txtName.getText() != null && !this.txtName.getText().isEmpty()) { 
         	String queryName = this.txtName.getText();
         	ValidatorResultsView val = new ValidatorResultsView(this);

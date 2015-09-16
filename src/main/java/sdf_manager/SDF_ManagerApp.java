@@ -23,6 +23,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+import sdf_manager.util.FontsUtil;
 import sdf_manager.util.PropertyUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
@@ -129,6 +130,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         try {
             initializeLogger();
             LOGGER.info("Logger installed, java version: " + System.getProperty("java.version"));
+            
+            // Load Application wide Fonts
+            FontsUtil.loadFonts();
+            
             // either there is one or the other we found the props:
             if (propsFileExists() || oldDbPropsExists()) {
 

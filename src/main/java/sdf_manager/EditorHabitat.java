@@ -59,7 +59,7 @@ public class EditorHabitat extends javax.swing.JFrame {
         EditorHabitat.log.info("Loading the data of the habitat::" + h.getHabitatCode());
         this.index = index;
         this.cmbCode.setSelectedItem(h.getHabitatCode());
-        this.cmbCode.setEnabled(false);
+        /*this.cmbCode.setEnabled(false);*/
         if (h.getHabitatPriority() != null && h.getHabitatPriority() > 0) {
             this.chkPriority.setSelected(true);
         }
@@ -69,7 +69,7 @@ public class EditorHabitat extends javax.swing.JFrame {
 
         this.txtCoverPercent.setText(ConversionTools.doubleToString(h.getHabitatCover()));
         this.txtCover.setText(ConversionTools.doubleToString(h.getHabitatCoverHa()));
-        this.txtName.setEnabled(false);
+        /*this.txtName.setEnabled(false);*/
         this.txtCaves.setText(ConversionTools.intToString(h.getHabitatCaves()));
 
 

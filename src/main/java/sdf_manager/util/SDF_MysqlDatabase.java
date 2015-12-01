@@ -1070,7 +1070,7 @@ public class SDF_MysqlDatabase {
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         Statement st = null;
         try {
-            String sql = "select * from " + schemaName + ".releasedbupdates where ver = '" + ver + "'";
+            String sql = "select * from " + schemaName + ".releasedbupdates where RELEASE_NUMBER = '" + ver + "' and UPDATE_DONE = 'Y'";
             st = con.createStatement();
             st.executeQuery(sql);
             tableExists = true;

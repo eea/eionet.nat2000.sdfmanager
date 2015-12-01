@@ -2,7 +2,10 @@ package sdf_manager;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -184,13 +187,19 @@ public class EditorHabitat extends javax.swing.JFrame {
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
        String hql = "select distinct refHab.refHabitatsCode from " + tableName + " refHab";
+       List<String> habitatCodes = new ArrayList<String>();
+       
        Query q = session.createQuery(hql);
        Iterator itr = q.iterate();
        int i = 0;
        while (itr.hasNext()) {
            Object obj = itr.next();
-           cmbCode.insertItemAt(obj, i);
+           habitatCodes.add((String)obj);
            i++;
+       }
+       Collections.sort(habitatCodes);
+       for (Object obj : habitatCodes) {
+    	   cmbCode.addItem(obj);
        }
 
        if (i > 0) {

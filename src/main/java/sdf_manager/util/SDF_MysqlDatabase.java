@@ -1072,11 +1072,15 @@ public class SDF_MysqlDatabase {
         try {
             String sql = "select * from " + schemaName + ".releasedbupdates where RELEASE_NUMBER = '" + ver + "' and UPDATE_DONE = 'Y'";
             st = con.createStatement();
-            st.executeQuery(sql);
-            tableExists = true;
+            ResultSet rs = st.executeQuery(sql);
+            boolean isEmpty = ! rs.first();
+            if (!isEmpty) {
+            	tableExists = true;
+            } else {            	
+            	SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
+            }            
         } catch (Exception e) {
-            tableExists = false;
-            SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
+    		// do nothing
         } finally {
             closeQuietly(st);
             return tableExists;

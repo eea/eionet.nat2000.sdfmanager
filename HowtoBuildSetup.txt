@@ -1,4 +1,0 @@
-* Download and install Inno Setup from http://www.jrsoftware.org/isdl.php#stable (NB! Be sure to install also the Inno Setup Preprocessor that the installer suggests)
-* Add the Inno Setup root path where iscc.exe resides to the win PATH variable
-* Copy a JRE to the project folder. NB! The JRE must be 32-bit!
-* mvn clean package creates two installers in the project root directory

@@ -166,9 +166,9 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
 
                 }
                 if (!validateSite(conn, this.siteCode)) {
-                    log("The site code: " + this.siteCode + " is not in Data Base.", true);
-                    ImporterSiteMDB.log.error("The site code: " + this.siteCode + " is not in Data Base.");
-                    msgValidError = "The site code: " + this.siteCode + " is not in Data Base.";
+                    log("The site code: " + this.siteCode + " is not in database.", true);
+                    ImporterSiteMDB.log.error("The site code: " + this.siteCode + " is not in database.");
+                    msgValidError = "The site code: " + this.siteCode + " is not in database.";
                     saveOK = false;
                     return false;
                 }

@@ -125,11 +125,11 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with sepecies with unknown name.
+     * Gets the sites with species with unknown name.
      * @param session
      */
     private void fetchUnknownSpeciesNames(Session session) {
-        QAQCMain.log.info("Getting the sepecies with unknown name");
+        QAQCMain.log.info("Getting the species with unknown name");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String hql = "select species.speciesName, species.site.siteCode from Species as species "
                 + "where not exists (from RefSpecies as ref where ref.refSpeciesName like species.speciesName) "
@@ -152,11 +152,11 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets the sites with sepecies with unknown code.
+     * Gets the sites with species with unknown code.
      * @param session
      */
     private void fetchUnknownSpeciesCodes(Session session) {
-       QAQCMain.log.info("Getting the sepecies with unknown code");
+       QAQCMain.log.info("Getting the species with unknown code");
        DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String hql = "select species.speciesCode, species.site.siteCode from Species as species "
                 + "where not exists (from RefSpecies as ref where ref.refSpeciesCode like species.speciesCode) "
@@ -284,11 +284,11 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat type.
+     * Gets sites with unknown habitat type.
      * @param session
      */
     private void fetchUnknownHabitatTypes(Session session) {
-        QAQCMain.log.info("Getting sites with unknwon habitat type");
+        QAQCMain.log.info("Getting sites with unknown habitat type");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
 
         String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
@@ -310,11 +310,11 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat classes.
+     * Gets sites with unknown habitat classes.
      * @param session
      */
     private void fetchUnknownHabitatClasses(Session session) {
-        QAQCMain.log.info("Getting sites with unknwon habitat classes");
+        QAQCMain.log.info("Getting sites with unknown habitat classes");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String tableName = "RefHabClasses";
         String hql = "select habitat.habitatClassCode, habitat.site.siteCode from HabitatClass as habitat "
@@ -335,11 +335,11 @@ public class QAQCMain extends javax.swing.JFrame {
     }
 
     /**
-     * Gets sites with unknwon habitat classes.
+     * Gets sites with unknown NUTS regions.
      * @param session
      */
     private void fetchUnknownNUTSRegions(Session session) {
-        QAQCMain.log.info("Getting sites with unknwon regions");
+        QAQCMain.log.info("Getting sites with unknown NUTS regions");
         DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
         String refnutsTable = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
         String hql = "select region.regionCode, region.site.siteCode from Region as region "

@@ -808,9 +808,9 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             ;
         }  catch (Exception ex) {
             ex.printStackTrace();
-            log("It's been produced an error in the Import Process");
-            ImporterXMLStax.log.error("It's been produced an error in the Import Process.:::" + ex.getMessage());
-            JOptionPane.showMessageDialog(new Frame(), "It's been produced an error in the Import Process", "Dialog",
+            log("An error occurred in the Import Process");
+            ImporterXMLStax.log.error("An error occurred in the Import Process.:::" + ex.getMessage());
+            JOptionPane.showMessageDialog(new Frame(), "An error occurred in the Import Process", "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             return false;
         } finally {

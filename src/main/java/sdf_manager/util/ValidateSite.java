@@ -112,7 +112,7 @@ public class ValidateSite {
                 Date designatedASCI = site.getSiteDesignatedAsciDate();
 
                 if (!ValidateSite.isDatesAscendingOrder(proposedASCI, confirmedCandidateASCI, confirmedASCI, designatedASCI)) {
-                    errorList.add("Chronologial order of site ASCI dates (Identification -> Dates)\n");
+                    errorList.add("Chronological order of site ASCI dates (Identification -> Dates)\n");
                 }
             }
 

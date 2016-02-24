@@ -125,7 +125,7 @@ public class ExporterXMLStax implements Exporter {
             out = new PrintWriter(outFile);
         } catch (Exception e) {
             // e.printStackTrace();
-            ExporterXMLStax.log.error("An error has accurred in initLogFile. Error Message :::" + e.getMessage());
+            ExporterXMLStax.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
         }
     }
 
@@ -138,7 +138,7 @@ public class ExporterXMLStax implements Exporter {
             outFile.close();
         } catch (Exception e) {
             // e.printStackTrace();
-            ExporterXMLStax.log.error("An error has accurred in initLogFile. Error Message :::" + e.getMessage());
+            ExporterXMLStax.log.error("An error has occurred in initLogFile. Error Message :::" + e.getMessage());
         }
     }
 

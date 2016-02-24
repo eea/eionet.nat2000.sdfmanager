@@ -148,10 +148,10 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
 
     @Action
     public void processDatabase() {
-        SDFExporterSite.log.info("Init export data base");
+        SDFExporterSite.log.info("Init export database");
         String encoding = "UTF-8";
         if (this.txtPath.getText().equals("")) {
-            SDFExporterSite.log.error("select a folder to export");
+            SDFExporterSite.log.error("Select a folder to export");
             javax.swing.JOptionPane.showMessageDialog(this,"Please select a folder to export.");
             return;
         }
@@ -168,16 +168,16 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
        if (!xmlFieldsList.isEmpty()) {
           File fileLog =null;
           try {
-              JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has been failed,\nthe XML is not compliant with SDF the schema.\nPlease check the log file, for more details.", "Dialog",JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(new JFrame(), "The validation of the data has failed,\nthe XML is not compliant with the SDF schema.\nPlease check the log file, for more details.", "Dialog",JOptionPane.INFORMATION_MESSAGE);
               fileLog = copyToLogExportFile(xmlFieldsList, logFile);
-              SDFExporterSite.log.error("The validation of the data has been failed, the XML is not compliant with SDF the schema. Please check the log file::" + fileLog.getName() + " for more details");
+              SDFExporterSite.log.error("The validation of the data has failed, the XML is not compliant with the SDF schema. Please check the log file::" + fileLog.getName() + " for more details");
               Desktop desktop = null;
               if (Desktop.isDesktopSupported()) {
                  desktop = Desktop.getDesktop();
                  Desktop.getDesktop().open(fileLog);
               }
           } catch (IOException e) {
-              SDFExporterSite.log.error("An error has ocurred in export site process. Error Message:::" + e.getMessage());
+              SDFExporterSite.log.error("An error has occurred in export site process. Error Message:::" + e.getMessage());
           }
           this.exit();
           return;
@@ -231,7 +231,7 @@ public class SDFExporterSite extends javax.swing.JFrame implements Logger {
           logErrorFile.flush();
           logErrorFile.close();
        } catch (Exception e) {
-           SDFExporterSite.log.error("An error has ocurred copying the errors in log file. Error Message :::" + e.getMessage());
+           SDFExporterSite.log.error("An error has occurred copying the errors in log file. Error Message :::" + e.getMessage());
        }
        return fileLog;
     }

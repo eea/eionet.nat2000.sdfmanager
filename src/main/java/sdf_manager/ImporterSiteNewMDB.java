@@ -102,9 +102,9 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             } else {
                 importOk = false;
                 ImporterSiteNewMDB.log.error("Error in validation");
-                ImporterSiteNewMDB.log.error("Some sites are already stored in Data Base. Please check the log file for details");
+                ImporterSiteNewMDB.log.error("Some sites are already stored in database. Please check the log file for details");
                 log("Error in validation.", true);
-                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in Data Base. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "Some sites are already stored in database. Please check the log file for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (Exception e) {

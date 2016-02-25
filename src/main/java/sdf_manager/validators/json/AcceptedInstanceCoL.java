@@ -24,6 +24,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 		private final static String KINGDOM = "Kingdom";
 		private final static String FAMILY = "Family";
 		private final static String SYNONYM = "synonym";
+		private final static String AMBIGUOUS_SYNONYM = "ambiguous synonym";
 		private final static String COMMON = "common name";
 		@SerializedName("id")
 		private String id;
@@ -140,7 +141,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 				String family = null;	
 				String acceptedName = null;
 				String acceptedId = null;
-				if (status.equalsIgnoreCase(Result.SYNONYM) || status.equalsIgnoreCase(Result.COMMON)) {
+				if (status.equalsIgnoreCase(Result.SYNONYM) || status.equalsIgnoreCase(Result.AMBIGUOUS_SYNONYM) || status.equalsIgnoreCase(Result.COMMON)) {
 					// Result is a synonym or a common name.
 					Result.AcceptedName acceptedNameObj = result.getAcceptedName();
 					if (acceptedNameObj.getRank().equalsIgnoreCase(Result.SPECIES)) {
@@ -157,7 +158,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 						if (kingdom != null && family != null) break;
 					}					
 					ValidatorTableRow row = new ValidatorTableRow(nameId, kingdom, family, new AcceptedNameTriple(false, acceptedId, acceptedName));
-					if (status.equalsIgnoreCase(Result.SYNONYM)) {
+					if (status.equalsIgnoreCase(Result.SYNONYM) || status.equalsIgnoreCase(Result.AMBIGUOUS_SYNONYM)) {
 						if (!list.contains(row)) {
 							list.add(row);	
 						}					

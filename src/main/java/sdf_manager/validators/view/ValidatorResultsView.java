@@ -207,9 +207,14 @@ public class ValidatorResultsView extends javax.swing.JFrame {
     				+ " Please make sure you have a working internet connection and try again.</p><br><p>" + cause.getMessage() + "</p></body></html>";
         	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
     	}
-    	if (cause instanceof java.lang.NullPointerException) {
+    	else if (cause instanceof java.lang.NullPointerException) {
     		String message = "<html><body width='300'><h2>Data error</h2><p>The data returned from validation web services had errors."
-    				+ " Please contact the SDFManager development team.</p><br><p>" + cause.getMessage() + "</p></body></html>";
+    				+ " Please contact the SDFManager development team.</p></body></html>";
+        	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
+    	} 
+    	else {
+    		String message = "<html><body width='300'><h2>Unknown error</h2><p>An unknown error has occurred."
+    				+ " Please contact the SDFManager development team.</p></body></html>";
         	javax.swing.JOptionPane.showMessageDialog(this, message, null, JOptionPane.WARNING_MESSAGE);
     	}
     	log.error("Error while searching for accepted species.." + ex);

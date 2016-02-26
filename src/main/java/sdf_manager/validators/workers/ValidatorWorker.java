@@ -25,9 +25,11 @@ public class ValidatorWorker extends SwingWorker<Boolean, Void> {
     private List<String> queryNames;
     private List<ValidatorTableRow> acceptedResults;
     private List<FuzzyResult> fuzzyResults;
+    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidatorWorker.class .getName());
    
     @Override
     public Boolean doInBackground() throws Exception {
+    	try {
     	Properties props = PropertyUtils.readProperties("sdf.properties");
     	SpeciesValidatorDao validator = new SpeciesValidatorDao(props);
     	if (method.equals("accepted")){
@@ -37,6 +39,10 @@ public class ValidatorWorker extends SwingWorker<Boolean, Void> {
     		this.fuzzyResults = validator.doQueryFuzzy(queryName);
     	}                       
     	return true;
+    	} catch(Exception ex) {    		
+			log.error("An error occured while retrieving data from validation web service", ex);    		
+    		throw ex;
+    	}
     }
 
    public void setDialog(JDialog dlg) {

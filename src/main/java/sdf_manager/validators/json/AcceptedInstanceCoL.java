@@ -21,6 +21,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 	
 	static class Result {
 		private final static String SPECIES = "Species";
+		private final static String INFRA_SPECIES = "Infraspecies";
 		private final static String KINGDOM = "Kingdom";
 		private final static String FAMILY = "Family";
 		private final static String SYNONYM = "synonym";
@@ -144,7 +145,7 @@ public class AcceptedInstanceCoL implements AcceptedInstance {
 				if (status.equalsIgnoreCase(Result.SYNONYM) || status.equalsIgnoreCase(Result.AMBIGUOUS_SYNONYM) || status.equalsIgnoreCase(Result.COMMON)) {
 					// Result is a synonym or a common name.
 					Result.AcceptedName acceptedNameObj = result.getAcceptedName();
-					if (acceptedNameObj.getRank().equalsIgnoreCase(Result.SPECIES)) {
+					if (acceptedNameObj.getRank().equalsIgnoreCase(Result.SPECIES) || acceptedNameObj.getRank().equalsIgnoreCase(Result.INFRA_SPECIES)) {
 						acceptedName = acceptedNameObj.getNameHtml();
 						acceptedId = acceptedNameObj.getId();
 					}

@@ -23,6 +23,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+import sdf_manager.util.FontsUtil;
 import sdf_manager.util.PropertyUtils;
 import sdf_manager.util.SDF_MysqlDatabase;
 import sdf_manager.util.SDF_Util;
@@ -129,6 +130,10 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         try {
             initializeLogger();
             LOGGER.info("Logger installed, java version: " + System.getProperty("java.version"));
+            
+            // Load Application wide Fonts
+            FontsUtil.loadFonts();
+            
             // either there is one or the other we found the props:
             if (propsFileExists() || oldDbPropsExists()) {
 
@@ -153,7 +158,21 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                     // it is upgrade - n2k mode
                     props.put("application.mode", NATURA_2000_MODE);
-
+                    
+                    // add default CDM webservice properties
+                    props.put("cdm.connection.protocol", "http");
+                    props.put("cdm.connection.timeout", "60");
+                    props.put("cdm.connection.host", "api.cybertaxonomy.org");
+                    props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
+                    props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
+                    props.put("cdm.fuzzy.accuracy", "0.8");
+                    props.put("cdm.fuzzy.hits", "10");
+                    props.put("cdm.fuzzy.type", "name");
+                    // add default CoL webservice properties
+                    props.put("col.connection.protocol", "http");                    
+                    props.put("col.connection.host", "www.catalogueoflife.org");
+                    props.put("col.json.accepted", "/annual-checklist/2015/webservice");                                                          
+                    
                     LOGGER.info("Getting seed properties from " + SEED_PROPERTIES_FILE);
                     Properties seedProps = PropertyUtils.readProperties(SEED_PROPERTIES_FILE);
                     for (Object key : seedProps.keySet()) {
@@ -284,7 +303,21 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         props.put("db.user", dbUser);
         props.put("db.password", dbPassword);
         props.put("application.mode", mode);
-
+        
+        // add default CDM webservice properties
+        props.put("cdm.connection.protocol", "http");
+        props.put("cdm.connection.timeout", "60");
+        props.put("cdm.connection.host", "api.cybertaxonomy.org");
+        props.put("cdm.json.accepted", "/col/name_catalogue/accepted.json");
+        props.put("cdm.json.fuzzy", "/col/name_catalogue/fuzzy.json");
+        props.put("cdm.fuzzy.accuracy", "0.8");
+        props.put("cdm.fuzzy.hits", "10");
+        props.put("cdm.fuzzy.type", "name");
+        // add default CoL webservice properties
+        props.put("col.connection.protocol", "http");              
+        props.put("col.connection.host", "www.catalogueoflife.org");
+        props.put("col.json.accepted", "/annual-checklist/2015/webservice");
+        
         PropertyUtils.writePropsToFile(LOCAL_PROPERTIES_FILE, props);
         LOGGER.info("properties stored to " + LOCAL_PROPERTIES_FILE);
 

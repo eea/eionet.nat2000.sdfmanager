@@ -25,6 +25,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
+import java.awt.Dimension;
 
 /**
  * The application's main frame.
@@ -134,7 +135,6 @@ public class SDF_ManagerView extends FrameView {
      */
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
@@ -158,7 +158,7 @@ public class SDF_ManagerView extends FrameView {
         mainPanel.setMaximumSize(new java.awt.Dimension(50, 50));
         mainPanel.setMinimumSize(new java.awt.Dimension(425, 605));
         mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setPreferredSize(new java.awt.Dimension(425, 605));
+        mainPanel.setPreferredSize(new Dimension(425, 605));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24));
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
@@ -360,17 +360,17 @@ public class SDF_ManagerView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
 
         setComponent(mainPanel);
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
-    private void btnManage1ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage1ActionPerformed
+    private void btnManage1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    } //GEN-LAST:event_btnManage1ActionPerformed
+    }
 
-    private void btnManage3ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage3ActionPerformed
+    private void btnManage3ActionPerformed(java.awt.event.ActionEvent evt) {
         new QAQCMain(parent.getMode()).setVisible(true);
-    } //GEN-LAST:event_btnManage3ActionPerformed
+    }
 
-    private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnManage4ActionPerformed
+    private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) {
         //String urlPdf = "http://212.145.147.187:8032/importtool/N2K%20Import%20Tool%20User%20Manual.pdf";
 
 
@@ -382,9 +382,9 @@ public class SDF_ManagerView extends FrameView {
         } catch (IOException ioe) {
             log.error("An error is occurred while system tries to open the pdf document.\nError Message::" + ioe.getMessage());
         }
-    } //GEN-LAST:event_btnManage4ActionPerformed
+    } 
 
-    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) { //GEN-FIRST:event_jLabel6MouseClicked
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {
       if (evt.getClickCount() > 0) {
           if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
@@ -399,9 +399,9 @@ public class SDF_ManagerView extends FrameView {
         }
       }
 
-    } //GEN-LAST:event_jLabel6MouseClicked
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private javax.swing.JButton btnManage;
     private javax.swing.JButton btnManage1;
     private javax.swing.JButton btnManage2;
@@ -417,9 +417,7 @@ public class SDF_ManagerView extends FrameView {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel mainPanel;
-    // End of variables declaration//GEN-END:variables
-
-
+    // End of variables declaration
 
     private JDialog aboutBox;
 

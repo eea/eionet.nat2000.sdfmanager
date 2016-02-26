@@ -174,6 +174,7 @@ public final class SDFFilter extends javax.swing.JFrame {
         populateFilters(session);
         this.txtNumberSites.setText(getNumberOfSites(session));
         displaySites(session, null);
+        session.close();
         return true;
     }
 

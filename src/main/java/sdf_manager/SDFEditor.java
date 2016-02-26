@@ -2153,7 +2153,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @return
      */
     private String getImpactName(String impactCode) {
-        SDFEditor.logger.info("Getting impact Name");
+        SDFEditor.logger.info("Getting impact name for impact code: " + impactCode);
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql =
                 "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";

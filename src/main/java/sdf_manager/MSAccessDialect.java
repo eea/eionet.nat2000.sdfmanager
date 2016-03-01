@@ -8,8 +8,13 @@ package sdf_manager;
 
 import java.sql.Types;
 
+import org.hibernate.MappingException;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.identity.GetGeneratedKeysDelegate;
+import org.hibernate.dialect.identity.IdentityColumnSupport;
+import org.hibernate.id.PostInsertIdentityPersister;
+import org.hibernate.id.factory.IdentifierGeneratorFactory;
 
 /**
 * @author Suchak.Jani  w/ modifications by Eric Klimas
@@ -52,27 +57,56 @@ public class MSAccessDialect extends Dialect {
 
     }
 
-
     @Override
-    public boolean supportsIdentityColumns() {
-        return true;
-    }
-
-    @Override
-    public String getIdentityColumnString() {
-        return "IDENTITY NOT NULL";
-    }
-
-    @Override
-    public String getIdentitySelectString() {
-        return "select @@IDENTITY";
-    }
-
-    @Override
-    public boolean hasDataTypeInIdentityColumn() {
-        return false;
-    }
-
+    public org.hibernate.dialect.identity.IdentityColumnSupport getIdentityColumnSupport() {
+    	return new IdentityColumnSupport() {
+			
+			@Override
+			public boolean supportsInsertSelectIdentity() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean supportsIdentityColumns() { 
+				return true;
+			}
+			
+			@Override
+			public boolean hasDataTypeInIdentityColumn() { 
+				return false;
+			}
+			
+			@Override
+			public String getIdentitySelectString(String table, String column, int type) throws MappingException {
+				return "select @@IDENTITY";
+			}
+			
+			@Override
+			public String getIdentityInsertString() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getIdentityColumnString(int type) throws MappingException { 
+				return "IDENTITY NOT NULL";
+			}
+			
+			@Override
+			public GetGeneratedKeysDelegate buildGetGeneratedKeysDelegate(PostInsertIdentityPersister persister,
+					Dialect dialect) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String appendIdentitySelectToInsert(String insertString) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+    };
 
     public boolean supportsForUpdate() {
             return false;

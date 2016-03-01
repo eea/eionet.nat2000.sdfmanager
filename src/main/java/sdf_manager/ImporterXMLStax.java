@@ -26,7 +26,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
 import pojos.Biogeo;
@@ -92,7 +91,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             // File.separator + "sdf_database.properties"));
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
 
-            AnnotationConfiguration annotationConfig = new AnnotationConfiguration();
+            Configuration annotationConfig = new Configuration();
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
             annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("db.host") + "/"

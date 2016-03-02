@@ -77,7 +77,7 @@ import sdf_manager.util.SDF_Util;
  */
 public class ImporterMDB extends AbstractImporter implements Importer {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterMDB.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ImporterMDB.class.getName());
 
     /**
      * table file for N2K.

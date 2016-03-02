@@ -31,7 +31,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -115,7 +115,7 @@ public final class SDFFilter extends javax.swing.JFrame {
     /** Creates new form SDFFilter2 */
     private String newSitecode = "";
     private Criteria criteria;
-    private final static Logger log = Logger.getLogger(SDFFilter.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDFFilter.class.getName());
     int numReg = 0;
     private boolean isInitDone = false;
 

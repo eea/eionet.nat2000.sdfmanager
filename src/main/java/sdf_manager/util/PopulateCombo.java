@@ -5,14 +5,14 @@
 package sdf_manager.util;
 
 import java.util.Properties;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import java.util.StringTokenizer;
 import javax.swing.JComboBox;
 
 
 public class PopulateCombo {
 
-    private final static Logger log = Logger.getLogger(PopulateCombo.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(PopulateCombo.class .getName());
 
 
     /**

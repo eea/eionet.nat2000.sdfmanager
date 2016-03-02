@@ -21,8 +21,8 @@ import java.util.Set;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.Logger;
+//import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jdesktop.application.ResourceMap;
@@ -34,7 +34,7 @@ import sdf_manager.SDF_ManagerApp;
  */
 public class SDF_Util {
 
-    private final static Logger log = Logger.getLogger(SDF_Util.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDF_Util.class .getName());
 
     /**
      * Format date to XML file
@@ -51,7 +51,7 @@ public class SDF_Util {
      */
     public static void getProperties() {
         Properties props = System.getProperties();
-        PropertyConfigurator.configure("log4j.properties");
+        //PropertyConfigurator.configure("log4j.properties");
     }
 
      /***

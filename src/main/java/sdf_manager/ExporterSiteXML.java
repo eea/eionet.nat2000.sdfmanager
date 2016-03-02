@@ -93,7 +93,7 @@ public class ExporterSiteXML implements Exporter {
     private PrintWriter out;
     private String logExportFileName;
     private FileWriter logErrorFile;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterSiteXML.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ExporterSiteXML.class.getName());
 
     /**
      *

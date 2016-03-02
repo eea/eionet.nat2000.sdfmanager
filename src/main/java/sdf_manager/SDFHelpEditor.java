@@ -13,7 +13,7 @@ public class SDFHelpEditor extends javax.swing.JDialog {
 
 
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFHelpEditor.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDFHelpEditor.class .getName());
 
     /**
      *

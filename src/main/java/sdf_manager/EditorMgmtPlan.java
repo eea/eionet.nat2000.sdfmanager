@@ -21,7 +21,7 @@ public class EditorMgmtPlan extends javax.swing.JFrame {
     private int index = -1;
     private MgmtPlan mgmtPlan;
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorMgmtPlan.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorMgmtPlan.class .getName());
 
     /**
      *

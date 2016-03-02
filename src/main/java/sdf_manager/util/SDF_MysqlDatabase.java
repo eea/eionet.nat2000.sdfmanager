@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import sdf_manager.ProgressDialog;
 import sdf_manager.SDF_ManagerApp;
@@ -44,7 +44,7 @@ import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
  */
 public class SDF_MysqlDatabase {
 
-    private static final Logger LOGGER = Logger.getLogger(SDF_MysqlDatabase.class.getName());
+    private static final org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(SDF_MysqlDatabase.class.getName());
 
     /**
      * Create the JDBC URL, open a connection to the database and set up tables.

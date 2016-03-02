@@ -41,7 +41,7 @@ public class EditorOtherSpeciesEmerald extends javax.swing.JFrame implements IEd
     private boolean editing = false;
     private int index = -1;
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorOtherSpeciesEmerald.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorOtherSpeciesEmerald.class .getName());
 
     /**
      *

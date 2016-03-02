@@ -23,7 +23,7 @@ public class EditorSitecode extends javax.swing.JDialog {
     private String sitecode;
     private SDFFilter filter;
     public static boolean ok = false;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorSitecode.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorSitecode.class .getName());
 
     /**
      *

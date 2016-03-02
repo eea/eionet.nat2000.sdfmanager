@@ -19,7 +19,7 @@ public class EditorDocLink extends javax.swing.JFrame {
     int index;
     DocLink docLink;
     boolean editing = false;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorDocLink.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorDocLink.class .getName());
 
     /** Creates new form EditorRegions. */
     private SDFEditor parent;

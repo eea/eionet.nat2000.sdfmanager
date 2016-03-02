@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.Logger;
+//import org.apache.log4j.PropertyConfigurator;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -35,7 +35,7 @@ import sdf_manager.workers.CreateDatabaseWorker;
 public class SDF_ManagerApp extends SingleFrameApplication {
 
     /** Static logger for this file. */
-    private final static Logger LOGGER = Logger.getLogger(SDF_ManagerApp.class.getName());
+    private final static org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(SDF_ManagerApp.class.getName());
 
     /** Default URI for Natura2000 schema. */
     private static final String NATURA2000_SCHEMA_DEFAULT_URI = "http://dd.eionet.europa.eu/schemas/natura2000/sdf_v1.xsd";
@@ -46,8 +46,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     /** Current path of the application. */
     public static final String CURRENT_APPLICATION_PATH = (new File("")).getAbsolutePath();
 
-    /** Full path to Log4j properties. */
-    private static final String LOG4J_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "log4j.properties";
+    /** Full path to Log4j properties. 
+     * TODO: REMOVE THIS CODE
+    private static final String LOG4J_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "log4j2.properties";*/
 
     /** Full path to local properties file. */
     public static final String LOCAL_PROPERTIES_FILE = CURRENT_APPLICATION_PATH + File.separator + "sdf.properties";
@@ -128,7 +129,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         boolean isEmeraldInstaller = SDF_Util.fileExists(SEED_EMERALD_PROPERTIES_FILE);
         ProgressDialog progressDialog = null;
         try {
-            initializeLogger();
+            //initializeLogger();
             LOGGER.info("Logger installed, java version: " + System.getProperty("java.version"));
             
             // Load Application wide Fonts
@@ -354,21 +355,22 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
     /**
      *
-     */
+     
+    TODO: REMOVE THIS CODE
     private static void initializeLogger() {
-        Properties logProperties = new Properties();
+        //Properties logProperties = new Properties();
 
         try {
             // load our log4j properties / configuration file
-            logProperties.load(new FileInputStream(LOG4J_PROPERTIES_FILE));
-            PropertyConfigurator.configure(logProperties);
+            //logProperties.load(new FileInputStream(LOG4J_PROPERTIES_FILE));
+            //PropertyConfigurator.configure(logProperties);
             LOGGER.info("Logging initialized.");
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "The process has been falied.::", "Dialog", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The process has failed.::", "Dialog", JOptionPane.ERROR_MESSAGE);
             LOGGER.error(e.getMessage());
             throw new RuntimeException("Unable to load logging property " + LOG4J_PROPERTIES_FILE);
         }
-    }
+    } */
 
     /**
      * Checks if sdf.properties file is created and can be used.

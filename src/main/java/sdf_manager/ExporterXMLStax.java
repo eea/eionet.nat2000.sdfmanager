@@ -60,7 +60,7 @@ public class ExporterXMLStax implements Exporter {
     private String logExportFileName;
     private FileWriter logErrorFile;
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterXMLStax.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ExporterXMLStax.class.getName());
 
     /**
      *

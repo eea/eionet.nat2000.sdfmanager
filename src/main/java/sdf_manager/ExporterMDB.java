@@ -68,7 +68,7 @@ public class ExporterMDB implements Exporter {
 
     private ArrayList sitecodes = new ArrayList();
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterMDB.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ExporterMDB.class.getName());
 
     /**
      *
@@ -218,6 +218,8 @@ public class ExporterMDB implements Exporter {
      *
      * @param fileName
      *
+     
+     TODO: REMOVE THIS CODE
     void createSchema(String fileName) {
         Statement stmt = null;
         try {

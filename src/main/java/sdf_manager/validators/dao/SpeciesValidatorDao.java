@@ -53,7 +53,7 @@ public class SpeciesValidatorDao implements ValidatorDao {
     private String FUZZY_SEARCH_HITS = null;
     private String FUZZY_SEARCH_TYPE = null;
     private int CONNECTION_TIMEOUT = 0;    
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SpeciesValidatorDao.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SpeciesValidatorDao.class .getName());
     
     /**
      * Constructor from Properties

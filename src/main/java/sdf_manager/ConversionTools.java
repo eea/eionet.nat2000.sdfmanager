@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
  * @author charbda
  */
 public class ConversionTools {
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ConversionTools.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ConversionTools.class .getName());
 
    /**
     * This method checks if the param is null.

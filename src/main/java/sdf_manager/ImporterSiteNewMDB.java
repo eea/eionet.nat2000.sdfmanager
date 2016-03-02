@@ -55,7 +55,7 @@ import sdf_manager.util.SDF_Util;
  */
 public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterSiteNewMDB.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ImporterSiteNewMDB.class .getName());
 
     private String[] biotopFields = {""};
     private String encoding;

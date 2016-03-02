@@ -79,7 +79,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
     private String fileName = "";
     private String siteCode;
     private ArrayList<String> siteCodes;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFExporterSelPDF.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDFExporterSelPDF.class .getName());
 
     /**
      *

@@ -26,7 +26,7 @@ public class EditorRegion extends javax.swing.JFrame {
     private boolean editing = false; //no cascaded actionPerformed
     private SDFEditor parent;
     private String siteCode;
-    private final static org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(EditorRegion.class);
+    private final static org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(EditorRegion.class);
 
     /**
      *

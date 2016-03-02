@@ -5,8 +5,6 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.log4j.LogManager;
-
 /**
  * Utility class for font management  
  * @author George Sofianos
@@ -14,7 +12,7 @@ import org.apache.log4j.LogManager;
  */
 public final class FontsUtil {
 
-	private static final org.apache.log4j.Logger logger = LogManager.getLogger(FontsUtil.class);	
+	private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(FontsUtil.class);	
 	public static Font openSansSemiBoldItalic;
 	
 	private FontsUtil() {

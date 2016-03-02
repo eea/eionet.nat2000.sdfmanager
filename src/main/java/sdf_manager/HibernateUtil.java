@@ -19,7 +19,7 @@ import org.hibernate.service.ServiceRegistry;
  */
 public class HibernateUtil {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(HibernateUtil.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(HibernateUtil.class .getName());
     /**
      *
      */
@@ -45,6 +45,8 @@ public class HibernateUtil {
         			.applySetting("hibernate.hikari.dataSource.user", properties.getProperty("db.user"))
         			.applySetting("hibernate.hikari.dataSource.password", properties.getProperty("db.password"))
         			.applySetting("hibernate.connection.release_mode", "after_transaction")
+        			// TODO: FIX leak detection in order to find bugs
+        			//.applySetting("hibernate.hikari.leakDetectionThreshold", 20000)
         			.configure("hibernate.cfg.xml").build();
         	Metadata metadata = new MetadataSources(standardRegistry)        			        			
         			.getMetadataBuilder().build();        	
@@ -68,11 +70,12 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public static /**
-     *
-     * @param fileName
-     */
-    void openSession(String fileName) {
+    /**
+    *
+    * @param fileName
+    
+    TODO: REMOVE THIS CODE
+    public static void openSession(String fileName) {
             Configuration cfg = new Configuration();
             cfg.configure();
             cfg.setProperty("hibernate.dialect", "sdf_manager.MSAccessDialect");
@@ -80,4 +83,5 @@ public class HibernateUtil {
             cfg.setProperty("hibernate.connection.url", "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + fileName + "");
             cfg.setProperty("hibernate.connection.username", "");
     }
+    */
 }

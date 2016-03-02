@@ -10,11 +10,11 @@
     <property name="hibernate.show_sql">false</property> 
 
 	<property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>	
-	<property name="hibernate.hikari.maximumPoolSize">1000</property>
+	<property name="hibernate.hikari.maximumPoolSize">30</property>
 	<property name="hibernate.hikari.idleTimeout">30000</property>
 	<property name="hibernate.hikari.dataSource.cachePrepStmts">true</property>
 	<property name="hibernate.hikari.dataSource.prepStmtCacheSize">250</property>
-	<property name="hibernate.hikari.dataSource.prepStmtCacheSqlLimit">2048</property>    
+	<property name="hibernate.hikari.dataSource.prepStmtCacheSqlLimit">2048</property>   
 	  
     <property name="hibernate.default_batch_fetch_size">16</property>
     

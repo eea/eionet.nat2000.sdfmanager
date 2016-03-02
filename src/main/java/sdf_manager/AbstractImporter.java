@@ -16,7 +16,7 @@ public class AbstractImporter {
     /**
      * Class logger.
      */
-    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(AbstractImporter.class.getName());
+    private static final org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(AbstractImporter.class.getName());
 
     /**
      * Logger of the parent object. Produces log to the tool UI

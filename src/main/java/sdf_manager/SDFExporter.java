@@ -108,7 +108,7 @@ class ExporterWorker extends SwingWorker<Boolean, Void> {
  */
 public class SDFExporter extends javax.swing.JFrame implements Logger {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SDFExporter.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDFExporter.class .getName());
 
     /** Creates new form SDFExporter */
     String dirPath = "";

@@ -20,7 +20,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
@@ -54,7 +54,7 @@ class InitFactoryWorker extends SwingWorker<Boolean, Void> {
 
 public class SDF_ManagerView extends FrameView {
 
-    private final static Logger log = Logger.getLogger(SDF_ManagerView.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(SDF_ManagerView.class .getName());
 
     /**
      * parent application instance.

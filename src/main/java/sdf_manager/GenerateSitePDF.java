@@ -77,7 +77,7 @@ public class GenerateSitePDF implements Exporter {
     private String encoding;
     private FileWriter outFile;
     private PrintWriter out;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GenerateSitePDF.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(GenerateSitePDF.class .getName());
 
 
 

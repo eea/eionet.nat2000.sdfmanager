@@ -23,7 +23,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
     private SDFEditor parent;
     private boolean editing = false; //no cascaded actionPerformed
     private int index = -1; //in case of edit of existing national relation
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorNationalRelation.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorNationalRelation.class .getName());
 
     /**
      *

@@ -7,7 +7,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  * General Uril methods for importer.
@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public final class ImporterUtils {
 
     /** class logger. */
-    private static final Logger LOGGER = Logger.getLogger(ImporterUtils.class);
+    private static final org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(ImporterUtils.class);
 
     /**
      * prevent init.

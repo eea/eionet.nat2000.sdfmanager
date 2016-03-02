@@ -85,7 +85,7 @@ public class ExporterSiteHTML implements Exporter {
     private File outFile;
     private FileWriter outFileWriter;
     private PrintWriter out;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ExporterSiteHTML.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ExporterSiteHTML.class .getName());
 
     /**
      *

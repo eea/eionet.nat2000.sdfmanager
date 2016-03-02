@@ -1,13 +1,13 @@
 package sdf_manager.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
 
 public class ImporterUtilTest {
 
-    private static final Logger LOGGER = Logger.getLogger(ImporterUtilTest.class);
+    private static final org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(ImporterUtilTest.class);
 
     @Test
     public void testFixAndGetDouble() throws Exception {

@@ -12,7 +12,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 /**
  * util methods for handling properties.
@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 public final class PropertyUtils {
 
     /** class logger. */
-    private static final Logger LOGGER = Logger.getLogger(PropertyUtils.class);
+    private static final Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(PropertyUtils.class);
 
     /**
      * do not create instance.

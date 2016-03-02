@@ -39,7 +39,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -104,7 +104,7 @@ public class SDFEditor extends javax.swing.JFrame {
     private Transaction trans;
     private String sitecode;
     private String mode; /* new, edit , duplicateSite */
-    private final static Logger logger = Logger.getLogger(SDFEditor.class.getName());
+    private final static org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(SDFEditor.class.getName());
 
     private javax.swing.JFrame parent;
     private SDFFilter filterWindow;

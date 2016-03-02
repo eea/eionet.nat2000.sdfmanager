@@ -56,7 +56,7 @@ import sdf_manager.util.SDF_Util;
 
 public class ImporterXMLStax extends AbstractImporter implements Importer {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterXMLStax.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ImporterXMLStax.class.getName());
     //private Logger logger;
     //private String encoding;
     private String fileName;

@@ -24,7 +24,7 @@ public class EditorBirds extends javax.swing.JFrame {
     private boolean init = true;
     private boolean editing = false;
     private int index = -1;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorBirds.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorBirds.class .getName());
 
     /**
      *

@@ -45,7 +45,7 @@ import javax.swing.UIManager;
 public class ValidatorResultsView extends javax.swing.JFrame {
 	
 	private IEditorOtherSpecies parent;
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidatorResultsView.class .getName());	
+	private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ValidatorResultsView.class .getName());	
 	private JTable tableResults;	
 	
 	public ValidatorResultsView(IEditorOtherSpecies parent) {		

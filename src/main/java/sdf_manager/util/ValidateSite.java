@@ -26,7 +26,7 @@ import sdf_manager.SDF_ManagerApp;
 
 public class ValidateSite {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidateSite.class.getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ValidateSite.class.getName());
 
     /**
      *

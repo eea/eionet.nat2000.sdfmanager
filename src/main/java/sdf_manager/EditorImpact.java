@@ -25,7 +25,7 @@ public class EditorImpact extends javax.swing.JFrame {
     private boolean editing = false;
     private int index = -1; //in case of edit of existing mgmt body
     private int impactId = -1;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EditorImpact.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(EditorImpact.class .getName());
 
     /*
      *

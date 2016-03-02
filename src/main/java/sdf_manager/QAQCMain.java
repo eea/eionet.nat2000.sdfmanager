@@ -57,7 +57,7 @@ class QAQCWorker extends SwingWorker<Boolean, Void> {
  */
 public class QAQCMain extends javax.swing.JFrame {
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(QAQCMain.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(QAQCMain.class .getName());
 
     /** Creates new form QAQCMain. */
     public QAQCMain(String appMode) {

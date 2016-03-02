@@ -13,7 +13,7 @@ import sdf_manager.ImporterMDB;
  */
 public class ImporterTools {
 	
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ImporterTools.class.getName());
+	private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ImporterTools.class.getName());
 	
 	/**
 	 * Converts String into Date, with strict interpretation.

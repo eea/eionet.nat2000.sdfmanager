@@ -25,7 +25,7 @@ public class ValidatorWorker extends SwingWorker<Boolean, Void> {
     private List<String> queryNames;
     private List<ValidatorTableRow> acceptedResults;
     private List<FuzzyResult> fuzzyResults;
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(ValidatorWorker.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(ValidatorWorker.class .getName());
    
     @Override
     public Boolean doInBackground() throws Exception {

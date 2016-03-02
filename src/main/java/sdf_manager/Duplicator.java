@@ -40,7 +40,7 @@ public class Duplicator {
 
 
 
-    private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Duplicator.class .getName());
+    private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Duplicator.class .getName());
     /**
      *
      */

@@ -127,12 +127,12 @@ public class SDFHelpEditor extends javax.swing.JDialog {
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
        // this.setVisible(false);
         this.exit();
-} //GEN-LAST:event_btnCancelActionPerformed
+}
 
     /**
      * @param args the command line arguments

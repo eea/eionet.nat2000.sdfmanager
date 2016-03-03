@@ -172,10 +172,9 @@ public class GenerateSitePDF implements Exporter {
      */
     public void loadSitecodes() {
         GenerateSitePDF.log.info("Loading the data of the site:::" + siteCode);
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+        	session.getTransaction().begin();            
             String hql = "select site.siteCode from Site as site where site.siteCode='" + this.siteCode + "' order by site.siteCode";
 
             Iterator itrSites = session.createQuery(hql).iterate();
@@ -185,11 +184,12 @@ public class GenerateSitePDF implements Exporter {
                 String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
-            tx.commit();
-            session.close();
-        } catch (Exception e) {
+            session.getTransaction().commit();            
+        } catch (Exception e) {        	
             //e.printStackTrace();
             GenerateSitePDF.log.error("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
+        } finally {
+        	session.close();
         }
     }
 
@@ -199,11 +199,10 @@ public class GenerateSitePDF implements Exporter {
      */
     public Document processDatabase() {
         OutputStream os = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
              DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-             DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-
-             Session session = HibernateUtil.getSessionFactory().openSession();
+             DocumentBuilder docBuilder = dbfac.newDocumentBuilder();            
              Iterator itrSites = this.sitecodes.iterator();
              int flush = 0;
 
@@ -754,6 +753,7 @@ public class GenerateSitePDF implements Exporter {
             return null;
         } finally {
             IOUtils.closeQuietly(os);
+            session.close();
         }
 
     }

@@ -163,18 +163,16 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     Boolean init() {
         SDFFilter.log.info("Init....");
-        /*
-         * Session session = new Configuration().configure()
-         * .setProperty("hibernate.jdbc.batch_size", "20")
-         * .setProperty("hibernate.cache.use_second_level_cache", "false")
-         * .buildSessionFactory().openSession();
-         */
-
         Session session = HibernateUtil.getSessionFactory().openSession();
-        populateFilters(session);
-        this.txtNumberSites.setText(getNumberOfSites(session));
-        displaySites(session, null);
-        session.close();
+        try {
+	        populateFilters(session);
+	        this.txtNumberSites.setText(getNumberOfSites(session));
+	        displaySites(session, null);
+        } catch (Exception ex) {
+        	log.error("Error while fetching data: " + ex);
+        } finally {
+	        session.close();
+        }
         return true;
     }
 
@@ -200,8 +198,9 @@ public final class SDFFilter extends javax.swing.JFrame {
      *
      * @param session
      */
-    void applyFilters(Session session) {
-        SDFFilter.log.info("Apply Filters....");
+    void applyFilters() {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	SDFFilter.log.info("Apply Filters....");
         try {
             if (!filterSitename.getText().equals("") && filterSitename.getText().equals(filterSitename.getText().toUpperCase())) {
                 SDFFilter.log.error("Site name shouldn't be in capital letters:::" + filterSitename.getText());
@@ -213,8 +212,9 @@ public final class SDFFilter extends javax.swing.JFrame {
                 this.txtNumberSites.setText((new Integer(numReg)).toString());
             }
         } catch (Exception e) {
-            // e.printStackTrace();
             SDFFilter.log.error("An error has ocurred applaying filters. Error Message::::" + e.getMessage());
+        } finally {
+        	session.close();
         }
     }
 
@@ -1864,11 +1864,11 @@ public final class SDFFilter extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    } 
 
-    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnApplyFilterActionPerformed
-        this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-    } // GEN-LAST:event_btnApplyFilterActionPerformed
+    private void btnApplyFilterActionPerformed(java.awt.event.ActionEvent evt) {
+        this.applyFilters();
+    } 
 
     /**
      *
@@ -1883,7 +1883,7 @@ public final class SDFFilter extends javax.swing.JFrame {
             SDFFilter.log.info("New site::::" + newSitecode);
         }
         editorSitecode.dispose();
-    } // GEN-LAST:event_btnNewActionPerformed
+    } 
 
     /**
      *
@@ -1898,12 +1898,12 @@ public final class SDFFilter extends javax.swing.JFrame {
             if (editorSitecode.ok) {
                 SDFEditor editor = new SDFEditor(this, "duplicate");
                 editor.loadSite(sitecode, newSitecode);
-                this.applyFilters(HibernateUtil.getSessionFactory().openSession());
+                this.applyFilters();
                 editor.setVisible(true);
             }
             editorSitecode.dispose();
         }
-    } // GEN-LAST:event_btnDuplicateActionPerformed
+    }
 
     /**
      *
@@ -1911,8 +1911,8 @@ public final class SDFFilter extends javax.swing.JFrame {
      */
     private void btnResetFilterActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnResetFilterActionPerformed
         this.clearFilterSelections();
-        this.applyFilters(HibernateUtil.getSessionFactory().openSession());
-    } // GEN-LAST:event_btnResetFilterActionPerformed
+        this.applyFilters();
+    }
 
     /**
      *
@@ -1963,28 +1963,33 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         }
 
-    } // GEN-LAST:event_btnDeleteAllActionPerformed
+    }
 
     public void deleteAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        int crow = this.tabDisplaySites.getRowCount();
-        DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-        Calendar cal = Calendar.getInstance();
-        for (int i = crow - 1; i >= 0; i--) {
-            String sitecode = (String) model.getValueAt(i, 1);
-            model.removeRow(i);
-            Transaction tx = session.beginTransaction();
-            Site site = (Site) session.load(Site.class, sitecode);
-            site.setSiteDateDeletion(cal.getTime());
-            session.delete(site);
-            SDFFilter.log.info("Deleted site: " + sitecode);
-            tx.commit();
+        try {
+	        int crow = this.tabDisplaySites.getRowCount();
+	        DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+	        Calendar cal = Calendar.getInstance();
+	        for (int i = crow - 1; i >= 0; i--) {
+	            String sitecode = (String) model.getValueAt(i, 1);
+	            model.removeRow(i);
+	            Transaction tx = session.beginTransaction();
+	            Site site = (Site) session.load(Site.class, sitecode);
+	            site.setSiteDateDeletion(cal.getTime());
+	            session.delete(site);
+	            SDFFilter.log.info("Deleted site: " + sitecode);
+	            tx.commit();
+	        }
+	
+	        javax.swing.JOptionPane.showMessageDialog(this, "Deletion all the sites has finished properly");
+	        tabDisplaySites.repaint();
+	        this.txtNumberSites.setText(getNumberOfSites(session));
+        } catch (Exception ex) {
+        	log.error("Error while deleting data: " + ex);
+        } finally {
+        	session.close();
         }
-
-        javax.swing.JOptionPane.showMessageDialog(this, "Deletion all the sites has finished properly");
-        tabDisplaySites.repaint();
-        this.txtNumberSites.setText(getNumberOfSites(session));
-        session.close();
     }
 
     /**
@@ -1992,7 +1997,7 @@ public final class SDFFilter extends javax.swing.JFrame {
      * @param evt
      */
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {
 
         int[] row = tabDisplaySites.getSelectedRows();
         if (row == null) {
@@ -2006,32 +2011,29 @@ public final class SDFFilter extends javax.swing.JFrame {
                             null, null, null);
             if (answer == javax.swing.JOptionPane.YES_OPTION) {
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
-                for (int i = 0; i < row.length; i++) {
-
-                    Transaction tx = session.beginTransaction();
-
-                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
-                    Site site = (Site) session.load(Site.class, sitecode);
-                    Calendar cal = Calendar.getInstance();
-                    site.setSiteDateDeletion(cal.getTime());
-                    session.delete(site);
-                    log("Deleted site: " + sitecode);
-                    tx.commit();
-
-                }
-                displaySites(session, this.criteria);
-                this.txtNumberSites.setText(getNumberOfSites(session));
-                if (session.isOpen()) {
+                try {
+	                DefaultTableModel model = (DefaultTableModel) tabDisplaySites.getModel();
+	                for (int i = 0; i < row.length; i++) {
+	                    Transaction tx = session.beginTransaction();
+	                    String sitecode = (String) this.tabDisplaySites.getModel().getValueAt(row[i], 1);
+	                    Site site = (Site) session.load(Site.class, sitecode);
+	                    Calendar cal = Calendar.getInstance();
+	                    site.setSiteDateDeletion(cal.getTime());
+	                    session.delete(site);
+	                    log("Deleted site: " + sitecode);
+	                    tx.commit();
+	                }
+	                displaySites(session, this.criteria);
+	                this.txtNumberSites.setText(getNumberOfSites(session));
+                } catch (Exception ex) {
+                	log.error("Error while deleting data: " + ex);
+                } finally {	                
                     session.close();
                 }
-
                 this.tabDisplaySites.repaint();
-
             }
         }
-
-    } // GEN-LAST:event_btnDeleteActionPerformed
+    }
 
     /**
      *
@@ -2139,9 +2141,15 @@ public final class SDFFilter extends javax.swing.JFrame {
         if (itemEvent.getStateChange() == 1 && isInitDone) {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String speciesGrpName = itemEvent.getItem().toString();
-            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
-            populateSpeciesByGroup(session, speciesGroupCode);
+            try {
+	            String speciesGrpName = itemEvent.getItem().toString();
+	            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
+	            populateSpeciesByGroup(session, speciesGroupCode);
+            } catch (Exception ex) {
+            	log.error("Error while fetching data: " + ex);
+            } finally {
+            	session.close();
+            }
         }
     }
 
@@ -2153,9 +2161,15 @@ public final class SDFFilter extends javax.swing.JFrame {
         if (itemEvent.getStateChange() == 1 && isInitDone) {
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String speciesGrpName = itemEvent.getItem().toString();
-            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
-            populateOSpeciesByGroup(session, speciesGroupCode);
+            try {
+	            String speciesGrpName = itemEvent.getItem().toString();
+	            String speciesGroupCode = getSpeciesGroupCodeByName(session, speciesGrpName);
+	            populateOSpeciesByGroup(session, speciesGroupCode);
+            } catch (Exception ex) {
+            	log.error("Error while fetching data: " + ex);
+            } finally {
+            	session.close();
+            }
         }
     }
 

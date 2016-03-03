@@ -15,6 +15,7 @@
 	<property name="hibernate.hikari.dataSource.cachePrepStmts">true</property>
 	<property name="hibernate.hikari.dataSource.prepStmtCacheSize">250</property>
 	<property name="hibernate.hikari.dataSource.prepStmtCacheSqlLimit">2048</property>   
+	<property name="hibernate.hikari.leakDetectionThreshold">30000</property>   
 	  
     <property name="hibernate.default_batch_fetch_size">16</property>
     

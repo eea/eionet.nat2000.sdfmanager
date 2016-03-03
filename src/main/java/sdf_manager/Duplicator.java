@@ -38,8 +38,6 @@ import pojos.Species;
  */
 public class Duplicator {
 
-
-
     private final static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(Duplicator.class .getName());
     /**
      *
@@ -349,10 +347,15 @@ public class Duplicator {
      */
     private void saveAndReloadObj(Object o) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(o);
-        tr.commit();
-        session.flush();
-        session.close();
+        try {
+	        Transaction tr = session.beginTransaction();
+	        session.saveOrUpdate(o);
+	        tr.commit();
+	        session.flush();
+        } catch(Exception ex) {
+        	log.error("Error while saving data: " + ex);
+        } finally {
+	        session.close();
+        }
     }
 }

@@ -44,24 +44,30 @@ public class EditorHabitatClass extends javax.swing.JFrame {
        EditorHabitatClass.log.info("Load habitat Classes from reference table, to fill the drop down list");
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql;
-       String tableName = "RefHabClasses";
-       hql = "select distinct hC.refHabClassesCode from " + tableName + " hC";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-
-       while (itr.hasNext()) {
-           Object obj = itr.next();
-           if (("").equals(obj)) {
-               continue;
-           }
-           cmbCode.insertItemAt(obj, i);
-           i++;
-       }
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
+       try {
+	       String hql;
+	       String tableName = "RefHabClasses";
+	       hql = "select distinct hC.refHabClassesCode from " + tableName + " hC";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	
+	       while (itr.hasNext()) {
+	           Object obj = itr.next();
+	           if (("").equals(obj)) {
+	               continue;
+	           }
+	           cmbCode.insertItemAt(obj, i);
+	           i++;
+	       }
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching habitat data" + ex);
+       } finally {
+    	   session.close();
        }
    }
 
@@ -92,20 +98,27 @@ public class EditorHabitatClass extends javax.swing.JFrame {
     * @param habClassCode
     * @return
     */
-   private String  getHabClassDesc(String habClassCode) {
+   private String getHabClassDesc(String habClassCode) {
        EditorHabitatClass.log.info("Get the description of the habitat Class. ::" + habClassCode);
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String habClassDesc = "";
-       String hql;
-       String tableName = "RefHabClasses";
-       hql = "select distinct hC.refHabClassesDescrEn from " + tableName + " hC where hC.refHabClassesCode ='" + habClassCode + "'";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       if (itr.hasNext()) {
-           habClassDesc = (String) itr.next();
-       }
-       EditorHabitatClass.log.info("The description of the habitat Class. ::" + habClassDesc);
-       return habClassDesc;
+       try {    	   
+	       String habClassDesc = "";
+	       String hql;
+	       String tableName = "RefHabClasses";
+	       hql = "select distinct hC.refHabClassesDescrEn from " + tableName + " hC where hC.refHabClassesCode ='" + habClassCode + "'";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       if (itr.hasNext()) {
+	           habClassDesc = (String) itr.next();
+	       }
+	       EditorHabitatClass.log.info("The description of the habitat Class. ::" + habClassDesc);
+	       return habClassDesc;
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }       
+       return "";
    }
 
    /**
@@ -125,7 +138,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
         hC.setHabitatClassCover(cover);
         if (this.editing && this.index > -1) {
             /*we're editing an existing habitat*/
-            saveOK = this.parent.saveHabitatClass(hC,this.index);
+            saveOK = this.parent.saveHabitatClass(hC, this.index);
         } else {
             if (this.parent.habitatClassExists((String) cmbCode.getSelectedItem())) {
                 EditorHabitatClass.log.error("Habitat class is already declared.");
@@ -328,29 +341,36 @@ public class EditorHabitatClass extends javax.swing.JFrame {
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {
          if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
             EditorHabitatClass.log.info("Get the description of the habitat Class to fill the text field in the editor. ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String tableName = "RefHabClasses";
-            String hql = "select distinct refHab.refHabClassesDescrEn from " + tableName
-                    + " refHab where refHab.refHabClassesCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            String descHabClass =(String) q.uniqueResult();
-            EditorHabitatClass.log.info("The description of the habitat Class. ::" + descHabClass);
-            this.txtName.setText(descHabClass);
+            try {
+	            String tableName = "RefHabClasses";
+	            String hql = "select distinct refHab.refHabClassesDescrEn from " + tableName
+	                    + " refHab where refHab.refHabClassesCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            String descHabClass =(String) q.uniqueResult();
+	            EditorHabitatClass.log.info("The description of the habitat Class. ::" + descHabClass);
+	            this.txtName.setText(descHabClass);
+            } catch (Exception ex) {
+            	log.error("Error while fetching data" + ex);
+            } finally {
+            	session.close();
+            }
+            
         }
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
-    private void tbnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_tbnCancelActionPerformed
+    private void tbnCancelActionPerformed(java.awt.event.ActionEvent evt) {
         this.exit();
-    } //GEN-LAST:event_tbnCancelActionPerformed
+    }
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
 
         if (((String) cmbCode.getSelectedItem()).equals("")) {
             EditorHabitatClass.log.error("No Habitat Class selected.");
@@ -372,11 +392,7 @@ public class EditorHabitatClass extends javax.swing.JFrame {
                 this.setVisible(true);
             }
         }
-    } //GEN-LAST:event_btnSaveActionPerformed
-
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    }
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cmbCode;
     private javax.swing.JLabel jLabel1;
@@ -389,8 +405,4 @@ public class EditorHabitatClass extends javax.swing.JFrame {
     private javax.swing.JButton tbnCancel;
     private javax.swing.JTextField txtCover;
     private javax.swing.JTextArea txtName;
-    // End of variables declaration//GEN-END:variables
-
-
-
 }

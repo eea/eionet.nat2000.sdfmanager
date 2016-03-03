@@ -20,9 +20,8 @@ import sdf_manager.util.SDF_Util;
  * @author charbda
  */
 public class EditorRegion extends javax.swing.JFrame {
-
+   
     /** Creates new form EditorRegions. */
-
     private boolean editing = false; //no cascaded actionPerformed
     private SDFEditor parent;
     private String siteCode;
@@ -56,28 +55,34 @@ public class EditorRegion extends javax.swing.JFrame {
         String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
         EditorRegion.LOGGER.info("Loading the regions from the reference table " + tableName);
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "from " + tableName + " refN order by refN.refNutsCode";
-        Query q = session.createQuery(hql);
-        Iterator itr = q.iterate();
-        int i = 0;
-        this.editing = true;
-        while (itr.hasNext()) {
-            if (SDF_ManagerApp.isEmeraldMode()) {
-                RefNutsEmerald refNE = (RefNutsEmerald) itr.next();
-                cmbCode.insertItemAt(refNE.getRefNutsCode(), i);
-                cmbName.insertItemAt(refNE.getRefNutsCode() + " - " + refNE.getRefNutsDescription(), i);
-            } else {
-                RefNuts refN = (RefNuts) itr.next();
-                cmbCode.insertItemAt(refN.getRefNutsCode(), i);
-                cmbName.insertItemAt(refN.getRefNutsCode() + " - " + refN.getRefNutsDescription(), i);
-            }
-            i++;
-        }
-        this.editing = false;
-        if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-        }
+        try {
+	        String hql = "from " + tableName + " refN order by refN.refNutsCode";
+	        Query q = session.createQuery(hql);
+	        Iterator itr = q.iterate();
+	        int i = 0;
+	        this.editing = true;
+	        while (itr.hasNext()) {
+	            if (SDF_ManagerApp.isEmeraldMode()) {
+	                RefNutsEmerald refNE = (RefNutsEmerald) itr.next();
+	                cmbCode.insertItemAt(refNE.getRefNutsCode(), i);
+	                cmbName.insertItemAt(refNE.getRefNutsCode() + " - " + refNE.getRefNutsDescription(), i);
+	            } else {
+	                RefNuts refN = (RefNuts) itr.next();
+	                cmbCode.insertItemAt(refN.getRefNutsCode(), i);
+	                cmbName.insertItemAt(refN.getRefNutsCode() + " - " + refN.getRefNutsDescription(), i);
+	            }
+	            i++;
+	        }
+	        this.editing = false;
+	        if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	        }
+        } catch (Exception ex) {
+     	   LOGGER.error("Error while fetching data: " + ex);
+        } finally {
+     	   session.close();
+        }    
     }
 
 
@@ -102,14 +107,20 @@ public class EditorRegion extends javax.swing.JFrame {
         EditorRegion.LOGGER.info("Checking if the region::" + codeNut + " exists for this site::" + this.siteCode);
         boolean nutExist = false;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode + "'";
-        Query q = session.createQuery(hql);
-        Iterator itr = q.iterate();
-        if (itr.hasNext()) {
-            nutExist = true;
-        }
-        return nutExist;
-
+        try {
+	        String hql = "select regionCode from Region where regionCode = '" + codeNut + "' and site = '" + this.siteCode + "'";
+	        Query q = session.createQuery(hql);
+	        Iterator itr = q.iterate();
+	        if (itr.hasNext()) {
+	            nutExist = true;
+	        }
+	        return nutExist;
+        } catch (Exception ex) {
+     	   LOGGER.error("Error while fetching data: " + ex);
+        } finally {
+     	   session.close();
+        }    
+        return false;
    }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -309,9 +320,8 @@ public class EditorRegion extends javax.swing.JFrame {
         String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefNutsEmerald" : "RefNuts";
         String hql = "select refN.refNutsDescription from " + tableName + " refN where refN.refNutsCode like '" + code + "'";
 
-        Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {            
             Query query = session.createQuery(hql);
             name = (String) query.uniqueResult();
 
@@ -339,21 +349,11 @@ public class EditorRegion extends javax.swing.JFrame {
             String msg = "Technical error when attempting to look up the region information: " + e.toString();
             LOGGER.error(msg, e);
             javax.swing.JOptionPane.showMessageDialog(this, msg);
-        }
-        finally {
-            if (session != null) {
-                try {
-                    session.close();
-                } catch (Exception e) {
-                    // Ignore session closing exceptions.
-                }
-            }
-        }
-    } //GEN-LAST:event_btnSaveActionPerformed
-
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        } finally {
+        	session.close();
+        }                          
+    }
+  
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cmbCode;
@@ -362,7 +362,5 @@ public class EditorRegion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
-    // End of variables declaration//GEN-END:variables
-
+    private javax.swing.JPanel jPanel1; 
 }

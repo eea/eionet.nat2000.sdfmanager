@@ -63,23 +63,29 @@ public class EditorBioregion extends javax.swing.JFrame {
     private void loadRegions() {
        EditorBioregion.log.info("Load BioRegions to add a new bio region to the site");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct biogeo.biogeoCode, biogeo.biogeoName from Biogeo biogeo order by biogeo.biogeoCode";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       this.editing = true;
-       while (itr.hasNext()) {
-           Object[] obj = (Object[]) itr.next();
-           cmbCode.insertItemAt(obj[0], i);
-           cmbName.insertItemAt(obj[1], i);
-           i++;
+       try {
+	       String hql = "select distinct biogeo.biogeoCode, biogeo.biogeoName from Biogeo biogeo order by biogeo.biogeoCode";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       this.editing = true;
+	       while (itr.hasNext()) {
+	           Object[] obj = (Object[]) itr.next();
+	           cmbCode.insertItemAt(obj[0], i);
+	           cmbName.insertItemAt(obj[1], i);
+	           i++;
+	       }
+	       this.editing = false;
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+	       EditorBioregion.log.info("End Load BioRegions");
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
        }
-       this.editing = false;
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-       }
-       EditorBioregion.log.info("End Load BioRegions");
    }
     /**
      * Load BioRegions to edit a new bio region to the site.
@@ -276,7 +282,7 @@ public class EditorBioregion extends javax.swing.JFrame {
             cmbName.setSelectedIndex(i);
             this.editing = false;
         }
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
     /**
      *
@@ -288,7 +294,7 @@ public class EditorBioregion extends javax.swing.JFrame {
             cmbCode.setSelectedIndex(i);
         }
         //txtArea.setText("100");
-    } //GEN-LAST:event_cmbNameItemStateChanged
+    }
 
     /**
      * Checks if the param is null.
@@ -347,38 +353,42 @@ public class EditorBioregion extends javax.swing.JFrame {
             }
 
             Session session = HibernateUtil.getSessionFactory().openSession();
-            Biogeo b;
-            percent = new Double(txtArea.getText());
-            String hql = "from Biogeo biogeo where biogeo.biogeoCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            b = (Biogeo) q.uniqueResult();
-            if (this.editing && this.index > -1) {
-                EditorBioregion.log.info("Bioregion saved");
-                /*we're editing an existing habitat*/
-                saveOK = this.parent.saveBiogeo(b, percent, this.index);
-                msgInfo = "Bioregion saved";
-           } else {
-                EditorBioregion.log.info("Bioregion added");
-                saveOK = this.parent.addBiogeo(b, percent);
-                msgInfo = "Bioregion added";
-
-           }
-            if (saveOK) {
-                javax.swing.JOptionPane.showMessageDialog(this, msgInfo);
-                this.exit();
-            } else {
-                this.setVisible(true);
+            try {
+	            Biogeo b;
+	            percent = new Double(txtArea.getText());
+	            String hql = "from Biogeo biogeo where biogeo.biogeoCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            b = (Biogeo) q.uniqueResult();
+	            if (this.editing && this.index > -1) {
+	                EditorBioregion.log.info("Bioregion saved");
+	                /*we're editing an existing habitat*/
+	                saveOK = this.parent.saveBiogeo(b, percent, this.index);
+	                msgInfo = "Bioregion saved";
+	            } else {
+	                EditorBioregion.log.info("Bioregion added");
+	                saveOK = this.parent.addBiogeo(b, percent);
+	                msgInfo = "Bioregion added";
+  	            }
+	            if (saveOK) {
+	                javax.swing.JOptionPane.showMessageDialog(this, msgInfo);
+	                this.exit();
+	            } else {
+	                this.setVisible(true);
+	            }
+            } catch (Exception ex) {
+            	log.error("Error while fetching data: " + ex);
+            } finally {
+            	session.close();
             }
-
         }
-    } //GEN-LAST:event_btnSaveActionPerformed
+    } 
     /**
      *
      * @param evt
      */
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
 
 

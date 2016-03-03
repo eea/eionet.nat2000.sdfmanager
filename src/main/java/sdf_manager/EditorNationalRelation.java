@@ -44,26 +44,32 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         EditorNationalRelation.log.info("Loading Designations from reference table");
         cmbCode.removeAllItems();
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql;
-
-        String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-        hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
-
-        Query q = session.createQuery(hql);
-        Iterator itr = q.iterate();
-        int i = 0;
-        while (itr.hasNext()) {
-            Object obj = itr.next();
-            if (((String) obj).equals("")) {
-                continue;
-            }
-            cmbCode.insertItemAt(obj, i);
-            i++;
-        }
-        if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-        }
+        try {
+	        String hql;
+	
+	        String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	        hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
+	
+	        Query q = session.createQuery(hql);
+	        Iterator itr = q.iterate();
+	        int i = 0;
+	        while (itr.hasNext()) {
+	            Object obj = itr.next();
+	            if (((String) obj).equals("")) {
+	                continue;
+	            }
+	            cmbCode.insertItemAt(obj, i);
+	            i++;
+	        }
+	        if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	        }
+        } catch (Exception ex) {
+     	   log.error("Error while fetching data: " + ex);
+        } finally {
+     	   session.close();
+        }    
     }
 
 
@@ -93,25 +99,23 @@ public class EditorNationalRelation extends javax.swing.JFrame {
      * @return
      */
     private String getRelationDescription(String desigCode) {
-         EditorNationalRelation.log.info("Get Description of the national relation:::" + desigCode);
-         String desigName = "";
-         try {
-
-            Session session = HibernateUtil.getSessionFactory().openSession();
+    	EditorNationalRelation.log.info("Get Description of the national relation:::" + desigCode);
+        String desigName = "";         
+        Session session = HibernateUtil.getSessionFactory().openSession();
+    	try {
             String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
             String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
                 desigName = (String) q.uniqueResult();
             }
-
-         } catch (Exception e) {
-             //e.printStackTrace();
-             EditorNationalRelation.log.error("An error has occurred in searching the description of the nationla relation. Error Message:::" + e.getMessage());
+         } catch (Exception ex) {
+             log.error("An error has occurred in searching the description of the nationla relation. Error Message:::" + ex.getMessage());
+         } finally {
+        	 session.close();
          }
          EditorNationalRelation.log.info("The description of the national relation:::" + desigName);
          return desigName;
-
      }
 
     /**
@@ -391,7 +395,7 @@ public class EditorNationalRelation extends javax.swing.JFrame {
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
     private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
         if (evt.getStateChange() == 1) {
@@ -399,14 +403,20 @@ public class EditorNationalRelation extends javax.swing.JFrame {
             String code = (String) cmbCode.getSelectedItem();
             EditorNationalRelation.log.info("Get the description for the national relation.:::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            String descNatRelation = (String) q.uniqueResult();
-            EditorNationalRelation.log.info("The description for the national relation.:::" + descNatRelation);
-            this.txtType.setText(descNatRelation);
+            try {
+	            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            String descNatRelation = (String) q.uniqueResult();
+	            EditorNationalRelation.log.info("The description for the national relation.:::" + descNatRelation);
+	            this.txtType.setText(descNatRelation);
+            } catch (Exception ex) {
+         	   log.error("Error while fetching data: " + ex);
+            } finally {
+         	   session.close();
+            }    
         }
-} //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
         if (((String) cmbCode.getSelectedItem()).equals("")) {

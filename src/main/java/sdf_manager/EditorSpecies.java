@@ -69,63 +69,69 @@ public class EditorSpecies extends javax.swing.JFrame {
        cmbCode.removeAllItems();
        cmbName.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql;
-       EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
-       String groupSpecies = "-";
-       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
-           String groupSpeciesName = (String) this.cmbGroup.getSelectedItem();
-           groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
-       }
-       if (groupSpecies.equals("B")) {
-           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds";
-           if (SDF_ManagerApp.isEmeraldMode()) {
-               hql += " where refBirds.refSpeciesRes6='1'";
-           }
-           hql += " order by refBirds.refBirdsName";
-       } else {
-
-           hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName";
-           hql += " from RefSpecies refSp";
-           hql += " where refSp.refSpeciesGroup like '" + groupSpecies;
-           if (SDF_ManagerApp.isEmeraldMode()) {
-               hql += "' and refSp.refSpeciesRes6 ='1'";
-           } else {
-               hql += "' and refSp.refSpeciesAnnexII ='1'";
-           }
-           if (speciesCode == null) {
-               hql += " and refSp.refSpeciesCodeNew='0'";
-           }
-
-           hql += " order by refSp.refSpeciesName";
-       }
-
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbCode.insertItemAt("", i); //initialize
-       cmbName.insertItemAt("", i); //initialize
-       i++;
-       int j = -1;
-       while (itr.hasNext()) {
-           Object obj[] = (Object[]) itr.next();
-           if (((String) obj[0]).equals("")) {
-               continue;
-           }
-           cmbCode.insertItemAt(obj[0], i);
-           cmbName.insertItemAt(obj[1], i);
-
-           i++;
-       }
-       if (i > 0) {
-           if (j > -1) {
-              cmbCode.setSelectedIndex(j);
-           } else {
-             cmbCode.setSelectedIndex(0);
-           }
-       }
-
-       this.cmbCode.repaint();
-       this.cmbName.repaint();
+       try {
+	       String hql;
+	       EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
+	       String groupSpecies = "-";
+	       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
+	           String groupSpeciesName = (String) this.cmbGroup.getSelectedItem();
+	           groupSpecies = getGroupSpCodeByGroupSpName(groupSpeciesName);
+	       }
+	       if (groupSpecies.equals("B")) {
+	           hql = "select distinct refBirds.refBirdsCode, refBirds.refBirdsName from RefBirds refBirds";
+	           if (SDF_ManagerApp.isEmeraldMode()) {
+	               hql += " where refBirds.refSpeciesRes6='1'";
+	           }
+	           hql += " order by refBirds.refBirdsName";
+	       } else {
+	
+	           hql = "select distinct refSp.refSpeciesCode, refSp.refSpeciesName";
+	           hql += " from RefSpecies refSp";
+	           hql += " where refSp.refSpeciesGroup like '" + groupSpecies;
+	           if (SDF_ManagerApp.isEmeraldMode()) {
+	               hql += "' and refSp.refSpeciesRes6 ='1'";
+	           } else {
+	               hql += "' and refSp.refSpeciesAnnexII ='1'";
+	           }
+	           if (speciesCode == null) {
+	               hql += " and refSp.refSpeciesCodeNew='0'";
+	           }
+	
+	           hql += " order by refSp.refSpeciesName";
+	       }
+	
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbCode.insertItemAt("", i); //initialize
+	       cmbName.insertItemAt("", i); //initialize
+	       i++;
+	       int j = -1;
+	       while (itr.hasNext()) {
+	           Object obj[] = (Object[]) itr.next();
+	           if (((String) obj[0]).equals("")) {
+	               continue;
+	           }
+	           cmbCode.insertItemAt(obj[0], i);
+	           cmbName.insertItemAt(obj[1], i);
+	
+	           i++;
+	       }
+	       if (i > 0) {
+	           if (j > -1) {
+	              cmbCode.setSelectedIndex(j);
+	           } else {
+	             cmbCode.setSelectedIndex(0);
+	           }
+	       }
+	
+	       this.cmbCode.repaint();
+	       this.cmbName.repaint();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
     }
 
    /**
@@ -138,6 +144,7 @@ public class EditorSpecies extends javax.swing.JFrame {
        this.editing = true;
        this.index = index;
        Session session = HibernateUtil.getSessionFactory().openSession();
+       try {
        String code, name = "";
        code = s.getSpeciesCode();
        name = s.getSpeciesName();
@@ -250,6 +257,11 @@ public class EditorSpecies extends javax.swing.JFrame {
             this.cmbGlobal.setSelectedItem(ConversionTools.charToString(s.getSpeciesGlobal()));
         }
         printSpecies(s);
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
    /**
@@ -257,40 +269,44 @@ public class EditorSpecies extends javax.swing.JFrame {
     * @param speciesCode
     */
    private void loadSpeciesName(String speciesCode) {
-
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql;
-       EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
-       EditorSpecies.log.info("speciesCode: " + speciesCode);
-       String groupSpecies = "-";
-       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
-           String groupSpName = (String) this.cmbGroup.getSelectedItem();
-           groupSpecies = getGroupSpCodeByGroupSpName(groupSpName);
-       }
-       EditorSpecies.log.info("groupSpecies: " + groupSpecies);
-       if (!groupSpecies.equals("B") && StringUtils.isNotBlank(speciesCode)) {
-
-           hql = "select distinct refSp.refSpeciesAltName, refSp.refSpeciesHdName, refSp.refSpeciesAnnexII, refSp.refSpeciesCode";
-           hql += " from RefSpecies refSp where refSp.refSpeciesCode ='" + speciesCode + "'";
-
-           Query q = session.createQuery(hql);
-           Iterator itr = q.iterate();
-
-           if (itr.hasNext()) {
-               Object obj[] = (Object[]) itr.next();
-               if (obj[0] != null) {
-                   this.txAltSpeciesName.setText((String) obj[0]);
-               } else {
-                 this.txAltSpeciesName.setText("");
-               }
-               if (obj[1] != null) {
-                   this.txHdSpeciesName.setText((String) obj[1]);
-               } else {
-                   this.txHdSpeciesName.setText("");
-               }
-           }
-       }
-
+       try {
+	       String hql;
+	       EditorSpecies.log.info("Loading species group: " + (String) this.cmbGroup.getSelectedItem());
+	       EditorSpecies.log.info("speciesCode: " + speciesCode);
+	       String groupSpecies = "-";
+	       if (!(("-").equals(this.cmbGroup.getSelectedItem()))) {
+	           String groupSpName = (String) this.cmbGroup.getSelectedItem();
+	           groupSpecies = getGroupSpCodeByGroupSpName(groupSpName);
+	       }
+	       EditorSpecies.log.info("groupSpecies: " + groupSpecies);
+	       if (!groupSpecies.equals("B") && StringUtils.isNotBlank(speciesCode)) {
+	
+	           hql = "select distinct refSp.refSpeciesAltName, refSp.refSpeciesHdName, refSp.refSpeciesAnnexII, refSp.refSpeciesCode";
+	           hql += " from RefSpecies refSp where refSp.refSpeciesCode ='" + speciesCode + "'";
+	
+	           Query q = session.createQuery(hql);
+	           Iterator itr = q.iterate();
+	
+	           if (itr.hasNext()) {
+	               Object obj[] = (Object[]) itr.next();
+	               if (obj[0] != null) {
+	                   this.txAltSpeciesName.setText((String) obj[0]);
+	               } else {
+	                 this.txAltSpeciesName.setText("");
+	               }
+	               if (obj[1] != null) {
+	                   this.txHdSpeciesName.setText((String) obj[1]);
+	               } else {
+	                   this.txHdSpeciesName.setText("");
+	               }
+	           }
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    	      
    }
 
    /**
@@ -415,10 +431,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getPopulationTypeCodebyName(String popTypeName) {
        EditorSpecies.log.info("Getting the population type code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPop.refPopulationCode from RefPopulation refPop where refPop.refPopulationName='" + popTypeName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refPop.refPopulationCode from RefPopulation refPop where refPop.refPopulationName='" + popTypeName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -429,10 +451,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getPopulationTypeNameByCode(String popTypeCode) {
        EditorSpecies.log.info("Getting the population type name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop where refPop.refPopulationCode='" + popTypeCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop where refPop.refPopulationCode='" + popTypeCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -443,10 +471,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getUnitTypeNameByCode(String unitCode) {
        EditorSpecies.log.info("Getting the unit name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitName from RefUnit where refUnitCode='" + unitCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refUnitName from RefUnit where refUnitCode='" + unitCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
 
@@ -459,10 +493,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getUnitTypeCodeByName(String unitName) {
        EditorSpecies.log.info("Getting the unit code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitCode from RefUnit where refUnitName='" + unitName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refUnitCode from RefUnit where refUnitName='" + unitName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -473,10 +513,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getCategoryNameByCode(String categoryCode) {
        EditorSpecies.log.info("Getting the category type name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='" + categoryCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+    	   String hql = "select distinct refCategoryName from RefCategory where refCategoryCode='" + categoryCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -487,10 +533,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getCategoryCodeByName(String categoryName) {
        EditorSpecies.log.info("Getting the category type code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='" + categoryName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refCategoryCode from RefCategory where refCategoryName='" + categoryName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
     /**
@@ -501,10 +553,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getQualityCodeByQualityName(String qualityName) {
        EditorSpecies.log.info("Get quality code by quality name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualityName='" + qualityName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualityName='" + qualityName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -515,10 +573,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getQualityNameByQualityCode(String qualityCode) {
        EditorSpecies.log.info("Get quality name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualityCode='" + qualityCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualityCode='" + qualityCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
     /**
@@ -529,10 +593,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getGroupSpCodeByGroupSpName(String groupSpName) {
        EditorSpecies.log.info("Get group of species code by group of species name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refSpeciesGroupCode from RefSpeciesGroup where refSpeciesGroupName='" + groupSpName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refSpeciesGroupCode from RefSpeciesGroup where refSpeciesGroupName='" + groupSpName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -543,10 +613,16 @@ public class EditorSpecies extends javax.swing.JFrame {
    private String getGroupSpNameByGroupSpCode(String groupSpCode) {
        EditorSpecies.log.info("Get group of species name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupCode='" + groupSpCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupCode='" + groupSpCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
 
@@ -558,21 +634,27 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Populate population type data");
        cmbType.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbType.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbType.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbType.setSelectedIndex(0);
-            cmbType.repaint();
-       }
+       try {
+	       String hql = "select distinct refPop.refPopulationName from RefPopulation refPop";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbType.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbType.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbType.setSelectedIndex(0);
+	            cmbType.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
    /**
@@ -582,21 +664,27 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Populate unit data");
        cmbUnit.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refUnitName from RefUnit";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbUnit.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbUnit.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbUnit.setSelectedIndex(0);
-            cmbUnit.repaint();
-       }
+       try {
+	       String hql = "select distinct refUnitName from RefUnit";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbUnit.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbUnit.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbUnit.setSelectedIndex(0);
+	            cmbUnit.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
     /**
@@ -606,21 +694,27 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Populate quality data");
        cmbQuality.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbQuality.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj =  itr.next();
-           cmbQuality.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbQuality.setSelectedIndex(0);
-            cmbQuality.repaint();
-       }
+       try {
+	       String hql = "select distinct refQua.refQualityName from RefQuality refQua";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbQuality.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj =  itr.next();
+	           cmbQuality.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbQuality.setSelectedIndex(0);
+	            cmbQuality.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
    /**
     * Loads the habitats from reference table.
@@ -629,21 +723,27 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Populate category data");
        cmbCategory.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refCategoryName from RefCategory";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbCategory.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj =  itr.next();
-           cmbCategory.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbCategory.setSelectedIndex(0);
-            cmbCategory.repaint();
-       }
+       try {
+	       String hql = "select distinct refCategoryName from RefCategory";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbCategory.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj =  itr.next();
+	           cmbCategory.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbCategory.setSelectedIndex(0);
+	            cmbCategory.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }           
    }
 
 
@@ -654,21 +754,27 @@ public class EditorSpecies extends javax.swing.JFrame {
        EditorSpecies.log.info("Populate species group");
        cmbGroup.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupSpecies='S'";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbGroup.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbGroup.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbGroup.setSelectedIndex(0);
-            cmbGroup.repaint();
-       }
+       try {
+	       String hql = "select distinct refSpeciesGroupName from RefSpeciesGroup where refSpeciesGroupSpecies='S'";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbGroup.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbGroup.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbGroup.setSelectedIndex(0);
+	            cmbGroup.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
 

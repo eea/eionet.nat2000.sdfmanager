@@ -45,23 +45,29 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
         EditorInternationalRelation.log.info("Loading convention from reference table to fill the drop down list");
         cmbCode.removeAllItems();
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql;
-        hql = "select conv.refConventionsName from RefConventions conv";
-        Query q = session.createQuery(hql);
-        Iterator itr = q.iterate();
-        int i = 0;
-        while (itr.hasNext()) {
-            Object obj = itr.next();
-            if (((String) obj).equals("")) {
-                continue;
-            }
-            cmbCode.insertItemAt(obj, i);
-            i++;
-        }
-        if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-        }
+        try {
+	        String hql;
+	        hql = "select conv.refConventionsName from RefConventions conv";
+	        Query q = session.createQuery(hql);
+	        Iterator itr = q.iterate();
+	        int i = 0;
+	        while (itr.hasNext()) {
+	            Object obj = itr.next();
+	            if (((String) obj).equals("")) {
+	                continue;
+	            }
+	            cmbCode.insertItemAt(obj, i);
+	            i++;
+	        }
+	        if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	        }
+        } catch (Exception ex) {
+     	   log.error("Error while fetching data: " + ex);
+        } finally {
+     	   session.close();
+        }    
     }
 
 
@@ -92,24 +98,22 @@ public class EditorInternationalRelation extends javax.swing.JFrame {
       */
      private String getRelationDescription(String desigCode) {
          String desigName = "";
-         EditorInternationalRelation.log.info("Get the description of the relation.:::" + desigCode);
-         try {
-
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-            String hql = "select distinct desig.refDesignationsCode from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
-            Query q = session.createQuery(hql);
-            if (q.uniqueResult() != null) {
-                desigName = (String) q.uniqueResult();
-            }
-
-         } catch (Exception e) {
-             //e.printStackTrace();
-             EditorInternationalRelation.log.error("An error has occurred in search of the description. Error Message:::" + e.getMessage());
-         }
+         EditorInternationalRelation.log.info("Get the description of the relation.:::" + desigCode);        
+            Session session = HibernateUtil.getSessionFactory().openSession();            
+            try {            
+	            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	            String hql = "select distinct desig.refDesignationsCode from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
+	            Query q = session.createQuery(hql);
+	            if (q.uniqueResult() != null) {
+	                desigName = (String) q.uniqueResult();
+	            }
+            } catch (Exception ex) {
+            	log.error("An error has occurred in search of the description. Error Message:::" + ex.getMessage());
+            } finally {
+            	session.close();
+            }                         
          EditorInternationalRelation.log.info("The description of the relation.:::" + desigName);
          return desigName;
-
      }
 
      private int getSelectedindexbyCode(String conventionCode) {

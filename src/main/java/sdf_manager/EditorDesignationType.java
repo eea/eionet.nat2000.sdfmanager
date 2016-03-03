@@ -44,23 +44,29 @@ public class EditorDesignationType extends javax.swing.JFrame {
        EditorDesignationType.log.info("Load Designations to fill the drop downlist, to add a new designation type for the site");
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql;
-       String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-       hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       while (itr.hasNext()) {
-           Object obj = itr.next();
-           if (((String) obj).equals("")) continue;
-           cmbCode.insertItemAt(obj, i);
-           i++;
-       }
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-       }
-       EditorDesignationType.log.info("Finish Loading Designations");
+       try {
+	       String hql;
+	       String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	       hql = "select distinct desig.refDesignationsCode from " + tblName + " desig order by desig.refDesignationsCode";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       while (itr.hasNext()) {
+	           Object obj = itr.next();
+	           if (((String) obj).equals("")) continue;
+	           cmbCode.insertItemAt(obj, i);
+	           i++;
+	       }
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+	       EditorDesignationType.log.info("Finish Loading Designations");
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }       
     }
 
     /**
@@ -91,15 +97,19 @@ public class EditorDesignationType extends javax.swing.JFrame {
          EditorDesignationType.log.info("Get the name of the designation type for the code :::" + desigCode);
          String desigName = "";
          try {
-
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
-            Query q = session.createQuery(hql);
-            if (q.uniqueResult() != null) {
-                desigName = (String) q.uniqueResult();
-            }
-
+            try {
+	            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + desigCode + "'";
+	            Query q = session.createQuery(hql);
+	            if (q.uniqueResult() != null) {
+	                desigName = (String) q.uniqueResult();
+	            }
+            } catch (Exception ex) {
+         	   log.error("Error while fetching data: " + ex);
+            } finally {
+         	   session.close();
+            }            
          } catch (Exception e) {
              //e.printStackTrace();
              EditorDesignationType.log.error("An Error has occurred . Error ::" + e.getMessage());
@@ -362,21 +372,26 @@ public class EditorDesignationType extends javax.swing.JFrame {
      * Added the description of the designtation type.
      * @param evt
      */
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
-
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {
         if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
             EditorDesignationType.log.info("Get the descrition of the designation type.Designation Code ::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
-            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            String desigTypeName = (String) q.uniqueResult();
-            EditorDesignationType.log.info("The description of the designation type ::" + desigTypeName);
-            this.txtName.setText(desigTypeName);
+            try {
+	            String tblName = SDF_ManagerApp.isEmeraldMode() ? "RefDesignationsEmerald" : "RefDesignations";
+	            String hql = "select distinct desig.refDesignationsDescr from " + tblName + " desig where desig.refDesignationsCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            String desigTypeName = (String) q.uniqueResult();
+	            EditorDesignationType.log.info("The description of the designation type ::" + desigTypeName);
+	            this.txtName.setText(desigTypeName);
+            } catch (Exception ex) {
+         	   log.error("Error while fetching data: " + ex);
+            } finally {
+         	   session.close();
+            }            
         }
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
     /**
      *
      * @param evt

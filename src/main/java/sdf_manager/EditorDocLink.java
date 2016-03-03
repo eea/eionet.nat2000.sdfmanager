@@ -216,45 +216,50 @@ public class EditorDocLink extends javax.swing.JFrame {
      *
      * @param evt
      */
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
-        System.out.println("btnSaveActionPerformed");
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
         if (this.txtLink.getText().equals("")) {
             EditorDocLink.log.error("No url ");
             javax.swing.JOptionPane.showMessageDialog(this, "Please provide a valid URL.");
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
-            //String hql = "from DocLink link where link.docLinkUrl like '" + this.txtLink.getText() + "'";
-            //Query q = session.createQuery(hql);
-            //if (q.uniqueResult() != null) {
-            if (this.parent.isLinkInSite(this.txtLink.getText())) {
-               EditorDocLink.log.error("The link already exists. Can't save.");
-               javax.swing.JOptionPane.showMessageDialog(this, "The link already exists. Can't save.");
-               setVisible(true);
-            } else {
-                if (this.editing) {
-                    System.out.println(":: EDITING");
-                    this.docLink.setDocLinkUrl(this.txtLink.getText());
-                    this.parent.updateLink(docLink, index); ;
-                    EditorDocLink.log.info("Link saved.");
-                    javax.swing.JOptionPane.showMessageDialog(this, "Link saved.");
-                    this.exit();
-                } else {
-                    System.out.println(":: IS NOT EDITING");
-                    this.parent.addLink(this.txtLink.getText());
-                    EditorDocLink.log.info("Link saved.");
-                    javax.swing.JOptionPane.showMessageDialog(this, "Link saved.");
-                    this.exit();
-                }
-            }
+            try {
+	            //String hql = "from DocLink link where link.docLinkUrl like '" + this.txtLink.getText() + "'";
+	            //Query q = session.createQuery(hql);
+	            //if (q.uniqueResult() != null) {
+	            if (this.parent.isLinkInSite(this.txtLink.getText())) {
+	               EditorDocLink.log.error("The link already exists. Can't save.");
+	               javax.swing.JOptionPane.showMessageDialog(this, "The link already exists. Can't save.");
+	               setVisible(true);
+	            } else {
+	                if (this.editing) {
+	                    System.out.println(":: EDITING");
+	                    this.docLink.setDocLinkUrl(this.txtLink.getText());
+	                    this.parent.updateLink(docLink, index); ;
+	                    EditorDocLink.log.info("Link saved.");
+	                    javax.swing.JOptionPane.showMessageDialog(this, "Link saved.");
+	                    this.exit();
+	                } else {
+	                    System.out.println(":: IS NOT EDITING");
+	                    this.parent.addLink(this.txtLink.getText());
+	                    EditorDocLink.log.info("Link saved.");
+	                    javax.swing.JOptionPane.showMessageDialog(this, "Link saved.");
+	                    this.exit();
+	                }
+	            }	        
+            } catch (Exception ex) {
+	     	   log.error("Error while fetching data: " + ex);
+	        } finally {
+	        	session.close();	            
+	        }
         }
-    } //GEN-LAST:event_btnSaveActionPerformed
+    }
     /**
      *
      * @param evt
      */
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
         this.exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
 
 

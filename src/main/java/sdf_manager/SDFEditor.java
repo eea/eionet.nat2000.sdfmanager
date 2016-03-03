@@ -100,7 +100,7 @@ public class SDFEditor extends javax.swing.JFrame {
     private ArrayList modelOwnerships = new ArrayList();
     private ArrayList modelRespAddress = new ArrayList();
     private Site site;
-    private Session session;
+    //private Session session;
     private Transaction trans;
     private String sitecode;
     private String mode; /* new, edit , duplicateSite */
@@ -261,147 +261,149 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param dupSitecode
      */
     void loadSite(String sitecode, String dupSitecode) {
+    	Session session = HibernateUtil.getSessionFactory().openSession();
         SDFEditor.logger.info("Loads the site::" + sitecode);
 
-        this.session = HibernateUtil.getSessionFactory().openSession();
-        this.session.close();
-        this.session = HibernateUtil.getSessionFactory().openSession();
+        //this.session = HibernateUtil.getSessionFactory().openSession();
+        //this.session.close();
+        //this.session = HibernateUtil.getSessionFactory().openSession();
 
         try {
-            this.site = (Site) session.load(new Site().getClass(), sitecode);
+            this.site = (Site) session.load(new Site().getClass(), sitecode);        
+            this.sitecode = sitecode;
+
+	        if (mode.equals("new")) {
+	            site = new Site();
+	            site.setSiteCode(sitecode);
+	        } else if (mode.equals("edit")) {
+	            SDFEditor.logger.info("sitecode::" + sitecode);
+	            this.site = (Site) session.load(new Site().getClass(), sitecode);
+	
+	            SDFEditor.logger.info("this.site.getSiteCode()::" + this.site.getSiteCode());
+	            /* CRASH ON LOAD A SITE AFTER IMPORTING AN OLD MDB */
+	            SDFEditor.logger.info("this.site.getSiteName()::" + this.site.getSiteName());
+	
+	        } else if (mode.equals("duplicate")) {
+	            Site oldSite = (Site) session.load(new Site().getClass(), sitecode);
+	            this.duplicateSite = new Site();
+	            this.duplicateSite.setSiteCode(dupSitecode);
+	            Duplicator duplicator = new Duplicator();
+	            duplicator.duplicateSite(oldSite, duplicateSite);
+	            this.site = this.duplicateSite;
+	            Calendar cal = Calendar.getInstance();
+	            this.site.setSiteDateCreation(cal.getTime());
+	            this.saveAndReloadSession();
+	        }
+	        this.txtSiteCode.setText(wrap(site.getSiteCode()));
+	        this.txtSiteName.setText(wrap(site.getSiteName()));
+	        Character type = site.getSiteType();
+	        if (type != null) {
+	            if (("A").equals(type.toString())) {
+	                this.cmbSiteType.setSelectedIndex(0);
+	            } // SPA
+	            else if (("B").equals(type.toString())) {
+	                this.cmbSiteType.setSelectedIndex(1);
+	            } // SCI
+	            else if (("C").equals(type.toString())) {
+	                this.cmbSiteType.setSelectedIndex(2);
+	            } // Both
+	        }
+	        this.txtCompDate.setText(wrap(site.getSiteCompDate()));
+	
+	        this.txtUpdateDate.setText(wrap(site.getSiteUpdateDate()));
+	        Resp resp = site.getResp();
+	        if (resp != null) {
+	            this.txtRespName.setText(wrap(resp.getRespName()));
+	            this.txtRespAddr.setText(wrap(resp.getRespAddress()));
+	            this.txtRespEmail.setText(wrap(resp.getRespEmail()));
+	            this.txtRespAdminUnit.setText(wrap(resp.getRespAdminUnit()));
+	            this.txtRespLocatorDesignator.setText(wrap(resp.getRespLocatorDesig()));
+	            this.txtRespLocatorName.setText(wrap(resp.getRespLocatorName()));
+	            this.txtRespAddressArea.setText(wrap(resp.getRespAddressArea()));
+	            this.txtRespPostCode.setText(wrap(resp.getRespPostCode()));
+	            this.txtRespPostName.setText(wrap(resp.getRespPostName()));
+	            this.txtRespThoroughFare.setText(wrap(resp.getRespThoroughFare()));
+	        }
+	        this.txtDateSpa.setText(wrap(site.getSiteSpaDate()));
+	        this.txtSpaRef.setText(wrap(site.getSiteSpaLegalRef()));
+	        this.txtDatePropSci.setText(wrap(site.getSiteSciPropDate()));
+	        this.txtDateConfSci.setText(wrap(site.getSiteSciConfDate()));
+	        this.txtDateSac.setText(wrap(site.getSiteSacDate()));
+	        this.txtSacRef.setText(wrap(site.getSiteSacLegalRef()));
+	        this.txtSacExpl.setText(wrap(site.getSiteExplanations()));
+	        this.txtLongitude.setText(formatCoordinates(site.getSiteLongitude()));
+	        this.txtLatitude.setText(formatCoordinates(site.getSiteLatitude()));
+	        this.txtLength.setText(wrap(site.getSiteLength()));
+	        this.txtArea.setText(wrap(site.getSiteArea()));
+	        this.txtMarineArea.setText(wrap(site.getSiteMarineArea()));
+	
+	        this.txtDateSiteProposedASCI.setText(wrap(site.getSiteProposedAsciDate()));
+	        this.txtDateSiteConfirmedCandidateASCI.setText(wrap(site.getSiteConfirmedCandidateAsciDate()));
+	        this.txtDateSiteConfirmedASCI.setText(wrap(site.getSiteConfirmedAsciDate()));
+	        this.txtDateSiteDesignatedASCI.setText(wrap(site.getSiteDesignatedAsciDate()));
+	        this.txtAsciNationalLegalReference.setText(wrap(site.getSiteAsciLegalRef()));
+	        this.txtAsciExplanations.setText(wrap(site.getSiteExplanations()));
+	
+	        this.loadRegions();
+	        this.loadBiogeo();
+	        this.loadSpecies();
+	        this.loadOtherSpecies();
+	        this.loadHabitats();
+	        this.loadHabitatClasses();
+	        this.txtSiteCharacter.setText(wrap(site.getSiteCharacteristics()));
+	        this.txtQuality.setText(wrap(site.getSiteQuality()));
+	        this.loadImpacts();
+	        this.loadOwnerships();
+	        this.loadDocLinks();
+	        this.loadDesignationTypes();
+	        this.loadRelations();
+	        this.txtDesignation.setText(wrap(site.getSiteDesignation()));
+	
+	        Mgmt mgmt = site.getMgmt();
+	
+	        if (mgmt != null) {
+	            Character status = mgmt.getMgmtStatus();
+	            if (status != null) {
+	                if (("Y").equals(status.toString())) {
+	                    this.btnMgmtExists.setSelected(true);
+	                } else if (("P").equals(status.toString())) {
+	                    this.btnMgmtPrep.setSelected(true);
+	                } else if (("N").equals(status.toString())) {
+	                    this.btnMgmtNo.setSelected(true);
+	                } else {
+	                    this.btnMgmtNo.setSelected(true);
+	                }
+	
+	            }
+	            if (mgmt.getMgmtConservMeasures() != null) {
+	                this.txtConservationMeasures.setText(mgmt.getMgmtConservMeasures());
+	            }
+	        }
+	        this.loadMgmtBodies();
+	        this.loadMgmtPlans();
+	        Map map = site.getMap();
+	        if (map != null) {
+	            if (map.getMapInspire() != null) {
+	                this.txtInspireID.setText(map.getMapInspire());
+	            }
+	            if (map.getMapPdf() == null) {
+	                this.btnPDFNo.setSelected(true);
+	            } else if (map.getMapPdf() != null && map.getMapPdf() == 0) {
+	                this.btnPDFNo.setSelected(true);
+	            } else if (map.getMapPdf() != null && map.getMapPdf() == 1) {
+	                this.btnPDFYes.setSelected(true);
+	            } else {
+	                this.btnPDFNo.setSelected(true);
+	            }
+	            if (map.getMapReference() != null) {
+	                this.txtMapRef.setText(map.getMapReference());
+	            }
+	        }
         } catch (Exception ex) {
-            this.session = HibernateUtil.getSessionFactory().openSession();
-        }
-
-        this.sitecode = sitecode;
-
-        if (mode.equals("new")) {
-            site = new Site();
-            site.setSiteCode(sitecode);
-        } else if (mode.equals("edit")) {
-            SDFEditor.logger.info("sitecode::" + sitecode);
-            this.site = (Site) session.load(new Site().getClass(), sitecode);
-
-            SDFEditor.logger.info("this.site.getSiteCode()::" + this.site.getSiteCode());
-            /* CRASH ON LOAD A SITE AFTER IMPORTING AN OLD MDB */
-            SDFEditor.logger.info("this.site.getSiteName()::" + this.site.getSiteName());
-
-        } else if (mode.equals("duplicate")) {
-            Site oldSite = (Site) session.load(new Site().getClass(), sitecode);
-            this.duplicateSite = new Site();
-            this.duplicateSite.setSiteCode(dupSitecode);
-            Duplicator duplicator = new Duplicator();
-            duplicator.duplicateSite(oldSite, duplicateSite);
-            this.site = this.duplicateSite;
-            Calendar cal = Calendar.getInstance();
-            this.site.setSiteDateCreation(cal.getTime());
-            this.saveAndReloadSession();
-        }
-        this.txtSiteCode.setText(wrap(site.getSiteCode()));
-        this.txtSiteName.setText(wrap(site.getSiteName()));
-        Character type = site.getSiteType();
-        if (type != null) {
-            if (("A").equals(type.toString())) {
-                this.cmbSiteType.setSelectedIndex(0);
-            } // SPA
-            else if (("B").equals(type.toString())) {
-                this.cmbSiteType.setSelectedIndex(1);
-            } // SCI
-            else if (("C").equals(type.toString())) {
-                this.cmbSiteType.setSelectedIndex(2);
-            } // Both
-        }
-        this.txtCompDate.setText(wrap(site.getSiteCompDate()));
-
-        this.txtUpdateDate.setText(wrap(site.getSiteUpdateDate()));
-        Resp resp = site.getResp();
-        if (resp != null) {
-            this.txtRespName.setText(wrap(resp.getRespName()));
-            this.txtRespAddr.setText(wrap(resp.getRespAddress()));
-            this.txtRespEmail.setText(wrap(resp.getRespEmail()));
-            this.txtRespAdminUnit.setText(wrap(resp.getRespAdminUnit()));
-            this.txtRespLocatorDesignator.setText(wrap(resp.getRespLocatorDesig()));
-            this.txtRespLocatorName.setText(wrap(resp.getRespLocatorName()));
-            this.txtRespAddressArea.setText(wrap(resp.getRespAddressArea()));
-            this.txtRespPostCode.setText(wrap(resp.getRespPostCode()));
-            this.txtRespPostName.setText(wrap(resp.getRespPostName()));
-            this.txtRespThoroughFare.setText(wrap(resp.getRespThoroughFare()));
-        }
-        this.txtDateSpa.setText(wrap(site.getSiteSpaDate()));
-        this.txtSpaRef.setText(wrap(site.getSiteSpaLegalRef()));
-        this.txtDatePropSci.setText(wrap(site.getSiteSciPropDate()));
-        this.txtDateConfSci.setText(wrap(site.getSiteSciConfDate()));
-        this.txtDateSac.setText(wrap(site.getSiteSacDate()));
-        this.txtSacRef.setText(wrap(site.getSiteSacLegalRef()));
-        this.txtSacExpl.setText(wrap(site.getSiteExplanations()));
-        this.txtLongitude.setText(formatCoordinates(site.getSiteLongitude()));
-        this.txtLatitude.setText(formatCoordinates(site.getSiteLatitude()));
-        this.txtLength.setText(wrap(site.getSiteLength()));
-        this.txtArea.setText(wrap(site.getSiteArea()));
-        this.txtMarineArea.setText(wrap(site.getSiteMarineArea()));
-
-        this.txtDateSiteProposedASCI.setText(wrap(site.getSiteProposedAsciDate()));
-        this.txtDateSiteConfirmedCandidateASCI.setText(wrap(site.getSiteConfirmedCandidateAsciDate()));
-        this.txtDateSiteConfirmedASCI.setText(wrap(site.getSiteConfirmedAsciDate()));
-        this.txtDateSiteDesignatedASCI.setText(wrap(site.getSiteDesignatedAsciDate()));
-        this.txtAsciNationalLegalReference.setText(wrap(site.getSiteAsciLegalRef()));
-        this.txtAsciExplanations.setText(wrap(site.getSiteExplanations()));
-
-        this.loadRegions();
-        this.loadBiogeo();
-        this.loadSpecies();
-        this.loadOtherSpecies();
-        this.loadHabitats();
-        this.loadHabitatClasses();
-        this.txtSiteCharacter.setText(wrap(site.getSiteCharacteristics()));
-        this.txtQuality.setText(wrap(site.getSiteQuality()));
-        this.loadImpacts();
-        this.loadOwnerships();
-        this.loadDocLinks();
-        this.loadDesignationTypes();
-        this.loadRelations();
-        this.txtDesignation.setText(wrap(site.getSiteDesignation()));
-
-        Mgmt mgmt = site.getMgmt();
-
-        if (mgmt != null) {
-            Character status = mgmt.getMgmtStatus();
-            if (status != null) {
-                if (("Y").equals(status.toString())) {
-                    this.btnMgmtExists.setSelected(true);
-                } else if (("P").equals(status.toString())) {
-                    this.btnMgmtPrep.setSelected(true);
-                } else if (("N").equals(status.toString())) {
-                    this.btnMgmtNo.setSelected(true);
-                } else {
-                    this.btnMgmtNo.setSelected(true);
-                }
-
-            }
-            if (mgmt.getMgmtConservMeasures() != null) {
-                this.txtConservationMeasures.setText(mgmt.getMgmtConservMeasures());
-            }
-        }
-        this.loadMgmtBodies();
-        this.loadMgmtPlans();
-        Map map = site.getMap();
-        if (map != null) {
-            if (map.getMapInspire() != null) {
-                this.txtInspireID.setText(map.getMapInspire());
-            }
-            if (map.getMapPdf() == null) {
-                this.btnPDFNo.setSelected(true);
-            } else if (map.getMapPdf() != null && map.getMapPdf() == 0) {
-                this.btnPDFNo.setSelected(true);
-            } else if (map.getMapPdf() != null && map.getMapPdf() == 1) {
-                this.btnPDFYes.setSelected(true);
-            } else {
-                this.btnPDFNo.setSelected(true);
-            }
-            if (map.getMapReference() != null) {
-                this.txtMapRef.setText(map.getMapReference());
-            }
-        }
+	        	
+        } finally {
+        	session.close();
+        }	        
     }
 
     /**
@@ -519,10 +521,17 @@ public class SDFEditor extends javax.swing.JFrame {
      */
     private void saveAndReloadSession() {
         /* saving main site obj */
-        Transaction tr = this.session.beginTransaction();
-        this.session.saveOrUpdate(this.site);
-        tr.commit();
-        this.session.flush();
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	try {
+	        Transaction tr = session.beginTransaction();
+	        session.saveOrUpdate(this.site);
+	        tr.commit();
+	        session.flush();
+    	} catch(Exception ex) {
+    	
+    	} finally {
+    		session.close();
+    	}
     }
 
     /**
@@ -530,10 +539,17 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param doc
      */
     private void saveAndReloadDoc(Doc doc) {
-        Transaction tr = this.session.beginTransaction();
-        this.session.saveOrUpdate(doc);
-        tr.commit();
-        this.session.flush();
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	try {
+	        Transaction tr = session.beginTransaction();
+	        session.saveOrUpdate(doc);
+	        tr.commit();    	
+	        session.flush();
+    	} catch(Exception ex) {
+    		
+    	} finally {
+    		session.close();
+    	}
     }
 
     /**
@@ -541,10 +557,11 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param o
      */
     private void saveAndReloadObj(Object o) {
-        Transaction tr = this.session.beginTransaction();
-        this.session.saveOrUpdate(o);
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tr = session.beginTransaction();
+        session.saveOrUpdate(o);
         tr.commit();
-        this.session.flush();
+        session.flush();
     }
 
     /**
@@ -552,10 +569,17 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param o
      */
     private void deleteMgmBodyPlan(Object o) {
-        Transaction tr = this.session.beginTransaction();
-        this.session.delete(o);
-        tr.commit();
-        this.session.flush();
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	try {
+	        Transaction tr = session.beginTransaction();
+	        session.delete(o);
+	        tr.commit();
+	        session.flush();
+    	} catch(Exception ex) {
+    		
+    	} finally {
+    		session.close();
+    	}
     }
 
     /**
@@ -1051,7 +1075,7 @@ public class SDFEditor extends javax.swing.JFrame {
             saveAndReloadSession();
             if (this.filterWindow != null) {
                 this.filterWindow.clearFilterSelections();
-                this.filterWindow.applyFilters(HibernateUtil.getSessionFactory().openSession());
+                this.filterWindow.applyFilters();
             }
             // this.parent.clearFilterSelections();
         } else {
@@ -2155,16 +2179,22 @@ public class SDFEditor extends javax.swing.JFrame {
     private String getImpactName(String impactCode) {
         SDFEditor.logger.info("Getting impact name for impact code: " + impactCode);
         Session session = HibernateUtil.getSessionFactory().openSession();
-        String hql =
-                "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";
-        Query q = session.createQuery(hql);
-
-        String impactName = "";
-        if (q.uniqueResult() != null) {
-            impactName = (String) q.uniqueResult();
+        try {
+	        String hql =
+	                "select distinct refImp.refImpactsDescr from RefImpacts refImp where refImp.refImpactsCode = '" + impactCode + "'";
+	        Query q = session.createQuery(hql);
+	
+	        String impactName = "";
+	        if (q.uniqueResult() != null) {
+	            impactName = (String) q.uniqueResult();
+	        }
+	        return impactName;
+        } catch (Exception ex) {
+        	logger.error("Error while fetching data: " + ex);
+        } finally {
+        	session.close();
         }
-        return impactName;
-
+        return null;
     }
 
     /***
@@ -2388,11 +2418,17 @@ public class SDFEditor extends javax.swing.JFrame {
                 int selectedIndex = dlsm.getMinSelectionIndex();
                 String code = (String) tabHabitats.getModel().getValueAt(selectedIndex, 0);
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                String hql =
-                        "select distinct(refHabitatsDescEn) from " + tableName + " refHab where refHab.refHabitatsCode = '" + code
-                                + "'";
-                Query q = session.createQuery(hql);
-                txtHabitatDescription.setText((String) q.uniqueResult());
+                try {
+	                String hql =
+	                        "select distinct(refHabitatsDescEn) from " + tableName + " refHab where refHab.refHabitatsCode = '" + code
+	                                + "'";
+	                Query q = session.createQuery(hql);
+	                txtHabitatDescription.setText((String) q.uniqueResult());
+                } catch (Exception ex) {
+                	logger.error("Error while fetching data: " + ex);
+                } finally {
+                	session.close();
+                }
             }
         });
     }
@@ -6575,14 +6611,13 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadSpecies(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelSpeciesActionPerformed
+    }
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnCloseActionPerformed
-        session.clear();
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {        
         this.exit();
-    } // GEN-LAST:event_btnCloseActionPerformed
+    }
 
-    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelOtherSpeciesActionPerformed
+    private void btnDelOtherSpeciesActionPerformed(java.awt.event.ActionEvent evt) {
         int row = this.tabOtherSpecies.getSelectedRow();
         if (row == -1 || this.tabOtherSpecies.getRowCount() < 1 || row > this.tabOtherSpecies.getRowCount()) {
             SDFEditor.logger.error("No Species selected.");
@@ -6598,7 +6633,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadOtherSpecies(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelOtherSpeciesActionPerformed
+    }
 
     private void btnDelHabitatClassActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelHabitatClassActionPerformed
         int row = this.tabHabitatClass.getSelectedRow();
@@ -6616,7 +6651,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadHabitatClasses(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelHabitatClassActionPerformed
+    }
 
     private void btnDelNegImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelNegImpactActionPerformed
         int row = this.tabNegativeImpacts.getSelectedRow();
@@ -6635,7 +6670,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    } // GEN-LAST:event_btnDelNegImpactActionPerformed
+    }
 
     private void btnDelPosImpactActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelPosImpactActionPerformed
         int row = this.tabPositiveImpacts.getSelectedRow();
@@ -6654,7 +6689,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadImpacts();
             }
         }
-    } // GEN-LAST:event_btnDelPosImpactActionPerformed
+    }
 
     private void btnDelOwnerActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelOwnerActionPerformed
         int row = this.tabOwnership.getSelectedRow();
@@ -6673,11 +6708,11 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadOwnerships();
             }
         }
-    } // GEN-LAST:event_btnDelOwnerActionPerformed
+    }
 
     private void btnAddDocLinkActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddDocLinkActionPerformed
         new EditorDocLink(this).setVisible(true);
-    } // GEN-LAST:event_btnAddDocLinkActionPerformed
+    }
 
     private void btnDelDocLinkActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelDocLinkActionPerformed
         int row = this.lstLinks.getSelectedIndex();
@@ -6699,7 +6734,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadDocLinks();
             }
         }
-    } // GEN-LAST:event_btnDelDocLinkActionPerformed
+    }
 
     private void btnDelDesigTypeActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelDesigTypeActionPerformed
         int row = this.tabDesigationTypes.getSelectedRow();
@@ -6717,7 +6752,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadDesignationTypes(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelDesigTypeActionPerformed
+    }
 
     private void btnDelNatRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelNatRelActionPerformed
         int row = this.tabNationalRelations.getSelectedRow();
@@ -6735,7 +6770,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadRelations(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelNatRelActionPerformed
+    }
 
     private void btnDelInterRelActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelInterRelActionPerformed
         int row = this.tabInternationalRelations.getSelectedRow();
@@ -6753,7 +6788,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadRelations(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelInterRelActionPerformed
+    }
 
     private void btnDelMgmtBodyActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelMgmtBodyActionPerformed
         int row = this.tabMgmtBodies.getSelectedRow();
@@ -6775,7 +6810,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadMgmtBodies(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelMgmtBodyActionPerformed
+    }
 
     private void btnDelMgmtPlanActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnDelMgmtPlanActionPerformed
         int row = this.tabMgmtPlans.getSelectedRow();
@@ -6794,17 +6829,17 @@ public class SDFEditor extends javax.swing.JFrame {
                 this.loadMgmtPlans(); // repopulate the list in the view
             }
         }
-    } // GEN-LAST:event_btnDelMgmtPlanActionPerformed
+    }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnSaveActionPerformed
         this.save();
-    } // GEN-LAST:event_btnSaveActionPerformed
+    }
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnExportActionPerformed
         // TODO add your handling code here:
         new SDFExporterSite(sitecode).setVisible(true);
 
-    } // GEN-LAST:event_btnExportActionPerformed
+    }
 
     private void jViewButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jViewButtonActionPerformed
         // TODO add your handling code here:
@@ -6814,7 +6849,7 @@ public class SDFEditor extends javax.swing.JFrame {
                         + File.separator + "HTMLView_" + sitecode + ".txt");
         exportHTML.processDatabase("xsl/exportSite.html");
 
-    } // GEN-LAST:event_jViewButtonActionPerformed
+    }
 
     private void editMgmtBodyButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editMgmtBodyButtonActionPerformed
         int row = tabMgmtBodies.getSelectedRow();

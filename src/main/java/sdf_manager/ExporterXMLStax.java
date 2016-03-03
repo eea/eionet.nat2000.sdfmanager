@@ -180,9 +180,9 @@ public class ExporterXMLStax implements Exporter {
      *
      */
     void loadSitecodes() {
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+    	try {            
+            session.getTransaction().begin();
             String hql = "select site.siteCode from Site as site order by site.siteCode";
             Iterator<?> itrSites = session.createQuery(hql).iterate();
             log("iterating...");
@@ -191,11 +191,12 @@ public class ExporterXMLStax implements Exporter {
                 String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
-            tx.commit();
-            session.close();
-        } catch (Exception e) {
+            session.getTransaction().commit();            
+        } catch (Exception e) {        	
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterXMLStax.log.error("ERROR loadSitecodes():::" + e.getMessage());
+        } finally {
+        	session.close();
         }
     }
 

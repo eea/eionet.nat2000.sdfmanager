@@ -389,12 +389,10 @@ public class ImporterMDB extends AbstractImporter implements Importer {
         boolean processOK = false;
 
         String sql = "select sitecode from " + this.tables.get("biotop") + " order by sitecode";
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Statement stmt = null;
 
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-
+        try {            
             loadSpecies(conn, session);
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -527,7 +525,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
     /**
      *
      * @param conn
-     */
+     // TODO: REMOVE THIS CODE
     private ArrayList<String> validateSites(Connection conn) throws SQLException {
 
         String sql = "select sitecode from " + this.tables.get("biotop");
@@ -580,7 +578,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
             session.close();
         }
         return siteCodeDB;
-    }
+    }*/
 
     /**
      *
@@ -2007,8 +2005,9 @@ public class ImporterMDB extends AbstractImporter implements Importer {
             }
 
         } catch (Exception e) {
-            // e.printStackTrace();
             ImporterMDB.log.error("Error:::" + e.getMessage());
+        } finally {
+        	session.close();
         }
         return impactCode;
 

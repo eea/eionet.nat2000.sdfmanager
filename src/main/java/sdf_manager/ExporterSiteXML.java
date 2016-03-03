@@ -245,9 +245,9 @@ public class ExporterSiteXML implements Exporter {
      *
      */
     void loadSitecodes() {
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction tx = session.beginTransaction();
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+        try {            
+            session.getTransaction().begin();
             String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode + "' order by site.siteCode";
             Iterator itrSites = session.createQuery(hql).iterate();
             log("iterating...");
@@ -256,11 +256,12 @@ public class ExporterSiteXML implements Exporter {
                 String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
-            tx.commit();
-            session.close();
+            session.getTransaction().commit();            
         } catch (Exception e) {
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterSiteXML.log.error("Error:::loadSitecodes()::" + e.getMessage());
+        } finally {
+        	session.close();
         }
     }
 

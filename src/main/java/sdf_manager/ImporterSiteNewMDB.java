@@ -1632,23 +1632,21 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
      * @param regionCode
      * @return
      */
-    private boolean isRegionLevel2( String regionCode) {
+    private boolean isRegionLevel2(String regionCode) {
+    	boolean nutsOK = false;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        boolean nutsOK = false;
-
-        ImporterSiteNewMDB.log.info("Validating Region Code");
-        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
-
         try {
+	        Transaction tx = session.beginTransaction();       
+	        ImporterSiteNewMDB.log.info("Validating Region Code");
+	        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";        
             Query q = session.createQuery(hql);
             if (q.uniqueResult() != null) {
                nutsOK = true;
             }
         } catch (Exception e) {
             ImporterSiteNewMDB.log.error("Error loading Region Description:::" + e.getMessage());
-
+        } finally {
+        	session.close();
         }
         return nutsOK;
     }

@@ -499,7 +499,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
             this.fileName = this.getFileName();
             this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
-    } //GEN-LAST:event_updateFileName
+    }
     /**
      *
      * @param evt
@@ -509,7 +509,7 @@ public class SDFExporter extends javax.swing.JFrame implements Logger {
             this.fileName = this.getFileName();
             this.txtPath.setText(this.dirPath + System.getProperty("file.separator") + this.fileName);
         }
-    } //GEN-LAST:event_rdioXMLStateChanged
+    }
 
 
     @Action

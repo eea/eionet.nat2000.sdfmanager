@@ -177,62 +177,64 @@ public class EditorSitecode extends javax.swing.JDialog {
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
-    private void txtSitecodeActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_txtSitecodeActionPerformed
+    private void txtSitecodeActionPerformed(java.awt.event.ActionEvent evt) {
 
-} //GEN-LAST:event_txtSitecodeActionPerformed
+    }
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
         this.setVisible(false);
-} //GEN-LAST:event_btnCancelActionPerformed
+    }
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
        if (this.txtSitecode.getText().length() != 9) {
             EditorSitecode.log.error("Not a valid sitecode: incorrect length.::" + this.txtSitecode.getText());
             javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: incorrect length.");
             return;
-        }
+       }
 
        Session session = HibernateUtil.getSessionFactory().openSession();
-       //Check if the site code is valid (it must start with country code
-       String cuntryCode = this.txtSitecode.getText();
-       cuntryCode = cuntryCode.substring(0, 2);
-       String tableName = SDF_ManagerApp.isEmeraldMode() ? "CountryEmerald" : "Country";
-       String hqlCountry = "from " + tableName + " where countryCode='" + cuntryCode + "'";
-       Iterator itrCountry = session.createQuery(hqlCountry).iterate();
-       if (!itrCountry.hasNext()) {
-            EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::" + this.txtSitecode.getText());
-            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: It must start with country code");
-            return;
-       }
-
-
-       String hql = "select count(*) from Site as site where site.siteCode like '"
-               + this.txtSitecode.getText() + "'";
-       Query q = session.createQuery(hql);
-       Number n = (Number) session.createCriteria(Site.class).add(Restrictions.eq("siteCode", this.txtSitecode.getText())).setProjection(Projections.rowCount()).uniqueResult();
-       if (n.intValue() > 0) {
-            EditorSitecode.log.error("Not a valid sitecode: already exists.::" + this.txtSitecode.getText());
-            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: already exists");
-            return;
-       }
-       ok = true;
-       this.sitecode = this.txtSitecode.getText();
-       this.filter.setNewSitecode(this.sitecode);
-       this.exit();
-
-    } //GEN-LAST:event_btnSaveActionPerformed
+       try {
+	       //Check if the site code is valid (it must start with country code
+	       String cuntryCode = this.txtSitecode.getText();
+	       cuntryCode = cuntryCode.substring(0, 2);
+	       String tableName = SDF_ManagerApp.isEmeraldMode() ? "CountryEmerald" : "Country";
+	       String hqlCountry = "from " + tableName + " where countryCode='" + cuntryCode + "'";
+	       Iterator itrCountry = session.createQuery(hqlCountry).iterate();
+	       if (!itrCountry.hasNext()) {
+	            EditorSitecode.log.error("Not a valid sitecode: It must start with country code.::" + this.txtSitecode.getText());
+	            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: It must start with country code");
+	            return;
+	       }
+	       String hql = "select count(*) from Site as site where site.siteCode like '"
+	               + this.txtSitecode.getText() + "'";
+	       Query q = session.createQuery(hql);
+	       Number n = (Number) session.createCriteria(Site.class).add(Restrictions.eq("siteCode", this.txtSitecode.getText())).setProjection(Projections.rowCount()).uniqueResult();
+	       if (n.intValue() > 0) {
+	            EditorSitecode.log.error("Not a valid sitecode: already exists.::" + this.txtSitecode.getText());
+	            javax.swing.JOptionPane.showMessageDialog(this, "Not a valid sitecode: already exists");
+	            return;
+	       }
+	       ok = true;
+	       this.sitecode = this.txtSitecode.getText();
+	       this.filter.setNewSitecode(this.sitecode);
+	       this.exit();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+    }
 
     /**
      * @param args the command line arguments
+     * 
      */
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField txtSitecode;
-    // End of variables declaration//GEN-END:variables
 }

@@ -44,22 +44,28 @@ public class EditorOwnership extends javax.swing.JFrame {
        EditorOwnership.log.info("Loading the ownerships frm reference table");
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql;
-       hql = "select ow.ownershipType from Ownership ow order by ow.ownershipId asc";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-
-       while (itr.hasNext()) {
-           Object obj = itr.next();
-           if (((String) obj).equals("")) continue;
-           cmbCode.insertItemAt(obj, i);
-           i++;
-       }
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-       }
+       try {
+	       String hql;
+	       hql = "select ow.ownershipType from Ownership ow order by ow.ownershipId asc";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	
+	       while (itr.hasNext()) {
+	           Object obj = itr.next();
+	           if (((String) obj).equals("")) continue;
+	           cmbCode.insertItemAt(obj, i);
+	           i++;
+	       }
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
    /**
@@ -85,13 +91,20 @@ public class EditorOwnership extends javax.swing.JFrame {
    private int getOwnerShipNameByCode(String ownerShipCode) {
        int indexOwnerShip = 0;
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode='" + ownerShipCode + "'";
-
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       if (itr.hasNext()) {
-           indexOwnerShip = ((Integer) itr.next()).intValue();
-       }
+       try {
+	       String hql = "select ow.ownershipId from Ownership ow where ow.ownershipCode='" + ownerShipCode + "'";
+	
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       if (itr.hasNext()) {
+	           indexOwnerShip = ((Integer) itr.next()).intValue();
+	       }
+	       return indexOwnerShip;
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
        return indexOwnerShip;
    }
 
@@ -297,26 +310,32 @@ public class EditorOwnership extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provided a valid percentage.");
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
-            Ownership o;
-            String hql = "from Ownership ow where ow.ownershipType like '" + code + "'";
-            percent = ConversionTools.stringToDouble(txtPercent.getText());
-            Query q = session.createQuery(hql);
-            o = (Ownership) q.uniqueResult();
-            if (this.editing && this.index > -1) {
-                /*we're editing an existing ownerShip*/
-                this.parent.saveOwnership(o, percent,this.index);
-                saveOK = true;
-                msgInfo = "OwnerShip saved";
-           } else {
-                if (this.parent.ownershipExists(o)) {
-                    EditorOwnership.log.error("Ownership class already exists. Can't save.");
-                    javax.swing.JOptionPane.showMessageDialog(this, "Ownership class already exists. Can't save.");
-                } else {
-                    this.parent.addOwnership(o, percent);
-                    saveOK = true;
-                    msgInfo = "OwnerShip added";
-                }
-           }
+            try {
+	            Ownership o;
+	            String hql = "from Ownership ow where ow.ownershipType like '" + code + "'";
+	            percent = ConversionTools.stringToDouble(txtPercent.getText());
+	            Query q = session.createQuery(hql);
+	            o = (Ownership) q.uniqueResult();
+	            if (this.editing && this.index > -1) {
+	                /*we're editing an existing ownerShip*/
+	                this.parent.saveOwnership(o, percent,this.index);
+	                saveOK = true;
+	                msgInfo = "OwnerShip saved";
+	           } else {
+	                if (this.parent.ownershipExists(o)) {
+	                    EditorOwnership.log.error("Ownership class already exists. Can't save.");
+	                    javax.swing.JOptionPane.showMessageDialog(this, "Ownership class already exists. Can't save.");
+	                } else {
+	                    this.parent.addOwnership(o, percent);
+	                    saveOK = true;
+	                    msgInfo = "OwnerShip added";
+	                }
+	           }
+            } catch (Exception ex) {
+         	   log.error("Error while fetching data: " + ex);
+            } finally {
+         	   session.close();
+            }    
         }
         EditorOwnership.log.error(msgInfo);
 

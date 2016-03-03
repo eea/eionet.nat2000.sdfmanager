@@ -405,7 +405,7 @@ public class SDFExporterPDF extends javax.swing.JFrame implements Logger {
 
     private void btnSavePDFActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSavePDFActionPerformed
         // TODO add your handling code here:
-    } //GEN-LAST:event_btnSavePDFActionPerformed
+    } 
 
 
     @Action

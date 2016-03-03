@@ -166,27 +166,24 @@ public class ExporterSiteHTML implements Exporter {
      */
     public void loadSitecodes() {
         ExporterSiteHTML.log.info("Loading the data of the site:::" + siteCode);
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
+        Session session = HibernateUtil.getSessionFactory().openSession();        
         try {
-
+        	session.getTransaction().begin();
             String hql = "select site.siteCode from Site as site where site.siteCode='" + siteCode + "' order by site.siteCode";
-
             Iterator itrSites = session.createQuery(hql).iterate();
-
             while (itrSites.hasNext()) {
                 Object tuple = itrSites.next();
                 String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
-            tx.commit();
-            session.close();
+            session.getTransaction().commit();            
         } catch (Exception e) {
-            tx.rollback();
+            session.getTransaction().rollback();
             log("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
-            //e.printStackTrace();
             ExporterSiteHTML.log.error("An error has occurred in loadSitecodes. Error Message:::" + e.getMessage());
-        }
+        } finally {
+        	session.close();
+        }        
     }
 
     /**
@@ -195,12 +192,12 @@ public class ExporterSiteHTML implements Exporter {
      */
     public Document processDatabase() {
         OutputStream os = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
              SDF_Util.getProperties();
              DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
              DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-
-             Session session = HibernateUtil.getSessionFactory().openSession();
+             
              Iterator itrSites = this.sitecodes.iterator();
              int flush = 0;
              ExporterSiteHTML.log.info("Parsing sitecodes...");
@@ -751,27 +748,23 @@ public class ExporterSiteHTML implements Exporter {
             }
             return null;
         } catch (TransformerConfigurationException e) {
-            //e.printStackTrace();
             ExporterSiteHTML.log.error("A TransformerConfigurationException has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
         } catch (TransformerException e) {
-            //e.printStackTrace();
             ExporterSiteHTML.log.error("A TransformerException has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
         } catch (FileNotFoundException e) {
             ExporterSiteHTML.log.error("A FileNotFoundException has occurred in processDatabase. Error Message:::" + e.getMessage());
-            //e.printStackTrace();
             return null;
         } catch (IOException e) {
-            ExporterSiteHTML.log.error("An IOException has occurred in processDatabase. Error Message:::" + e.getMessage());
-            //e.printStackTrace();
+            ExporterSiteHTML.log.error("An IOException has occurred in processDatabase. Error Message:::" + e.getMessage());            
             return null;
         } catch (Exception e) {
-            //e.printStackTrace();
             ExporterSiteHTML.log.error("A general exception has occurred in processDatabase. Error Message:::" + e.getMessage());
             return null;
         } finally {
             IOUtils.closeQuietly(os);
+            session.close();
         }
 
     }

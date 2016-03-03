@@ -184,27 +184,33 @@ public class EditorHabitat extends javax.swing.JFrame {
    private void loadHabitats() {
        EditorHabitat.log.info("Loads the habitats from reference table to fill the drop down list");
        String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
-       cmbCode.removeAllItems();
+       cmbCode.removeAllItems();       
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refHab.refHabitatsCode from " + tableName + " refHab";
-       List<String> habitatCodes = new ArrayList<String>();
-       
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       while (itr.hasNext()) {
-           Object obj = itr.next();
-           habitatCodes.add((String)obj);
-           i++;
-       }
-       Collections.sort(habitatCodes);
-       for (Object obj : habitatCodes) {
-    	   cmbCode.addItem(obj);
-       }
-
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
+       try {
+	       String hql = "select distinct refHab.refHabitatsCode from " + tableName + " refHab";
+	       List<String> habitatCodes = new ArrayList<String>();
+	       
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       while (itr.hasNext()) {
+	           Object obj = itr.next();
+	           habitatCodes.add((String)obj);
+	           i++;
+	       }
+	       Collections.sort(habitatCodes);
+	       for (Object obj : habitatCodes) {
+	    	   cmbCode.addItem(obj);
+	       }
+	
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+       } catch(Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
        }
    }
 
@@ -213,22 +219,28 @@ public class EditorHabitat extends javax.swing.JFrame {
     */
    private void populateQuality() {
        EditorHabitat.log.info("Populate quality data");
-       cmbQuality.removeAllItems();
+       cmbQuality.removeAllItems();       
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H'";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbQuality.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbQuality.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbQuality.setSelectedIndex(0);
-            cmbQuality.repaint();
+       try {
+	       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H'";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbQuality.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbQuality.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbQuality.setSelectedIndex(0);
+	            cmbQuality.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
        }
    }
 
@@ -240,10 +252,16 @@ public class EditorHabitat extends javax.swing.JFrame {
    private String getQualityCodeByQualityName(String qualityName) {
        EditorHabitat.log.info("Get quality code by quality name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityName='" + qualityName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refQua.refQualityCode from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityName='" + qualityName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }
+       return null;
    }
 
    /**
@@ -254,10 +272,16 @@ public class EditorHabitat extends javax.swing.JFrame {
    private String getQualityNameByQualityCode(String qualityCode) {
        EditorHabitat.log.info("Get quality name by quality code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='" + qualityCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {    	         
+	       String hql = "select distinct refQua.refQualityName from RefQuality refQua where refQua.refQualitySpecies='H' and refQua.refQualityCode='" + qualityCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);    	   
+       } finally {
+    	   session.close();
+       }
+       return null;
    }
 
 
@@ -304,8 +328,7 @@ public class EditorHabitat extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @SuppressWarnings("unchecked")    
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
@@ -654,13 +677,13 @@ jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_Manage
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
         this.exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
           if (this.saveHabitat()) {
               EditorHabitat.log.info("Habitat saved.");
               javax.swing.JOptionPane.showMessageDialog(this, "Habitat saved.");
@@ -668,26 +691,29 @@ jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_Manage
           } else {
               this.setVisible(true);
           }
-    } //GEN-LAST:event_btnSaveActionPerformed
+    }
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {
         if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
             EditorHabitat.log.info("Fill the description field, of the habitat ::" + code);
             String tableName = SDF_ManagerApp.isEmeraldMode() ? "RefHabitatsEmerald" : "RefHabitats";
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct refHab.refHabitatsDescEn from " + tableName + " refHab where refHab.refHabitatsCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            String habDesc = (String) q.uniqueResult();
-            EditorHabitat.log.info("The description of the habitat ::" + habDesc);
-            this.txtName.setText(habDesc);
+            try {
+	            String hql = "select distinct refHab.refHabitatsDescEn from " + tableName + " refHab where refHab.refHabitatsCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            String habDesc = (String) q.uniqueResult();
+	            EditorHabitat.log.info("The description of the habitat ::" + habDesc);
+	            this.txtName.setText(habDesc);
+            } catch (Exception ex) {
+            	log.error("error" + ex);
+            } finally {
+            	session.close();
+            }
         }
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JCheckBox chkNP;
@@ -720,6 +746,5 @@ jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_Manage
     private javax.swing.JTextField txtCover;
     private javax.swing.JTextField txtCoverPercent;
     private javax.swing.JTextArea txtName;
-    // End of variables declaration//GEN-END:variables
 
 }

@@ -239,6 +239,8 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error: " + e.getMessage());
+        } finally {
+        	session.close();
         }
         return siteList;
     }
@@ -252,13 +254,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
         boolean processOK = false;
 
         String sql = "select site_code from site";
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Statement stmt = null;
 
         // HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
         try {
-            int j = 0;
-            session = HibernateUtil.getSessionFactory().openSession();
+            int j = 0;            
             // loadSpecies(conn, session);
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -1694,14 +1695,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
         return mgmt;
     }
@@ -1738,14 +1736,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
         return doc;
 
@@ -1795,8 +1790,8 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      */
     private int loadBiogeoRegionId(String regionKey) {
         int biogeoId = 0;
-        try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {            
             Transaction tx = session.beginTransaction();
             String hql = "select bio.biogeoId from Biogeo as bio where bio.biogeoCode='" + regionKey + "'";
             Iterator itr = session.createQuery(hql).iterate();
@@ -1805,12 +1800,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 Integer tuple = (Integer) itr.next();
                 biogeoId = tuple.intValue();
             }
-            tx.commit();
-            session.close();
+            tx.commit();            
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-
-            // ////e.printStackTrace();
+        } finally {
+        	session.close();
         }
         return biogeoId;
     }
@@ -1821,23 +1815,21 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @return
      */
     private boolean isRegionLevel2(String regionCode) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    	boolean nutsOK = false;
+    	Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
         Transaction tx = session.beginTransaction();
-
-        boolean nutsOK = false;
-
         ImporterNewMDB.log.info("Validating Region Code");
         String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
-
-        try {
-            Query q = session.createQuery(hql);
-            if (q.uniqueResult() != null) {
-                nutsOK = true;
-            }
-        } catch (Exception e) {
-            // //e.printStackTrace();
+        Query q = session.createQuery(hql);
+        if (q.uniqueResult() != null) {
+            nutsOK = true;
+        }
+        tx.commit();
+        } catch (Exception e) {           
             ImporterNewMDB.log.error("Error loading Region Description:::" + e.getMessage());
-
+        } finally {
+        	session.close();
         }
         return nutsOK;
     }

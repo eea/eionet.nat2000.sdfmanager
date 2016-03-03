@@ -540,7 +540,7 @@ public class QAQCMain extends javax.swing.JFrame {
             editor.loadSite(sitecode, "");
             editor.setVisible(true);
         }
-    } //GEN-LAST:event_btnEditActionPerformed
+    }
 
     private void btnFetchActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnFetchActionPerformed
 

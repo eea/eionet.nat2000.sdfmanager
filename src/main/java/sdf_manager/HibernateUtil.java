@@ -44,9 +44,7 @@ public class HibernateUtil {
                     + "/" + dbSchemaName + "?autoReconnect=true")
         			.applySetting("hibernate.hikari.dataSource.user", properties.getProperty("db.user"))
         			.applySetting("hibernate.hikari.dataSource.password", properties.getProperty("db.password"))
-        			.applySetting("hibernate.connection.release_mode", "after_transaction")
-        			// TODO: FIX leak detection in order to find bugs
-        			//.applySetting("hibernate.hikari.leakDetectionThreshold", 20000)
+        			.applySetting("hibernate.connection.release_mode", "after_transaction")        			
         			.configure("hibernate.cfg.xml").build();
         	Metadata metadata = new MetadataSources(standardRegistry)        			        			
         			.getMetadataBuilder().build();        	

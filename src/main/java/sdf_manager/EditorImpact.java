@@ -48,22 +48,28 @@ public class EditorImpact extends javax.swing.JFrame {
        EditorImpact.log.info("Loading impacts from the reference table to add a new impact to the site");
        cmbCode.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct impact.refImpactsCode from RefImpacts impact";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       while (itr.hasNext()) {
-           Object obj = itr.next();
-           if (("").equals(obj)) {
-               continue;
-           }
-           cmbCode.insertItemAt(obj, i);
-           i++;
-       }
-       if (i > 0) {
-            cmbCode.setSelectedIndex(0);
-            cmbCode.repaint();
-       }
+       try {
+	       String hql = "select distinct impact.refImpactsCode from RefImpacts impact";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       while (itr.hasNext()) {
+	           Object obj = itr.next();
+	           if (("").equals(obj)) {
+	               continue;
+	           }
+	           cmbCode.insertItemAt(obj, i);
+	           i++;
+	       }
+	       if (i > 0) {
+	            cmbCode.setSelectedIndex(0);
+	            cmbCode.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }       
    }
 
     /**
@@ -207,21 +213,27 @@ public class EditorImpact extends javax.swing.JFrame {
        EditorImpact.log.info("Populate rank data");
        cmbRank.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refRankName from RefImpactRank refQua";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbRank.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbRank.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbRank.setSelectedIndex(0);
-            cmbRank.repaint();
-       }
+       try {
+	       String hql = "select distinct refQua.refRankName from RefImpactRank refQua";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbRank.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbRank.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbRank.setSelectedIndex(0);
+	            cmbRank.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }       
    }
 
    /**
@@ -231,21 +243,27 @@ public class EditorImpact extends javax.swing.JFrame {
        EditorImpact.log.info("Populate pollution data");
        cmbPollution.removeAllItems();
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refQua.refPollutionName from RefImpactPollution refQua";
-       Query q = session.createQuery(hql);
-       Iterator itr = q.iterate();
-       int i = 0;
-       cmbPollution.insertItemAt("-", 0);
-       while (itr.hasNext()) {
-           i++;
-           Object obj = itr.next();
-           cmbPollution.insertItemAt(obj, i);
-
-       }
-       if (i > 0) {
-            cmbPollution.setSelectedIndex(0);
-            cmbPollution.repaint();
-       }
+       try {
+	       String hql = "select distinct refQua.refPollutionName from RefImpactPollution refQua";
+	       Query q = session.createQuery(hql);
+	       Iterator itr = q.iterate();
+	       int i = 0;
+	       cmbPollution.insertItemAt("-", 0);
+	       while (itr.hasNext()) {
+	           i++;
+	           Object obj = itr.next();
+	           cmbPollution.insertItemAt(obj, i);
+	
+	       }
+	       if (i > 0) {
+	            cmbPollution.setSelectedIndex(0);
+	            cmbPollution.repaint();
+	       }
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
    }
 
    /**
@@ -256,10 +274,16 @@ public class EditorImpact extends javax.swing.JFrame {
    private String getRankNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the rank name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankName from RefImpactRank where refRankCode='" + rankCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refRankName from RefImpactRank where refRankCode='" + rankCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
 
@@ -272,10 +296,16 @@ public class EditorImpact extends javax.swing.JFrame {
    private String getRankCodeByName(String rankName) {
        EditorImpact.log.info("Getting the rank code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refRankCode from RefImpactRank where refRankName='" + rankName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refRankCode from RefImpactRank where refRankName='" + rankName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
 
@@ -287,10 +317,16 @@ public class EditorImpact extends javax.swing.JFrame {
    private String getPollutionNameByCode(String rankCode) {
        EditorImpact.log.info("Getting the Polution name by code");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='" + rankCode + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refPollutionName from RefImpactPollution where refPollutionCode='" + rankCode + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
 
@@ -303,10 +339,16 @@ public class EditorImpact extends javax.swing.JFrame {
    private String getPollutionCodeByName(String rankName) {
        EditorImpact.log.info("Getting the Polution code by name");
        Session session = HibernateUtil.getSessionFactory().openSession();
-       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='" + rankName + "'";
-       Query q = session.createQuery(hql);
-       return (String) q.uniqueResult();
-
+       try {
+	       String hql = "select distinct refPollutionCode from RefImpactPollution where refPollutionName='" + rankName + "'";
+	       Query q = session.createQuery(hql);
+	       return (String) q.uniqueResult();
+       } catch (Exception ex) {
+    	   log.error("Error while fetching data: " + ex);
+       } finally {
+    	   session.close();
+       }    
+       return null;
    }
 
    /**
@@ -327,13 +369,8 @@ public class EditorImpact extends javax.swing.JFrame {
       super.setVisible(true);
       requestFocus();
     }
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
+    @SuppressWarnings("unchecked") 
     private void initComponents() {
 
         labTitle = new javax.swing.JLabel();
@@ -536,27 +573,33 @@ public class EditorImpact extends javax.swing.JFrame {
         );
 
         pack();
-    } // </editor-fold>//GEN-END:initComponents
+    }
 
-    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) { //GEN-FIRST:event_cmbCodeItemStateChanged
+    private void cmbCodeItemStateChanged(java.awt.event.ItemEvent evt) {
          if (evt.getStateChange() == 1) {
             int i = cmbCode.getSelectedIndex();
             String code = (String) cmbCode.getSelectedItem();
             EditorImpact.log.info("Get the description of the impact.:::" + code);
             Session session = HibernateUtil.getSessionFactory().openSession();
-            String hql = "select distinct impact.refImpactsDescr from RefImpacts impact where impact.refImpactsCode like '" + code + "'";
-            Query q = session.createQuery(hql);
-            String impactDesc = (String) q.uniqueResult();
-            EditorImpact.log.info("The description of the impact.:::" + impactDesc);
-            this.txtName.setText(impactDesc);
+            try {
+	            String hql = "select distinct impact.refImpactsDescr from RefImpacts impact where impact.refImpactsCode like '" + code + "'";
+	            Query q = session.createQuery(hql);
+	            String impactDesc = (String) q.uniqueResult();
+	            EditorImpact.log.info("The description of the impact.:::" + impactDesc);
+	            this.txtName.setText(impactDesc);
+            } catch (Exception ex) {
+         	   log.error("Error while fetching data: " + ex);
+            } finally {
+         	   session.close();
+            }    
         }
-    } //GEN-LAST:event_cmbCodeItemStateChanged
+    }
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnCancelActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
         this.exit();
-    } //GEN-LAST:event_btnCancelActionPerformed
+    }
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnSaveActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {
         String code = (String) this.cmbCode.getSelectedItem();
         String rank = (String) this.cmbRank.getSelectedItem();
         String rankCode = "-";
@@ -577,11 +620,7 @@ public class EditorImpact extends javax.swing.JFrame {
             this.setVisible(true);
         }
 
-    } //GEN-LAST:event_btnSaveActionPerformed
-
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    } 
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cmbCode;
@@ -599,6 +638,4 @@ public class EditorImpact extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labTitle;
     private javax.swing.JTextArea txtName;
-    // End of variables declaration//GEN-END:variables
-
 }

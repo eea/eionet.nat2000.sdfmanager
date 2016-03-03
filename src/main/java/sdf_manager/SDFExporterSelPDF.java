@@ -443,7 +443,7 @@ public class SDFExporterSelPDF extends javax.swing.JFrame implements Logger {
         dlg.setModal(true);
         dlg.setVisible(true);
 
-    } //GEN-LAST:event_btnSavePDFActionPerformed
+    } 
 
 
 

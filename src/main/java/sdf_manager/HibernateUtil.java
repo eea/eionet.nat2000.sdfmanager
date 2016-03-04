@@ -67,19 +67,4 @@ public class HibernateUtil {
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
-
-    /**
-    *
-    * @param fileName
-    
-    TODO: REMOVE THIS CODE
-    public static void openSession(String fileName) {
-            Configuration cfg = new Configuration();
-            cfg.configure();
-            cfg.setProperty("hibernate.dialect", "sdf_manager.MSAccessDialect");
-            cfg.setProperty("hibernate.connection.driver_class", "sun.jdbc.odbc.JdbcOdbcDriver");
-            cfg.setProperty("hibernate.connection.url", "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + fileName + "");
-            cfg.setProperty("hibernate.connection.username", "");
-    }
-    */
 }

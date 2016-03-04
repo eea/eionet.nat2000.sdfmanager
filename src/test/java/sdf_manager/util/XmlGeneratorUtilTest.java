@@ -9,7 +9,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -17,8 +16,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class XmlGeneratorUtilTest {
-    private static final Logger LOGGER = Logger.getLogger(XmlGeneratorUtilTest.class);
-
+	
     @Test
     public void testAppendDate() throws Exception {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

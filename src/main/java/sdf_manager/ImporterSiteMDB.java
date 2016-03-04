@@ -144,26 +144,19 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
       */
       @Override
     public boolean processDatabase(String fileName) {
-
         Connection conn = null;
         boolean saveOK = false;
         String msgValidError = "";
-        Session session = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-
             conn = getConnection(fileName);
-            //TODO study if jacksess helps to solve unicode issues?
-            //Database db = Database.create(new File(fileName));
-
             if (conn != null) {
-
                 if (!checkTables(conn)) {
                     log("Failed to find all tables in the database. Please check the database schema and configuration files.", true);
                     ImporterSiteMDB.log.error("Failed to find all tables in the database. Please check the database schema and configuration files");
                     msgValidError = "Failed to find all tables in the database. Please check the database schema and configuration files";
                     saveOK = false;
                     return false;
-
                 }
                 if (!validateSite(conn, this.siteCode)) {
                     log("The site code: " + this.siteCode + " is not in database.", true);
@@ -176,9 +169,7 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
                 this.importDate = getImportDate();
 
                 ImporterSiteMDB.log.info("Validation has finished");
-                log("Validation has finished.", true);
-
-                session = HibernateUtil.getSessionFactory().openSession();
+                log("Validation has finished.", true);               
                 boolean siteInDB = validateSites(conn, session);
 
                 if (!siteInDB) {
@@ -239,7 +230,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
                         "Dialog", JOptionPane.INFORMATION_MESSAGE);
             }
             closeLogFile();
-
         }
      return saveOK;
      }
@@ -253,10 +243,8 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
     private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         try {
-
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
-
             return conn;
         } catch (ClassNotFoundException e) {
             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
@@ -264,8 +252,6 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
         } catch (SQLException e) {
             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
             return null;
-
-            // } catch (IllA)
         } catch (Exception e) {
             SDF_MysqlDatabase.closeQuietly(conn);
             ImporterSiteMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
@@ -1881,9 +1867,7 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
      * @throws SQLException
      */
     private String getImpactCode(String impactCodeOld) throws SQLException {
-
         String impactCode = null;
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         String hql = "from RefImpacts where refImpactsOldcode ='" + impactCodeOld + "' order by ref_Impacts_Code";
         try {
@@ -1892,13 +1876,12 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
             if (impact != null) {
                impactCode = impact.getRefImpactsCode();
             }
-
         } catch (Exception e) {
-            //e.printStackTrace();
            ImporterSiteMDB.log.error("Error:::" + e.getMessage());
+        } finally {
+        	session.close();
         }
         return impactCode;
-
     }
 
 

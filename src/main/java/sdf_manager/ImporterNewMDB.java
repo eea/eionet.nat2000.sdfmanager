@@ -91,9 +91,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         try {
             conn = getConnection(fileName);
-
             if (conn != null) {
-
                 ArrayList<Site> siteList = this.loadSpecies(conn);
                 importOk = validateAndProcessSites(conn, siteList);
                 ImporterNewMDB.log.info("Validation has finished");
@@ -101,7 +99,6 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             } else {
                 importOk = false;
             }
-
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage());
             importOk = false;
@@ -177,7 +174,6 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             session.close();
         }
         return siteHasHDB;
-
     }
 
     /**
@@ -190,22 +186,8 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
     Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         try {
-
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
-
-//            if (accessVersion.equals("2003")) {
-//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};Dbq=" + fileName + ";";
-//                Connection conn = DriverManager.getConnection(db, "", "");
-//                return conn;
-//            } else {
-//                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-//                String db = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=" + fileName + ";";
-//                Connection conn = DriverManager.getConnection(db, "", "");
-//                return conn;
-//            }
-
             return conn;
         } catch (ClassNotFoundException e) {
             ImporterNewMDB.log.error("Error connecting to MS Access DB", e);
@@ -255,27 +237,24 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         String sql = "select site_code from site";
         Session session = HibernateUtil.getSessionFactory().openSession();
+        int test = HibernateUtil.getSessionFactory().getSessionFactoryOptions().getJdbcBatchSize();
         Statement stmt = null;
 
         // HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
-        try {
-            int j = 0;            
-            // loadSpecies(conn, session);
+        try {        	            
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while (rs.next()) {
+            ResultSet rs = stmt.executeQuery(sql);                    	        
+            while (rs.next()) {            	
                 Site site = new Site();
                 String sitecode = rs.getString("site_code");
 
                 this.log.info("Validating site: " + sitecode);
-                log("Validating site: " + sitecode, true);
-                Transaction tx = null;
+                log("Validating site: " + sitecode, true);                
                 try {
+                	session.getTransaction().begin();
                     if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
-                    } else {
-                        tx = session.beginTransaction();
+                    } else {                        
                         log("processing: " + sitecode, true);
                         site.setSiteCode(sitecode);
                         processSite(conn, session, site);
@@ -287,17 +266,16 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         processRelations(conn, session, site);
                         processDTypes(conn, session, site);
                         processImpacts(conn, session, site);
-                        processSiteoOwnerShips(conn, session, site);
-                        tx.commit();
+                        processSiteoOwnerShips(conn, session, site);                                                
+                        session.getTransaction().commit();
                         processOK = true;
                     }
                 } catch (Exception e) {
-                    Util.rollback(tx);
+                    session.getTransaction().rollback();
                     String msg = "Failed processing site: " + sitecode;
                     ImporterNewMDB.log.error(msg, e);
                     log(msg, true);
                 }
-
             }
 
         } catch (Exception e) {
@@ -336,14 +314,10 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
     /**
      *
      * @param conn
-     * @throws SQLException
-     */
+     * @throws SQLException     
     private boolean processSites(Connection conn, String fileName) throws SQLException {
-
         boolean processOK = false;
-        Session session =
-                new Configuration().configure().setProperty("hibernate.jdbc.batch_size", "20")
-                        .setProperty("hibernate.cache.use_second_level_cache", "false").buildSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -419,7 +393,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         }
         return processOK;
-    }
+    }*/
 
     /**
      *
@@ -806,15 +780,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
-
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -900,14 +870,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
     }
 
@@ -993,14 +960,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
     }
 
@@ -1040,18 +1004,14 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
                 habitat.setSite(site);
                 site.getHabitatClasses().add(habitat);
-                // session.save(habitat);
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1068,16 +1028,13 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
         ResultSet rs = null;
         try {
             String sql = "select * from REGION where site_code ='" + site.getSiteCode() + "'";
-
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             String tmpStr;
             while (rs.next()) {
                 Region region = new Region();
-
                 tmpStr = getString(rs, "region_code");
                 if (tmpStr != null) {
-
                     /* just get NUT2 level */
                     if (tmpStr.length() > 4) {
                         tmpStr = tmpStr.substring(0, 4);
@@ -1104,7 +1061,6 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                                 log(String.format("\tCouldn't match NUTS code (%s). Encoding anyway.", tmpStr), false);
                             }
                         } catch (Exception e) {
-                            // //e.printStackTrace();
                             ImporterNewMDB.log.error("An error has occurred in import process. Region section::Error Message:::"
                                     + e.getMessage());
                         }
@@ -1117,14 +1073,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1186,14 +1139,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1233,14 +1183,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1295,14 +1242,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1346,14 +1290,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (SQLException e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
             throw e;
         } catch (Exception e) {
             ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
         } finally {
             stmt.close();
-            // rs.close();
         }
 
     }
@@ -1818,14 +1759,14 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
     	boolean nutsOK = false;
     	Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-        Transaction tx = session.beginTransaction();
-        ImporterNewMDB.log.info("Validating Region Code");
-        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
-        Query q = session.createQuery(hql);
-        if (q.uniqueResult() != null) {
-            nutsOK = true;
-        }
-        tx.commit();
+	        Transaction tx = session.beginTransaction();
+	        ImporterNewMDB.log.info("Validating Region Code");
+	        String hql = "select n.REF_NUTS_DESCRIPTION from ref_nuts where REF_NUTS_CODE='" + regionCode + "'";
+	        Query q = session.createQuery(hql);
+	        if (q.uniqueResult() != null) {
+	            nutsOK = true;
+	        }
+	        tx.commit();
         } catch (Exception e) {           
             ImporterNewMDB.log.error("Error loading Region Description:::" + e.getMessage());
         } finally {

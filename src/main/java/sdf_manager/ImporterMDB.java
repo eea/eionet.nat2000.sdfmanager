@@ -105,8 +105,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
     private HashMap<String, String> fields;
     private String[] tableKeys = {"name", "used_name"};
     private String[] fieldKeys = {"reference", "oldname"};
-//    private Logger logger;
-   private String encoding;
+    private String encoding;
     private HashMap speciesByCode = new HashMap();
     private HashMap speciesByName = new HashMap();
     private FileWriter outFile;
@@ -125,11 +124,8 @@ public class ImporterMDB extends AbstractImporter implements Importer {
      */
     public ImporterMDB(Logger logger, String encoding, String logFile, String accessVersion) {
         super(logger, logFile);
-//        this.logger = logger;
         this.encoding = encoding;
         this.accessVersion = accessVersion;
-
-//        this.initLogFile(logFile);
         this.init();
     }
 
@@ -142,15 +138,6 @@ public class ImporterMDB extends AbstractImporter implements Importer {
         this.parse(this.tableFile, this.tables, this.table_element, this.tableKeys);
         this.parse(this.fieldFile, this.fields, this.field_element, this.fieldKeys);
     }
-
-    /**
-     *
-     * @param msg
-     */
-//    @Override
-//    public void log(String msg) {
-//        this.logger.log(msg);
-//    }
 
     /**
      *
@@ -282,23 +269,17 @@ public class ImporterMDB extends AbstractImporter implements Importer {
     private Connection getConnection(String fileName) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         try {
-
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
             conn = DriverManager.getConnection("jdbc:ucanaccess://" + fileName);
-
         } catch (ClassNotFoundException e) {
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-            // e.printStackTrace();
         } catch (SQLException e) {
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-            // e.printStackTrace();
         } catch (Exception e) {
             SDF_MysqlDatabase.closeQuietly(conn);
             ImporterMDB.log.error("Error conecting to MS Access DB. Error Message:::" + e.getMessage());
-            // e.printStackTrace();
-        } finally {
-            return conn;
         }
+        return conn;
     }
 
     /**
@@ -322,7 +303,6 @@ public class ImporterMDB extends AbstractImporter implements Importer {
             }
         } catch (Exception e) {
             ImporterMDB.log.error("Failed processing tables: " + e.getMessage());
-            // e.printStackTrace();
             log("Failed processing tables.");
             return false;
         }

@@ -9,7 +9,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -51,22 +50,7 @@ public class SDF_MysqlDatabaseTest {
      * @throws Exception if fail
      */
     private Connection getDBConnection() throws Exception {
-
         return getDBConnection(SDF_ManagerApp.NATURA_2000_MODE);
-    }
-
-    /**
-     * Initialize the logging system.
-     */
-    @BeforeClass
-    public static void setupLogger() throws Exception {
-        Properties logProperties = new Properties();
-        logProperties.setProperty("log4j.rootCategory", "DEBUG, CONSOLE");
-        logProperties.setProperty("log4j.appender.CONSOLE", "org.apache.log4j.ConsoleAppender");
-        logProperties.setProperty("log4j.appender.CONSOLE.Threshold", "DEBUG");
-        logProperties.setProperty("log4j.appender.CONSOLE.layout", "org.apache.log4j.PatternLayout");
-        logProperties.setProperty("log4j.appender.CONSOLE.layout.ConversionPattern", "- %m%n");
-        PropertyConfigurator.configure(logProperties);
     }
 
     /**

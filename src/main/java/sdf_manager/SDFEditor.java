@@ -557,11 +557,17 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param o
      */
     private void saveAndReloadObj(Object o) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(o);
-        tr.commit();
-        session.flush();
+    	Session session = HibernateUtil.getSessionFactory().openSession();    	
+    	try {
+	        Transaction tr = session.beginTransaction();
+	        session.saveOrUpdate(o);
+	        tr.commit();
+	        session.flush();
+    	} catch (Exception ex) {
+    		
+    	} finally {
+    		session.close();
+    	}
     }
 
     /**

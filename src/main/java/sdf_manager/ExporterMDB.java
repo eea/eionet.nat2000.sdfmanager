@@ -272,7 +272,6 @@ public class ExporterMDB implements Exporter {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-
             Configuration cfg = new Configuration();
             cfg.configure();
             Properties props = cfg.getProperties();

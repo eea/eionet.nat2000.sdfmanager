@@ -100,7 +100,7 @@ public class SDFEditor extends javax.swing.JFrame {
     private ArrayList modelOwnerships = new ArrayList();
     private ArrayList modelRespAddress = new ArrayList();
     private Site site;
-    //private Session session;
+    private Session session;
     private Transaction trans;
     private String sitecode;
     private String mode; /* new, edit , duplicateSite */
@@ -164,6 +164,7 @@ public class SDFEditor extends javax.swing.JFrame {
                         "Confirm close editor", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE,
                         null, null, null);
         if (answer == javax.swing.JOptionPane.YES_OPTION) {
+        	this.session.close();
             this.dispose();
         }
     }
@@ -261,12 +262,8 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param dupSitecode
      */
     void loadSite(String sitecode, String dupSitecode) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
         SDFEditor.logger.info("Loads the site::" + sitecode);
-
-        //this.session = HibernateUtil.getSessionFactory().openSession();
-        //this.session.close();
-        //this.session = HibernateUtil.getSessionFactory().openSession();
+        this.session = HibernateUtil.getSessionFactory().openSession();
 
         try {
             this.site = (Site) session.load(new Site().getClass(), sitecode);        
@@ -401,9 +398,7 @@ public class SDFEditor extends javax.swing.JFrame {
 	        }
         } catch (Exception ex) {
 	        	
-        } finally {
-        	session.close();
-        }	        
+        }      
     }
 
     /**
@@ -520,17 +515,14 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      */
     private void saveAndReloadSession() {
-        /* saving main site obj */
-    	Session session = HibernateUtil.getSessionFactory().openSession();
+        /* saving main site obj */    	
     	try {
-	        Transaction tr = session.beginTransaction();
-	        session.saveOrUpdate(this.site);
+	        Transaction tr = this.session.beginTransaction();
+	        this.session.saveOrUpdate(this.site);
 	        tr.commit();
-	        session.flush();
+	        this.session.flush();
     	} catch(Exception ex) {
-    	
-    	} finally {
-    		session.close();
+    		this.session.getTransaction().rollback();
     	}
     }
 
@@ -538,35 +530,29 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @param doc
      */
-    private void saveAndReloadDoc(Doc doc) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
+    private void saveAndReloadDoc(Doc doc) {    	
     	try {
-	        Transaction tr = session.beginTransaction();
-	        session.saveOrUpdate(doc);
+	        Transaction tr = this.session.beginTransaction();
+	        this.session.saveOrUpdate(doc);
 	        tr.commit();    	
-	        session.flush();
+	        this.session.flush();
     	} catch(Exception ex) {
-    		
-    	} finally {
-    		session.close();
-    	}
+    		this.session.getTransaction().rollback();
+    	} 
     }
 
     /**
      *
      * @param o
      */
-    private void saveAndReloadObj(Object o) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();    	
+    private void saveAndReloadObj(Object o) { 	
     	try {
-	        Transaction tr = session.beginTransaction();
-	        session.saveOrUpdate(o);
+	        Transaction tr = this.session.beginTransaction();
+	        this.session.saveOrUpdate(o);
 	        tr.commit();
-	        session.flush();
+	        this.session.flush();
     	} catch (Exception ex) {
-    		
-    	} finally {
-    		session.close();
+    		this.session.getTransaction().rollback();
     	}
     }
 
@@ -575,16 +561,13 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param o
      */
     private void deleteMgmBodyPlan(Object o) {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
     	try {
-	        Transaction tr = session.beginTransaction();
-	        session.delete(o);
+	        Transaction tr = this.session.beginTransaction();
+	        this.session.delete(o);
 	        tr.commit();
-	        session.flush();
+	        this.session.flush();
     	} catch(Exception ex) {
-    		
-    	} finally {
-    		session.close();
+    		this.session.getTransaction().rollback();
     	}
     }
 
@@ -6929,11 +6912,10 @@ public class SDFEditor extends javax.swing.JFrame {
             return;
         } else {
             SDFEditor.logger.info("The Site is valid.");
-            javax.swing.JOptionPane.showMessageDialog(this, "The Site is valid.");
-            // this.exit();
+            javax.swing.JOptionPane.showMessageDialog(this, "The Site is valid."); 
             return;
         }
-    } // GEN-LAST:event_validateSiteButtonActionPerformed
+    }
 
     private void editDTypesButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editDTypesButtonActionPerformed
         int row = tabDesigationTypes.getSelectedRow();
@@ -6947,7 +6929,7 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadDesignations(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editDTypesButtonActionPerformed
+    }
 
     private void editNationRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editNationRelationsButtonActionPerformed
         int row = tabNationalRelations.getSelectedRow();
@@ -6961,7 +6943,7 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadDesignations(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editNationRelationsButtonActionPerformed
+    } 
 
     private void editIntRelationsButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editIntRelationsButtonActionPerformed
         int row = tabInternationalRelations.getSelectedRow();
@@ -6975,7 +6957,7 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadConventions(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editIntRelationsButtonActionPerformed
+    } 
 
     private void editHabClassButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editHabClassButtonActionPerformed
         int row = tabHabitatClass.getSelectedRow();
@@ -6989,7 +6971,7 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadClasses(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editHabClassButtonActionPerformed
+    } 
 
     private void editBioRegionButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editBioRegionButtonActionPerformed
         int row = tabBiogeo.getSelectedRow();
@@ -7003,7 +6985,7 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadRegions(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editBioRegionButtonActionPerformed
+    } 
 
     private void editOwnershipButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editOwnershipButtonActionPerformed
         int row = tabOwnership.getSelectedRow();
@@ -7017,17 +6999,17 @@ public class SDFEditor extends javax.swing.JFrame {
             eS.loadOwnership(s, row);
             eS.setVisible(true);
         }
-    } // GEN-LAST:event_editOwnershipButtonActionPerformed
+    } 
 
     private void btnPDFYesActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnPDFYesActionPerformed
         // TODO add your handling code here:
-    } // GEN-LAST:event_btnPDFYesActionPerformed
+    }
 
     private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnGeneratePDFActionPerformed
         // TODO add your handling code here:
         new SDFExporterPDF(sitecode).setVisible(true);
 
-    } // GEN-LAST:event_btnGeneratePDFActionPerformed
+    }
 
     private void editLinksActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editLinksActionPerformed
         // TODO add your handling code here:
@@ -7043,7 +7025,7 @@ public class SDFEditor extends javax.swing.JFrame {
             linkEditor.setVisible(true);
 
         }
-    } // GEN-LAST:event_editLinksActionPerformed
+    } 
 
     private void editMgmtBodyPlansButtonActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editMgmtBodyPlansButtonActionPerformed
 
@@ -7062,9 +7044,8 @@ public class SDFEditor extends javax.swing.JFrame {
             // this.loadMgmtPlans(); //repopulate the list in the view
         }
 
-    } // GEN-LAST:event_editMgmtBodyPlansButtonActionPerformed
+    } 
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddBiogeo;
     private javax.swing.JButton btnAddDesigType;
     private javax.swing.JButton btnAddDocLink;

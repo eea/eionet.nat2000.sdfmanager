@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SDFManager"
-#define MyAppVersion "4.2.3"
+#define MyAppVersion "4.2.4"
 #define MyAppPublisher "EEA"
 #define MyAppURL "http://bd.eionet.europa.eu/activities/Natura_2000/index_html"
 #define MyAppExeName "SDFManager.exe"
@@ -149,7 +149,7 @@ Source: "natura2000_logo.ico"; DestDir: "{app}";  Check: IsNatura2000Mode
 Source: "emeraude_logo.ico"; DestDir: "{app}";  Check: IsEmeraldMode
 Source: "natura2000_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "emeraude_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
-Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
 Source: "SDFManager.l4j.ini"; DestDir: "{app}"; Flags: ignoreversion
 Source: "config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsNatura2000Mode
 Source: "config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode

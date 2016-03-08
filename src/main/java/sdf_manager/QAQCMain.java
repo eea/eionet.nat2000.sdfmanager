@@ -415,7 +415,7 @@ public class QAQCMain extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanel1.setName("jPanel1"); // NOI18N
 
-        cmbCriteria.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Unknown species names (3.2)", "Unknown species codes (3.2)", "Unknown birds names (3.2)", "Unknown birds codes (3.2)", "Unknown otherspecies names (3.3)", "Unknown other species codes (3.3)", "Unknown habitat types", "Unknown habitat classes", "Unknown NUTS regions" }));
+        cmbCriteria.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Unknown species names (3.2)", "Unknown species codes (3.2)", "Unknown birds names (3.2)", "Unknown birds codes (3.2)", "Unknown other species names (3.3)", "Unknown other species codes (3.3)", "Unknown habitat types", "Unknown habitat classes", "Unknown NUTS regions" }));
         cmbCriteria.setName("cmbCriteria"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext().getResourceMap(QAQCMain.class);

@@ -91,6 +91,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             // File.separator + "sdf_database.properties"));
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
 
+            // TODO: CHECK IF IT IS POSSIBLE TO REMOVE THIS HIBERNATE CONFIGURATION AND USE THE DEFAULT ONE
             Configuration annotationConfig = new Configuration();
             annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
@@ -121,7 +122,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                 ImporterXMLStax.log.error("Error in validation");
                 log("Error in validation.", true);
                 JOptionPane.showMessageDialog(new JFrame(),
-                        "Some sites are already stored in Data Base. Please check the log file for details", "Dialog",
+                        "Some sites are already stored in database. Please check the log file for details", "Dialog",
                         JOptionPane.INFORMATION_MESSAGE);
                 File fileLog = SDF_Util.copyToLogImportFile(sitesDB, "XML");
                 if (fileLog != null) {

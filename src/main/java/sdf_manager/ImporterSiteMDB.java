@@ -196,9 +196,9 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
                     }
                 } else {
                     saveOK = false;
-                    ImporterSiteMDB.log.error("Error in validation:. Error Message: Some sites are already stored in Data Base. Please check the log file for details");
+                    ImporterSiteMDB.log.error("Error in validation:. Error Message: Some sites are already stored in database. Please check the log file for details");
                     log("Error in validation.", true);
-                    msgValidError = "Some sites are already stored in Data Base. Please check the log file for details";
+                    msgValidError = "Some sites are already stored in database. Please check the log file for details";
 
                     File fileLog = SDF_Util.copyToLogErrorSite(this.sitesDB, "OldDB");
                     if (fileLog != null) {
@@ -370,8 +370,8 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
                 log("failed processing site: " + this.siteCode, true);
             }
 
-           ImporterSiteMDB.log.info("Finishing import process.Closing connection to Data Base");
-           log("Finishing import process.Closing connection to Data Base");
+           ImporterSiteMDB.log.info("Finishing import process. Closing connection to database");
+           log("Finishing import process. Closing connection to database");
         } catch (Exception e) {
            ImporterSiteMDB.log.error("The error: " + e.getMessage());
            processOK = false;

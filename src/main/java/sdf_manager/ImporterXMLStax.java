@@ -90,22 +90,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             // properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "database" +
             // File.separator + "sdf_database.properties"));
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
-
-            // TODO: CHECK IF IT IS POSSIBLE TO REMOVE THIS HIBERNATE CONFIGURATION AND USE THE DEFAULT ONE
-            Configuration annotationConfig = new Configuration();
-            annotationConfig.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-            annotationConfig.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-            annotationConfig.setProperty("hibernate.connection.url", "jdbc:mysql://" + properties.getProperty("db.host") + "/"
-                    + dbSchemaName + "?autoReconnect=true");
-            annotationConfig.setProperty("hibernate.connection.username", properties.getProperty("db.user"));
-            annotationConfig.setProperty("hibernate.connection.password", properties.getProperty("db.password"));
-            annotationConfig
-                    .setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
-            annotationConfig.setProperty("hibernate.jdbc.batch_size", "50");
-            annotationConfig.setProperty("hibernate.cache.use_second_level_cache", "false");
-
-            SessionFactory sessionFactory = annotationConfig.configure().buildSessionFactory();
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSessionFactory().openSession();
 
             ArrayList siteList = this.loadSpecies(session);
             ImporterXMLStax.log.info("Init validate process");
@@ -140,7 +125,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
 
         } catch (Exception e) {
             // //e.printStackTrace();
-            ImporterXMLStax.log.error("Error in import process:::" + e.getMessage());
+            ImporterXMLStax.log.error("Error in import process:::" + e);
             return false;
         } finally {
             session.clear();
@@ -170,7 +155,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             }
         } catch (Exception e) {
             // e.printStackTrace();
-            ImporterXMLStax.log.error("Error loading Species:::" + e.getMessage());
+            ImporterXMLStax.log.error("Error loading Species:::" + e);
         }
         return siteList;
     }
@@ -220,7 +205,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             }
 
         } catch (Exception e) {
-            ImporterXMLStax.log.error("Error validating Site:::" + e.getMessage());
+            ImporterXMLStax.log.error("Error validating Site:::" + e);
             return siteHasHDB;
         }
         return siteHasHDB;
@@ -809,7 +794,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
         }  catch (Exception ex) {
             ex.printStackTrace();
             log("An error occurred in the Import Process");
-            ImporterXMLStax.log.error("An error occurred in the Import Process.:::" + ex.getMessage());
+            ImporterXMLStax.log.error("An error occurred in the Import Process.:::" + ex);
             JOptionPane.showMessageDialog(new Frame(), "An error occurred in the Import Process", "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -1017,7 +1002,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             }
         } catch (Exception e) {
             // e.printStackTrace();
-            ImporterXMLStax.log.error("Error loading Region Description:::" + e.getMessage());
+            ImporterXMLStax.log.error("Error loading Region Description:::" + e);
 
         }
         return nutsOK;

@@ -376,9 +376,7 @@ public class ImporterSiteXML implements Importer {
      * @param regionCode
      * @return
      */
-    private boolean isRegionLevel2(Session session, String regionCode) {
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-
+    private boolean isRegionLevel2(Session session, String regionCode) {     
         boolean nutsOK = false;
 
         ImporterSiteXML.log.info("Validating Region Code");

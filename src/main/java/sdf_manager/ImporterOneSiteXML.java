@@ -296,9 +296,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
      * @return
      */
     private boolean isRegionLevel2(Session session, String regionCode) {
-
-        // SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-
         boolean nutsOK = false;
 
         ImporterOneSiteXML.log.info("Validating Region Code");

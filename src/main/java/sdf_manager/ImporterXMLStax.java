@@ -988,8 +988,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param regionCode
      * @return
      */
-    private boolean isRegionLevel2(Session session, String regionCode) {
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    private boolean isRegionLevel2(Session session, String regionCode) {        
         boolean nutsOK = false;
 
         ImporterXMLStax.log.info("Validating Region Code");

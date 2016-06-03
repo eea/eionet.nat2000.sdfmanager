@@ -322,7 +322,8 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 			NameIdPair selectedSpecies = (NameIdPair) tableResults.getValueAt(row, 0);			
 			AcceptedNameTriple acceptedNameTriple = (AcceptedNameTriple) tableResults.getValueAt(row, 3);			
 			if (acceptedNameTriple.isAccepted()) {
-				parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID: " + selectedSpecies.getId() + "]"));
+				parent.setValidatedTxtName(stripHtml(selectedSpecies.getName()));
+				//parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID: " + selectedSpecies.getId() + "]"));
 				exit();
 			} else {
 				String message = "<html><body width='300'><h2>Notice</h2><p>The species name you selected (" + selectedSpecies + ") is a synonym "
@@ -333,11 +334,13 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 								
 				int answer = JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (answer == JOptionPane.YES_OPTION) {
-					parent.setValidatedTxtName(stripHtml(acceptedNameTriple.getAcceptedName() + " [CoL-ID:" + acceptedNameTriple.getAcceptedId() + "]"));	
+					//parent.setValidatedTxtName(stripHtml(acceptedNameTriple.getAcceptedName() + " [CoL-ID:" + acceptedNameTriple.getAcceptedId() + "]"));
+					parent.setValidatedTxtName(stripHtml(acceptedNameTriple.getAcceptedName()));
 					exit();
 				}
 				else if (answer == JOptionPane.NO_OPTION) {
-					parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID:" + selectedSpecies.getId() + "]"));
+					//parent.setValidatedTxtName(stripHtml(selectedSpecies.getName() + " [CoL-ID:" + selectedSpecies.getId() + "]"));
+					parent.setValidatedTxtName(stripHtml(selectedSpecies.getName()));
 					exit();
 				}
 			}			

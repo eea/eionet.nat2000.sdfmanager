@@ -94,11 +94,11 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
 
             ArrayList siteList = this.loadSpecies(session);
             ImporterXMLStax.log.info("Init validate process");
-            HashMap sitesDB = validateSites(session, siteList);
+            HashMap existingSites = validateSites(session, siteList);
             ImporterXMLStax.log.info("Validation has finished");
             log("Validation has finished.", true);
 
-            if (sitesDB != null && (sitesDB.isEmpty())) {
+            if (existingSites != null && (existingSites.isEmpty())) {
                 ImporterXMLStax.log.info("Import process is starting");
                 log("Import process is starting.", true);
 
@@ -109,7 +109,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                 JOptionPane.showMessageDialog(new JFrame(),
                         "Some sites are already stored in database. Please check the log file for details", "Dialog",
                         JOptionPane.INFORMATION_MESSAGE);
-                File fileLog = SDF_Util.copyToLogImportFile(sitesDB, "XML");
+                File fileLog = SDF_Util.copyToLogImportFile(existingSites, "XML");
                 if (fileLog != null) {
                     Desktop desktop = null;
                     if (Desktop.isDesktopSupported()) {
@@ -161,7 +161,9 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     }
 
     /**
-     *
+     * Checks how many of the sites in the siteList exist in the database. Also, performs a check on whether the regions of each site are of level 2.
+     * The regions that are not of level 2 are returned as the value of the returned {@link HashMap}.
+     * 
      * @param conn
      */
     private HashMap validateSites(Session session, ArrayList siteList) {
@@ -177,20 +179,18 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                     ImporterXMLStax.log.info("validating sites:::" + sitecode);
 
                     log("validating site: " + sitecode, true);
-                    boolean siteInDB = false;
-                    if (SDF_Util.validateSite(session, sitecode)) {
-                        siteInDB = true;
-                    }
+                    boolean siteExists = SDF_Util.validateSite(session, sitecode);
                     Set regionSiteList = site.getRegions();
-                    Iterator itr = regionSiteList.iterator();
+                    Iterator regionsIterator = regionSiteList.iterator();
                     ArrayList nutsNoOK = new ArrayList();
-                    while (itr.hasNext()) {
-                        String nuts = (String) itr.next();
-                        if (!isRegionLevel2(session, nuts)) {
-                            nutsNoOK.add(nuts);
+                    while (regionsIterator.hasNext()) {
+                        Region nuts = (Region) regionsIterator.next();
+                        String regionCode = nuts.getRegionCode();
+                        if (!isRegionLevel2(session, regionCode)) {
+                            nutsNoOK.add(regionCode);
                         }
                     }
-                    if (siteInDB) {
+                    if (siteExists) {
                         siteHasHDB.put(site.getSiteCode(), nutsNoOK);
                     }
                     tx.commit();

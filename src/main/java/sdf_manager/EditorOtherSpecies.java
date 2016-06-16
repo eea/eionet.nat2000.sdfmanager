@@ -189,13 +189,17 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
 	           EditorOtherSpecies.log.info("no match, using Free-text");
 	           this.txtName.setText(name);
 	           this.chkFT.setSelected(true);
-	
+	           this.cmbCode.setEnabled(false);
+		       this.cmbName.setEnabled(false);
 	       }
-	       this.txtName.setEnabled(false);
-	       this.cmbCode.setEnabled(false);
-	       this.cmbName.setEnabled(false);
-	       this.cmbGroup.setEnabled(false);
-	       this.chkFT.setEnabled(false);
+	       else {
+	    	   EditorOtherSpecies.log.info("Use fixed name and code");
+	    	   this.txtName.setText("");
+	           this.txtName.setEditable(false);
+	           this.cmbName.setEnabled(true);
+	           this.cmbCode.setEnabled(true);
+	       }
+
 	       if (ConversionTools.smallToBool(s.getOtherSpeciesSensitive())) {
 	           this.chkSensitive.setSelected(true);
 	       }
@@ -1180,12 +1184,6 @@ public class EditorOtherSpecies extends javax.swing.JFrame implements IEditorOth
     public void enableCombos() {
         cmbGroup.setEnabled(true);
         cmbGroup.setEditable(true);
-        cmbName.setEditable(true);
-        cmbName.setEnabled(true);
-        cmbCode.setEditable(true);
-        cmbCode.setEnabled(true);
-        txtName.setEditable(true);
-        txtName.setEnabled(true);
     }
     @Override
     public void setValidatedTxtName(String name) {

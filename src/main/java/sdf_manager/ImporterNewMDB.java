@@ -79,7 +79,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
     }
 
     /**
-     *
+     * 
      * @param fileName
      * @return
      */
@@ -92,8 +92,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
         try {
             conn = getConnection(fileName);
             if (conn != null) {
-                ArrayList<Site> siteList = this.loadSpecies(conn);
-                importOk = validateAndProcessSites(conn, siteList);
+                importOk = validateAndProcessSites(conn);
                 ImporterNewMDB.log.info("Validation has finished");
                 log("Validation has finished.", true);
             } else {
@@ -101,7 +100,6 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
         } catch (Exception e) {
             ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage());
-            importOk = false;
             importOk = false;
         } finally {
             SDF_MysqlDatabase.closeQuietly(conn);
@@ -228,9 +226,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
     }
 
     /**
-     * New method for validating and process only the ones that doesn't exist
+     * New method for validating and process only the ones that don't exist
      */
-    boolean validateAndProcessSites(Connection conn, ArrayList siteList) throws SQLException {
+    boolean validateAndProcessSites(Connection conn) throws SQLException {
 
         ArrayList<String> notProcessedSiteCodesList = new ArrayList<String>();
         boolean processOK = false;

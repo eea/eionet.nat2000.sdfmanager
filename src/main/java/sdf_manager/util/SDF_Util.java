@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -174,11 +175,11 @@ public class SDF_Util {
 
      /**
       *
-      * @param sitesDB
+      * @param siteCodesAlreadyStored
       * @param importType
       * @return
       */
-     public static File copyToLogImportFileList(ArrayList sitesDB, String importType) {
+     public static File copyToLogImportFileList(List<String> siteCodesAlreadyStored, String importType) {
         File fileLog = null;
         try {
             Calendar cal = Calendar.getInstance();
@@ -192,7 +193,7 @@ public class SDF_Util {
 
             //Set sitesSet = sitesDB.entrySet();
 
-            Iterator it = sitesDB.iterator();
+            Iterator it = siteCodesAlreadyStored.iterator();
             logErrorFile.write(dateLine + ": The following sites are already stored in Data Base: " + System.getProperty("line.separator"));
             while (it.hasNext()) {
                 String siteCode = (String) it.next();

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -92,36 +93,10 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
             session = HibernateUtil.getSessionFactory().openSession();
 
-            ArrayList siteList = this.loadSpecies(session);
-            ImporterXMLStax.log.info("Init validate process");
-            HashMap existingSites = validateSites(session, siteList);
-            ImporterXMLStax.log.info("Validation has finished");
-            log("Validation has finished.", true);
+            ImporterXMLStax.log.info("Import process is starting");
+            log("Import process is starting.", true);
 
-            if (existingSites != null && (existingSites.isEmpty())) {
-                ImporterXMLStax.log.info("Import process is starting");
-                log("Import process is starting.", true);
-
-                this.processDatabase(session, fileName);
-            } else {
-                ImporterXMLStax.log.error("Error in validation");
-                log("Error in validation.", true);
-                JOptionPane.showMessageDialog(new JFrame(),
-                        "Some sites are already stored in database. Please check the log file for details", "Dialog",
-                        JOptionPane.INFORMATION_MESSAGE);
-                File fileLog = SDF_Util.copyToLogImportFile(existingSites, "XML");
-                if (fileLog != null) {
-                    Desktop desktop = null;
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                        Desktop.getDesktop().open(fileLog);
-                    }
-
-                }
-                return false;
-            }
-            session.flush();
-            session.clear();
+            this.processDatabase(session, fileName);
 
         } catch (Exception e) {
             // //e.printStackTrace();
@@ -166,51 +141,51 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * 
      * @param conn
      */
-    private HashMap validateSites(Session session, ArrayList siteList) {
-        HashMap siteHasHDB = new HashMap();
-        try {
-            int j = 0;
-
-            for (int i = 0; i < siteList.size(); i++) {
-                Transaction tx = session.beginTransaction();
-                try {
-                    Site site = (Site) siteList.get(i);
-                    String sitecode = site.getSiteCode();
-                    ImporterXMLStax.log.info("validating sites:::" + sitecode);
-
-                    log("validating site: " + sitecode, true);
-                    boolean siteExists = SDF_Util.validateSite(session, sitecode);
-                    Set regionSiteList = site.getRegions();
-                    Iterator regionsIterator = regionSiteList.iterator();
-                    ArrayList nutsNoOK = new ArrayList();
-                    while (regionsIterator.hasNext()) {
-                        Region nuts = (Region) regionsIterator.next();
-                        String regionCode = nuts.getRegionCode();
-                        if (!isRegionLevel2(session, regionCode)) {
-                            nutsNoOK.add(regionCode);
-                        }
-                    }
-                    if (siteExists) {
-                        siteHasHDB.put(site.getSiteCode(), nutsNoOK);
-                    }
-                    tx.commit();
-                } catch (Exception e) {
-                    tx.rollback();
-                    break;
-                }
-                if (++j % 20 == 0) {
-                    session.flush();
-                    session.clear();
-                }
-            }
-
-        } catch (Exception e) {
-            ImporterXMLStax.log.error("Error validating Site:::" + e);
-            return siteHasHDB;
-        }
-        return siteHasHDB;
-
-    }
+//    private HashMap validateSites(Session session, ArrayList siteList) {
+//        HashMap siteHasHDB = new HashMap();
+//        try {
+//            int j = 0;
+//
+//            for (int i = 0; i < siteList.size(); i++) {
+//                Transaction tx = session.beginTransaction();
+//                try {
+//                    Site site = (Site) siteList.get(i);
+//                    String sitecode = site.getSiteCode();
+//                    ImporterXMLStax.log.info("validating sites:::" + sitecode);
+//
+//                    log("validating site: " + sitecode, true);
+//                    boolean siteExists = SDF_Util.validateSite(session, sitecode);
+//                    Set regionSiteList = site.getRegions();
+//                    Iterator regionsIterator = regionSiteList.iterator();
+//                    ArrayList nutsNoOK = new ArrayList();
+//                    while (regionsIterator.hasNext()) {
+//                        Region nuts = (Region) regionsIterator.next();
+//                        String regionCode = nuts.getRegionCode();
+//                        if (!isRegionLevel2(session, regionCode)) {
+//                            nutsNoOK.add(regionCode);
+//                        }
+//                    }
+//                    if (siteExists) {
+//                        siteHasHDB.put(site.getSiteCode(), nutsNoOK);
+//                    }
+//                    tx.commit();
+//                } catch (Exception e) {
+//                    tx.rollback();
+//                    break;
+//                }
+//                if (++j % 20 == 0) {
+//                    session.flush();
+//                    session.clear();
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            ImporterXMLStax.log.error("Error validating Site:::" + e);
+//            return siteHasHDB;
+//        }
+//        return siteHasHDB;
+//
+//    }
 
     /**
      *
@@ -269,7 +244,9 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             boolean bioReg = false;
             ArrayList siteList = new ArrayList();
             String siteIdent = null;
-
+            
+            List<String> restrictedCodes = new ArrayList<String>();
+            
             while (parser.hasNext()) {
                 String localName = printEventInfo(parser);
 
@@ -289,6 +266,9 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             siteCode = localData;
                             log("Processing site: " + localData, true);
                             site.setSiteCode(localData);
+                            if (SDF_Util.validateSite(session, siteCode)) {
+                            	restrictedCodes.add(siteCode);
+                            }
                         } else if (localName.equals("siteName") && siteIdent != null) {
                             site.setSiteName(localData);
                         } else if (localName.equals("compilationDate")) {
@@ -614,7 +594,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                         } else if (localName.equals("description") && doc != null) {
                             doc.setDocDescription(localData);
                             site.setDoc(doc);
-                            saveAndReloadSession(session, doc);
+                            saveAndReloadSession(session, doc, restrictedCodes, siteCode);
                         }
 
                         // LINK
@@ -625,7 +605,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             docLink.setDoc(doc);
                             docLink.setDocLinkUrl(localData);
                             doc.getDocLinks().add(docLink);
-                            saveAndReloadSession(session, docLink);
+                            saveAndReloadSession(session, docLink, restrictedCodes, siteCode);
                             ImporterXMLStax.log.info("docLink link ==>" + localData);
                         } else if (localName.equals("link_end")) {
                             docLink = null;
@@ -633,7 +613,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             // saveAndReloadSession(session, doc);
                         } else if (localName.equals("documentation_end")) {
                             site.setDoc(doc);
-                            saveAndReloadSession(session, doc);
+                            saveAndReloadSession(session, doc, restrictedCodes, siteCode);
                             doc = null;
                         }
 
@@ -693,7 +673,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                         // MANAGEMENT
                         else if (localName.equals("siteManagement")) {
                             mgmt = new Mgmt();
-                            saveAndReloadSession(session, mgmt);
+                            saveAndReloadSession(session, mgmt, restrictedCodes, siteCode);
                         }
 
                         // MANAGEMENT BODY
@@ -721,7 +701,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             mgmtBody.setMgmtBodyEmail(localData);
                         } else if (localName.equals("managementBody_end")) {
                             mgmtBody.setMgmt(mgmt);
-                            saveAndReloadSession(session, mgmtBody);
+                            saveAndReloadSession(session, mgmtBody, restrictedCodes, siteCode);
                             mgmt.getMgmtBodies().add(mgmtBody);
                             // saveAndReloadSession(session, mgmt);
                             mgmtBody = null;
@@ -741,14 +721,14 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             mgmtPlan.setMgmtPlanUrl(localData);
                         } else if (localName.equals("managementPlan_end")) {
                             mgmtPlan.setMgmt(mgmt);
-                            saveAndReloadSession(session, mgmtPlan);
+                            saveAndReloadSession(session, mgmtPlan, restrictedCodes, siteCode);
                             mgmt.getMgmtPlans().add(mgmtPlan);
                             mgmtPlan = null;
                             ImporterXMLStax.log.info("Add managementPlan class to mgmt and set it to null");
                         } else if (localName.equals("conservationMeasures") && mgmt != null) {
                             mgmt.setMgmtConservMeasures(localData);
                         } else if (localName.equals("siteManagement_end")) {
-                            saveAndReloadSession(session, mgmt);
+                            saveAndReloadSession(session, mgmt, restrictedCodes, siteCode);
                             site.setMgmt(mgmt);
                             mgmt = null;
                         }
@@ -768,15 +748,13 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             map.setMapReference(localData);
                         } else if (localName.equals("map_end")) {
                             site.setMap(map);
-                            saveAndReloadSession(session, map);
+                            saveAndReloadSession(session, map, restrictedCodes, siteCode);
                             map = null;
                         } else if (localName.equals("sdf_end")) {
                             Calendar cal = Calendar.getInstance();
                             site.setSiteDateCreation(cal.getTime());
-                            log("Saving in DB:::" + site.getSiteCode());
-                            saveAndReloadSession(session, site);
+                            saveAndReloadSession(session, site, restrictedCodes, siteCode);
                             session.flush();
-                            ImporterXMLStax.log.info("Saving site");
                             site = null;
                         }
                     }
@@ -786,11 +764,36 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
             } // while
             parser.close();
 
-            ImporterXMLStax.log.info("Import process has finished succesfully");
-            log("Import process has finished succesfully");
-            javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog",
+            if (restrictedCodes.size()==0){
+            	ImporterXMLStax.log.info("Import process has finished succesfully");
+            	log("Import process has finished succesfully");
+            	javax.swing.JOptionPane.showMessageDialog(new Frame(), "Import Processing has finished succesfully.", "Dialog",
                     JOptionPane.INFORMATION_MESSAGE);
-            ;
+            } else {
+            	String message;
+            	if (restrictedCodes.size()==1) {
+            		message = "Import process has finished without errors. " + restrictedCodes.size() + " site was not saved, as it was already present in the db.";
+            	}
+            	else {
+            		message = "Import process has finished without errors. " + restrictedCodes.size() + " sites were not saved, as they were already present in the db.";
+            	}
+            	ImporterXMLStax.log.info(message);
+        		log(message);
+        		javax.swing.JOptionPane.showMessageDialog(new Frame(), message, "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+        		File fileLog = SDF_Util.copyToLogImportFileList(restrictedCodes, "OldDB");
+        		if (fileLog != null) {
+        			Desktop desktop = null;
+        			if (Desktop.isDesktopSupported()) {
+        				desktop = Desktop.getDesktop();
+        				try {
+        					Desktop.getDesktop().open(fileLog);
+        				} catch (Exception ex) {
+        					this.log.error("The error: " + ex.getMessage());
+        				}
+        			}
+        		}
+            }
         }  catch (Exception ex) {
             ex.printStackTrace();
             log("An error occurred in the Import Process");
@@ -804,6 +807,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
         return true;
     }
 
+    
     /**
      *
      * @param reader
@@ -850,12 +854,20 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param site
      */
-    private void saveAndReloadSession(Session session, Site site) {
+    private void saveAndReloadSession(Session session, Site site, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(site);
-        tr.commit();
-        session.flush();
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		log("Saving in DB:::" + site.getSiteCode());
+            ImporterXMLStax.log.info("Saving site with code : " + site.getSiteCode());
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(site);
+    		tr.commit();
+    		session.flush();
+    	}
+    	else {
+            ImporterXMLStax.log.info("Site with code : " + site.getSiteCode() + " already exists. Did not save.");
+            log("Site with code:::" + site.getSiteCode()+ "::already exists in DB.");
+    	}
 
     }
 
@@ -864,12 +876,14 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param mgmt
      */
-    private void saveAndReloadSession(Session session, Mgmt mgmt) {
+    private void saveAndReloadSession(Session session, Mgmt mgmt, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(mgmt);
-        tr.commit();
-        session.flush();
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(mgmt);
+    		tr.commit();
+    		session.flush();
+    	}
 
     }
 
@@ -878,12 +892,14 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param mgmtBody
      */
-    private void saveAndReloadSession(Session session, MgmtBody mgmtBody) {
+    private void saveAndReloadSession(Session session, MgmtBody mgmtBody, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(mgmtBody);
-        tr.commit();
-        session.flush();
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(mgmtBody);
+    		tr.commit();
+    		session.flush();
+    	}
 
     }
 
@@ -892,12 +908,14 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param mgmtPlan
      */
-    private void saveAndReloadSession(Session session, MgmtPlan mgmtPlan) {
+    private void saveAndReloadSession(Session session, MgmtPlan mgmtPlan, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(mgmtPlan);
-        tr.commit();
-        session.flush();
+        if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+        	Transaction tr = session.beginTransaction();
+        	session.saveOrUpdate(mgmtPlan);
+        	tr.commit();
+        	session.flush();
+        }
 
     }
 
@@ -906,13 +924,15 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param map
      */
-    private void saveAndReloadSession(Session session, Map map) {
+    private void saveAndReloadSession(Session session, Map map, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(map);
-        // session.merge(site);
-        tr.commit();
-        session.flush();
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(map);
+    		// session.merge(site);
+    		tr.commit();
+    		session.flush();
+    	}
 
     }
 
@@ -921,17 +941,18 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param doc
      */
-    private void saveAndReloadSession(Session session, Doc doc) {
+    private void saveAndReloadSession(Session session, Doc doc, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(doc);
-        try {
-            tr.commit();
-        } catch (Exception e) {
-            tr.rollback();
-        }
-        session.flush();
-
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(doc);
+    		try {
+    			tr.commit();
+    		} catch (Exception e) {
+    			tr.rollback();
+    		}
+    		session.flush();
+    	}
     }
 
     /**
@@ -939,16 +960,31 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
      * @param session
      * @param doc
      */
-    private void saveAndReloadSession(Session session, DocLink doc) {
+    private void saveAndReloadSession(Session session, DocLink doc, List<String> restrictedSiteCodes, String currentSiteCode) {
         /* saving main site obj */
-
-        Transaction tr = session.beginTransaction();
-        session.saveOrUpdate(doc);
-        tr.commit();
-        session.flush();
-
+    	if (this.isSaveAllowed(restrictedSiteCodes, currentSiteCode)) {
+    		Transaction tr = session.beginTransaction();
+    		session.saveOrUpdate(doc);
+    		tr.commit();
+    		session.flush();
+    	}
     }
 
+    /**
+     * Checks whether the current site is part of the set of sites that already exist in the database and thus are not allowed to be stored again.
+     * 
+     * @param restrictedSiteCodes
+     * @param currentSiteCode
+     * @return
+     */
+    private boolean isSaveAllowed(List<String> restrictedSiteCodes, String currentSiteCode) {
+    	if (restrictedSiteCodes.contains(currentSiteCode)) {
+    		return false;
+    	}
+    	else {
+    		return true;
+    	}
+    }
     /**
      *
      * @param ownerShipType

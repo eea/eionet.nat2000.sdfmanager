@@ -568,7 +568,9 @@ public class ImporterMDB extends AbstractImporter implements Importer {
      */
     Double getDouble(ResultSet rs, String fieldName) {
         try {
-            return rs.getDouble(fieldName);
+            Double result = rs.getDouble(fieldName);
+            if (rs.wasNull()) result = null;
+            return result;
         } catch (Exception e) {
             // e.printStackTrace();
             ImporterMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());

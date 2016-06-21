@@ -391,6 +391,7 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
       */
      Double getDouble(ResultSet rs, String fieldName) {
          try {
+        	 if (rs.wasNull()) return null;
              return rs.getDouble(fieldName);
          } catch (Exception e) {
              ImporterSiteMDB.log.error("Failed extracting field: " + fieldName + ". Error:::" + e.getMessage());
@@ -889,7 +890,12 @@ public class ImporterSiteMDB extends AbstractImporter implements Importer {
              ResultSet rs = stmt.executeQuery(sql);
 
              while (rs.next()) {
-                marineArea = rs.getDouble("MarineArea");
+            	if (rs.wasNull()){
+            		marineArea = null;
+            	}
+            	else {
+            		marineArea = rs.getDouble("MarineArea");
+            	}
              }
 
          } catch (SQLException e) {

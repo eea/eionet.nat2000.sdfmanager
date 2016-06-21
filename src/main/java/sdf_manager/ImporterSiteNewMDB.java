@@ -399,37 +399,32 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 log("Processing: Site Location-Area");
                 ImporterSiteNewMDB.log.info("Processing: Site Location-Area");
                 tmpDouble = rs.getDouble("SITE_AREA");
-                if (tmpDouble != null) {
-                    site.setSiteArea(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                site.setSiteArea(tmpDouble);
 
                 log("Processing: Site Location-Marine Area");
                 ImporterSiteNewMDB.log.info("Processing: Site Location-Marine Area");
                 tmpDouble = rs.getDouble("SITE_MARINE_AREA");
-                if (tmpDouble != null) {
-                    site.setSiteMarineArea(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                site.setSiteMarineArea(tmpDouble);
 
                 log("Processing: Site Location-Length");
                 ImporterSiteNewMDB.log.info("Processing: Site Location-Length");
                 tmpDouble = rs.getDouble("SITE_LENGTH");
-                if (tmpDouble != null) {
-                    site.setSiteLength(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                site.setSiteLength(tmpDouble);
 
                 log("Processing: Site Location-Longitude");
                 ImporterSiteNewMDB.log.info("Processing: Site Location-Longitude");
                 Double longitude = rs.getDouble("SITE_LONGITUDE");
-                if (longitude != 0) {
-                    site.setSiteLongitude(longitude);
-                }
+                if (rs.wasNull()) longitude = null;
+                site.setSiteLongitude(longitude);
 
                 log("Processing: Site Location-Latitude");
                 ImporterSiteNewMDB.log.info("Processing: Site Location-Latitude");
                 Double latitude = rs.getDouble("SITE_LATITUDE");
-                if (latitude != null) {
-                    site.setSiteLatitude(latitude);
-                }
+                if (rs.wasNull()) latitude = null;
+                site.setSiteLatitude(latitude);
 
                 log("Processing: Designation");
                 ImporterSiteNewMDB.log.info("Processing: Designation");
@@ -577,7 +572,7 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             String tmpStr;
             Character tmpChar;
             Short tmpShort;
-            int tmpInt;
+            Integer tmpInt;
             String spName = "";
             log("Processing: Species");
             ImporterSiteNewMDB.log.info("Processing: Species");
@@ -602,14 +597,12 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 log("      Processing: Species Code::" + species.getSpeciesCode() + ":: Species Name:::" + species.getSpeciesName());
                 ImporterSiteNewMDB.log.info("Processing: Species Code::" + species.getSpeciesCode() + ":: Species Name:::" + species.getSpeciesName());
                 tmpShort = rs.getShort("SPECIES_SENSITIVE");
-                if (tmpShort != 0) {
-                    species.setSpeciesSensitive(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                species.setSpeciesSensitive(tmpShort);
 
                 tmpShort = rs.getShort("SPECIES_NP");
-                if (tmpShort != 0) {
-                    species.setSpeciesNp(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                species.setSpeciesNp(tmpShort);
 
                 tmpStr = getString(rs, "SPECIES_TYPE");
                 if (tmpStr != null) {
@@ -617,14 +610,12 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpInt = rs.getInt("SPECIES_SIZE_MIN");
-                if (tmpInt != 0) {
-                    species.setSpeciesSizeMin(tmpInt);
-                }
+                if (rs.wasNull()) tmpInt = null;
+                species.setSpeciesSizeMin(tmpInt);
 
                 tmpInt = rs.getInt("SPECIES_SIZE_MAX");
-                if (tmpInt != 0) {
-                    species.setSpeciesSizeMax(tmpInt);
-                }
+                if (rs.wasNull()) tmpInt = null;
+                species.setSpeciesSizeMax(tmpInt);
 
                 tmpStr = getString(rs, "SPECIES_UNIT");
                 if (tmpStr != null) {
@@ -693,7 +684,7 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             String tmpStr;
             String spName = "";
             Short tmpShort;
-            int tmpInt;
+            Integer tmpInt;
 
             log("Processing: Other Species");
             ImporterSiteNewMDB.log.info("Processing: Other Species");
@@ -719,24 +710,20 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 ImporterSiteNewMDB.log.info("Processing: Species Code::" + otherSpecies.getOtherSpeciesCode() + ":: Species Name:::" + otherSpecies.getOtherSpeciesName());
 
                 tmpShort = rs.getShort("OTHER_SPECIES_SENSITIVE");
-                if (tmpShort != 0) {
-                    otherSpecies.setOtherSpeciesSensitive(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                otherSpecies.setOtherSpeciesSensitive(tmpShort);
 
                 tmpShort = rs.getShort("OTHER_SPECIES_NP");
-                if (tmpShort != 0) {
-                    otherSpecies.setOtherSpeciesNp(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                otherSpecies.setOtherSpeciesNp(tmpShort);
 
                 tmpInt = rs.getInt("OTHER_SPECIES_SIZE_MIN");
-                if (tmpInt != 0) {
-                    otherSpecies.setOtherSpeciesSizeMin(tmpInt);
-                }
+                if (rs.wasNull()) tmpInt = 0; 
+                otherSpecies.setOtherSpeciesSizeMin(tmpInt);
 
                 tmpInt = rs.getInt("OTHER_SPECIES_SIZE_MAX");
-                if (tmpInt != 0) {
-                    otherSpecies.setOtherSpeciesSizeMax(tmpInt);
-                }
+                if (rs.wasNull()) tmpInt = null;
+                otherSpecies.setOtherSpeciesSizeMax(tmpInt);
 
                 tmpStr = getString(rs, "OTHER_SPECIES_UNIT");
                 if (tmpStr != null) {
@@ -784,7 +771,7 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             Character tmpChar;
             Double tmpDouble;
             Short tmpShort;
-            int tmpInt;
+            Integer tmpInt;
             log("Processing: Habitats");
             ImporterSiteNewMDB.log.info("Processing: Habitats");
             while (rs.next()) {
@@ -798,30 +785,25 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 ImporterSiteNewMDB.log.info("Processing: Habitat:::" + habitat.getHabitatCode());
 
                 tmpShort = rs.getShort("HABITAT_PRIORITY");
-
-                if (tmpShort != 0) {
-                    habitat.setHabitatPriority(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                habitat.setHabitatPriority(tmpShort);
 
                 tmpDouble = rs.getDouble("HABITAT_COVER");
-                if (tmpDouble != 0) {
-                    habitat.setHabitatCover(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                habitat.setHabitatCover(tmpDouble);
 
                 tmpDouble = rs.getDouble("HABITAT_COVER_HA");
-                if (tmpDouble != 0) {
-                    habitat.setHabitatCoverHa(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                habitat.setHabitatCoverHa(tmpDouble);
 
                 tmpShort = rs.getShort("HABITAT_NP");
-                if (tmpShort != 0) {
-                    habitat.setHabitatNp(tmpShort);
-                }
+                if (rs.wasNull()) tmpShort = null;
+                habitat.setHabitatNp(tmpShort);
 
                 tmpInt = rs.getInt("HABITAT_CAVES");
-                if (tmpInt != 0) {
-                    habitat.setHabitatCaves(tmpInt);
-                }
+                if (rs.wasNull()) tmpInt = null;
+                habitat.setHabitatCaves(tmpInt);
+                
                 tmpStr = getString(rs, "HABITAT_DATA_QUALITY");
                 if (tmpStr != null) {
                     habitat.setHabitatDataQuality(tmpStr);
@@ -896,9 +878,9 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpDouble = rs.getDouble("HABITAT_CLASS_COVER");
-                if (tmpDouble != 0) {
-                    habitat.setHabitatClassCover(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                habitat.setHabitatClassCover(tmpDouble);
+                
                 habitat.setSite(site);
                 site.getHabitatClasses().add(habitat);
                 //session.save(habitat);
@@ -1041,9 +1023,9 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpDouble = rs.getDouble("site_relation_cover");
-                if (tmpDouble != 0) {
-                    relation.setSiteRelationCover(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                relation.setSiteRelationCover(tmpDouble);
+                
                 relation.setSite(site);
                 site.getSiteRelations().add(relation);
                 session.save(relation);
@@ -1089,9 +1071,9 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 ImporterSiteNewMDB.log.info("Processing: National Designation Type:::" + dType.getNationalDtypeCode());
 
                 tmpDouble = rs.getDouble("NATIONAL_DTYPE_COVER");
-                if (tmpDouble != 0) {
-                    dType.setNationalDtypeCover(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                dType.setNationalDtypeCover(tmpDouble);
+                
                 dType.setSite(site);
                 site.getNationalDtypes().add(dType);
                 session.save(dType);
@@ -1122,8 +1104,6 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
             String tmpStr;
-            Character tmpChar;
-            Double tmpDouble;
             log("Processing: Impacts");
             ImporterSiteNewMDB.log.info("Processing: Impact");
             while (rs.next()) {
@@ -1185,8 +1165,6 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
 
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
-            String tmpStr;
-            Character tmpChar;
             Integer tmpInt;
             Double tmpDouble;
             log("Processing: OwnerShips");
@@ -1195,9 +1173,8 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
                 SiteOwnership siteOwnerShip = new SiteOwnership();
 
                 tmpDouble = rs.getDouble("OWNERSHIP_PERCENT");
-                if (tmpDouble != 0) {
-                    siteOwnerShip.setOwnershipPercent(tmpDouble);
-                }
+                if (rs.wasNull()) tmpDouble = null;
+                siteOwnerShip.setOwnershipPercent(tmpDouble);
 
                 tmpInt = rs.getInt("OWNERSHIP_ID");
                 if (tmpInt != null) {

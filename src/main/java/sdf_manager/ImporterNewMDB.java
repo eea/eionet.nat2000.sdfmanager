@@ -1408,17 +1408,17 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-
+            	
                 String mapInspired = rs.getString("MAP_INSPIRE");
-                short mapPDF = rs.getShort("MAP_PDF");
-                String mapRef = rs.getString("MAP_REFERENCE");
-
                 if (mapInspired != null) {
                     mapSite.setMapInspire(mapInspired);
                 }
-                if (mapPDF != 0) {
-                    mapSite.setMapPdf(mapPDF);
-                }
+                
+                Short mapPDF = rs.getShort("MAP_PDF");
+                if (rs.wasNull()) mapPDF = null;
+                mapSite.setMapPdf(mapPDF);
+                
+                String mapRef = rs.getString("MAP_REFERENCE");
                 if (mapRef != null) {
                     mapSite.setMapReference(mapRef);
                 }

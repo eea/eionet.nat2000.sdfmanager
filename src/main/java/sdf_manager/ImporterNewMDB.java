@@ -643,8 +643,8 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             while (rs.next()) {
 
                 int biogeId = rs.getInt("BIOGEO_ID");
-                double percent = rs.getDouble("BIOGEO_PERCENT");
-
+                Double percent = rs.getDouble("BIOGEO_PERCENT");
+                if (rs.wasNull()) percent = null;
                 Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeId);
 
                 SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
@@ -1108,6 +1108,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpDouble = getDouble(rs, "SITE_RELATION_COVER");
+                if (rs.wasNull()) tmpDouble = null;
                 relation.setSiteRelationCover(tmpDouble);
                 
                 relation.setSite(site);

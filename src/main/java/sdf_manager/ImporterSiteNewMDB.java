@@ -536,7 +536,8 @@ public class ImporterSiteNewMDB extends AbstractImporter implements Importer {
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 int biogeId = rs.getInt("BIOGEO_ID");
-                double percent = rs.getDouble("BIOGEO_PERCENT");
+                Double percent = rs.getDouble("BIOGEO_PERCENT");
+                if (rs.wasNull()) percent= null;
                 Biogeo biogeo = (Biogeo) session.load(Biogeo.class, biogeId);
                 SiteBiogeoId id = new SiteBiogeoId(site.getSiteCode(), biogeo.getBiogeoId());
                 SiteBiogeo siteBiogeo = new SiteBiogeo(id, biogeo, site);

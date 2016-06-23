@@ -413,7 +413,7 @@ public class ExporterSiteXML implements Exporter {
             }
             return fmt(strVal, fieldName);
         } else {
-            return fmt("0.00", fieldName);
+            return fmt("", fieldName);
         }
     }
 
@@ -431,7 +431,7 @@ public class ExporterSiteXML implements Exporter {
             }
             return fmt(strVal, fieldName);
         } else {
-            return fmt("0", fieldName);
+            return fmt("", fieldName);
         }
     }
 
@@ -646,7 +646,7 @@ public class ExporterSiteXML implements Exporter {
      */
     public static Boolean toBoolean(Short i) {
         if (i == null) {
-            return false;
+            return null;
         }
         if (i > 0) {
             return true;
@@ -667,7 +667,6 @@ public class ExporterSiteXML implements Exporter {
      */
     @SuppressWarnings("rawtypes")
     public static Document generateXML(Session session, ArrayList<String> sitecodes, Schema schema) throws Exception {
-
         DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
 
         dbfac.setSchema(schema);
@@ -829,8 +828,10 @@ public class ExporterSiteXML implements Exporter {
             location.appendChild(doc.createElement("marineAreaPercentage")).appendChild(
                     doc.createTextNode(fmt(site.getSiteMarineArea(), "marineArea")));
 
-            location.appendChild(doc.createElement("siteLength")).appendChild(
-                    doc.createTextNode(fmt(site.getSiteLength(), "siteLength")));
+            if (site.getSiteLength() != null) {
+            	location.appendChild(doc.createElement("siteLength")).appendChild(
+            			doc.createTextNode(fmt(site.getSiteLength(), "siteLength")));
+            }
 
             // Bio-regions info.
 
@@ -863,8 +864,12 @@ public class ExporterSiteXML implements Exporter {
                     Biogeo b = s.getBiogeo();
                     biogeoElement.appendChild(doc.createElement("code")).appendChild(
                             doc.createTextNode(fmt(b.getBiogeoCode(), "bioRegionCode")));
-                    biogeoElement.appendChild(doc.createElement("percentage")).appendChild(
-                            doc.createTextNode(fmt(s.getBiogeoPercent(), "biogeoPercent")));
+                    
+                    if (s.getBiogeoPercent() != null) {
+                    	biogeoElement.appendChild(doc.createElement("percentage")).appendChild(
+                    			doc.createTextNode(fmt(s.getBiogeoPercent(), "biogeoPercent")));
+                    }
+                    
                     location.appendChild(biogeoElement);
                 }
 
@@ -880,109 +885,131 @@ public class ExporterSiteXML implements Exporter {
 
             // Site habitat types.
 
-            Element habitatsTypes = doc.createElement("habitatTypes");
-
-            Set siteHabs = site.getHabitats();
-            Iterator itr = siteHabs.iterator();
             boolean habitatInfo = false;
-            boolean speciesInfo = false;
-            if (!siteHabs.isEmpty()) {
-                habitatInfo = true;
-            }
-            while (itr.hasNext()) {
-                Habitat h = (Habitat) itr.next();
-                Element hElem = doc.createElement("habitatType");
-                if (h.getHabitatCode() != null && !(h.getHabitatCode().equals(""))) {
-                    hElem.appendChild(doc.createElement("code")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatCode(), "habitatCode")));
-                } else {
-                    // xmlValidFields.add("The code of the habitat. (Ecological Info-Habitat Type  section)\n");
-                }
+			if (site.getHabitats().size() > 0) {
+				Element habitatsTypes = doc.createElement("habitatTypes");
 
-                boolean dAssesment = false;
-                boolean representativityNotNull = false;
-                if (h.getHabitatRepresentativity() != null && !(("-").equals(h.getHabitatRepresentativity().toString()))) {
-                    if (("D").equals(h.getHabitatRepresentativity().toString())) {
-                        dAssesment = true;
-                    }
-                    representativityNotNull = true;
-                } else {
-                    // xmlValidFields.add("Representativity of the habitat whose code is: " +
-                    // h.getHabitatCode()+". (Ecological Info-Habitat Type  section)\n");
-                }
+				Set siteHabs = site.getHabitats();
+				Iterator itr = siteHabs.iterator();
+				
+				
+				if (!siteHabs.isEmpty()) {
+					habitatInfo = true;
+				}
+				while (itr.hasNext()) {
+					Habitat h = (Habitat) itr.next();
+					Element hElem = doc.createElement("habitatType");
+					if (h.getHabitatCode() != null && !(h.getHabitatCode().equals(""))) {
+						hElem.appendChild(doc.createElement("code"))
+								.appendChild(doc.createTextNode(fmt(h.getHabitatCode(), "habitatCode")));
+					} else {
+						// xmlValidFields.add("The code of the habitat.
+						// (Ecological Info-Habitat Type section)\n");
+					}
 
-                hElem.appendChild(doc.createElement("priorityFormOfHabitatType")).appendChild(
-                        doc.createTextNode(fmt(toBoolean(h.getHabitatPriority()), "habitatPriority")));
-                hElem.appendChild(doc.createElement("nonpresentInSite")).appendChild(
-                        doc.createTextNode(fmt(toBoolean(h.getHabitatNp()), "habitatNp")));
-                hElem.appendChild(doc.createElement("coveredArea")).appendChild(
-                        doc.createTextNode(fmt(h.getHabitatCoverHa(), "habitatCover")));
-                hElem.appendChild(doc.createElement("caves")).appendChild(
-                        doc.createTextNode(fmt(h.getHabitatCaves(), "habitatCaves")));
+					boolean dAssesment = false;
+					boolean representativityNotNull = false;
+					if (h.getHabitatRepresentativity() != null
+							&& !(("-").equals(h.getHabitatRepresentativity().toString()))) {
+						if (("D").equals(h.getHabitatRepresentativity().toString())) {
+							dAssesment = true;
+						}
+						representativityNotNull = true;
+					} else {
+						// xmlValidFields.add("Representativity of the habitat
+						// whose code is: " +
+						// h.getHabitatCode()+". (Ecological Info-Habitat Type
+						// section)\n");
+					}
 
-                if (h.getHabitatDataQuality() != null) {
-                    hElem.appendChild(doc.createElement("observationDataQuality")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatDataQuality(), "habitatDataQuality")));
-                } else {
-                    if (!dAssesment) {
-                        // xmlValidFields.add("Data Quality of the habitat whose code is: " +
-                        // h.getHabitatCode()+". (Ecological Info-Habitat Type  section)\n");
-                    } else {
-                        hElem.appendChild(doc.createElement("observationDataQuality")).appendChild(
-                                doc.createTextNode(fmt("-", "habitatDataQuality")));
-                    }
-                }
+					if (h.getHabitatPriority() != null) {
+						hElem.appendChild(doc.createElement("priorityFormOfHabitatType")).appendChild(
+								doc.createTextNode(fmt(toBoolean(h.getHabitatPriority()), "habitatPriority")));
+					}
+					if (h.getHabitatNp() != null) {
+						hElem.appendChild(doc.createElement("nonpresentInSite")).appendChild(
+								doc.createTextNode(fmt(toBoolean(h.getHabitatNp()), "habitatNp")));
+					}
+					if (h.getHabitatCoverHa() != null) {
+						hElem.appendChild(doc.createElement("coveredArea")).appendChild(
+								doc.createTextNode(fmt(h.getHabitatCoverHa(), "habitatCover")));
+					}
+					if (h.getHabitatCaves() != null) {
+						hElem.appendChild(doc.createElement("caves")).appendChild(
+								doc.createTextNode(fmt(h.getHabitatCaves(), "habitatCaves")));
+					}
+					if (h.getHabitatDataQuality() != null) {
+						hElem.appendChild(doc.createElement("observationDataQuality"))
+								.appendChild(doc.createTextNode(fmt(h.getHabitatDataQuality(), "habitatDataQuality")));
+					} else {
+						if (!dAssesment) {
+							// xmlValidFields.add("Data Quality of the habitat
+							// whose code is: " +
+							// h.getHabitatCode()+". (Ecological Info-Habitat
+							// Type section)\n");
+						} else {
+							hElem.appendChild(doc.createElement("observationDataQuality"))
+									.appendChild(doc.createTextNode(fmt("-", "habitatDataQuality")));
+						}
+					}
 
-                if (representativityNotNull) {
-                    hElem.appendChild(doc.createElement("representativity")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatRepresentativity(), "habitatRepresentativity")));
-                }
+					if (representativityNotNull) {
+						hElem.appendChild(doc.createElement("representativity")).appendChild(
+								doc.createTextNode(fmt(h.getHabitatRepresentativity(), "habitatRepresentativity")));
+					}
 
-                if (h.getHabitatRelativeSurface() != null) {
-                    hElem.appendChild(doc.createElement("relativeSurface")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatRelativeSurface(), "relativeSurface")));
-                } else {
-                    if (!dAssesment) {
-                        // xmlValidFields.add("Relative Surface of the habitat whose code is: " +
-                        // h.getHabitatCode()+". (Ecological Info-Habitat Type  section)\n");
-                    } else {
-                        hElem.appendChild(doc.createElement("relativeSurface")).appendChild(
-                                doc.createTextNode(fmt("-", "relativeSurface")));
-                    }
-                }
+					if (h.getHabitatRelativeSurface() != null) {
+						hElem.appendChild(doc.createElement("relativeSurface"))
+								.appendChild(doc.createTextNode(fmt(h.getHabitatRelativeSurface(), "relativeSurface")));
+					} else {
+						if (!dAssesment) {
+							// xmlValidFields.add("Relative Surface of the
+							// habitat whose code is: " +
+							// h.getHabitatCode()+". (Ecological Info-Habitat
+							// Type section)\n");
+						} else {
+							hElem.appendChild(doc.createElement("relativeSurface"))
+									.appendChild(doc.createTextNode(fmt("-", "relativeSurface")));
+						}
+					}
 
-                if (h.getHabitatConservation() != null && !(h.getHabitatConservation().equals("-"))) {
-                    hElem.appendChild(doc.createElement("conservation")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatConservation(), "habitatConservation")));
-                } else {
-                    if (!dAssesment) {
-                        // xmlValidFields.add("Conservation of the habitat whose code is: " +
-                        // h.getHabitatCode()+". (Ecological Info-Habitat Type  section)\n");
-                    } else {
-                        hElem.appendChild(doc.createElement("conservation")).appendChild(
-                                doc.createTextNode(fmt("-", "habitatConservation")));
-                    }
+					if (h.getHabitatConservation() != null && !(h.getHabitatConservation().equals("-"))) {
+						hElem.appendChild(doc.createElement("conservation")).appendChild(
+								doc.createTextNode(fmt(h.getHabitatConservation(), "habitatConservation")));
+					} else {
+						if (!dAssesment) {
+							// xmlValidFields.add("Conservation of the habitat
+							// whose code is: " +
+							// h.getHabitatCode()+". (Ecological Info-Habitat
+							// Type section)\n");
+						} else {
+							hElem.appendChild(doc.createElement("conservation"))
+									.appendChild(doc.createTextNode(fmt("-", "habitatConservation")));
+						}
 
-                }
+					}
 
-                if (h.getHabitatGlobal() != null && !(h.getHabitatGlobal().equals("-"))) {
-                    hElem.appendChild(doc.createElement("global")).appendChild(
-                            doc.createTextNode(fmt(h.getHabitatGlobal(), "habitatGlobal")));
-                } else {
-                    if (!dAssesment) {
-                        // xmlValidFields.add("Global of the habitat whose code is: " +
-                        // h.getHabitatCode()+". (Ecological Info-Habitat Type  section)\n");
-                    } else {
-                        hElem.appendChild(doc.createElement("global")).appendChild(doc.createTextNode(fmt("-", "habitatGlobal")));
-                    }
-                }
+					if (h.getHabitatGlobal() != null && !(h.getHabitatGlobal().equals("-"))) {
+						hElem.appendChild(doc.createElement("global"))
+								.appendChild(doc.createTextNode(fmt(h.getHabitatGlobal(), "habitatGlobal")));
+					} else {
+						if (!dAssesment) {
+							// xmlValidFields.add("Global of the habitat whose
+							// code is: " +
+							// h.getHabitatCode()+". (Ecological Info-Habitat
+							// Type section)\n");
+						} else {
+							hElem.appendChild(doc.createElement("global"))
+									.appendChild(doc.createTextNode(fmt("-", "habitatGlobal")));
+						}
+					}
 
-                habitatsTypes.appendChild(hElem);
-            }
-            ecologicalInformation.appendChild(habitatsTypes);
-
+					habitatsTypes.appendChild(hElem);
+				}
+				ecologicalInformation.appendChild(habitatsTypes);
+			}
             // Site species info.
-
+			boolean speciesInfo = false;
             Element specieses = doc.createElement("species");
             Set siteSpecies = site.getSpecieses();
             boolean birdsSPA = false;
@@ -1018,10 +1045,15 @@ public class ExporterSiteXML implements Exporter {
                         // s.getSpeciesGroup()+". (Ecological Info - Species Type  section)\n");
                     }
 
-                    sElem.appendChild(doc.createElement("sensitiveInfo")).appendChild(
-                            doc.createTextNode(fmt(toBoolean(s.getSpeciesSensitive()), "speciesSensitive")));
-                    sElem.appendChild(doc.createElement("nonpresentInSite")).appendChild(
-                            doc.createTextNode(fmt(toBoolean(s.getSpeciesNp()), "speciesNP")));
+                    if (s.getSpeciesSensitive() != null) {
+                    	sElem.appendChild(doc.createElement("sensitiveInfo")).appendChild(
+                    			doc.createTextNode(fmt(toBoolean(s.getSpeciesSensitive()), "speciesSensitive")));
+                    }
+                    if (s.getSpeciesNp() != null) {
+                    	sElem.appendChild(doc.createElement("nonpresentInSite")).appendChild(
+                    			doc.createTextNode(fmt(toBoolean(s.getSpeciesNp()), "speciesNP")));
+                    }
+                    
                     boolean dAssesment = false;
                     if (s.getSpeciesPopulation() != null && ("D").equals(s.getSpeciesPopulation())) {
                         dAssesment = true;
@@ -1138,8 +1170,10 @@ public class ExporterSiteXML implements Exporter {
                         // s.getOtherSpeciesGroup()+". . (Ecological Info - Other Species Type  section)\n");
                     }
 
-                    sElem.appendChild(doc.createElement("sensitiveInfo")).appendChild(
-                            doc.createTextNode(fmt(toBoolean(s.getOtherSpeciesSensitive()), "ospeciesSensitive")));
+                    if (s.getOtherSpeciesSensitive() != null) {
+                    	sElem.appendChild(doc.createElement("sensitiveInfo")).appendChild(
+                    			doc.createTextNode(fmt(toBoolean(s.getOtherSpeciesSensitive()), "ospeciesSensitive")));
+                    }
 
                     if (s.getOtherSpeciesNp() != null && !(("").equals(s.getOtherSpeciesNp()))) {
                         sElem.appendChild(doc.createElement("nonpresentInSite")).appendChild(
@@ -1493,8 +1527,10 @@ public class ExporterSiteXML implements Exporter {
                 if (map != null) {
                     mapElem.appendChild(doc.createElement("InspireID")).appendChild(
                             doc.createTextNode(fmt(map.getMapInspire(), "mapInspireID")));
-                    mapElem.appendChild(doc.createElement("pdfProvided")).appendChild(
-                            doc.createTextNode(fmt(toBoolean(map.getMapPdf()), "mapPDF")));
+                    if (map.getMapPdf() != null) {
+                    	mapElem.appendChild(doc.createElement("pdfProvided")).appendChild(
+                    			doc.createTextNode(fmt(toBoolean(map.getMapPdf()), "mapPDF")));
+                    }
                     mapElem.appendChild(doc.createElement("mapReference")).appendChild(
                             doc.createTextNode(fmt(map.getMapReference(), "mapRef")));
                 }

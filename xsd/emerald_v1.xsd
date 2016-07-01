@@ -207,7 +207,7 @@
 														<xs:complexType>
 															<xs:sequence>
 																<!--The coding convention use for Impacts Type is referenced at Biodiversity Data Centre     	  http://bd.eionet.europa.eu/activities/Natura_2000/reference_portal -->
-																<xs:element name="code" type="xs:string"/>
+																<xs:element name="impactCode" type="xs:string"/>
 																<xs:element name="rank" type="rankType"/>
 																<xs:element name="pollutionCode" type="pollutionCodeType" minOccurs="0"/>
 																<xs:element name="occurrence" type="impactOccurrenceType"/>

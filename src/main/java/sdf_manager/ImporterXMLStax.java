@@ -543,7 +543,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                         // IMPACTS
                         else if (localName.equals("impact")) {
                             impact = new Impact();
-                        } else if (localName.equals("code") && impact != null) {
+                        } else if ((localName.equals("code") || localName.equals("impactCode")) && impact != null) {
                             impact.setImpactCode(localData);
                             impact.setImpactRank(localData.charAt(0));
 

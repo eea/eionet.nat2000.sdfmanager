@@ -1259,7 +1259,7 @@ public class ExporterSiteXML implements Exporter {
                     Impact im = (Impact) itir.next();
 
                     if (im.getImpactCode() != null && !(im.getImpactCode().equals(""))) {
-                        iElem.appendChild(doc.createElement("code")).appendChild(
+                        iElem.appendChild(doc.createElement("impactCode")).appendChild(
                                 doc.createTextNode(fmt(im.getImpactCode(), "impactCode")));
                     } else {
                         // xmlValidFields.add("Impact code. (Description - Pressures and Threads section)\n");

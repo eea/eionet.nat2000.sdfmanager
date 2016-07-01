@@ -98,7 +98,7 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
             session.clear();
 
         } catch (Exception e) {
-            // //e.printStackTrace();
+            e.printStackTrace();
             ImporterOneSiteXML.log.error("Error in import process:::" + e.getMessage());
             return false;
         } finally {
@@ -721,6 +721,7 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
             expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/siteLocation/adminRegions");
             // Run the query and get a nodeset
             result = expr.evaluate(document, XPathConstants.NODE);
+            Map map = new Map();
             if (result != null) {
                 expr =
                         xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode
@@ -1450,11 +1451,17 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
                                 Impact impact = new Impact();
                                 expr =
                                         xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode
-                                                + "']/siteDescription/impacts/impact[" + i + "]/code/text()");
+                                                + "']/siteDescription/impacts/impact[" + i + "]/impactCode/text()");
                                 // expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode +
                                 // "']/siteDescription/impacts/impact[" + i + "]/code/text()");
                                 // Run the query and get a nodeset
                                 result = expr.evaluate(document, XPathConstants.NODE);
+                                if (result == null) {
+                                	 expr =
+                                             xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode
+                                                     + "']/siteDescription/impacts/impact[" + i + "]/code/text()");
+                                	 result = expr.evaluate(document, XPathConstants.NODE);
+                                }
                                 if (result != null) {
                                     Node nodeData = (Node) result;
                                     if (nodeData.getNodeValue() != null) {
@@ -2166,7 +2173,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
                 // Run the query and get a nodeset
                 result = expr.evaluate(document, XPathConstants.NODE);
                 if (result != null) {
-                    Map map = new Map();
                     expr = xpath.compile("//sdf[siteIdentification/siteCode='" + this.siteCode + "']/map/InspireID/text()");
                     // Run the query and get a nodeset
                     result = expr.evaluate(document, XPathConstants.NODE);
@@ -2211,16 +2217,10 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
             importOK = true;
         } catch (Exception e) {
             importOK = false;
-            // e.printStackTrace();
             ImporterOneSiteXML.log.info("Impor process has failed, the error message :" + e.getMessage());
         }
         return importOK;
 
-    }
-
-    @Override
-    public void initLogFile(String fileName) {
-        //no need to init log file as it is not used
     }
 
 }

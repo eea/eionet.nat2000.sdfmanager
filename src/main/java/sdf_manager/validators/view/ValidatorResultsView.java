@@ -68,7 +68,7 @@ public class ValidatorResultsView extends javax.swing.JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		JButton btnSave = new JButton("Save");
+		JButton btnSave = new JButton("Select");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSelectedSpeciesName();

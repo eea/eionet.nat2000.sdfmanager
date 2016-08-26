@@ -591,6 +591,7 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                         // DOCUMENTATION
                         else if (localName.equals("documentation")) {
                             doc = new Doc();
+                            saveAndReloadSession(session, doc, restrictedCodes, siteCode);
                         } else if (localName.equals("description") && doc != null) {
                             doc.setDocDescription(localData);
                             site.setDoc(doc);

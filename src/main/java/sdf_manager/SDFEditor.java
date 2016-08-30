@@ -70,8 +70,9 @@ import sdf_manager.util.SDF_Util;
 import sdf_manager.util.TranslationCodeName;
 import sdf_manager.util.ValidateSite;
 
-public class SDFEditor extends javax.swing.JFrame {
-
+public class SDFEditor extends javax.swing.JFrame {	
+	/** site type for empty */
+	private static final String SITE_TYPE_NULL = "-";
     /** site type for birds */
     private static final String SITE_TYPE_FOR_BIRDS = "Only birds";
 
@@ -294,15 +295,17 @@ public class SDFEditor extends javax.swing.JFrame {
 	        this.txtSiteCode.setText(wrap(site.getSiteCode()));
 	        this.txtSiteName.setText(wrap(site.getSiteName()));
 	        Character type = site.getSiteType();
-	        if (type != null) {
+	        if (type == null) {
+	        	this.cmbSiteType.setSelectedIndex(0);
+	        } else if (type != null) {
 	            if (("A").equals(type.toString())) {
-	                this.cmbSiteType.setSelectedIndex(0);
+	                this.cmbSiteType.setSelectedIndex(1);
 	            } // SPA
 	            else if (("B").equals(type.toString())) {
-	                this.cmbSiteType.setSelectedIndex(1);
+	                this.cmbSiteType.setSelectedIndex(2);
 	            } // SCI
 	            else if (("C").equals(type.toString())) {
-	                this.cmbSiteType.setSelectedIndex(2);
+	                this.cmbSiteType.setSelectedIndex(3);
 	            } // Both
 	        }
 	        this.txtCompDate.setText(wrap(site.getSiteCompDate()));
@@ -588,7 +591,9 @@ public class SDFEditor extends javax.swing.JFrame {
 
         }
         Character type;
-        if (this.cmbSiteType.getSelectedItem().equals("SPA") || this.cmbSiteType.getSelectedItem().equals(SITE_TYPE_FOR_BIRDS)) {
+        if (this.cmbSiteType.getSelectedItem().equals("-")) {
+        	type = null;
+        } else if (this.cmbSiteType.getSelectedItem().equals("SPA") || this.cmbSiteType.getSelectedItem().equals(SITE_TYPE_FOR_BIRDS)) {
             type = 'A';
         } else if (this.cmbSiteType.getSelectedItem().equals("SCI")
                 || this.cmbSiteType.getSelectedItem().equals(SITE_TYPE_FOR_OTHER)) {
@@ -2910,8 +2915,8 @@ public class SDFEditor extends javax.swing.JFrame {
         jLabel42.setText(resourceMap.getString("jLabel42.text")); // NOI18N
         jLabel42.setName("jLabel42"); // NOI18N
 
-        String[] siteTypeValuesN2k = new String[] {"SPA", "SCI", "Both"};
-        String[] siteTypeValuesEmerald = new String[] {SITE_TYPE_FOR_BIRDS, SITE_TYPE_FOR_OTHER, SITE_TYPE_FOR_BOTH};
+        String[] siteTypeValuesN2k = new String[] {SITE_TYPE_NULL, "SPA", "SCI", "Both"};
+        String[] siteTypeValuesEmerald = new String[] {SITE_TYPE_NULL, SITE_TYPE_FOR_BIRDS, SITE_TYPE_FOR_OTHER, SITE_TYPE_FOR_BOTH};
 
         cmbSiteType.setModel(new javax.swing.DefaultComboBoxModel(SDF_ManagerApp.isEmeraldMode() ? siteTypeValuesEmerald
                 : siteTypeValuesN2k));

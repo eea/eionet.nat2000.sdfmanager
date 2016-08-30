@@ -774,7 +774,13 @@ public class ExporterSiteXML implements Exporter {
                 siteIdentification.appendChild(respNode);
             }
 
-            String siteType = site.getSiteType().toString();
+            String siteType = null;
+            if (site.getSiteType() != null) { 
+            	siteType = Character.toString(site.getSiteType());
+            } else {
+            	siteType = null;
+            }
+            	
             Calendar cal = Calendar.getInstance();
             cal.set(0, 0, 0);
             Date dateNull = cal.getTime();
@@ -1218,11 +1224,11 @@ public class ExporterSiteXML implements Exporter {
                 // xmlValidFields.add("No habitats, species. (Ecological Info)\n");
             }
 
-            if (((site.getSiteType().toString()).equals("A")) || ((site.getSiteType().toString()).equals("C"))) {
-                if (!birdsSPA) {
+            //if ("A".equals(siteType) || "C".equals(siteType)) {
+            //    if (!birdsSPA) {
                     // xmlValidFields.add("No birds in SPA site. (Ecological Info)\n");
-                }
-            }
+            //    }
+            //}
 
             ecologicalInformation.appendChild(specieses);
 

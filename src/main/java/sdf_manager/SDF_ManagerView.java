@@ -371,14 +371,12 @@ public class SDF_ManagerView extends FrameView {
     }
 
     private void btnManage4ActionPerformed(java.awt.event.ActionEvent evt) {
-        //String urlPdf = "http://212.145.147.187:8032/importtool/N2K%20Import%20Tool%20User%20Manual.pdf";
-
-
         try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(new java.io.File("").getAbsolutePath() + File.separator + "sdf.properties"));
-            String urlPdf = properties.getProperty("sdf.path.pdf");
-            Desktop.getDesktop().browse(java.net.URI.create(urlPdf));
+            String installationGuide = "https://github.com/eea/eionet.nat2000.sdfmanager/releases/download/v" + SDF_ManagerView.class.getPackage().getImplementationVersion() + "/SDF_Manager_Tool_Installation_Guide_and_User_Manual.doc";
+            if (installationGuide.contains("SNAPSHOT")) {
+            	installationGuide = "https://github.com/eea/eionet.nat2000.sdfmanager/releases/";
+            }
+            Desktop.getDesktop().browse(java.net.URI.create(installationGuide));
         } catch (IOException ioe) {
             log.error("An error is occurred while system tries to open the pdf document.\nError Message::" + ioe.getMessage());
         }

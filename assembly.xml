@@ -6,7 +6,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>${file.separator}</outputDirectory>
             <useDefaultExcludes>false</useDefaultExcludes>
             <includes>
                 <include>config/**</include>
@@ -27,6 +27,8 @@
                 <exclude>lib/junit-*.jar</exclude>
                 <exclude>*.exe</exclude>
                 <exclude>jre/**</exclude>
+                <exclude>xsl/*.html</exclude>
+                <exclude>xsl/*.pdf</exclude>
             </excludes>
         </fileSet>
         <fileSet>

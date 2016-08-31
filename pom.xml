@@ -125,7 +125,7 @@
                             <dontWrapJar>false</dontWrapJar>
                             <headerType>gui</headerType>
                             <jar>SDFmanager-${project.version}.jar</jar>
-                            <outfile>SDFManager.exe</outfile>
+                            <outfile>${basedir}/inno/SDFManager.exe</outfile>
                             <errTitle />
                             <cmdLine />
                             <chdir>.</chdir>
@@ -134,7 +134,7 @@
                             <supportUrl />
                             <stayAlive>false</stayAlive>
                             <manifest />
-                            <icon>${basedir}/sdfmanager.ico</icon>
+                            <icon>${basedir}/inno/sdfmanager.ico</icon>
                             <jre>
                                 <path>./jre</path>
                                 <minVersion />
@@ -179,7 +179,7 @@
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <descriptor>${project.basedir}/assembly.xml</descriptor>
+                        <descriptor>${project.basedir}/src/assembly/assembly.xml</descriptor>
                     </descriptors>
                     <outputDirectory>${project.basedir}</outputDirectory>
                 </configuration>
@@ -212,7 +212,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.3</version>
+                <version>1.5.0</version>
                 <executions>
                   <execution>
                       <phase>install</phase>
@@ -223,7 +223,7 @@
                       <configuration>
                         <executable>iscc</executable>
                         <arguments>
-                            <argument>${project.basedir}/SDFManager.iss</argument>
+                            <argument>${project.basedir}/inno/SDFManager.iss</argument>
                         </arguments>
                       </configuration>
                   </execution>
@@ -286,11 +286,6 @@
 			<artifactId>hibernate-hikaricp</artifactId>
 			<version>5.1.0.Final</version>
 		</dependency>
-	    <dependency>
-        	<groupId>com.zaxxer</groupId>
-        	<artifactId>HikariCP</artifactId>
-        	<version>2.4.3</version>
-    	</dependency>
   	    <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -343,11 +338,6 @@
             <artifactId>swing-worker</artifactId>
             <version>1.1</version>
         </dependency>
-       <!--  <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
-            <version>1.1</version>
-        </dependency> -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -374,16 +364,6 @@
             <version>3.7</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>8.7</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>Saxon-HE</artifactId>
-            <version>9.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>2.2.8</version>
@@ -403,7 +383,6 @@
             <artifactId>lucene-core</artifactId>
             <version>2.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

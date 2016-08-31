@@ -25,7 +25,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=/{code:GetAppName}
 DefaultGroupName={code:GetAppName}
 AllowNoIcons=yes
-OutputDir=.\
+OutputDir=..\
 OutputBaseFilename=SDFManagerSetup_v{#MyAppVersion}
 SetupIconFile=sdfmanager.ico
 Compression=lzma
@@ -145,31 +145,30 @@ end;
 [Files]
 Source: "SDFManager.exe"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "natura2000_logo.ico"; DestDir: "{app}";  Check: IsNatura2000Mode
-Source: "emeraude_logo.ico"; DestDir: "{app}";  Check: IsEmeraldMode
-Source: "natura2000_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
-Source: "emeraude_logo_small.bmp"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "log4j.properties"; DestDir: "{app}"; Flags: ignoreversion
+Source: "natura2000_logo.ico"; DestDir: "{app}\icons";  Check: IsNatura2000Mode
+Source: "emeraude_logo.ico"; DestDir: "{app}\icons";  Check: IsEmeraldMode
+Source: "natura2000_logo_small.bmp"; DestDir: "{app}\icons"; Flags: ignoreversion
+Source: "emeraude_logo_small.bmp"; DestDir: "{app}\icons"; Flags: ignoreversion
 Source: "SDFManager.l4j.ini"; DestDir: "{app}"; Flags: ignoreversion
-Source: "config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsNatura2000Mode
-Source: "config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode
-Source: "config\*.xml"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsNatura2000Mode
+Source: "..\config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode
+Source: "..\config\*.xml"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: "jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: "xsl\*"; DestDir: "{app}\xsl"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "xsd\*"; DestDir: "{app}\xsd"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\xsl\*"; DestDir: "{app}\xsl"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\xsd\*"; DestDir: "{app}\xsd"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
  
 [Icons]
-Name: "{group}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}";IconFilename: {app}\emeraude_logo.ico; Comment: "SDFManager"; Check: IsEmeraldMode
-Name: "{group}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}";IconFilename: {app}\natura2000_logo.ico; Comment: "SDFManager"; Check: IsNatura2000Mode
+Name: "{group}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}";IconFilename: {app}\icons\emeraude_logo.ico; Comment: "SDFManager"; Check: IsEmeraldMode
+Name: "{group}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}";IconFilename: {app}\icons\natura2000_logo.ico; Comment: "SDFManager"; Check: IsNatura2000Mode
 Name: "{group}\{cm:ProgramOnTheWeb,{code:GetAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{code:GetAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: {app}\natura2000_logo.ico; Check: IsNatura2000Mode
-Name: "{commondesktop}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: {app}\emeraude_logo.ico; Check: IsEmeraldMode
+Name: "{commondesktop}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: {app}\icons\natura2000_logo.ico; Check: IsNatura2000Mode
+Name: "{commondesktop}\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: {app}\icons\emeraude_logo.ico; Check: IsEmeraldMode
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{code:GetAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]

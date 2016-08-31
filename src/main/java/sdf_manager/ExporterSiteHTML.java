@@ -731,8 +731,7 @@ public class ExporterSiteHTML implements Exporter {
 
             ITextFontResolver fontResolver=renderer.getFontResolver();
             String rootFolder = System.getProperty("user.dir");
-            fontResolver.addFont(rootFolder + File.separator + "lib" + File.separator + "fonts"
-                    + File.separator + "arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            fontResolver.addFont(getClass().getClassLoader().getResource("fonts" + File.separator + "arialuni.ttf").getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
             renderer.setDocument(inputFile);
             renderer.layout();

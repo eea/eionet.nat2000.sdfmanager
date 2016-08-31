@@ -17,7 +17,7 @@
                 <include>xsl/**</include>
                 <include>?DS_Store</include>
                 <include>README.md</include>
-                <include>${version}.jar</include>
+                <include>SDFmanager-${project.version}.jar</include>
             </includes>
             <!-- Exclude the files that are only used for testing -->
             <!-- Probably should consider using <dependencySet> for libraries

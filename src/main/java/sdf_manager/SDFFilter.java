@@ -793,7 +793,7 @@ public final class SDFFilter extends javax.swing.JFrame {
 
             Boolean edited = (Boolean) value;
             if (edited.booleanValue()) {
-                ImageIcon imageIcon = new ImageIcon((new File("")).getAbsolutePath() + "\\images\\checkmark.gif");
+                ImageIcon imageIcon = new ImageIcon(getClass().getResource("/sdf_manager/images/checkmark.gif"));
                 setIcon(imageIcon);
             }
         }

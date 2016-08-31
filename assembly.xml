@@ -12,15 +12,12 @@
                 <include>config/**</include>
                 <include>database/**</include>
                 <include>images/**</include>
-                <include>import/**</include>
                 <include>lib/**</include>
-                <include>logs/**</include>
                 <include>xsd/**</include>
                 <include>xsl/**</include>
                 <include>?DS_Store</include>
-                <include>log4j.properties</include>
                 <include>README.md</include>
-                <include>*.jar</include>
+                <include>${version}.jar</include>
             </includes>
             <!-- Exclude the files that are only used for testing -->
             <!-- Probably should consider using <dependencySet> for libraries
@@ -32,13 +29,12 @@
                 <exclude>jre/**</exclude>
             </excludes>
         </fileSet>
-        <!-- Include the SDFManager JAR -->
         <fileSet>
-            <directory>${project.build.directory}</directory>
-            <outputDirectory>/</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
+            <directory>.</directory>
+            <outputDirectory>logs</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 </assembly>

@@ -721,9 +721,6 @@ public class GenerateSitePDF implements Exporter {
             os = new FileOutputStream(new File(pdfPath));
 
             ITextRenderer renderer = new ITextRenderer();
-
-            ITextFontResolver fontResolver=renderer.getFontResolver();
-            String fontPath = getClass().getClassLoader().getResource("fonts/arialuni.ttf").getPath();
             FontFactory.registerDirectory("resources/fonts");
 
             renderer.setDocument(file);

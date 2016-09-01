@@ -729,8 +729,6 @@ public class ExporterSiteHTML implements Exporter {
             os = new FileOutputStream(new File(pdfPath));
 
             ITextRenderer renderer = new ITextRenderer();
-
-            ITextFontResolver fontResolver=renderer.getFontResolver();
             FontFactory.register("resources/fonts");
 
             renderer.setDocument(inputFile);

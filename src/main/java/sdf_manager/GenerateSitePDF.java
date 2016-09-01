@@ -29,6 +29,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.lowagie.text.FontFactory;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -722,8 +723,8 @@ public class GenerateSitePDF implements Exporter {
             ITextRenderer renderer = new ITextRenderer();
 
             ITextFontResolver fontResolver=renderer.getFontResolver();
-            String rootFolder = System.getProperty("user.dir");
-            fontResolver.addFont(getClass().getClassLoader().getResource("fonts" + File.separator + "arialuni.ttf").getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            String fontPath = getClass().getClassLoader().getResource("fonts/arialuni.ttf").getPath();
+            FontFactory.registerDirectory("resources/fonts");
 
             renderer.setDocument(file);
             renderer.layout();

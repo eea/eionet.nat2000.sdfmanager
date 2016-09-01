@@ -33,6 +33,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.lowagie.text.FontFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
@@ -730,8 +731,7 @@ public class ExporterSiteHTML implements Exporter {
             ITextRenderer renderer = new ITextRenderer();
 
             ITextFontResolver fontResolver=renderer.getFontResolver();
-            String rootFolder = System.getProperty("user.dir");
-            fontResolver.addFont(getClass().getClassLoader().getResource("fonts" + File.separator + "arialuni.ttf").getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            FontFactory.register("resources/fonts");
 
             renderer.setDocument(inputFile);
             renderer.layout();

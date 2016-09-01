@@ -1,0 +1,1 @@
+DELETE from ref_designations_emerald WHERE REF_DESIGNATIONS_CODE LIKE 'NO%';

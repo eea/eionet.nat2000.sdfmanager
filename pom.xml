@@ -30,11 +30,119 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.6</jdk.version>
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
-        <liquibase.changeLogFile>${basedir}/target/classes/liquibase/db-master.xml</liquibase.changeLogFile>
     </properties>
     <!-- The build configuration. -->
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.15.16</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- Use the following workaround for Windows hosts -->
+                    <!--<dockerHost>http://localhost:2375</dockerHost>-->
+                    <image>mysql</image>
+                    <images>
+                        <image>
+                            <alias>mysql</alias>
+                            <name>mysql:5.5</name>
+                            <run>
+                                <ports>
+                                    <port>3336:3306</port>
+                                </ports>
+                                <env>
+                                    <MYSQL_ROOT_PASSWORD>12345</MYSQL_ROOT_PASSWORD>
+                                    <MYSQL_DATABASE>natura2000</MYSQL_DATABASE>
+                                    <MYSQL_USER>testuser</MYSQL_USER>
+                                    <MYSQL_PASSWORD>testpassword</MYSQL_PASSWORD>
+                                </env>
+                                <!--
+                                <volumes>
+                                    <bind>
+                                        <volume>/home/dev-gso/volumes/tmp:/var/lib/mysql</volume>
+                                    </bind>
+                                </volumes>-->
+                                <wait>
+                                    <tcp>
+                                        <ports>
+                                            <port>3306</port>
+                                        </ports>
+                                    </tcp>
+                                    <time>40000</time>
+                                </wait>
+                                <!--<wait>
+                                    <time>10000</time>
+                                </wait>-->
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <skip>${maven.test.skip}</skip>
+                        </configuration>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <configuration>
+                            <skip>${maven.test.skip}</skip>
+                        </configuration>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>logs</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <docker.host.address>${docker.host.address}</docker.host.address>
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <!-- Maven compiler plugin. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -192,12 +300,12 @@
                 <configuration>
                     <!-- Default configuration for application database. -->
                     <propertyFile>target/test-classes/liquibase.properties</propertyFile>
-                    <changeLogFile>${liquibase.changeLogFile}</changeLogFile>
+                    <changeLogFile>${basedir}/target/classes/liquibase/db-master.xml</changeLogFile>
                 </configuration>
                 <executions>
                     <execution>
                         <id>Update test database</id>
-                        <phase>process-test-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <configuration>
                             <skip>${maven.test.skip}</skip>
                             <propertyFile>target/test-classes/liquibase.properties</propertyFile>
@@ -480,18 +588,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-mxj</artifactId>
-            <version>5.0.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-mxj-db-files</artifactId>
-            <version>5.0.12</version>
             <scope>test</scope>
         </dependency>
     	<dependency>

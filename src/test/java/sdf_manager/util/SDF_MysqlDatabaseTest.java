@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sdf_manager.SDF_ManagerApp;
@@ -57,6 +58,7 @@ public class SDF_MysqlDatabaseTest {
      * This method should be split up.
      */
     @Test
+    @Ignore
     public void checkDBCreationAndPopulation() throws Exception {
         String msgError;
         Connection con = null;
@@ -134,8 +136,6 @@ public class SDF_MysqlDatabaseTest {
         }
 
     }
-
-
 
     @Test
     public void pathForDbScripts() throws Exception {

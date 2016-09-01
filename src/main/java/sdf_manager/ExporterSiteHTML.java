@@ -213,7 +213,7 @@ public class ExporterSiteHTML implements Exporter {
 
                 Site site = (Site) session.get(Site.class,(String) itrSites.next()); // results.get(i);
 
-                siteIdentification.appendChild(doc.createElement("siteType")).appendChild(doc.createTextNode(fmt(Character.toString(site.getSiteType()), "siteType")));
+                siteIdentification.appendChild(doc.createElement("siteType")).appendChild(doc.createTextNode(fmt(site.getSiteType(), "siteType")));
                 siteIdentification.appendChild(doc.createElement("siteCode")).appendChild(doc.createTextNode(fmt(site.getSiteCode().toUpperCase(), "siteCode")));
                 ExporterSiteHTML.log.info("Parsing sitecode:::" + site.getSiteCode());
                 siteIdentification.appendChild(doc.createElement("siteName")).appendChild(doc.createTextNode(fmt(site.getSiteName(), "siteName")));

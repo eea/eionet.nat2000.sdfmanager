@@ -28,6 +28,7 @@
     <!-- Properties to be used below. -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jdk.version>1.6</jdk.version>
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
     </properties>
@@ -292,31 +293,6 @@
                     <outputDirectory>${project.basedir}</outputDirectory>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <!-- Default configuration for application database. -->
-                    <propertyFile>target/test-classes/liquibase.properties</propertyFile>
-                    <changeLogFile>${basedir}/target/classes/liquibase/db-master.xml</changeLogFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>Update test database</id>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <skip>${maven.test.skip}</skip>
-                            <propertyFile>target/test-classes/liquibase.properties</propertyFile>
-                        </configuration>
-                        <goals>
-                            <goal>dropAll</goal>
-                            <goal>update</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -339,6 +315,7 @@
           </plugin>
         </plugins>
         <!-- Definition of resources. -->
+
         <resources>
             <resource>
                 <directory>src/main/java</directory>

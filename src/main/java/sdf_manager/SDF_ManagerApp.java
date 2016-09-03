@@ -13,15 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 //import org.apache.log4j.PropertyConfigurator;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
 
 import sdf_manager.util.FontsUtil;
 import sdf_manager.util.PropertyUtils;
@@ -32,7 +29,7 @@ import sdf_manager.workers.CreateDatabaseWorker;
 /**
  * The main class of the application.
  */
-public class SDF_ManagerApp extends SingleFrameApplication {
+public class SDF_ManagerApp {
 
     /** Static logger for this file. */
     private final static org.apache.logging.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(SDF_ManagerApp.class.getName());
@@ -92,29 +89,13 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     private static String APP_VERSION;
 
     /**
-     * At startup create and show the main frame of the application.
-     */
-    @Override
-    protected void startup() {
-        show(new SDF_ManagerView(this));
-    }
-
-    /**
-     * This method is to initialize the specified window by injecting resources. Windows shown in our application come fully
-     * initialized from the GUI builder, so this additional configuration is not needed.
-     */
-    @Override
-    protected void configureWindow(java.awt.Window root) {
-    }
-
-    /**
      * A convenient static getter for the application instance.
      *
      * @return the instance of SDF_ManagerApp
      */
-    public static SDF_ManagerApp getApplication() {
-        return Application.getInstance(SDF_ManagerApp.class);
-    }
+    //public static SDF_ManagerApp getApplication() {
+    //    return Application.getInstance(SDF_ManagerApp.class);
+    // }
 
     /**
      * Main method launching the application.
@@ -122,7 +103,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
     public static void main(String[] args) throws IOException {
 
         String errorMesg = null;
-        getApplication().getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //getApplication().getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         settingsDialog = null;
 
         // user has chosen emerald in the installer
@@ -137,7 +118,6 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             
             // either there is one or the other we found the props:
             if (propsFileExists() || oldDbPropsExists()) {
-
                 // take Dbprops from old db props in lib folder
                 if (!propsFileExists()) {
                     // assume if user is upgrading to an existing location it has to be natura2000 tool
@@ -206,7 +186,9 @@ public class SDF_ManagerApp extends SingleFrameApplication {
 
                 } else {
                     LOGGER.info("run importTool");
-                    launch(SDF_ManagerApp.class, args);
+                    SDF_ManagerView view = new SDF_ManagerView(getMode());
+                    view.setVisible(true);
+                   // launch(SDF_ManagerApp.class, args);
                 }
 
             } else {
@@ -349,7 +331,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
         } else {
             dialog.dispose();
             LOGGER.info("running importTool");
-            launch(SDF_ManagerApp.class, null);
+            //launch(SDF_ManagerApp.class, null);
         }
     }
 

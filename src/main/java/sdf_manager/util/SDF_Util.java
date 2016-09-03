@@ -20,13 +20,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.swing.Icon;
+import javax.swing.*;
 
 import org.apache.logging.log4j.Logger;
 //import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.jdesktop.application.ResourceMap;
 
 import sdf_manager.SDF_ManagerApp;
 
@@ -248,18 +247,18 @@ public class SDF_Util {
 
      /**
       * returns correct icon for the control from the resourcemap depending on the mode.
-      * @param resourceMap resourcemap
+      * @param properties properties
       * @param labelName labelname
       * @param mode Natura 2000 or emerald
       * @return icon resource
       */
-     public static Icon getIconForLabel(ResourceMap resourceMap, String labelName, String mode) {
+     public static Icon getIconForLabel(Properties properties, String labelName, String mode) {
          if (mode.equals(SDF_ManagerApp.EMERALD_MODE)) {
              labelName += ".emerald";
          }
 
          //SDF_Util.log.info("getting icon for " + labelName);
-         return resourceMap.getIcon(labelName);
+         return new ImageIcon(properties.getProperty(labelName));
 
      }
 

@@ -1,12 +1,11 @@
 package sdf_manager;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import org.hibernate.Query;
@@ -418,9 +417,14 @@ public class QAQCMain extends javax.swing.JFrame {
         cmbCriteria.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "Unknown species names (3.2)", "Unknown species codes (3.2)", "Unknown birds names (3.2)", "Unknown birds codes (3.2)", "Unknown other species names (3.3)", "Unknown other species codes (3.3)", "Unknown habitat types", "Unknown habitat classes", "Unknown NUTS regions" }));
         cmbCriteria.setName("cmbCriteria"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext().getResourceMap(QAQCMain.class);
-        btnFetch.setIcon(resourceMap.getIcon("btnFetch.icon")); // NOI18N
-        btnFetch.setText(resourceMap.getString("btnFetch.text")); // NOI18N
+        Properties p = new Properties();
+        try {
+            p.load(getClass().getResourceAsStream("resources/QAQCMain.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        btnFetch.setIcon(new ImageIcon(p.getProperty("btnFetch.icon"))); // NOI18N
+        btnFetch.setText(p.getProperty("btnFetch.text")); // NOI18N
         btnFetch.setName("btnFetch"); // NOI18N
         btnFetch.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -441,10 +445,10 @@ public class QAQCMain extends javax.swing.JFrame {
         ));
         tabDisplaySites.setName("tabDisplaySites"); // NOI18N
         jScrollPane1.setViewportView(tabDisplaySites);
-        tabDisplaySites.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("tabDisplaySites.columnModel.title0")); // NOI18N
-        tabDisplaySites.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("tabDisplaySites.columnModel.title1")); // NOI18N
+        tabDisplaySites.getColumnModel().getColumn(0).setHeaderValue(p.getProperty("tabDisplaySites.columnModel.title0")); // NOI18N
+        tabDisplaySites.getColumnModel().getColumn(1).setHeaderValue(p.getProperty("tabDisplaySites.columnModel.title1")); // NOI18N
 
-        btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
+        btnEdit.setText(p.getProperty("btnEdit.text")); // NOI18N
         btnEdit.setName("btnEdit"); // NOI18N
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -453,7 +457,7 @@ public class QAQCMain extends javax.swing.JFrame {
             }
         });
 
-        txtNumResults.setText(resourceMap.getString("txtNumResults.text")); // NOI18N
+        txtNumResults.setText(p.getProperty("txtNumResults.text")); // NOI18N
         txtNumResults.setName("txtNumResults"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -491,13 +495,13 @@ public class QAQCMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel3.setFont(resourceMap.getFont("jLabel3.font")); // NOI18N
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setFont(new Font(p.getProperty("jLabel3.font"), 12, 18)); // NOI18N
+        jLabel3.setText(p.getProperty("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
-        //jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
-        jLabel1.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel1.icon", SDF_ManagerApp.getMode()));
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        //jLabel1.setIcon(new ImageIcon(p.getProperty("jLabel1.icon")); // NOI18N
+        jLabel1.setIcon(SDF_Util.getIconForLabel(p, "jLabel1.icon", SDF_ManagerApp.getMode()));
+        jLabel1.setText(p.getProperty("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

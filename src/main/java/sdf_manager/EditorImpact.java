@@ -3,9 +3,11 @@ package sdf_manager;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -392,19 +394,24 @@ public class EditorImpact extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext().getResourceMap(EditorImpact.class);
-        setTitle(resourceMap.getString("Form.title")); // NOI18N
+        Properties p = new Properties();
+        try {
+            p.load(getClass().getResourceAsStream("resources/EditorImpact.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setTitle(p.getProperty("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
-        labTitle.setFont(resourceMap.getFont("labTitle.font")); // NOI18N
-        labTitle.setText(resourceMap.getString("labTitle.text")); // NOI18N
+        labTitle.setFont(new Font(p.getProperty("labTitle.font"), 12, 18)); // NOI18N
+        labTitle.setText(p.getProperty("labTitle.text")); // NOI18N
         labTitle.setName("labTitle"); // NOI18N
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel3.border.title"))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(p.getProperty("jPanel3.border.title"))); // NOI18N
         jPanel3.setName("jPanel3"); // NOI18N
 
-        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setIcon(new ImageIcon(p.getProperty("jLabel1.icon"))); // NOI18N
+        jLabel1.setText(p.getProperty("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
         cmbCode.setName("cmbCode"); // NOI18N
@@ -415,7 +422,7 @@ public class EditorImpact extends javax.swing.JFrame {
             }
         });
 
-        jLabel14.setText(resourceMap.getString("jLabel14.text")); // NOI18N
+        jLabel14.setText(p.getProperty("jLabel14.text")); // NOI18N
         jLabel14.setName("jLabel14"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -430,18 +437,18 @@ public class EditorImpact extends javax.swing.JFrame {
         cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"-", "i", "o", "b" }));
         cmbType.setName("cmbType"); // NOI18N
 
-        jLabel15.setIcon(resourceMap.getIcon("jLabel15.icon")); // NOI18N
-        jLabel15.setText(resourceMap.getString("jLabel15.text")); // NOI18N
+        jLabel15.setIcon(new ImageIcon(p.getProperty("jLabel15.icon"))); // NOI18N
+        jLabel15.setText(p.getProperty("jLabel15.text")); // NOI18N
         jLabel15.setName("jLabel15"); // NOI18N
 
-        jLabel16.setIcon(resourceMap.getIcon("jLabel16.icon")); // NOI18N
-        jLabel16.setText(resourceMap.getString("jLabel16.text")); // NOI18N
+        jLabel16.setIcon(new ImageIcon(p.getProperty("jLabel16.icon"))); // NOI18N
+        jLabel16.setText(p.getProperty("jLabel16.text")); // NOI18N
         jLabel16.setName("jLabel16"); // NOI18N
 
         cmbRank.setName("cmbRank"); // NOI18N
 
-        jLabel17.setIcon(resourceMap.getIcon("jLabel17.icon")); // NOI18N
-        jLabel17.setText(resourceMap.getString("jLabel17.text")); // NOI18N
+        jLabel17.setIcon(new ImageIcon(p.getProperty("jLabel17.icon"))); // NOI18N
+        jLabel17.setText(p.getProperty("jLabel17.text")); // NOI18N
         jLabel17.setName("jLabel17"); // NOI18N
 
         cmbPollution.setName("cmbPollution"); // NOI18N
@@ -498,7 +505,7 @@ public class EditorImpact extends javax.swing.JFrame {
         jPanel4.setAutoscrolls(true);
         jPanel4.setName("jPanel4"); // NOI18N
 
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setText(p.getProperty("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -507,7 +514,7 @@ public class EditorImpact extends javax.swing.JFrame {
             }
         });
 
-        btnCancel.setText(resourceMap.getString("btnCancel.text")); // NOI18N
+        btnCancel.setText(p.getProperty("btnCancel.text")); // NOI18N
         btnCancel.setName("btnCancel"); // NOI18N
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -534,9 +541,9 @@ public class EditorImpact extends javax.swing.JFrame {
                 .addComponent(btnCancel))
         );
 
-        //jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
-        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        //jLabel2.setIcon(new ImageIcon(p.getProperty("jLabel2.icon")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(p, "jLabel2.icon", SDF_ManagerApp.getMode()));
+        jLabel2.setText(p.getProperty("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

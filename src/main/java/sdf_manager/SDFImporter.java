@@ -11,16 +11,16 @@
 
 package sdf_manager;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JDialog;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 
 import org.apache.commons.lang.StringUtils;
-import org.jdesktop.application.Action;
 
 import sdf_manager.util.SDF_Util;
 
@@ -140,26 +140,31 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap =
-                org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext()
-                        .getResourceMap(SDFImporter.class);
-        setTitle(resourceMap.getString("Form.title")); // NOI18N
+        Properties p = new Properties();
+        try {
+            p.load(getClass().getResourceAsStream("resources/SDFImporter.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setTitle(p.getProperty("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel3.border.title"))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(p.getProperty("jPanel3.border.title"))); // NOI18N
         jPanel3.setName("jPanel3"); // NOI18N
 
-        txtPath.setText(resourceMap.getString("txtPath.text")); // NOI18N
+        txtPath.setText(p.getProperty("txtPath.text")); // NOI18N
         txtPath.setName("txtPath"); // NOI18N
 
-        javax.swing.ActionMap actionMap =
-                org.jdesktop.application.Application.getInstance(sdf_manager.SDF_ManagerApp.class).getContext()
-                        .getActionMap(SDFImporter.class, this);
-        jButton3.setAction(actionMap.get("importDatabase")); // NOI18N
-        jButton3.setIcon(resourceMap.getIcon("jButton3.icon")); // NOI18N
-        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                importDatabase();
+            }
+        });
+        jButton3.setIcon(new ImageIcon(p.getProperty("jButton3.icon"))); // NOI18N
+        jButton3.setText(p.getProperty("jButton3.text")); // NOI18N
         jButton3.setName("jButton3"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -181,25 +186,25 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE).addComponent(jButton3).addGap(15, 15, 15)));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel2.border.title"))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(p.getProperty("jPanel2.border.title"))); // NOI18N
         jPanel2.setName("jPanel2"); // NOI18N
 
         btnGroupFormat.add(radioXMl);
-        radioXMl.setText(resourceMap.getString("radioXMl.text")); // NOI18N
+        radioXMl.setText(p.getProperty("radioXMl.text")); // NOI18N
         radioXMl.setName("radioXMl"); // NOI18N
 
         btnGroupFormat.add(radioOldMDB);
         radioOldMDB.setSelected(true);
         if (SDF_ManagerApp.isEmeraldMode()) {
-            radioOldMDB.setText(resourceMap.getString("radioOldMDB.text.emerald")); // NOI18N
+            radioOldMDB.setText(p.getProperty("radioOldMDB.text.emerald")); // NOI18N
         } else {
-            radioOldMDB.setText(resourceMap.getString("radioOldMDB.text")); // NOI18N
+            radioOldMDB.setText(p.getProperty("radioOldMDB.text")); // NOI18N
         }
         radioOldMDB.setName("radioOldMDB"); // NOI18N
 
         btnGroupFormat.add(radioNewMDB);
-        radioNewMDB.setText(resourceMap.getString("radioNewMDB.text")); // NOI18N
-        radioNewMDB.setActionCommand(resourceMap.getString("radioNewMDB.actionCommand")); // NOI18N
+        radioNewMDB.setText(p.getProperty("radioNewMDB.text")); // NOI18N
+        radioNewMDB.setActionCommand(p.getProperty("radioNewMDB.actionCommand")); // NOI18N
         radioNewMDB.setName("radioNewMDB"); // NOI18N
 
         radioNewMDB.setVisible(!SDF_ManagerApp.isEmeraldMode());
@@ -207,20 +212,20 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         btnGroupFormat.add(radioBold2007);
 
         if (SDF_ManagerApp.isEmeraldMode()) {
-            radioBold2007.setText(resourceMap.getString("radioBold2007.text.emerald")); // NOI18N
+            radioBold2007.setText(p.getProperty("radioBold2007.text.emerald")); // NOI18N
         } else {
-            radioBold2007.setText(resourceMap.getString("radioBold2007.text")); // NOI18N
+            radioBold2007.setText(p.getProperty("radioBold2007.text")); // NOI18N
         }
         radioBold2007.setName("radioBold2007"); // NOI18N
 
         btnGroupFormat.add(radioNew2007);
-        radioNew2007.setText(resourceMap.getString("radioNew2007.text")); // NOI18N
+        radioNew2007.setText(p.getProperty("radioNew2007.text")); // NOI18N
         radioNew2007.setName("radioNew2007"); // NOI18N
 
         radioNew2007.setVisible(!SDF_ManagerApp.isEmeraldMode());
 
-        btHelp.setIcon(resourceMap.getIcon("btHelp.icon")); // NOI18N
-        btHelp.setText(resourceMap.getString("btHelp.text")); // NOI18N
+        btHelp.setIcon(new ImageIcon(p.getProperty("btHelp.icon"))); // NOI18N
+        btHelp.setText(p.getProperty("btHelp.text")); // NOI18N
         btHelp.setName("btHelp"); // NOI18N
         btHelp.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -294,9 +299,14 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
 
         jPanel5.setName("jPanel5"); // NOI18N
 
-        jButton1.setAction(actionMap.get("processDatabase")); // NOI18N
-        jButton1.setIcon(resourceMap.getIcon("jButton1.icon")); // NOI18N
-        jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processDatabase();
+            }
+        });
+        jButton1.setIcon(new ImageIcon(p.getProperty("jButton1.icon"))); // NOI18N
+        jButton1.setText(p.getProperty("jButton1.text")); // NOI18N
         jButton1.setName("jButton1"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -332,11 +342,11 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118,
                                 javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(23, Short.MAX_VALUE)));
 
-        jLabel1.setFont(resourceMap.getFont("jLabel1.font")); // NOI18N
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setFont(new Font(p.getProperty("jLabel1.font"), 12, 18)); // NOI18N
+        jLabel1.setText(p.getProperty("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel6.border.title"))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(p.getProperty("jPanel6.border.title"))); // NOI18N
         jPanel6.setName("jPanel6"); // NOI18N
 
         DefaultComboBoxModel encodingModel =
@@ -349,11 +359,11 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
 
         cmbLang.setName("cmbLang"); // NOI18N
 
-        txtSiteCode.setText(resourceMap.getString("txtSiteCode.text")); // NOI18N
+        txtSiteCode.setText(p.getProperty("txtSiteCode.text")); // NOI18N
         txtSiteCode.setEnabled(false);
         txtSiteCode.setName("txtSiteCode"); // NOI18N
 
-        chbImportOneSite.setText(resourceMap.getString("chbImportOneSite.text")); // NOI18N
+        chbImportOneSite.setText(p.getProperty("chbImportOneSite.text")); // NOI18N
         chbImportOneSite.setName("chbImportOneSite"); // NOI18N
         chbImportOneSite.addItemListener(new java.awt.event.ItemListener() {
             @Override
@@ -362,7 +372,7 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
             }
         });
 
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setText(p.getProperty("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -396,8 +406,8 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         // jLabel2.setIcon(resourceMap.getIcon("jLabel2.icon")); // NOI18N
-        jLabel2.setIcon(SDF_Util.getIconForLabel(resourceMap, "jLabel2.icon", SDF_ManagerApp.getMode()));
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setIcon(SDF_Util.getIconForLabel(p, "jLabel2.icon", SDF_ManagerApp.getMode()));
+        jLabel2.setText(p.getProperty("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -501,7 +511,6 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
      * @param args the command line arguments
      */
 
-    @Action
     public void importDatabase() {
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
@@ -516,7 +525,6 @@ public class SDFImporter extends javax.swing.JFrame implements Logger {
         }
     }
 
-    @Action
     public void processDatabase() {
         try {
             String encoding = (String) cmbLang.getModel().getSelectedItem();

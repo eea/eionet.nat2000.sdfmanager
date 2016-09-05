@@ -174,3 +174,6 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{code:GetAppName}"
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[UninstallDelete]
+Type: files; Name: "{app}\sdf.properties"
+Type: filesandordirs; Name: "{app}\logs" 

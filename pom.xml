@@ -38,19 +38,19 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.15.16</version>
+                <version>0.24.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <!-- Use the following workaround for Windows hosts -->
                     <!--<dockerHost>http://localhost:2375</dockerHost>-->
-                    <image>mysql</image>
+                    <filter>mysql</filter>
                     <images>
                         <image>
                             <alias>mysql</alias>
                             <name>mysql:5.5</name>
                             <run>
                                 <ports>
-                                    <port>3336:3306</port>
+                                    <port>53336:3306</port>
                                 </ports>
                                 <env>
                                     <MYSQL_ROOT_PASSWORD>12345</MYSQL_ROOT_PASSWORD>
@@ -58,23 +58,18 @@
                                     <MYSQL_USER>testuser</MYSQL_USER>
                                     <MYSQL_PASSWORD>testpassword</MYSQL_PASSWORD>
                                 </env>
-                                <!--
-                                <volumes>
-                                    <bind>
-                                        <volume>/home/dev-gso/volumes/tmp:/var/lib/mysql</volume>
-                                    </bind>
-                                </volumes>-->
                                 <wait>
                                     <tcp>
+                                        <mode>direct</mode>
                                         <ports>
                                             <port>3306</port>
                                         </ports>
                                     </tcp>
-                                    <time>40000</time>
+                                    <time>20000</time>
                                 </wait>
-                                <!--<wait>
-                                    <time>10000</time>
-                                </wait>-->
+                                <tmpfs>
+                                    <mount>/var/lib/mysql:size=1G</mount>
+                                </tmpfs>
                             </run>
                         </image>
                     </images>
@@ -98,7 +93,6 @@
                         <id>stop</id>
                         <phase>post-integration-test</phase>
                         <goals>
-                            <goal>logs</goal>
                             <goal>stop</goal>
                         </goals>
                     </execution>

@@ -299,7 +299,7 @@ public class ExporterMDB implements Exporter {
             while (rsTables.next()) {
 
                 String tableName = rsTables.getString("TABLE_NAME");
-                if (tableName.toUpperCase().startsWith("REF_") || StringUtils.startsWith(tableName.toUpperCase(), "COUNTRY")) {
+                if (tableName.toUpperCase().startsWith("REF_") || StringUtils.startsWith(tableName.toUpperCase(), "COUNTRY") || tableName.toUpperCase().equals("RELEASEDBUPDATES")) {
                     continue;
                 }
 

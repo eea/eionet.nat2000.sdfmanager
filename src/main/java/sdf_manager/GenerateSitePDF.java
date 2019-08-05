@@ -32,10 +32,8 @@ import javax.xml.transform.stream.StreamSource;
 import com.lowagie.text.FontFactory;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import pojos.Biogeo;
@@ -61,7 +59,6 @@ import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.XmlGenerationUtils;
 
-import com.lowagie.text.pdf.BaseFont;
 
 /**
  *
@@ -260,11 +257,11 @@ public class GenerateSitePDF implements Exporter {
                 }
 
                 if (SDF_ManagerApp.isEmeraldMode()) {
-                    XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate",
-                            doc);
-                    if (site.getSiteProposedAsciDate() == null) {
-                        XmlGenerationUtils.appendDateElement(XmlGenerationUtils.nullDate(), siteIdentification,
-                                "asciProposalDate", doc);
+                    if (site.getSiteProposedAsciDate() != null) {
+                        XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate", doc);
+                    } else {
+                        siteIdentification.appendChild(doc.createElement("asciProposalDate")).appendChild(
+                                doc.createTextNode(fmt("0000-00", "asciProposalDate")));
                     }
                     XmlGenerationUtils.appendDateElement(site.getSiteConfirmedCandidateAsciDate(), siteIdentification,
                             "asciConfirmedCandidateDate", doc);

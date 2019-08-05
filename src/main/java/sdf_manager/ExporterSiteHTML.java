@@ -255,15 +255,14 @@ public class ExporterSiteHTML implements Exporter {
                     siteIdentification.appendChild(respNode);
                 }
 
-
-
                 if (SDF_ManagerApp.isEmeraldMode()) {
-                    XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate",
-                            doc);
-                    if (site.getSiteProposedAsciDate() == null) {
-                        XmlGenerationUtils.appendDateElement(XmlGenerationUtils.nullDate(), siteIdentification,
-                                "asciProposalDate", doc);
+                    if (site.getSiteProposedAsciDate() != null) {
+                        XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate", doc);
+                    } else {
+                        siteIdentification.appendChild(doc.createElement("asciProposalDate")).appendChild(
+                                doc.createTextNode(fmt("0000-00", "asciProposalDate")));
                     }
+
                     XmlGenerationUtils.appendDateElement(site.getSiteConfirmedCandidateAsciDate(), siteIdentification,
                             "asciConfirmedCandidateDate", doc);
                     XmlGenerationUtils.appendDateElement(site.getSiteConfirmedAsciDate(), siteIdentification,
@@ -273,9 +272,7 @@ public class ExporterSiteHTML implements Exporter {
 
                     siteIdentification.appendChild(doc.createElement("asciLegalReference")).appendChild(
                             doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciLegalReference")));
-
                 } else {
-
                     if (site.getSiteSpaDate() != null) {
                         siteIdentification.appendChild(doc.createElement("spaClassificationDate"))
                                 .appendChild(

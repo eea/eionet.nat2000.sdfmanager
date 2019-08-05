@@ -1,6 +1,5 @@
 package sdf_manager.util;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.w3c.dom.Document;
@@ -38,13 +37,4 @@ public final class XmlGenerationUtils {
 
     }
 
-    /**
-     * Date 00-00-00.
-     * @return date object no entries specified
-     */
-    public static Date nullDate() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(0, 0, 0);
-        return cal.getTime();
-    }
 }

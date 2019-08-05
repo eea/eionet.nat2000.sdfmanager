@@ -14,7 +14,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -42,7 +41,6 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -780,10 +778,7 @@ public class ExporterSiteXML implements Exporter {
             } else {
             	siteType = null;
             }
-            	
-            Calendar cal = Calendar.getInstance();
-            cal.set(0, 0, 0);
-            Date dateNull = cal.getTime();
+
             boolean isEmeraldMode = SDF_ManagerApp.isEmeraldMode();
 
             // Site classification dates and explanation.
@@ -791,7 +786,8 @@ public class ExporterSiteXML implements Exporter {
             if (isEmeraldMode) {
                 XmlGenerationUtils.appendDateElement(site.getSiteProposedAsciDate(), siteIdentification, "asciProposalDate", doc);
                 if (("B").equals(siteType) && site.getSiteProposedAsciDate() == null) {
-                    XmlGenerationUtils.appendDateElement(dateNull, siteIdentification, "asciProposalDate", doc);
+                    siteIdentification.appendChild(doc.createElement("asciProposalDate")).appendChild(
+                            doc.createTextNode(fmt("0000-00", "asciProposalDate")));
                 }
                 XmlGenerationUtils.appendDateElement(site.getSiteConfirmedCandidateAsciDate(), siteIdentification,
                         "asciCandidateConfirmationDate", doc);
@@ -802,11 +798,11 @@ public class ExporterSiteXML implements Exporter {
 
                 siteIdentification.appendChild(doc.createElement("asciDesignationLegalReference")).appendChild(
                         doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciDesignationLegalReference")));
-
             } else {
                 XmlGenerationUtils.appendDateElement(site.getSiteSpaDate(), siteIdentification, "spaClassificationDate", doc);
                 if (("B").equals(siteType) && site.getSiteSpaDate() == null) {
-                    XmlGenerationUtils.appendDateElement(dateNull, siteIdentification, "spaClassificationDate", doc);
+                    siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(
+                            doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
                 }
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
                         doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));

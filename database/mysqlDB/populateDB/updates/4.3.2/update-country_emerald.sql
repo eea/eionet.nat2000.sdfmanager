@@ -1,0 +1,1 @@
+UPDATE country_emerald SET COUNTRY_NAME="North Macedonia" WHERE COUNTRY_ID=10; 

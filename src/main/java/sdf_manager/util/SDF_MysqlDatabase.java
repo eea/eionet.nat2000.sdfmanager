@@ -412,6 +412,15 @@ public class SDF_MysqlDatabase {
                 updateVersionDone(con, "4.3.1");
             }
 
+             // release 4.3.2 updates
+            if (isEmeraldMode() && !isReleaseDBUpdatesExist(con, "4.3.2")) {
+                logD(dialog, "Performing release 4.3.2 updates");
+                populateReleaseDBUpdates(con, "4.3.2", "6");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.3.2", dialog);
+                logD(dialog, "Release 4.3.2 updates done");
+                updateVersionDone(con, "4.3.2");
+            }
+
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
             SDF_MysqlDatabase.LOGGER.error("Error in Data Base:::" + s.getMessage());
@@ -720,7 +729,7 @@ public class SDF_MysqlDatabase {
             st.executeQuery(sql);
             refSpeciesUpdated = true;
         } catch (Exception e) {
-            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated");
+            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated: " + e);
         } finally {
             closeQuietly(st);
             return refSpeciesUpdated;

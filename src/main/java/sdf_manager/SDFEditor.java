@@ -39,7 +39,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -6900,7 +6899,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 String dirPath = (new File("")).getAbsolutePath();
                 String logFileName =
                         dirPath + System.getProperty("file.separator") + "logs" + System.getProperty("file.separator")
-                                + "ErrorSite_" + formatDate + ".log";
+                                + "ErrorSite" + this.site.getSiteCode() + "_" + formatDate + ".log";
                 fileLog = SDF_Util.copyToLogErrorSite(xmlFieldsList, logFileName);
                 JOptionPane.showMessageDialog(this, "The site is not compliant with SDF schema.\n Please check the log file::"
                         + fileLog.getName() + " for details", "Dialog", JOptionPane.INFORMATION_MESSAGE);

@@ -6371,16 +6371,7 @@ public class SDFEditor extends javax.swing.JFrame {
     } // GEN-LAST:event_btnAddRegionActionPerformed
 
     private void btnAddBiogeoActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddBiogeoActionPerformed
-        if (checkSumPercentBioReg() == 100) {
-            SDFEditor.logger
-                    .error("The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "The sum of percent of Biogeographical regions is 100.New Bioregographical Region cannot be added.");
-            return;
-        } else {
-            new EditorBioregion(this).setVisible(true);
-        }
-
+        new EditorBioregion(this).setVisible(true);
     } // GEN-LAST:event_btnAddBiogeoActionPerformed
 
     private void btnAddHabitatActionPerformed(java.awt.event.ActionEvent evt) { // GEN-FIRST:event_btnAddHabitatActionPerformed

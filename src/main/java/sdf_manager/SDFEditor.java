@@ -1361,7 +1361,7 @@ public class SDFEditor extends javax.swing.JFrame {
                 SDFEditor.logger.error("Biogeo region already exists, not saving a new one.");
                 javax.swing.JOptionPane.showMessageDialog(this, "Biogeo region already exists, not saving a new one.");
                 return false;
-            } else if ((checkSumPercentBioReg() + percent) > 100) {
+            } else if (percent != null && (checkSumPercentBioReg() + percent > 100)) {
                 SDFEditor.logger.error("The sum of the percent of the Biographical regions is bigger than 100.");
                 javax.swing.JOptionPane.showMessageDialog(this,
                         "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
@@ -2555,7 +2555,7 @@ public class SDFEditor extends javax.swing.JFrame {
         double sumPercentBioReg = 0;
         try {
             for (int i = 0; i < this.modelBioregions.size(); i++) {
-                if (modelBioregions.get(i) != null) {
+                if (modelBioregions.get(i) != null && ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent() != null) {
                     sumPercentBioReg += ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent();
                 }
             }
@@ -2575,10 +2575,13 @@ public class SDFEditor extends javax.swing.JFrame {
         try {
             for (int i = 0; i < this.modelBioregions.size(); i++) {
                 if (modelBioregions.get(i) != null) {
-                    if (!(biogeo.getBiogeoCode()).equals(modelBioregions.get(0))) {
+                    if (!(biogeo.getBiogeoCode()).equals(modelBioregions.get(i)) && ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent() != null) {
                         sumPercentBioReg += ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent();
                     } else {
-                        sumPercentBioReg += percent;
+                        sumPercentBioReg -= ((SiteBiogeo) modelBioregions.get(i)).getBiogeoPercent();
+                        if (percent != null) {
+                            sumPercentBioReg += percent;
+                        }
                     }
 
                 }

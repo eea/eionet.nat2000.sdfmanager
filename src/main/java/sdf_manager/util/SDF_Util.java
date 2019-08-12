@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.swing.Icon;
 
-import org.apache.logging.log4j.Logger;
 //import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.Query;
 import org.hibernate.Session;

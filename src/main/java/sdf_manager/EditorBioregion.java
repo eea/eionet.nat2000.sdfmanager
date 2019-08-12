@@ -317,45 +317,41 @@ public class EditorBioregion extends javax.swing.JFrame {
 
         String code = (String) cmbCode.getSelectedItem();
         EditorBioregion.log.info("Saving bio region ::" + code);
-        Double percent;
+        Double percent = null;
         boolean saveOK = false;
         String msgInfo = "";
         if (code.equals("")) {
             EditorBioregion.log.error("There is not code for Biogeographical region .");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a code for Biogeographical region.");
-        } else if (txtArea.getText().equals("")) {
-            EditorBioregion.log.error("There is not perecent for cover.");
-            javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a percentage for cover.");
-        } else if ((isNum(txtArea.getText())) == null) {
+        } else if (!txtArea.getText().equals("") && (isNum(txtArea.getText())) == null) {
             EditorBioregion.log.error("Percent field should be a number.");
             javax.swing.JOptionPane.showMessageDialog(this, "Percentage should be a number.");
-
-        } else if (!SDF_Util.validatePercent(txtArea.getText())) {
+        } else if (!txtArea.getText().equals("") && !SDF_Util.validatePercent(txtArea.getText())) {
             EditorBioregion.log.error("The percent is not valid.");
             javax.swing.JOptionPane.showMessageDialog(this, "Please, Provide a valid percentage.");
         } else {
-            Double dblPercentage = null;
             if (txtArea.getText() != null && !txtArea.getText().equals("")) {
-                dblPercentage = new Double(txtArea.getText());
+                percent = new Double(txtArea.getText());
             }
-            if (this.previousPercentage != null) {
-                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage - this.previousPercentage) > 100) {
-                    EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
-                    javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
-                    return;
-                }
-            } else {
-                if (this.editing && (this.parent.checkSumPercentBioReg() + dblPercentage) > 100) {
-                    EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
-                    javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
-                    return;
+            if (percent != null) {
+                if (this.previousPercentage != null) {
+                    if (this.editing && (this.parent.checkSumPercentBioReg() + percent - this.previousPercentage) > 100) {
+                        EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
+                        javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
+                        return;
+                    }
+                } else {
+                    if (this.editing && (this.parent.checkSumPercentBioReg() + percent) > 100) {
+                        EditorBioregion.log.error("The sum of the percent of the Biographical regions is bigger than 100.");
+                        javax.swing.JOptionPane.showMessageDialog(this, "The sum of the percent of the Biographical regions is bigger than 100. Can't save");
+                        return;
+                    }
                 }
             }
 
             Session session = HibernateUtil.getSessionFactory().openSession();
             try {
 	            Biogeo b;
-	            percent = new Double(txtArea.getText());
 	            String hql = "from Biogeo biogeo where biogeo.biogeoCode like '" + code + "'";
 	            Query q = session.createQuery(hql);
 	            b = (Biogeo) q.uniqueResult();

@@ -154,7 +154,7 @@ public class SDF_ManagerView extends FrameView {
         mainPanel.setMaximumSize(new java.awt.Dimension(50, 50));
         mainPanel.setMinimumSize(new java.awt.Dimension(425, 605));
         mainPanel.setName("mainPanel"); // NOI18N
-        mainPanel.setPreferredSize(new Dimension(490, 605));
+        mainPanel.setPreferredSize(new Dimension(510, 605));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24));
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
@@ -306,7 +306,7 @@ public class SDF_ManagerView extends FrameView {
                                     .addComponent(btnManage2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnManage3, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
+                        .addGap(115, 115, 115)
                         .addComponent(btnManage4, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );

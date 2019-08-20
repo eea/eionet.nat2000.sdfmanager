@@ -1427,18 +1427,19 @@ public class SDF_MysqlDatabase {
             LOGGER.info("Test if host is solved: ");
             InetSocketAddress endPoint = new InetSocketAddress(host, Integer.parseInt(port));
             if (endPoint.isUnresolved()) {
-                return "Host name " + host + " cannot be resolved. \n" + "Check if there is a tyop in the host name";
+                return "Host name " + host + " cannot be resolved. \n" + "Check if there is a typo in the host name";
             }
-            LOGGER.info("Test if port is open: host='" + "'; port='" + port + "'");
+            LOGGER.info("Test if port is open: host='" + host + "'; port='" + port + "'");
             socket.connect(endPoint, 1000);
 
         } catch (IOException ie) {
+            LOGGER.error("Error: " + ie);
             return "No access to specified host:port " + host + ":" + port + "\n" + "Potential reasons:\n"
                     + "1. MySql is not running at the specified location. \n"
                     + "2. Firewall is blocking access to the host:port. \n"
                     + "3. There is a proxy configured with no bypassing exception to the specified host.";
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error: " + e);
             return e.getMessage();
         } finally {
             IOUtils.closeQuietly(socket);

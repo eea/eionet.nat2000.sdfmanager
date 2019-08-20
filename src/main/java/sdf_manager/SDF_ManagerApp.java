@@ -262,7 +262,7 @@ public class SDF_ManagerApp extends SingleFrameApplication {
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An error has occurred in saving settings." + e.getMessage(), "Dialog",
+            JOptionPane.showMessageDialog(null, "An error has occurred in saving settings. " + e.getMessage(), "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             LOGGER.error("Error::::" + e.getMessage());
             e.printStackTrace();

@@ -6,7 +6,7 @@
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
-    <version>4.3.2-SNAPSHOT</version>
+    <version>4.3.3-SNAPSHOT</version>
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
     <scm>
@@ -61,6 +61,7 @@
                 <version>0.26.0</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <skip>true</skip>
                     <!-- Use the following workaround for Windows hosts -->
                     <!--<dockerHost>http://localhost:2375</dockerHost>-->
                     <filter>mysql</filter>

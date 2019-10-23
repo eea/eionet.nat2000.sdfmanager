@@ -1054,6 +1054,8 @@ public class SDF_MysqlDatabase {
 
                     // Get filename of file or directory
                     File filename = files[i];
+                    SDF_MysqlDatabase.LOGGER.info("FileName:"+ filename.getName());
+
                     logD(dialog, "Populating " + filename.getName());
                     FileInputStream fsInsert = new FileInputStream(filename);
 
@@ -1064,6 +1066,7 @@ public class SDF_MysqlDatabase {
                     st = con.createStatement();
                     // Read File Line By Line
                     while ((strLineInsert = brInsert.readLine()) != null) {
+                        SDF_MysqlDatabase.LOGGER.info("SQL Statement to be executed:"+strLineInsert);
                         st.executeUpdate(strLineInsert);
                     }
                     // Close the input stream

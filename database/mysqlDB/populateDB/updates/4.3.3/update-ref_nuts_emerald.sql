@@ -1,0 +1,1 @@
+UPDATE ref_nuts_emerald SET REF_NUTS_DESCRIPTION = 'North Macedonia' WHERE  REF_NUTS_CODE = 'MK';

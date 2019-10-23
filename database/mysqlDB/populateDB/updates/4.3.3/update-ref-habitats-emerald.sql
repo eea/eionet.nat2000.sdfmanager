@@ -5,4 +5,3 @@ INSERT IGNORE INTO `ref_habitats_emerald` (REF_HABITATS_ID,REF_HABITATS_CODE,REF
 INSERT IGNORE INTO `ref_habitats_emerald` (REF_HABITATS_ID,REF_HABITATS_CODE,REF_HABITATS_DESC_EN) VALUES (272, 'G1.41',  'Alnus Swamp Woods not on acid peat');
 INSERT IGNORE INTO `ref_habitats_emerald` (REF_HABITATS_ID,REF_HABITATS_CODE,REF_HABITATS_DESC_EN) VALUES (273, 'G3.4G',  'Pinus sylvestris forest on chalk in the steppe zone');
 INSERT IGNORE INTO `ref_habitats_emerald` (REF_HABITATS_ID,REF_HABITATS_CODE,REF_HABITATS_DESC_EN) VALUES (274, 'X36',  'Depressions (pody) of the Steppe zone');
-

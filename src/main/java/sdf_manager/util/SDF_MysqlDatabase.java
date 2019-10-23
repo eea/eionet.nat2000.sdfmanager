@@ -525,6 +525,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineSchema = brSchema.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineSchema);
+                if(isLineEmptyOrComment(strLineSchema)){
+                    continue;
+                }
                 st.executeUpdate(strLineSchema);
             }
             // Close the input stream
@@ -585,6 +589,10 @@ public class SDF_MysqlDatabase {
             int counter = 1;
             // Read File Line By Line
             while ((strLine = br.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLine);
+                if(isLineEmptyOrComment(strLine)){
+                    continue;
+                }
                 logD(dialog, "Executing statement " + counter);
                 counter++;
                 st2.executeUpdate(strLine);
@@ -603,6 +611,10 @@ public class SDF_MysqlDatabase {
                 st2 = con.createStatement();
                 // Read File Line By Line
                 while ((strLine = br.readLine()) != null) {
+                    SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLine);
+                    if(isLineEmptyOrComment(strLine)){
+                        continue;
+                    }
                     st2.executeUpdate(strLine);
                 }
                 // Close the input stream
@@ -649,6 +661,10 @@ public class SDF_MysqlDatabase {
                     stInsert = con.createStatement();
                     // Read File Line By Line
                     while ((strLineInsert = brInsert.readLine()) != null) {
+                        SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                        if(isLineEmptyOrComment(strLineInsert)){
+                            continue;
+                        }
                         stInsert.executeUpdate(strLineInsert);
                     }
                     // Close the input stream
@@ -701,6 +717,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineAlter = brAlter.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineAlter);
+                if(isLineEmptyOrComment(strLineAlter)){
+                    continue;
+                }
                 st.executeUpdate(strLineAlter);
             }
             inAlter.close();
@@ -863,6 +883,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                if(isLineEmptyOrComment(strLineInsert)){
+                    continue;
+                }
                 st.executeUpdate(strLineInsert);
             }
             // Close the input stream
@@ -992,6 +1016,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineAlter = brAlter.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineAlter);
+                if(isLineEmptyOrComment(strLineAlter)){
+                    continue;
+                }
                 st.executeUpdate(strLineAlter);
             }
             inAlter.close();
@@ -1066,7 +1094,10 @@ public class SDF_MysqlDatabase {
                     st = con.createStatement();
                     // Read File Line By Line
                     while ((strLineInsert = brInsert.readLine()) != null) {
-                        SDF_MysqlDatabase.LOGGER.info("SQL Statement to be executed:"+strLineInsert);
+                        SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                        if(isLineEmptyOrComment(strLineInsert)){
+                            continue;
+                        }
                         st.executeUpdate(strLineInsert);
                     }
                     // Close the input stream
@@ -1090,6 +1121,25 @@ public class SDF_MysqlDatabase {
         }
 
     }
+
+
+    /***
+     * Identifies if a new Line Read from an SQL File, is either empty or a comment .
+     * */
+    private static boolean isLineEmptyOrComment(String newLine) {
+        newLine = newLine.trim();
+        if (newLine.isEmpty()) {
+            SDF_MysqlDatabase.LOGGER.info("Line is Empty.");
+            return true;
+        } else if (newLine.startsWith("#") || newLine.startsWith("--") || newLine.startsWith("/*") || newLine.endsWith("*/")) {
+            SDF_MysqlDatabase.LOGGER.info("Line is a Comment.");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     /**
      *
@@ -1134,6 +1184,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineAlter = brAlter.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineAlter);
+                if(isLineEmptyOrComment(strLineAlter)){
+                    continue;
+                }
                 st.executeUpdate(strLineAlter);
             }
             inAlter.close();
@@ -1216,6 +1270,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                if(isLineEmptyOrComment(strLineInsert)){
+                    continue;
+                }
                 st.executeUpdate(strLineInsert);
             }
             // Close the input stream
@@ -1255,6 +1313,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                if(isLineEmptyOrComment(strLineInsert)){
+                    continue;
+                }
                 st.executeUpdate(strLineInsert);
             }
             // Close the input stream
@@ -1377,6 +1439,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                if(isLineEmptyOrComment(strLineInsert)){
+                    continue;
+                }
                 st.executeUpdate(strLineInsert);
             }
             // Close the input stream
@@ -1497,6 +1563,10 @@ public class SDF_MysqlDatabase {
             st = con.createStatement();
             // Read File Line By Line
             while ((strLineInsert = brInsert.readLine()) != null) {
+                SDF_MysqlDatabase.LOGGER.debug("SQL Statement to be executed:"+strLineInsert);
+                if(isLineEmptyOrComment(strLineInsert)){
+                    continue;
+                }
                 st.executeUpdate(strLineInsert);
             }
             // Close the input stream

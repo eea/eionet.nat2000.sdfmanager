@@ -811,4 +811,52 @@ public class Site implements java.io.Serializable {
     //
     // }
 
+
+    @Override
+    public String toString() {
+        return "Site{" +
+                "siteCode='" + siteCode + '\'' +
+                ", map=" + map +
+                ", doc=" + doc +
+                ", mgmt=" + mgmt +
+                ", resp=" + resp +
+                ", siteType=" + siteType +
+                ", siteName='" + siteName + '\'' +
+                ", siteCompDate=" + siteCompDate +
+                ", siteUpdateDate=" + siteUpdateDate +
+                ", siteSpaDate=" + siteSpaDate +
+                ", siteSpaLegalRef='" + siteSpaLegalRef + '\'' +
+                ", siteSciPropDate=" + siteSciPropDate +
+                ", siteSciConfDate=" + siteSciConfDate +
+                ", siteSacDate=" + siteSacDate +
+                ", siteSacLegalRef='" + siteSacLegalRef + '\'' +
+                ", siteExplanations='" + siteExplanations + '\'' +
+                ", siteLongitude=" + siteLongitude +
+                ", siteLatitude=" + siteLatitude +
+                ", siteArea=" + siteArea +
+                ", siteMarineArea=" + siteMarineArea +
+                ", siteLength=" + siteLength +
+                ", siteCharacteristics='" + siteCharacteristics + '\'' +
+                ", siteQuality='" + siteQuality + '\'' +
+                ", siteDesignation='" + siteDesignation + '\'' +
+                ", habitatClasses=" + habitatClasses +
+                ", specieses=" + specieses +
+                ", habitats=" + habitats +
+                ", siteRelations=" + siteRelations +
+                ", siteOwnerships=" + siteOwnerships +
+                ", nationalDtypes=" + nationalDtypes +
+                ", regions=" + regions +
+                ", otherSpecieses=" + otherSpecieses +
+                ", siteBiogeos=" + siteBiogeos +
+                ", impacts=" + impacts +
+                ", siteDateCreation=" + siteDateCreation +
+                ", siteDateDeletion=" + siteDateDeletion +
+                ", siteDateUpdate=" + siteDateUpdate +
+                ", siteProposedAsciDate=" + siteProposedAsciDate +
+                ", siteConfirmedCandidateAsciDate=" + siteConfirmedCandidateAsciDate +
+                ", siteConfirmedAsciDate=" + siteConfirmedAsciDate +
+                ", siteDesignatedAsciDate=" + siteDesignatedAsciDate +
+                ", siteAsciLegalRef='" + siteAsciLegalRef + '\'' +
+                '}';
+    }
 }

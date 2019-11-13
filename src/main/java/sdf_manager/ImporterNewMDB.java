@@ -99,7 +99,8 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 importOk = false;
             }
         } catch (Exception e) {
-            ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage());
+
+            ImporterNewMDB.log.error("Error in processDatabase::" + e.getMessage(),e.getCause());
             importOk = false;
         } finally {
             SDF_MysqlDatabase.closeQuietly(conn);
@@ -235,11 +236,14 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
         String sql = "select site_code from site";
         Session session = HibernateUtil.getSessionFactory().openSession();
-        int test = HibernateUtil.getSessionFactory().getSessionFactoryOptions().getJdbcBatchSize();
-        Statement stmt = null;
 
+        int test = HibernateUtil.getSessionFactory().getSessionFactoryOptions().getJdbcBatchSize();
+        ImporterNewMDB.log.info("Batch Size:  "+test);
+
+        Statement stmt = null;
+        int siteCodesCounter = 0;
         // HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
-        try {        	            
+        try {
             stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);                    	        
             while (rs.next()) {            	
@@ -250,10 +254,14 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 log("Validating site: " + sitecode, true);                
                 try {
                 	session.getTransaction().begin();
+
                     if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
                     } else {                        
                         log("processing: " + sitecode, true);
+
+                        siteCodesCounter+=1;
+
                         site.setSiteCode(sitecode);
                         processSite(conn, session, site);
                         processSpecies(conn, session, site);
@@ -264,19 +272,31 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         processRelations(conn, session, site);
                         processDTypes(conn, session, site);
                         processImpacts(conn, session, site);
-                        processSiteoOwnerShips(conn, session, site);                                                
+                        processSiteoOwnerShips(conn, session, site);
                         session.getTransaction().commit();
+                        if (siteCodesCounter % 20 == 0) {
+                            session.flush();
+                            session.clear();
+                        }
                         processOK = true;
                     }
                 } catch (Exception e) {
+
                     session.getTransaction().rollback();
+                    ImporterNewMDB.log.info("SiteCodes counted: "+siteCodesCounter);
+                                  ImporterNewMDB.log.info("Exception commiting: "+e.getMessage());
+                    ImporterNewMDB.log.info("Exception commiting: "+e.getCause());
+
                     String msg = "Failed processing site: " + sitecode;
                     ImporterNewMDB.log.error(msg, e);
                     log(msg, true);
                 }
+                ImporterNewMDB.log.info("SiteCodes counted: "+siteCodesCounter);
+
             }
 
         } catch (Exception e) {
+
             ImporterNewMDB.log.error("Error: " + e.getMessage());
         } finally {
             session.close();
@@ -400,10 +420,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processSite(Connection conn, Session session, Site site) throws SQLException {
+    private void processSite(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
-
         try {
 
             String sql = "select * from SITE where SITE_CODE ='" + site.getSiteCode() + "'";
@@ -610,12 +629,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
             stmt.close();
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // //e.printStackTrace();
+            ImporterNewMDB.log.error(" Error In Processing Site : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // //e.printStackTrace();
+            ImporterNewMDB.log.error(" Error  Processing Site : " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
             // rs.close();
@@ -671,11 +690,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processSpecies(Connection conn, Session session, Site site) throws SQLException {
+    private void processSpecies(Connection conn, Session session, Site site) throws Exception {
 
         /*** All the species are in the same table **/
         Statement stmt = null;
         ResultSet rs = null;
+
         try {
 
             String sql = "select * from SPECIES where site_code ='" + site.getSiteCode() + "'";
@@ -766,10 +786,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
 
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Species : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Species : " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -783,10 +805,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processOtherSpecies(Connection conn, Session session, Site site) throws SQLException {
+    private void processOtherSpecies(Connection conn, Session session, Site site) throws Exception {
 
         Statement stmt = null;
         ResultSet rs = null;
+
         try {
 
             String sql = "select * from OTHER_SPECIES where site_code ='" + site.getSiteCode() + "'";
@@ -852,10 +875,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
             }
 
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Other Species: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Other Species: " + e.getMessage());
+            throw e;
         } finally {
             stmt.close();
         }
@@ -868,10 +892,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processHabitats(Connection conn, Session session, Site site) throws SQLException {
+    private void processHabitats(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from HABITAT where site_code ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -938,10 +963,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 // session.save(habitat);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Habitats : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Habitats : " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -954,10 +981,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processHabitatClasses(Connection conn, Session session, Site site) throws SQLException {
+    private void processHabitatClasses(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from HABITAT_CLASS where site_code ='" + site.getSiteCode() + "'";
 
             stmt = conn.createStatement();
@@ -985,10 +1013,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 site.getHabitatClasses().add(habitat);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing Habitats classes: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing habitats classes: " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1002,10 +1032,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processRegions(Connection conn, Session session, Site site) throws SQLException {
+    private void processRegions(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from REGION where site_code ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1051,10 +1082,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 // session.save(region);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing Regions : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing Regions : " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1068,11 +1101,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processRelations(Connection conn, Session session, Site site) throws SQLException {
+    private void processRelations(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
 
         try {
+
             String sql = "select * from SITE_RELATION where site_code ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1116,10 +1150,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 session.save(relation);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Relations : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Relations: " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1133,10 +1169,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processDTypes(Connection conn, Session session, Site site) throws SQLException {
+    private void processDTypes(Connection conn, Session session, Site site) throws Exception
+    {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from NATIONAL_DTYPE where site_code ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1159,10 +1197,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 session.save(dType);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing DTypes: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing DTypes: " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1176,10 +1216,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processImpacts(Connection conn, Session session, Site site) throws SQLException {
+    private void processImpacts(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from IMPACT where site_code ='" + site.getSiteCode() + "'";
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
@@ -1216,10 +1257,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 session.save(impact);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Impacts: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error Processing Impacts: " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1233,10 +1276,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
      * @param site
      * @throws SQLException
      */
-    private void processSiteoOwnerShips(Connection conn, Session session, Site site) throws SQLException {
+    private void processSiteoOwnerShips(Connection conn, Session session, Site site) throws Exception {
         Statement stmt = null;
         ResultSet rs = null;
         try {
+
             String sql = "select * from site_ownership where site_code ='" + site.getSiteCode() + "'";
 
             stmt = conn.createStatement();
@@ -1261,10 +1305,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 session.save(siteOwnerShip);
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing siteOwnerships: " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
+            ImporterNewMDB.log.error(" Error processing siteOwnerships: " + e.getMessage());
+            throw e;
+
         } finally {
             stmt.close();
         }
@@ -1375,12 +1421,10 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
             }
         } catch (SQLException e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
+            ImporterNewMDB.log.error(" Error in Getting Resp Data : " + e.getMessage());
             throw e;
         } catch (Exception e) {
-            ImporterNewMDB.log.error(" Error: " + e.getMessage());
-            // ////e.printStackTrace();
+            ImporterNewMDB.log.error("Error in Getting Resp Data : " + e.getMessage());
         } finally {
             stmt.close();
             // rs.close();

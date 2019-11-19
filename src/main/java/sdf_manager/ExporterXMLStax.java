@@ -23,6 +23,8 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
@@ -39,10 +41,10 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.annotations.QueryHints;
 import org.w3c.dom.Document;
+import org.xml.sax.XMLReader;
 
 /**
  *
@@ -181,18 +183,23 @@ public class ExporterXMLStax implements Exporter {
      */
     void loadSitecodes() {
     	Session session = HibernateUtil.getSessionFactory().openSession();
-    	try {            
+
+        try {
             session.getTransaction().begin();
             String hql = "select site.siteCode from Site as site order by site.siteCode";
             Iterator<?> itrSites = session.createQuery(hql).iterate();
+            ScrollableResults results = session.createQuery(hql)
+                    .setReadOnly(true)
+                    .setFetchSize( 1000 ) // <<--- !!!!
+                    .setCacheable(false).scroll(ScrollMode.FORWARD_ONLY);
             log("iterating...");
-            while (itrSites.hasNext()) {
-                Object tuple = itrSites.next();
+            while(results.next()){
+                Object tuple = results.get(0);
                 String sitecode = (String) tuple;
                 this.sitecodes.add(sitecode);
             }
-            session.getTransaction().commit();            
-        } catch (Exception e) {        	
+            session.getTransaction().commit();
+        } catch (Exception e) {
             log("ERROR loadSitecodes()" + e.getMessage());
             ExporterXMLStax.log.error("ERROR loadSitecodes():::" + e.getMessage());
         } finally {
@@ -484,7 +491,6 @@ public class ExporterXMLStax implements Exporter {
             boolean xmlOK = ExporterSiteXML.writeXmlFile(doc, outputFilePath);
 
             if (xmlOK) {
-
                 writtenFileInputStream = new FileInputStream(outputFilePath);
                 Source xmlFile = new StreamSource(writtenFileInputStream);
                 Validator validator = schema.newValidator();

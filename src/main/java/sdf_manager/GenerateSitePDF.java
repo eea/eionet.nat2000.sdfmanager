@@ -30,10 +30,13 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.pdf.BaseFont;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Session;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import pojos.Biogeo;
@@ -657,8 +660,10 @@ public class GenerateSitePDF implements Exporter {
                         plansElem.appendChild(pElem);
                     }
                     mgmtElem.appendChild(plansElem);
-
-                    mgmtElem.appendChild(doc.createElement("conservationMeasures")).appendChild(doc.createTextNode(fmt(mgmt.getMgmtConservMeasures(), "conservationMeasures")));
+                    String formatedResult = fmt(mgmt.getMgmtConservMeasures(), "conservationMeasures");
+                    Text txt =    doc.createTextNode(formatedResult);
+                    mgmtElem.appendChild(doc.createElement("conservationMeasures")).appendChild(txt);
+                   // mgmtElem.appendChild(doc.createElement("conservationMeasures")).appendChild(doc.createTextNode(fmt(mgmt.getMgmtConservMeasures(), "conservationMeasures")));
                 }
                 sdf.appendChild(mgmtElem);
 
@@ -675,7 +680,10 @@ public class GenerateSitePDF implements Exporter {
                     }
 
                     mapElem.appendChild(doc.createElement("pdfProvided")).appendChild(doc.createTextNode(fmt(bMap, "mapPDF")));
-                    mapElem.appendChild(doc.createElement("mapReference")).appendChild(doc.createTextNode(fmt(map.getMapReference(), "mapRef")));
+                  String formatedResult = fmt(map.getMapReference(), "mapRef");
+                Text txt =    doc.createTextNode(formatedResult);
+
+                    mapElem.appendChild(doc.createElement("mapReference")).appendChild(txt);
                 }
                 sdf.appendChild(mapElem);
 
@@ -706,6 +714,7 @@ public class GenerateSitePDF implements Exporter {
             Templates template = tFactory.newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+          //transformer.setOutputProperty(OutputKeys.ENCODING,"ISO8859_2");
             transformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS,
                     "siteName name otherSiteCharacteristics"
                     + " qualityAndImportance selectiveBasis derogationJustification comments "
@@ -718,10 +727,12 @@ public class GenerateSitePDF implements Exporter {
             os = new FileOutputStream(new File(pdfPath));
 
             ITextRenderer renderer = new ITextRenderer();
-            FontFactory.registerDirectory("resources/fonts");
+        //    FontFactory.registerDirectory("resources/fonts");
+            renderer.getFontResolver().addFont("C:\\projects\\sdf-15-10-2019\\eionet.nat2000.sdfmanager\\src\\main\\resources\\fonts\\arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
             renderer.setDocument(file);
             renderer.layout();
+         //   renderer.set
             renderer.createPDF(os);
 
             return null;

@@ -70,6 +70,9 @@ import pojos.SiteRelation;
 import pojos.Species;
 import sdf_manager.util.SDF_Util;
 import sdf_manager.util.XmlGenerationUtils;
+import sdf_manager.validatorErrors.CustomErrorMessage;
+import sdf_manager.validatorErrors.KeywordsBasedCustomErrorMessageCondition;
+import sdf_manager.validatorErrors.ValidatorErrorMessagesPreparator;
 
 /**
  *
@@ -299,6 +302,13 @@ public class ExporterSiteXML implements Exporter {
 
                 Validator validator = schema.newValidator();
 
+
+                final CustomErrorMessage customErrorMessage = new CustomErrorMessage().addMessage("cvc-complex-type.2.4.a: Invalid content was found starting with element 'spaLegalReference'.At least one SCI or SAC date must be provided (sciProposalDate, sciConfirmationDate or sacDesignationDate).")
+                        .addMessageCondition(new KeywordsBasedCustomErrorMessageCondition(new String[]{"cvc-complex-type.2.4.a","spaLegalReference"
+                                ,"spaClassificationDate"}));
+                final ValidatorErrorMessagesPreparator validatorErrorMessagesPreparator = new ValidatorErrorMessagesPreparator().
+                        setDisplayColumnNumber(true).setDisplayLineNumber(true).addCustomErrorMessage(customErrorMessage);
+
                 // Error Handler
                 validator.setErrorHandler(new ErrorHandler() {
                     @Override
@@ -315,8 +325,14 @@ public class ExporterSiteXML implements Exporter {
 
                     @Override
                     public void error(SAXParseException exception) throws SAXException {
-                        xmlValidFields.add("< Line: " + exception.getLineNumber() + ", Column: " + exception.getColumnNumber()
-                                + " > " + exception.getMessage());
+                        String customMessage = validatorErrorMessagesPreparator.prepareMessageBasedOnValidationException(exception);
+                        if(customMessage!=null){
+                            xmlValidFields.add(customMessage);
+                        }
+                        else {
+                            xmlValidFields.add("< Line: " + exception.getLineNumber() + ", Column: " + exception.getColumnNumber()
+                                    + " > " + exception.getMessage());
+                        }
                     }
                 });
 
@@ -800,10 +816,11 @@ public class ExporterSiteXML implements Exporter {
                         doc.createTextNode(fmt(site.getSiteAsciLegalRef(), "asciDesignationLegalReference")));
             } else {
                 XmlGenerationUtils.appendDateElement(site.getSiteSpaDate(), siteIdentification, "spaClassificationDate", doc);
-                if (("B").equals(siteType) && site.getSiteSpaDate() == null) {
+              /**  if (("B").equals(siteType) && site.getSiteSpaDate() == null) {
                     siteIdentification.appendChild(doc.createElement("spaClassificationDate")).appendChild(
                             doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
                 }
+               **/
                 siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
                         doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
                 XmlGenerationUtils.appendDateElement(site.getSiteSciPropDate(), siteIdentification, "sciProposalDate", doc);

@@ -12,7 +12,12 @@
 
 
     <html>
-      <head><link href="css/Natura2000_SDF.css" rel="stylesheet" type="text/css" /></head>
+      <head><link href="css/Natura2000_SDF.css" rel="stylesheet" type="text/css" />
+        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+        <style type='text/css'>
+          * { font-family: 'Arial Unicode MS'; }
+        </style>
+      </head>
       <body>
          <div class="SDFContent">
       <a name="top">

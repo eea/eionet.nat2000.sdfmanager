@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SDFManager"
-#define MyAppVersion "4.3.5"
+#define MyAppVersion "4.3.6"
 #define MyAppPublisher "EEA"
 #define MyAppURL "http://bd.eionet.europa.eu/activities/Natura_2000/index_html"
 #define MyAppExeName "SDFManager.exe"
@@ -155,6 +155,7 @@ Source: "..\config\seed_sdf.properties"; DestDir: "{app}\config"; Flags: ignorev
 Source: "..\config\seed_emerald.properties"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsEmeraldMode
 Source: "..\config\*.xml"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\database\*"; DestDir: "{app}\database"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\fonts\*"; DestDir: "{app}\fonts"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 Source: "..\jre\*"; DestDir: "{app}\jre"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\lib\*"; Excludes: "mysql-connector-mxj-db-files-5.0.12.jar"; DestDir: "{app}\lib"; Flags: ignoreversion recursesubdirs createallsubdirs

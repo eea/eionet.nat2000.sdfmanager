@@ -430,6 +430,15 @@ public class SDF_MysqlDatabase {
                 updateVersionDone(con, "4.3.3");
             }
 
+            // release 4.3.6 updates
+            if ( !isReleaseDBUpdatesExist(con, "4.3.6")) {
+                logD(dialog, "Performing release 4.3.6 updates");
+                populateReleaseDBUpdates(con, "4.3.6", "8");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.3.6", dialog);
+                logD(dialog, "Release 4.3.6 updates done");
+                updateVersionDone(con, "4.3.6");
+            }
+
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);
             SDF_MysqlDatabase.LOGGER.error("Error in Data Base:::" + s.getMessage());

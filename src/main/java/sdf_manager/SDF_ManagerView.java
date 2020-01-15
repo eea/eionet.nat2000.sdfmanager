@@ -148,7 +148,6 @@ public class SDF_ManagerView extends FrameView {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
 
         mainPanel.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -237,16 +236,6 @@ public class SDF_ManagerView extends FrameView {
         jLabel5.setText(bundle.getString("SDF_ManagerView.jLabel5.text") + SDF_ManagerApp.getAppVersion()); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sdf_manager/images/bilbomatica_logo_126.jpg"))); // NOI18N
-        jLabel6.setText(bundle.getString("SDF_ManagerView.jLabel6.text")); // NOI18N
-        jLabel6.setToolTipText(bundle.getString("SDF_ManagerView.jLabel6.toolTipText")); // NOI18N
-        jLabel6.setName("jLabel6"); // NOI18N
-        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel6MouseClicked(evt);
-            }
-        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel7.setText(bundle.getString("SDF_ManagerView.jLabel7.text")); // NOI18N
@@ -262,9 +251,7 @@ public class SDF_ManagerView extends FrameView {
                 .addGap(27, 27, 27)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel5))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -280,9 +267,7 @@ public class SDF_ManagerView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6)
                         .addContainerGap(34, Short.MAX_VALUE))))
         );
 
@@ -377,24 +362,9 @@ public class SDF_ManagerView extends FrameView {
         } catch (IOException ioe) {
             log.error("An error is occurred while system tries to open the pdf document.\nError Message::" + ioe.getMessage());
         }
-    } 
-
-    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {
-      if (evt.getClickCount() > 0) {
-          if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                try {
-                    URI uri = new URI("http://www.bilbomatica.es/en");
-                    desktop.browse(uri);
-                } catch (IOException ex) {
-                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::" + ex.getMessage());
-                } catch (URISyntaxException ex) {
-                    log.error("An error is occurred while system tries to open the Bilbomatica website.\nError Message::" + ex.getMessage());
-                }
-        }
-      }
-
     }
+
+
 
     // Variables declaration - do not modify
     private javax.swing.JButton btnManage;
@@ -407,7 +377,6 @@ public class SDF_ManagerView extends FrameView {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

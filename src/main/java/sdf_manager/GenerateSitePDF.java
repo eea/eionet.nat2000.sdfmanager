@@ -718,7 +718,7 @@ public class GenerateSitePDF implements Exporter {
             Templates template = tFactory.newTemplates(xsl);
             Transformer transformer = template.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-          //transformer.setOutputProperty(OutputKeys.ENCODING,"ISO8859_2");
+        //  transformer.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-2");
             transformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS,
                     "siteName name otherSiteCharacteristics"
                     + " qualityAndImportance selectiveBasis derogationJustification comments "
@@ -732,15 +732,18 @@ public class GenerateSitePDF implements Exporter {
 
             ITextRenderer renderer = new ITextRenderer();
         //    FontFactory.registerDirectory("resources/fonts");
-          //  renderer.getFontResolver().addFont(
-           //         "C:\\projects\\sdf-15-10-2019\\eionet.nat2000.sdfmanager\\src\\main\\resources\\fonts\\arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            renderer.getFontResolver().addFont(getFontFileAbsolutePath("arialuni.ttf")
-                    , BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-           // final ClassPathResource regular = new ClassPathResource("fonts/LiberationSerif-Regular.ttf");
+            renderer.getFontResolver().addFont(
+            "C:\\projects\\sdf-15-10-2019\\eionet.nat2000.sdfmanager\\src\\main\\resources\\fonts\\arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+          //  renderer.getFontResolver().addFont(getFontFileAbsolutePath("arialuni.ttf")
+           //         , BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                   // ,  BaseFont.NOT_EMBEDDED);
+
+            // final ClassPathResource regular = new ClassPathResource("fonts/LiberationSerif-Regular.ttf");
       //  renderer.getFontResolver().
        //     fontResolver.addFont(regular.getURL().toString(), BaseFont.IDENTITY_H, true);
             renderer.setDocument(file);
             renderer.layout();
+            renderer.getFontResolver().getFontFamily("Arial Unicode MS");
          //   renderer.set
             renderer.createPDF(os);
 

@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
     <xsl:import href="DateFormat.xsl" />
-    <xsl:output method="xml" indent="yes" encoding="utf-16" omit-xml-declaration="yes"/>
+  <xsl:output method="xml" indent="yes" encoding="ISO-8859-1" omit-xml-declaration="no"/>
 
 
 
@@ -13,9 +13,9 @@
 
     <html>
       <head><link href="css/Natura2000_SDF.css" rel="stylesheet" type="text/css" />
-        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+        <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'/>
         <style type='text/css'>
-          * { font-family: 'Arial Unicode MS'; }
+          * { font-family: 'DejaVu Sans'; }
         </style>
       </head>
       <body>
@@ -108,7 +108,7 @@
             </li>
           </xsl:when>
         </xsl:choose>
-        <!-- This part is not so clear... Â¿Where do I get this data (SiteSlides) from (in the new XML structure)?-->
+        <!-- This part is not so clear... ¿Where do I get this data (SiteSlides) from (in the new XML structure)?-->
         <xsl:choose>
           <xsl:when test="string(../SiteSlides)">
             <li>

@@ -441,7 +441,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "SITE_TYPE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
 
                     site.setSiteType(tmpStr.charAt(0));
                 }
@@ -710,7 +710,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 Species species = new Species();
 
                 tmpStr = getString(rs, "SPECIES_GROUP");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesGroup(tmpStr.charAt(0));
                 }
 
@@ -734,12 +734,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
 
 
                 tmpStr = getString(rs, "SPECIES_TYPE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesType(tmpStr.charAt(0));
                 }
 
                 tmpInt = rs.getInt("SPECIES_SIZE_MIN");
-                if (rs.wasNull()) tmpInt = null;               
+                if (rs.wasNull()) tmpInt = null;
                 species.setSpeciesSizeMin(tmpInt);
 
                 tmpInt = rs.getInt("SPECIES_SIZE_MAX");
@@ -752,7 +752,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "SPECIES_CATEGORY");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesCategory(tmpStr.charAt(0));
                 }
 
@@ -763,22 +763,22 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "species_population");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesPopulation(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "species_conservation");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesConservation(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "species_isolation");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesIsolation(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "species_global");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     species.setSpeciesGlobal(tmpStr.charAt(0));
                 }
                 species.setSite(site);
@@ -862,7 +862,7 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "OTHER_SPECIES_CATEGORY");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     otherSpecies.setOtherSpeciesCategory(tmpStr.charAt(0));
                 }
 
@@ -921,9 +921,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 if (rs.wasNull()) tmpDouble = null;
                 habitat.setHabitatCover(tmpDouble);
 
-                tmpDouble = rs.getDouble("HABITAT_COVER_HA");
-                if (rs.wasNull()) tmpDouble = null; 
-                habitat.setHabitatCoverHa(tmpDouble);
+            //    tmpDouble = rs.getDouble("HABITAT_COVER_HA");
+              //  if (rs.wasNull()) tmpDouble = null;
+               // habitat.setHabitatCoverHa(tmpDouble);
 
                 tmpShort = rs.getShort("HABITAT_NP");
                 if (rs.wasNull()) tmpShort = null; 
@@ -939,22 +939,22 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "HABITAT_REPRESENTATIVITY");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     habitat.setHabitatRepresentativity(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "HABITAT_RELATIVE_SURFACE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     habitat.setHabitatRelativeSurface(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "HABITAT_CONSERVATION");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     habitat.setHabitatConservation(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "HABITAT_GLOBAL");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     habitat.setHabitatGlobal(tmpStr.charAt(0));
                 }
 
@@ -1133,11 +1133,11 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "site_relation_type");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     relation.setSiteRelationType(tmpStr.charAt(0));
                 }
                 tmpStr = getString(rs, "SITE_RELATION_CONVENTION");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     relation.setSiteRelationConvention(tmpStr);
                 }
 
@@ -1229,12 +1229,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 Impact impact = new Impact();
 
                 tmpStr = getString(rs, "IMPACT_TYPE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     impact.setImpactType(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "IMPACT_RANK");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     impact.setImpactRank(tmpStr.charAt(0));
                 }
 
@@ -1244,12 +1244,12 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 }
 
                 tmpStr = getString(rs, "IMPACT_POLLUTION_CODE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     impact.setImpactPollutionCode(tmpStr.charAt(0));
                 }
 
                 tmpStr = getString(rs, "IMPACT_OCCURRENCE");
-                if (tmpStr != null) {
+                if (tmpStr != null && !tmpStr.isEmpty()) {
                     impact.setImpactOccurrence(tmpStr.charAt(0));
                 }
                 impact.setSite(site);

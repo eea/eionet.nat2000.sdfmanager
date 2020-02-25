@@ -285,7 +285,6 @@ public class ExporterSiteXML implements Exporter {
             if (schemaUrlBroken) {
                 ExporterSiteXML.log.info("Schema URL broken (" + schemaUrl + "), trying with local file: " + schemaFile);
             }
-
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = schemaUrlBroken ? schemaFactory.newSchema(schemaFile) : schemaFactory.newSchema(new URL(schemaUrl));
 
@@ -821,8 +820,10 @@ public class ExporterSiteXML implements Exporter {
                             doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
                 }
                **/
-                siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
-                        doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
+              if(!site.getSiteSpaLegalRef().equals("")) {
+                  siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
+                          doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
+              }
                 XmlGenerationUtils.appendDateElement(site.getSiteSciPropDate(), siteIdentification, "sciProposalDate", doc);
                 XmlGenerationUtils.appendDateElement(site.getSiteSciConfDate(), siteIdentification, "sciConfirmationDate", doc);
                 XmlGenerationUtils.appendDateElement(site.getSiteSacDate(), siteIdentification, "sacDesignationDate", doc);

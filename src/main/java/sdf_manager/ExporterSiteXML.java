@@ -820,7 +820,7 @@ public class ExporterSiteXML implements Exporter {
                             doc.createTextNode(fmt("0000-00", "spaClassificationDate")));
                 }
                **/
-              if(!site.getSiteSpaLegalRef().equals("")) {
+              if(site.getSiteSpaLegalRef()!=null &&!site.getSiteSpaLegalRef().equals("")) {
                   siteIdentification.appendChild(doc.createElement("spaLegalReference")).appendChild(
                           doc.createTextNode(fmt(site.getSiteSpaLegalRef(), "spaLegalReference")));
               }

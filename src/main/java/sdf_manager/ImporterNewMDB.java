@@ -921,9 +921,9 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                 if (rs.wasNull()) tmpDouble = null;
                 habitat.setHabitatCover(tmpDouble);
 
-            //    tmpDouble = rs.getDouble("HABITAT_COVER_HA");
-              //  if (rs.wasNull()) tmpDouble = null;
-               // habitat.setHabitatCoverHa(tmpDouble);
+                tmpDouble = rs.getDouble("HABITAT_COVER_HA");
+               if (rs.wasNull()) tmpDouble = null;
+                habitat.setHabitatCoverHa(tmpDouble);
 
                 tmpShort = rs.getShort("HABITAT_NP");
                 if (rs.wasNull()) tmpShort = null; 

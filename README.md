@@ -11,12 +11,22 @@ For running the software, you will need the following software components instal
 * MySQL database server 5.0 or 5.1. It must be running and there must be at least an empty database named "natura2000".
 
 
+
+
+Build a local jar file 
+===========================================
+-   mvn -Dmaven.test.skip=true clean verify 
     
 Building a distributable package on Windows
 ===========================================
 * Download and install Inno Setup from http://www.jrsoftware.org/isdl.php#stable (NB! Be sure to install also the *Inno Setup Preprocessor* that the installer suggests).
 * Add the Inno Setup root path where _iscc.exe_ resides to Windows system environment PATH variable.
 * Copy a JRE to [project folder]/jre  **NB! The JRE must be 32-bit!**
+
+
+
+
+
 
 Run:
 

@@ -732,8 +732,11 @@ public class GenerateSitePDF implements Exporter {
 
             ITextRenderer renderer = new ITextRenderer();
 
-            renderer.getFontResolver().addFont(getFontFileAbsolutePath("DejaVuSans.ttf")
-                    , BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            String fontAbsolutePath = getFontFileAbsolutePath("DejaVuSans.ttf");
+            if(fontAbsolutePath!=null) {
+                renderer.getFontResolver().addFont(fontAbsolutePath
+                        , BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            }
              renderer.setDocument(file);
             renderer.layout();
 
@@ -936,8 +939,12 @@ public class GenerateSitePDF implements Exporter {
         try {
             String path = GenerateSitePDF.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             String decodedPath = URLDecoder.decode(path, "UTF-8");
-            GenerateSitePDF.log.info("jar location full patrh is:" + decodedPath);
-            decodedPath = decodedPath.replace("SDFManager.exe","fonts/"+fontFileName);
+            GenerateSitePDF.log.info("jar location full path is:" + decodedPath);
+            if(decodedPath.contains("target/classes")){
+                decodedPath = null;
+            }else if(decodedPath.contains("SDFManager.exe")) {
+                decodedPath = decodedPath.replace("SDFManager.exe", "fonts/" + fontFileName);
+            }
                  return decodedPath;
         }catch (Exception ex){
             GenerateSitePDF.log.error(ex.getMessage());

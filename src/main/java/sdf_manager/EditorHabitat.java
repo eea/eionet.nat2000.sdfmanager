@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -491,7 +494,8 @@ public class EditorHabitat extends javax.swing.JFrame {
                     .addComponent(txtCaves, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title"))); // NOI18N
+        Border padding = new EmptyBorder(-10, 0, 0, 0);
+        jPanel1.setBorder(new CompoundBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("jPanel1.border.title")), padding));
         jPanel1.setName("jPanel1"); // NOI18N
 
         labQuality.setText(resourceMap.getString("labQuality.text")); // NOI18N

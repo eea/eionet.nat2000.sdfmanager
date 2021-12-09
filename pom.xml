@@ -6,7 +6,7 @@
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
-    <version>4.3.9</version>
+    <version>4.4.0</version>
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
     <scm>

@@ -6313,8 +6313,8 @@ public class SDFEditor extends javax.swing.JFrame {
                                 .addComponent(btnGeneratePDF)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSave)
-                                .addGap(26, 26, 26)
-                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 85,
+                                .addGap(16, 16, 16)
+                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 105,
                                         javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap()));
         jPanel10Layout.setVerticalGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
                 javax.swing.GroupLayout.Alignment.TRAILING,
@@ -6343,11 +6343,11 @@ public class SDFEditor extends javax.swing.JFrame {
                                                 .addGroup(
                                                         layout.createSequentialGroup()
                                                                 .addComponent(jLabel24)
-                                                                .addGap(204)
+                                                                .addGap(104)
                                                                 .addComponent(jLabel1)
                                                                 .addPreferredGap(ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                                                                 .addComponent(jPanel10, GroupLayout.PREFERRED_SIZE,
-                                                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                        GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addComponent(jPanel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
                                                         Short.MAX_VALUE)).addGap(285)));
         layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING).addGroup(

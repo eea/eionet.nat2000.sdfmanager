@@ -74,7 +74,7 @@ public class SDF_ManagerView extends FrameView {
         initSessionFactory();
 
         this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.getFrame().setResizable(false);
+        this.getFrame().setResizable(true);
         this.getFrame().pack();
         this.getFrame().setLocationRelativeTo(null);
     }

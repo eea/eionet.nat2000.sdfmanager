@@ -116,7 +116,7 @@ public class SDFEditor extends javax.swing.JFrame {
      * @param mode
      */
     public SDFEditor(javax.swing.JFrame parent, String mode) {
-        setResizable(false);
+        setResizable(true);
         if (parent instanceof SDFEditor) {
             this.filterWindow = (SDFFilter) parent;
         }

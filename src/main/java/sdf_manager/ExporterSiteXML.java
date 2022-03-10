@@ -688,6 +688,9 @@ public class ExporterSiteXML implements Exporter {
 
         Element sdfs = doc.createElement("sdfs");
         sdfs.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        Package p = SDF_ManagerApp.class.getPackage();
+        String version = p.getImplementationVersion();
+        sdfs.setAttribute("version","SDF-Natura2000-V"+version  );
         String schemaUri = SDF_ManagerApp.getXMLSchemaURI();
         sdfs.setAttribute("xsi:noNamespaceSchemaLocation", schemaUri);
 

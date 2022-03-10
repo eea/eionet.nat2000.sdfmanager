@@ -449,12 +449,21 @@ public class SDF_MysqlDatabase {
             }
 
             // release 4.4.1 updates
-            if ( !isReleaseDBUpdatesExist(con, "4.4.1")) {
+            if (!isEmeraldMode()&& !isReleaseDBUpdatesExist(con, "4.4.1")) {
                 logD(dialog, "Performing release 4.4.1 updates");
                 populateReleaseDBUpdates(con, "4.4.1", "10");
                 populateRefTablesInFolder(con, "updates" + File.separator + "4.4.1", dialog);
                 logD(dialog, "Release 4.4.1 updates done");
                 updateVersionDone(con, "4.4.1");
+            }
+
+            // release 4.4.2 updates
+            if (!isEmeraldMode() && !isReleaseDBUpdatesExist(con, "4.4.2")) {
+                logD(dialog, "Performing release 4.4.2 updates");
+                populateReleaseDBUpdates(con, "4.4.2", "11");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.4.2", dialog);
+                logD(dialog, "Release 4.4.2 updates done");
+                updateVersionDone(con, "4.4.2");
             }
 
         } catch (SQLException s) {

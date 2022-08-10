@@ -36,8 +36,8 @@ UPDATE ref_species SET ref_species_name = 'Jacobaea vulgaris subsp. gotlandica' 
 UPDATE ref_species SET ref_species_name = 'Jasione crispa subsp. serpentinica' WHERE  ref_species_code = '1752';
 UPDATE ref_species SET ref_species_name = 'Kogia sima' WHERE  ref_species_code = '2623';
 UPDATE ref_species SET ref_species_name = 'Leptodirus hochenwartii' WHERE  ref_species_code = '4019';
-UPDATE ref_species SET ref_species_name = 'COD NO PRESENTE' WHERE  ref_species_code = '7030';
-UPDATE ref_species SET ref_species_name = 'Linum mulleri' WHERE  ref_species_code = '=1572';
+UPDATE ref_species SET ref_species_name = 'Limonium arboreum' WHERE  ref_species_code = '7030';
+UPDATE ref_species SET ref_species_name = 'Linum mulleri' WHERE  ref_species_code = '1572';
 UPDATE ref_species SET ref_species_name = 'Malcolmia lacera subsp. gracilima' WHERE  ref_species_code = '1489';
 UPDATE ref_species SET ref_species_name = 'Melilotus segetalis subsp. fallax' WHERE  ref_species_code = '1556';
 UPDATE ref_species SET ref_species_name = 'Murbeckiella pinnatifida subsp. herminii' WHERE  ref_species_code = '1504';

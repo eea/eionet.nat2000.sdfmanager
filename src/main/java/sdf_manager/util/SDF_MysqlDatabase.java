@@ -475,6 +475,14 @@ public class SDF_MysqlDatabase {
                 updateVersionDone(con, "4.4.3");
             }
 
+            if (!isEmeraldMode() && !isReleaseDBUpdatesExist(con, "4.4.4")) {
+                logD(dialog, "Performing release 4.4.4 updates");
+                populateReleaseDBUpdates(con, "4.4.4", "13");
+                populateRefTablesInFolder(con, "updates" + File.separator + "4.4.4", dialog);
+                logD(dialog, "Release 4.4.4 updates done");
+                updateVersionDone(con, "4.4.4");
+            }
+
 
         } catch (SQLException s) {
             JOptionPane.showMessageDialog(new JFrame(), "Error in Data Base", "Dialog", JOptionPane.ERROR_MESSAGE);

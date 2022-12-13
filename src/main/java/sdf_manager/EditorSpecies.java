@@ -94,7 +94,7 @@ public class EditorSpecies extends javax.swing.JFrame {
 	               hql += "' and refSp.refSpeciesAnnexII ='1'";
 	           }
 	           if (speciesCode == null) {
-	               hql += " and refSp.refSpeciesCodeNew='0'";
+	          //     hql += " and refSp.refSpeciesCodeNew='0'";
 	           }
 	
 	           hql += " order by refSp.refSpeciesName";

@@ -39,8 +39,8 @@ An installer exe file named SDFManagerSetup_v[ver no].exe will be created in the
 
 Installing the tool
 ===================
-* The intallation package does not contain database installation. Mysql 5.1 has to be installed separately.
-* The intaller asks you some configuration-related questions:
+* The installation package does not contain database installation. Mysql 5.1 has to be installed separately.
+* The installer asks you some configuration-related questions:
 	* The mode you wish to run the tool in (i.e. Natura 2000 or EMERALD)
 	* The host name, port, user and password of your MySQL database mentioned in the pre-requisites above.
 

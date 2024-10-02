@@ -385,7 +385,7 @@ public class SDF_MysqlDatabase {
                 logD(dialog, "Performing release 4.2.1 updates");
                 //ver no field needs altering BEFORE updates
                 Statement st = con.createStatement();
-                st.executeUpdate("ALTER TABLE `releasedbupdates` CHANGE COLUMN `RELEASE_NUMBER` `RELEASE_NUMBER` VARCHAR(12) NOT NULL");
+                st.executeUpdate("ALTER TABLE `releasedbupdates` MODIFY COLUMN `RELEASE_NUMBER` VARCHAR(12) NOT NULL");
                 st.close();
 
                 String msgErrorPopulateRel = populateReleaseDBUpdates(con, "4.2.1", "3");
@@ -396,7 +396,7 @@ public class SDF_MysqlDatabase {
             
             // release 4.2.3 updates
             if (isEmeraldMode() && !isReleaseDBUpdatesExist(con, "4.2.3")) {
-            	logD(dialog, "Performing release 4.2.3 updates");
+                logD(dialog, "Performing release 4.2.3 updates");
                 String msgErrorPopulateRel = populateReleaseDBUpdates(con, "4.2.3", "4");
                 populateRefTablesInFolder(con, "updates" + File.separator + "4.2.3", dialog);
                 logD(dialog, "Release 4.2.3 updates done");
@@ -1274,7 +1274,7 @@ public class SDF_MysqlDatabase {
         try {
             SDF_MysqlDatabase.LOGGER.info("populate ReleaseDBUpdates....");
             st = con.createStatement();
-            st.executeUpdate("insert ignore into " + schemaName + ".ReleaseDBUpdates values(" + releaseId + ",'" + version + "','Version" + version + "' ,'N')");
+            st.executeUpdate("insert ignore into " + schemaName + ".releasedbupdates values(" + releaseId + ",'" + version + "','Version" + version + "' ,'N')");
         } catch (SQLException e) {
             msgErrorCreate = "insert_ReleaseDBUpdates_version :An error has been produced in database ver=" + version;
             SDF_MysqlDatabase.LOGGER.error(msgErrorCreate + ".::::" + e.getMessage());
@@ -1406,7 +1406,7 @@ public class SDF_MysqlDatabase {
         try {
             SDF_MysqlDatabase.LOGGER.info("Updating UpdateVersion Done ... ver " + ver);
             st = con.createStatement();
-            st.executeUpdate("update " + schemaName + ".ReleaseDBUpdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = '"
+            st.executeUpdate("update " + schemaName + ".releasedbupdates SET UPDATE_DONE='Y' WHERE RELEASE_NUMBER = '"
                     + ver + "'");
         } catch (SQLException e) {
             msgErrorCreate = "UpdateVersion3Done: An error has been produced in database";

@@ -6,13 +6,13 @@
     <groupId>eionet.natura2000</groupId>
     <artifactId>SDFmanager</artifactId>
     <packaging>jar</packaging>
-    <version>4.4.5</version>
+    <version>5.0.0</version>
     <name>SDFmanager</name>
     <url>http://maven.apache.org</url>
     <scm>
-    	<developerConnection>scm:git:https://github.com/eea/eionet.nat2000.sdfmanager.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <developerConnection>scm:git:https://github.com/eea/eionet.nat2000.sdfmanager.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <!-- Properties to be used below. -->
     <properties>
@@ -180,7 +180,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>install</phase>
@@ -212,17 +212,17 @@
                 </configuration>
             </plugin>
             <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-release-plugin</artifactId>
-		        <version>2.5.2</version>
-		        <configuration>
-		          <tagNameFormat>v@{project.version}</tagNameFormat>
-		          <checkModificationExcludes>
-				    <checkModificationExclude>pom.xml</checkModificationExclude>
-				    <checkModificationExclude>src/test/java/sdf_manager/OdbcTest.java</checkModificationExclude>
-				  </checkModificationExcludes>
-   		       </configuration>
-		    </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
+                        <checkModificationExclude>src/test/java/sdf_manager/OdbcTest.java</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+            </plugin>
             <!-- launch4J -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -301,7 +301,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>3.4.1</version>
                 <executions>
                   <execution>
                       <phase>install</phase>
@@ -344,44 +344,44 @@
     </build>
     <!-- Dependencies. -->
     <dependencies>
-    	<!-- Logging -->
-	    <dependency>
+        <!-- Logging -->
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.18</version>
         </dependency>
-		<dependency>
-		  <groupId>org.apache.logging.log4j</groupId>
-		  <artifactId>log4j-api</artifactId>
-		  <version>2.5</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.apache.logging.log4j</groupId>
-		  <artifactId>log4j-core</artifactId>
-		  <version>2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.5</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.5</version>
+        </dependency>
 		<!-- Database connectivity -->
         <dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.1.0.Final</version>
+			<version>5.6.15.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-hikaricp</artifactId>
-			<version>5.1.0.Final</version>
+			<version>5.6.15.Final</version>
 		</dependency>
-  	    <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.48</version>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.0.0</version>
         </dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.20.0-GA</version>

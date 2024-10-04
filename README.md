@@ -7,8 +7,8 @@ This README contains instructions on how to build and/or run the software.
 Building is relevant only if you have the source code. If you only have the pre-built ZIP package, then you can skip the building part.
 
 For running the software, you will need the following software components installed on your machine:
-* A 32-bit version of Java Runtime Environment (JRE) 6 or 7
-* MySQL database server 5.0 or 5.1. It must be running and there must be at least an empty database named "natura2000".
+* A 32-bit version of Java Runtime Environment (JRE) 8
+* MySQL database server 8.0 or later. It must be running and there must be at least an empty database named "natura2000".
 
 
 

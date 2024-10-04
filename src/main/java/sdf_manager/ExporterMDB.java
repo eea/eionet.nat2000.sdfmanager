@@ -271,13 +271,13 @@ public class ExporterMDB implements Exporter {
         Statement stmt = null;
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Configuration cfg = new Configuration();
             cfg.configure();
             Properties props = cfg.getProperties();
             Properties properties = new Properties();
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
             log("Connecting to MySQL");
             log.info("Connecting to MySQL");
@@ -288,7 +288,7 @@ public class ExporterMDB implements Exporter {
             String dbPassword = properties.getProperty("db.password");
 
             String dbSchemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
-            String dbConnUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbSchemaName + "?autoReconnect=true";
+            String dbConnUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbSchemaName + "?useSSL=false&autoReconnect=true";
 
             conn = DriverManager.getConnection(dbConnUrl, dbUser, dbPassword);
             DatabaseMetaData dbMetaData = conn.getMetaData();

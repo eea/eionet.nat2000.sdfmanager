@@ -13,12 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -29,13 +24,10 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 
 import sdf_manager.ProgressDialog;
 import sdf_manager.SDF_ManagerApp;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 
 /**
  *
@@ -71,14 +63,14 @@ public class SDF_MysqlDatabase {
         }
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             SDF_MysqlDatabase.LOGGER.info("Connection to MySQL: user==>" + properties.getProperty("db.user") + "<==password==>"
                     + properties.getProperty("db.password") + "<==");
 
             String dbUrl = "jdbc:mysql://" + host + ":" + port + "/";
 
             SDF_MysqlDatabase.LOGGER.info("database connection URL: " + dbUrl);
-            con = (Connection) DriverManager.getConnection(dbUrl, user, pwd);
+            con = DriverManager.getConnection(dbUrl, user, pwd);
             dialog.setLabel("Creating database schema...");
             boolean schemaExists = createDatabaseSchema(con, dialog);
 
@@ -1213,14 +1205,14 @@ public class SDF_MysqlDatabase {
             String sql = "select * from " + schemaName + ".releasedbupdates where RELEASE_NUMBER = '" + ver + "' and UPDATE_DONE = 'Y'";
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            boolean isEmpty = ! rs.first();
+            boolean isEmpty = !rs.next();
             if (!isEmpty) {
-            	tableExists = true;
-            } else {            	
-            	SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
-            }            
+                tableExists = true;
+            } else {
+                SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
+            }
         } catch (Exception e) {
-    		// do nothing
+            SDF_MysqlDatabase.LOGGER.error( "Error: " + e.getMessage());
         } finally {
             closeQuietly(st);
             return tableExists;
@@ -1584,13 +1576,11 @@ public class SDF_MysqlDatabase {
         }
         LOGGER.info("Testing MySQL existence: ");
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://" + host + ":" + port + "/?socketTimeout=2000&user=" + user + "&password=" + pwd;
             DriverManager.getConnection(url);
         } catch (ClassNotFoundException cnfe) {
             return "MySql database driver is not available.";
-        } catch (CommunicationsException ce) {
-            return "Mysql database is not available at " + host + ":" + port;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return sqle.getMessage();

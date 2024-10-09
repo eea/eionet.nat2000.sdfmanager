@@ -1556,11 +1556,6 @@ public class ExporterSiteXML implements Exporter {
             }
             sdf.appendChild(mapElem);
             sdfs.appendChild(sdf);
-            if (flush++ % 100 == 0) {
-                session.flush();
-                session.clear();
-            }
-
         }
 
         return doc;

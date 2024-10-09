@@ -1212,7 +1212,7 @@ public class SDF_MysqlDatabase {
                 SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates version " + ver + " has not run.");
             }
         } catch (Exception e) {
-            SDF_MysqlDatabase.LOGGER.error( "Error: " + e.getMessage());
+            SDF_MysqlDatabase.LOGGER.info(e.getMessage());
         } finally {
             closeQuietly(st);
             return tableExists;
@@ -1264,7 +1264,7 @@ public class SDF_MysqlDatabase {
         Statement st = null;
         String schemaName = SDF_ManagerApp.isEmeraldMode() ? "emerald" : "natura2000";
         try {
-            SDF_MysqlDatabase.LOGGER.info("populate ReleaseDBUpdates....");
+            SDF_MysqlDatabase.LOGGER.info("Running ReleaseDBUpdates version " + version + "...");
             st = con.createStatement();
             st.executeUpdate("insert ignore into " + schemaName + ".releasedbupdates values(" + releaseId + ",'" + version + "','Version" + version + "' ,'N')");
         } catch (SQLException e) {
@@ -1732,7 +1732,7 @@ public class SDF_MysqlDatabase {
     private static void ensureSiteAsciDateFieldsPresent(Connection conn, String schemaName) {
 
         if (conn == null || StringUtils.isBlank(schemaName)) {
-            LOGGER.warn("Cannot check existence of ASCI date fields: DB connetion or schema name is null/blank.");
+            LOGGER.warn("Cannot check existence of ASCI date fields: DB connection or schema name is null/blank.");
             return;
         }
 
@@ -1745,7 +1745,7 @@ public class SDF_MysqlDatabase {
             DatabaseMetaData dbMetaData = conn.getMetaData();
             if (dbMetaData != null) {
 
-                rs = dbMetaData.getColumns(null, schemaName, tableName, null);
+                rs = dbMetaData.getColumns(schemaName, null, tableName, null);
                 while (rs.next()) {
                     String colName = rs.getString(4);
                     if (colName != null) {
@@ -1826,7 +1826,7 @@ public class SDF_MysqlDatabase {
             DatabaseMetaData dbMetaData = conn.getMetaData();
             if (dbMetaData != null) {
 
-                rs = dbMetaData.getColumns(null, schemaName, tableName, null);
+                rs = dbMetaData.getColumns(schemaName, null, tableName, null);
                 while (rs.next()) {
                     String colName = rs.getString(4);
                     if (colName != null) {

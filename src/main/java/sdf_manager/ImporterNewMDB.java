@@ -245,19 +245,19 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
         // HashMap<String, ArrayList<String>> siteHasHDB = new HashMap<String, ArrayList<String>>();
         try {
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);                    	        
-            while (rs.next()) {            	
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
                 Site site = new Site();
                 String sitecode = rs.getString("site_code");
 
-                this.log.info("Validating site: " + sitecode);
-                log("Validating site: " + sitecode, true);                
+                ImporterNewMDB.log.info("Validating site: " + sitecode);
+                log("Validating site: " + sitecode, true);
                 try {
-                	session.getTransaction().begin();
 
                     if (SDF_Util.validateSite(session, sitecode)) {
                         notProcessedSiteCodesList.add(sitecode);
-                    } else {                        
+                    } else {
+                        session.getTransaction().begin();
                         log("processing: " + sitecode, true);
 
                         siteCodesCounter+=1;
@@ -274,29 +274,18 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                         processImpacts(conn, session, site);
                         processSiteoOwnerShips(conn, session, site);
                         session.getTransaction().commit();
-                        if (siteCodesCounter % 20 == 0) {
-                            session.flush();
-                            session.clear();
-                        }
                         processOK = true;
                     }
                 } catch (Exception e) {
-
                     session.getTransaction().rollback();
-                    ImporterNewMDB.log.info("SiteCodes counted: "+siteCodesCounter);
-                                  ImporterNewMDB.log.info("Exception commiting: "+e.getMessage());
-                    ImporterNewMDB.log.info("Exception commiting: "+e.getCause());
-
+                    ImporterNewMDB.log.info("Exception commiting: " + e.getMessage());
                     String msg = "Failed processing site: " + sitecode;
                     ImporterNewMDB.log.error(msg, e);
                     log(msg, true);
                 }
-                ImporterNewMDB.log.info("SiteCodes counted: "+siteCodesCounter);
-
+                ImporterNewMDB.log.info("SiteCodes counted: " + siteCodesCounter);
             }
-
         } catch (Exception e) {
-
             ImporterNewMDB.log.error("Error: " + e.getMessage());
         } finally {
             session.close();

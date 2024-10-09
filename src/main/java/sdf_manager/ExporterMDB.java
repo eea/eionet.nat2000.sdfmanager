@@ -274,7 +274,6 @@ public class ExporterMDB implements Exporter {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Configuration cfg = new Configuration();
             cfg.configure();
-            Properties props = cfg.getProperties();
             Properties properties = new Properties();
             properties.load(new FileInputStream(SDF_ManagerApp.LOCAL_PROPERTIES_FILE));
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -293,7 +292,7 @@ public class ExporterMDB implements Exporter {
             conn = DriverManager.getConnection(dbConnUrl, dbUser, dbPassword);
             DatabaseMetaData dbMetaData = conn.getMetaData();
 
-            rsTables = dbMetaData.getTables(null, dbSchemaName, "%", null);
+            rsTables = dbMetaData.getTables(dbSchemaName, null, "%", null);
             accessDb = DatabaseBuilder.open(new File(fileName));
 
             while (rsTables.next()) {

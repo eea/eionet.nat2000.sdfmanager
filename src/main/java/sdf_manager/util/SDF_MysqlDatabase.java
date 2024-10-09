@@ -810,7 +810,7 @@ public class SDF_MysqlDatabase {
             st.executeQuery(sql);
             refSpeciesUpdated = true;
         } catch (Exception e) {
-            SDF_MysqlDatabase.LOGGER.error("Ref Species is already updated: " + e);
+            SDF_MysqlDatabase.LOGGER.info("Ref Species is not updated: " + e);
         } finally {
             closeQuietly(st);
             return refSpeciesUpdated;
@@ -1209,7 +1209,7 @@ public class SDF_MysqlDatabase {
             if (!isEmpty) {
                 tableExists = true;
             } else {
-                SDF_MysqlDatabase.LOGGER.error("ReleaseDBUpdates does not exist");
+                SDF_MysqlDatabase.LOGGER.info("ReleaseDBUpdates version " + ver + " has not run.");
             }
         } catch (Exception e) {
             SDF_MysqlDatabase.LOGGER.error( "Error: " + e.getMessage());

@@ -194,8 +194,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(site);
         tr.commit();
-        session.flush();
-
     }
 
     /***
@@ -208,8 +206,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmt);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -222,8 +218,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmtBody);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -236,8 +230,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmtPlan);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -250,8 +242,6 @@ public class ImporterOneSiteXML extends AbstractImporter implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(map);
         tr.commit();
-        session.flush();
-
     }
 
     /**

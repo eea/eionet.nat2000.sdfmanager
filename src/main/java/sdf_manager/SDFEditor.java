@@ -517,12 +517,11 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      */
     private void saveAndReloadSession() {
-        /* saving main site obj */    	
+        /* saving main site obj */
     	try {
 	        Transaction tr = this.session.beginTransaction();
 	        this.session.saveOrUpdate(this.site);
 	        tr.commit();
-	        this.session.flush();
     	} catch(Exception ex) {
     		this.session.getTransaction().rollback();
     	}
@@ -532,12 +531,11 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @param doc
      */
-    private void saveAndReloadDoc(Doc doc) {    	
+    private void saveAndReloadDoc(Doc doc) {
     	try {
 	        Transaction tr = this.session.beginTransaction();
 	        this.session.saveOrUpdate(doc);
-	        tr.commit();    	
-	        this.session.flush();
+	        tr.commit();
     	} catch(Exception ex) {
     		this.session.getTransaction().rollback();
     	} 
@@ -547,12 +545,11 @@ public class SDFEditor extends javax.swing.JFrame {
      *
      * @param o
      */
-    private void saveAndReloadObj(Object o) { 	
+    private void saveAndReloadObj(Object o) {
     	try {
 	        Transaction tr = this.session.beginTransaction();
 	        this.session.saveOrUpdate(o);
 	        tr.commit();
-	        this.session.flush();
     	} catch (Exception ex) {
     		this.session.getTransaction().rollback();
     	}
@@ -567,7 +564,6 @@ public class SDFEditor extends javax.swing.JFrame {
 	        Transaction tr = this.session.beginTransaction();
 	        this.session.delete(o);
 	        tr.commit();
-	        this.session.flush();
     	} catch(Exception ex) {
     		this.session.getTransaction().rollback();
     	}
@@ -576,7 +572,7 @@ public class SDFEditor extends javax.swing.JFrame {
     /**
      *
      */
-    private void save() {    
+    private void save() {
         String msgError = "";
         // printSiteFields();
         SDFEditor.logger.info("Saving the Site");

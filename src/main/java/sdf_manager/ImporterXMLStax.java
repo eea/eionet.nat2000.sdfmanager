@@ -863,7 +863,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		Transaction tr = session.beginTransaction();
     		session.saveOrUpdate(site);
     		tr.commit();
-    		session.flush();
     	}
     	else {
             ImporterXMLStax.log.info("Site with code : " + site.getSiteCode() + " already exists. Did not save.");
@@ -883,7 +882,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		Transaction tr = session.beginTransaction();
     		session.saveOrUpdate(mgmt);
     		tr.commit();
-    		session.flush();
     	}
 
     }
@@ -899,7 +897,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		Transaction tr = session.beginTransaction();
     		session.saveOrUpdate(mgmtBody);
     		tr.commit();
-    		session.flush();
     	}
 
     }
@@ -915,7 +912,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
         	Transaction tr = session.beginTransaction();
         	session.saveOrUpdate(mgmtPlan);
         	tr.commit();
-        	session.flush();
         }
 
     }
@@ -932,7 +928,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		session.saveOrUpdate(map);
     		// session.merge(site);
     		tr.commit();
-    		session.flush();
     	}
 
     }
@@ -952,7 +947,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		} catch (Exception e) {
     			tr.rollback();
     		}
-    		session.flush();
     	}
     }
 
@@ -967,7 +961,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
     		Transaction tr = session.beginTransaction();
     		session.saveOrUpdate(doc);
     		tr.commit();
-    		session.flush();
     	}
     }
 

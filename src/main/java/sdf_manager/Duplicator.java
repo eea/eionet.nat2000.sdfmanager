@@ -351,7 +351,6 @@ public class Duplicator {
 	        Transaction tr = session.beginTransaction();
 	        session.saveOrUpdate(o);
 	        tr.commit();
-	        session.flush();
         } catch(Exception ex) {
         	log.error("Error while saving data: " + ex);
         } finally {

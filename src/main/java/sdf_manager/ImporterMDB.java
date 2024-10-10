@@ -401,43 +401,36 @@ public class ImporterMDB extends AbstractImporter implements Importer {
                         site.setSiteCode(sitecode);
                         processBiotop(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // HABITATS
                         tx = session.beginTransaction();
                         processHabitats(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // HABITAT CLASSES
                         tx = session.beginTransaction();
                         processHabitatClasses(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // REGIONS
                         tx = session.beginTransaction();
                         processRegions(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // RELATIONS
                         tx = session.beginTransaction();
                         processRelations(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // DTYPES
                         tx = session.beginTransaction();
                         processDTypes(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // IMPACTS
                         tx = session.beginTransaction();
                         processImpacts(conn, session, site);
                         tx.commit();
-                        session.flush();
 
                         // SPECIES
                         processSpecies(conn, session, site);
@@ -1527,8 +1520,6 @@ public class ImporterMDB extends AbstractImporter implements Importer {
                 rs.close();
                 stmt.close();
                 tx.commit();
-                session.flush();
-
             }
         } catch (SQLException e) {
             // e.printStackTrace();

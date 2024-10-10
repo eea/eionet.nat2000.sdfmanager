@@ -160,10 +160,6 @@ public class ImporterNewMDB extends AbstractImporter implements Importer {
                     ImporterNewMDB.log.error("Error: " + e.getMessage());
                     break;
                 }
-                if (++j % 20 == 0) {
-                    session.flush();
-                    session.clear();
-                }
             }
 
         } catch (Exception e) {

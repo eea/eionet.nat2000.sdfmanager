@@ -271,8 +271,6 @@ public class ImporterSiteXML implements Importer {
         session.saveOrUpdate(site);
         //session.merge(site);
         tr.commit();
-       session.flush();
-
     }
 
     /***
@@ -285,8 +283,6 @@ public class ImporterSiteXML implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmt);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -299,8 +295,6 @@ public class ImporterSiteXML implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmtBody);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -313,8 +307,6 @@ public class ImporterSiteXML implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(mgmtPlan);
         tr.commit();
-        session.flush();
-
     }
 
     /**
@@ -327,8 +319,6 @@ public class ImporterSiteXML implements Importer {
         Transaction tr = session.beginTransaction();
         session.saveOrUpdate(map);
         tr.commit();
-        session.flush();
-
     }
 
 

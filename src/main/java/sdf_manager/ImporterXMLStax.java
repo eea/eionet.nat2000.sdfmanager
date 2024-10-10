@@ -755,7 +755,6 @@ public class ImporterXMLStax extends AbstractImporter implements Importer {
                             Calendar cal = Calendar.getInstance();
                             site.setSiteDateCreation(cal.getTime());
                             saveAndReloadSession(session, site, restrictedCodes, siteCode);
-                            session.flush();
                             site = null;
                         }
                     }

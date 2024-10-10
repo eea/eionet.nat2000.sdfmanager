@@ -436,9 +436,7 @@ public class ImporterMDB extends AbstractImporter implements Importer {
                         processSpecies(conn, session, site);
 
                         processOK = true;
-                        session.flush();
                         session.evict(site);
-
                     }
 
                 } catch (Exception e) {

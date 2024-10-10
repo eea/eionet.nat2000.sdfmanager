@@ -8,7 +8,7 @@ Building is relevant only if you have the source code. If you only have the pre-
 
 For running the software, you will need the following software components installed on your machine:
 * A 32-bit version of Java Runtime Environment (JRE) 8
-* MySQL database server 8.0 or later. It must be running and there must be at least an empty database named "natura2000".
+* MySQL database server 8.0 or later (must be running).
 
 
 

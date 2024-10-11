@@ -2,6 +2,7 @@ package sdf_manager.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -9,14 +10,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import sdf_manager.SDF_ManagerApp;
-
-import com.mysql.jdbc.Connection;
-
 
 public class SDF_MysqlDatabaseTest {
 
@@ -39,7 +36,7 @@ public class SDF_MysqlDatabaseTest {
         properties.setProperty("password", bundle.getString("password"));
 
         Class.forName(driver);
-        Connection jdbcConn = (Connection)DriverManager.getConnection(url, properties);
+        Connection jdbcConn = (Connection) DriverManager.getConnection(url, properties);
 
         return jdbcConn;
     }

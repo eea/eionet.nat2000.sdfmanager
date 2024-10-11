@@ -578,7 +578,7 @@ public class SDFEditor extends javax.swing.JFrame {
         SDFEditor.logger.info("Saving the Site");
         if (differentFields(this.site.getSiteName(), this.txtSiteName.getText())) {
             if (this.txtSiteName.getText().length() > 256) {
-                msgError = "The site name is too long.The lengh of the site name should be less than 256 characters\n";
+                msgError = "The site name is too long.The length of the site name should be less than 256 characters\n";
                 SDFEditor.logger.error("The site name is too long.");
             } else {
                 this.site.setSiteName(fmt(this.txtSiteName.getText()));

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SDFManager"
-#define MyAppVersion "4.4.5"
+#define MyAppVersion "5.0.0"
 #define MyAppPublisher "EEA"
 #define MyAppURL "http://bd.eionet.europa.eu/activities/Natura_2000/index_html"
 #define MyAppExeName "SDFManager.exe"

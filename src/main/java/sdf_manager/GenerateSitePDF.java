@@ -940,13 +940,15 @@ public class GenerateSitePDF implements Exporter {
             String path = GenerateSitePDF.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             String decodedPath = URLDecoder.decode(path, "UTF-8");
             GenerateSitePDF.log.info("jar location full path is:" + decodedPath);
-            if(decodedPath.contains("target/classes")){
+            if (decodedPath.contains("target/classes")) {
                 decodedPath = null;
-            }else if(decodedPath.contains("SDFManager.exe")) {
+            } else if (decodedPath.contains("SDFManager.exe")) {
                 decodedPath = decodedPath.replace("SDFManager.exe", "fonts/" + fontFileName);
+            } else if (decodedPath.contains("SDFmanager-" + SDF_ManagerApp.getAppVersion() + ".jar")) {
+                decodedPath = decodedPath.replace("SDFmanager-" + SDF_ManagerApp.getAppVersion() + ".jar", "fonts/" + fontFileName);
             }
-                 return decodedPath;
-        }catch (Exception ex){
+            return decodedPath;
+        } catch (Exception ex) {
             GenerateSitePDF.log.error(ex.getMessage());
             GenerateSitePDF.log.error(ex.getCause());
             return "";

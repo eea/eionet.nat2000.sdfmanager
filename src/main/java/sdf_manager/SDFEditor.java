@@ -649,6 +649,10 @@ public class SDFEditor extends javax.swing.JFrame {
                 site.setSiteDateCreation(cal.getTime());
             }
             this.saveAndReloadSession();
+            if (this.filterWindow != null) {
+                this.filterWindow.applyFilters();
+            }
+
             SDFEditor.logger.info("Site saved.");
             javax.swing.JOptionPane.showMessageDialog(this, "The site has been succesfully saved. ", "Dialog",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -757,10 +761,10 @@ public class SDFEditor extends javax.swing.JFrame {
         Double marineArea = ConversionTools.stringToDoubleN(this.txtMarineArea.getText());
         Double length = ConversionTools.stringToDoubleN(this.txtLength.getText());
         
-        this.site.setSiteLongitude(longitude);       
-        this.site.setSiteLatitude(latitude);              
-        this.site.setSiteArea(area);               
-        this.site.setSiteMarineArea(marineArea);               
+        this.site.setSiteLongitude(longitude);
+        this.site.setSiteLatitude(latitude);
+        this.site.setSiteArea(area);
+        this.site.setSiteMarineArea(marineArea);
         this.site.setSiteLength(length);
         
         return msgErrorSpatial;
@@ -1062,11 +1066,6 @@ public class SDFEditor extends javax.swing.JFrame {
             resp.getSites().add(site);
             site.setResp(resp);
             saveAndReloadSession();
-            if (this.filterWindow != null) {
-                this.filterWindow.clearFilterSelections();
-                this.filterWindow.applyFilters();
-            }
-            // this.parent.clearFilterSelections();
         } else {
             if (!respAddress) {
                 SDFEditor.logger.error("An error has occurred in address field.");

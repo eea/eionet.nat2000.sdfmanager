@@ -1684,9 +1684,13 @@ public final class SDFFilter extends javax.swing.JFrame {
 
         pnlDisplaySites.setBorder(javax.swing.BorderFactory.createTitledBorder("SDF"));
 
-        tabDisplaySites.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {
-
-        }, new String[] {"Edited", "Site code", "Site name", "Updated Date"}));
+        tabDisplaySites.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {},
+                new String[] {"Edited", "Site code", "Site name", "Updated Date"}) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                });
         tabDisplaySites.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(tabDisplaySites);
         tabDisplaySites.getColumnModel().getColumn(0).setResizable(false);

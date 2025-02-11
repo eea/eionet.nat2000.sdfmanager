@@ -13,4 +13,4 @@ update ref_birds SET REF_BIRDS_NAME = 'Saxicola torquatus' where REF_BIRDS_CODE 
 update ref_birds SET REF_BIRDS_NAME = 'Catharacta skua' where REF_BIRDS_CODE = 'A175';
 update ref_birds SET REF_BIRDS_NAME = 'Morus bassanus' where REF_BIRDS_CODE = 'A016';
 update ref_birds SET REF_BIRDS_NAME = 'Sylvia ruppeli' where REF_BIRDS_CODE = 'A440';
-insert ignore into ref_birds values(457,'A362','Carduelis citrinella',0,0,0,0,0,'0','Carduelis citrinella');
+insert ignore into ref_birds values(457,'A362','Carduelis citrinella',0,0,0,0,0,0,'0','Carduelis citrinella');

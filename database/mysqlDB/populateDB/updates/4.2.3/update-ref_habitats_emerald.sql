@@ -121,4 +121,4 @@ UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Brackish coastal lagoons
 UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Raised bog complexes' WHERE REF_HABITATS_CODE = 'X04';
 UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Wooded steppe' WHERE REF_HABITATS_CODE = 'X18';
 UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Salt lake islands' WHERE REF_HABITATS_CODE = 'X29';
-UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Inland Sand Dunes' WHERE REF_HABITATS_CODE = 'X35';
+UPDATE ref_habitats_emerald SET REF_HABITATS_DESC_EN = 'Inland Sand Dunes', REF_HABITATS_DESC_FR = '' WHERE REF_HABITATS_CODE = 'X35';

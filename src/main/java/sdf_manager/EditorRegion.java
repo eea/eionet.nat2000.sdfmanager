@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 

@@ -1,6 +1,6 @@
 package sdf_manager.validators.model;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import sdf_manager.validators.AcceptedNameTriple;
 import sdf_manager.validators.NameIdPair;

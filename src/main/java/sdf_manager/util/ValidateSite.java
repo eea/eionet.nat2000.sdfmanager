@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import pojos.Habitat;
 import pojos.Impact;

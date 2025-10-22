@@ -23,7 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import sdf_manager.ProgressDialog;
 import sdf_manager.SDF_ManagerApp;

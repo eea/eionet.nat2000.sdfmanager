@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 

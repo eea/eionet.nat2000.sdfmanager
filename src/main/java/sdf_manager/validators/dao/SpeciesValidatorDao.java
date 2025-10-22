@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -72,44 +70,40 @@ public class SpeciesValidatorDao implements ValidatorDao {
 		CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("cdm.connection.timeout")) * 1000; //time in milisecs		
     }
     
-    protected String getJsonResponse(URIBuilder uriBuilder) throws URISyntaxException, ClientProtocolException, IOException {
-    	SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(
-                ProxySelector.getDefault());
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setRoutePlanner(routePlanner)
-                .build();                
-               
+    protected String getJsonResponse(URIBuilder uriBuilder) throws URISyntaxException, IOException {
+        SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(ProxySelector.getDefault());
         RequestConfig requestConfig = RequestConfig.custom()
-            .setConnectionRequestTimeout(CONNECTION_TIMEOUT)
-            .setConnectTimeout(CONNECTION_TIMEOUT)
-            .setSocketTimeout(CONNECTION_TIMEOUT)
-            .build();                               
-        URI simpleQueryUri = uriBuilder.build();        
-        HttpGet httpGet = new HttpGet(simpleQueryUri);        
-        httpGet.setConfig(requestConfig);
-        CloseableHttpResponse response = httpclient.execute(httpGet);     	            
-        try {
-            HttpEntity entity = response.getEntity();
-            StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() >= 300) { 
-                throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
-            }          
-            if (entity == null) {
-              throw new ClientProtocolException("Response contains no content");
+                .setConnectionRequestTimeout(CONNECTION_TIMEOUT)
+                .setConnectTimeout(CONNECTION_TIMEOUT)
+                .setSocketTimeout(CONNECTION_TIMEOUT)
+                .build();
+
+        try (CloseableHttpClient httpclient = HttpClients.custom()
+                .setRoutePlanner(routePlanner)
+                .build()) {
+
+            URI simpleQueryUri = uriBuilder.build();
+            HttpGet httpGet = new HttpGet(simpleQueryUri);
+            httpGet.setConfig(requestConfig);
+            try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
+                StatusLine statusLine = response.getStatusLine();
+                if (statusLine.getStatusCode() >= 300) {
+                    throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+                }
+
+                HttpEntity entity = response.getEntity();
+                if (entity == null) {
+                    throw new ClientProtocolException("Response contains no content");
+                }
+
+                ContentType contentType = ContentType.getOrDefault(entity);
+                if (!contentType.getMimeType().equals(ContentType.APPLICATION_JSON.getMimeType())) {
+                    throw new ClientProtocolException("Unexpected content type " + contentType);
+                }
+
+                return EntityUtils.toString(entity);
             }
-            ContentType contentType = ContentType.getOrDefault(entity);
-            if (!contentType.getMimeType().equals(ContentType.APPLICATION_JSON.getMimeType())) {
-                throw new ClientProtocolException("Unexpected content type " + contentType);
-            }
-            Charset charset = contentType.getCharset();
-            if (charset == null) {
-                charset = StandardCharsets.UTF_8;
-            }
-            String responseJsonString = EntityUtils.toString(entity);
-            return responseJsonString;
-        } finally {
-            response.close();            
-        }        
+        }
     }
     
     /**
